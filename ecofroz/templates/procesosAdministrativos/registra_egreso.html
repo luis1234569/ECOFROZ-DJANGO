@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block extrahead %}
+<style>
+     .select-tipo-item {
+     background: transparent;
+     border: 1px solid rgb(195, 199, 201);
+     font-size: 14px;
+     height: 35px;
+     padding: 5px;
+     width: 780px;
+  }
+
+  .select-tipo {
+     background: transparent;
+     border: 1px solid rgb(195, 199, 201);
+     font-size: 14px;
+     height: 35px;
+     padding: 5px;
+     width: 80px;
+  }
+
+  .textinput {
+     background: transparent;
+     border: 1px solid rgb(195, 199, 201);
+     font-size: 14px;
+     height: 35px;
+     padding: 5px;
+     width: 130px;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus,
+  button:focus {
+    outline: none;
+  }
+  
+</style>
+
+
+
+{% endblock %}
+
+{% block title %}
+    <h2>Solicitud de Desecho</h2>
+{% endblock %}
+
+{% block content %}
+<div class="loader"></div>
+<div class="container-fluid">
+<h5 style="margin-top: 25px;" class="display-6">Registro e impresión de Egresos Agrícolas</h5><br>
+{% if saved %}
+<label>{{saved}}</label>
+{% endif %}
+<!-- <h4 class="display-6">Hola {{ user.first_name }} {{ user.last_name }}</h4> -->
+<!-- <form method="POST" id="ingreso" enctype="multipart/form-data"> -->
+<form method="POST" id="ingreso" enctype="multipart/form-data">
+
+    {% csrf_token %}
+    <div class="row mb-3">
+        <input id="usuario_solicita" type="text" name="usuario_solicita" hidden value="{{ user.id }}">
+        {{ form.auth_user }}
+    </div>
+    
+    <div class="row g-4">
+        <div class="col-sm">
+            <label><b>{{ form.bodega.label }}</b></label>
+            {{ form.bodega }}
+        </div>
+
+        <div class="col-sm">
+            <label><b>{{ form.proyecto.label }}</b></label>
+            {{ form.proyecto }}
+        </div>
+
+        <div class="col-sm">
+            <label><b>{{ form.fecha.label }}</b></label>
+            {{ form.fecha }}
+        </div>
+
+        <div class="col-sm">
+            <label><b>{{ form.lote.label }}</b></label>
+            {% render_field form.lote  %}
+        </div>
+      
+    </div>
+    
+    <br>
+   
+
+    {{ formdet.management_form }}
+    <div class="container">
+        <table class="table">
+            <thead>
+                <th>Item</th>
+                <th>Cantidad/Peso</th>
+                <th>Unidad</th>
+                <th>+/-</th>
+            </thead>
+            <tbody>
+                {% for i in formdet %}
+                <tr class="add-row">
+                    <td style="width: 70%;">{% render_field i.producto class="select-tipo-item"  %}</td>
+                    <td>{% render_field i.peso class="textinput"   %}</td>
+                    <td>{% render_field i.unimed class="select-tipo"   %}</td>
+                    <td style="width: 2%;">
+                        <div class="input-group-append">
+                            <button class="btn btn-success add-form-row">+</button>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <br>
+    <div class="row g-3">
+        <div class="col-sm-12">
+            <label><b>{{ form.observaciones.label }}</b></label><br>
+            {{ form.observaciones }}
+        </div>
+    </div>
+
+    <br>
+    <br>
+
+    <div class="row g-3">
+        <div class="col-sm-3">
+            <label><b>Usuario Registra</b></label><br>
+            {% render_field form.usuario_registra value=usuario.username %}
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12" style="margin-top: 10px;">
+            <button type="submit" name="enviar" id="enviar" class="btn btn-lg btn-primary">Enviar</button>
+        </div>
+    </div>
+</form>
+</div>
+
+
+
+{% endblock %}
+
+{% block extrajs %}
+
+
+
+<script>
+    
+    
+  $(window).on("load", function() {
+        $(".loader").fadeOut("slow");
+    });
+
+    $(document).ready(function() {    
+        $('#enviar').on('click', function(){
+          if($('#id_form-0-unimedida').val().length == 0) {
+            $('#id_form-0-unimedida').prop('required', true);
+          }
+        //   else if ($('#id_form-0-cantidad-peso').val().length == 0){  
+        //     $('#id_form-0-cantidad-peso').prop('required', true);
+        //     }
+             
+           else {
+            // $(document).ready(function() {    
+            // $('#enviar').on('click', function(){
+            //Añadimos la imagen de carga en el contenedor
+            $(".loader").show();
+            $(window).on("load", function(){
+                $(".loader").fadeOut("slow");
+            });
+                      
+          }
+        });              
+    });
+
+    $(document).ready(function() {    
+        $('#enviar').on('click', function(){
+        
+        if ($('#id_form-0-cantidad-peso').val().length == 0){  
+             $('#id_form-0-cantidad-peso').attr('required', true);
+             }
+             
+           else {
+            $(document).ready(function() {    
+            $('#enviar').on('click', function(){
+            //Añadimos la imagen de carga en el contenedor
+            $(".loader").show();
+            $(window).on("load", function(){
+                $(".loader").fadeOut("slow");
+            });
+        });              
+    }); 
+           
+          }
+        });              
+    });
+
+
+     
+
+    $(document).on('click', '.add-form-row', function(e){
+        e.preventDefault();
+        cloneMore('.add-row:last', 'form');
+        return false;
+    });
+
+    $(document).on('click', '.remove-form-row', function(e){
+        e.preventDefault();
+        deleteForm('form', $(this));
+        return false;
+    });
+
+
+    $("#tipo").change(function () {
+      var url = $("#ingreso").attr("items-url");  // get the url of the `load_items` view
+      var tipoId = $(this).val();  // get the selected country ID from the HTML input
+
+      $.ajax({                       // initialize an AJAX request
+        url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+        data: {
+          'tipo': tipoId       // add the country id to the GET parameters
+        },
+        success: function (data) {   // `data` is the return of the `load_cities` view function
+          $("#id_form-0-item").html(data);  // replace the contents of the city input with the data that came from the server
+        }
+      });
+
+    });
+  </script>
+
+
+{% endblock %}

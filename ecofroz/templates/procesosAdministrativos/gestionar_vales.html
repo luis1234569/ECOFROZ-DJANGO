@@ -1,0 +1,248 @@
+{% extends 'base.html' %}
+
+
+{% block extrahead %}
+<style>
+    body {font-family: Arial;}
+    
+    /* Style the tab */
+    .tab {
+      overflow: hidden;
+      border: 1px solid #ccc;
+      background-color: #f1f1f1;
+    }
+    
+    /* Style the buttons inside the tab */
+    .tab button {
+      background-color: inherit;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.3s;
+      font-size: 17px;
+    }
+    
+    /* Change background color of buttons on hover */
+    .tab button:hover {
+      background-color: #ddd;
+    }
+    
+    /* Create an active/current tablink class */
+    .tab button.active {
+      background-color: #ccc;
+    }
+    
+    /* Style the tab content */
+    .tabcontent {
+      display: none;
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      border-top: none;
+    }
+    
+    /* Style the close button */
+    .topright {
+      float: right;
+      cursor: pointer;
+      font-size: 28px;
+    }
+    
+    .topright:hover {color: red;}
+
+    .loader{
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background: url('/media/img/load.gif') 50% 50% no-repeat rgb(249,249,249);
+        opacity: .8;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+<div class="loader"></div>
+<!-- <div class="container" style="margin: 25px auto;">
+  <div class="row">
+    <div class="col-md-auto">
+      <form class="input-group mb-3" method="GET">
+        <input class="form-control" type="text" size="40px;" placeholder="Busque IDs de solicitudes" name="buscar">
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+      </form>
+    </div>
+    
+  </div> 
+</div> -->
+
+<div class="tab" style="margin-top: 25px;">
+  {% if form %}
+  <button class="tablinks" onclick="openTab(event, 'Pendientes')" id="defaultOpen">Nuevas Solicitudes Vales Combustible</button>
+  <button class="tablinks" onclick="openTab(event, 'Aprobadas')">Gestionadas/Rechazos</button>
+  {% else %}
+  <button class="tablinks" onclick="openTab(event, 'Aprobadas')" id="defaultOpen">Gestionadas/Rechazos</button>
+  <button class="tablinks" onclick="openTab(event, 'Pendientes')" >Nuevas Solicitudes Vales Combustible</button>
+  {% endif %}
+</div>
+
+<div id="Pendientes" class="tabcontent">
+
+  <div>
+
+<table class="table table-hover table-striped table-info table-sm" style="margin: 10px auto">
+  {%if form %}
+    <thead>
+      <tr>
+        <th scope="col">Solicitud N°</th>
+        <th scope="col">Fecha Solicitud</th>
+        <th scope="col">Ubicación</th>
+        <th scope="col">Beneficiario Vale</th>
+        <th scope="col">Tipo</th> 
+        <th scope="col" style="text-align:center">Ver</th>
+        
+      </tr>
+    </thead>
+    <tbody>
+      {% if form %}
+      {% for i in form %}
+      <tr>
+        <td>{{ i.numpedido.numpedido  }}</td>
+        <td>{{ i.numpedido.fchsolicita }}</td>
+        <td>{{ i.numpedido.ubica }}</td>
+        <td>{{ i.numpedido.beneficiario_vale }}</td>
+        <td>{{ i.numpedido.get_tipo_display }}</td>
+        
+        <td style="text-align:right">
+          
+          <a href="{% url 'procesosadministrativos:autoriza_vales' i.numpedido.numpedido %}" class="btn btn-primary glyphicon glyphicon-eye-open" title="Ver detalle"></a>
+        </td>
+      </tr>
+      {% endfor %}
+      {% endif %}
+
+      {% else %}
+            <div class="alert-danger" role="alert">
+              <h3 style="text-align: center;">No hay Solicitudes para gestionar</h3>
+              
+            </div>
+          {% endif %}
+    </tbody>
+</table>
+  
+</div>  
+</div>
+
+<div id="Aprobadas" class="tabcontent">
+  
+  <div>
+
+    <table class="table table-success table-striped table-sm">
+    
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">N°</th>
+          <th scope="col">Fecha Solicitud</th>
+        <th scope="col">Fecha Generación/Anulación</th>
+        <th scope="col">Ubicación</th>
+        <th scope="col">Beneficiario Vale</th>
+        <th scope="col">Tipo</th> 
+        <th scope="col">Registra</th> 
+        <th scope="col">Estado</th>
+        <th scope="col">Opción</th>
+        
+      </tr>
+    </thead>
+    <tbody>
+
+      {% if procesadas %}
+      
+      {% for i in procesadas %}
+      
+        <td>{{ i.numpedido.numpedido }}</td>
+        <td>{{ i.numpedido.fchsolicita }}</td>
+        <td>{{ i.numpedido.fchaprueba1n }}</td>
+        <td>{{ i.numpedido.ubica }}</td>
+        <td>{{ i.numpedido.beneficiario_vale | default:"--"}}</td>
+        
+        <td>{{ i.numpedido.get_tipo_display }}</td>
+        <td>{{ i.numpedido.usu_gestiona_vale }}</td>    
+        {% if i.numpedido.estado_vale == 1 %}
+        <td style="text-align: center;"><i class="glyphicon glyphicon-ok" style="font-size: 2rem; color:darkgreen" title="Generado"></i></td>
+        {% elif i.numpedido.estado_vale == 2 %}
+        <td style="text-align: center;"><i class="glyphicon glyphicon-remove" style="font-size: 2rem; color:indianred" title="Rechazado"></i></td>
+        {% endif %}
+        
+        <td>
+          <a href="{% url 'procesosadministrativos:autoriza_vales' i.numpedido.numpedido %}" class="btn btn-secondary" title="Ver detalle">Revisar</a>
+        </td>
+      </tr>
+      {% endfor %}
+      {% endif %}
+          
+    </tbody>
+  </table>
+  
+</div>
+</div>
+
+<!-- <div class="pagination">
+  <span class="step-links">
+      {% if procesadas.has_previous %}
+          <a href="?page=1">&laquo; inicio</a>
+          <a href="?page={{ procesadas.previous_page_number }}">previo</a>
+      {% endif %}
+
+      <span class="current">
+          Page {{ procesadas.number }} of {{ procesadas.paginator.num_pages }}.
+      </span>
+
+      {% if procesadas.has_next %}
+          <a href="?page={{ procesadas.next_page_number }}">próximo</a>
+          <a href="?page={{ procesadas.paginator.num_pages }}">último &raquo;</a>
+      {% endif %}
+  </span>
+</div> -->
+
+{% endblock %}
+
+{% block extrajs %}
+
+<script>
+
+  $(window).on("load",function() {
+        $(".loader").fadeOut("slow");
+    });
+
+    $(document).ready(function() {    
+        $('#enviar').on('click', function(){
+            //Añadimos la imagen de carga en el contenedor
+            $(".loader").show();
+            $(window).on("load",function(){
+                $(".loader").fadeOut("slow");
+            });
+        });              
+    }); 
+
+
+  function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
+  }
+
+  // Get the element with id="defaultOpen" and click on it
+  document.getElementById("defaultOpen").click();
+  </script>
+
+{% endblock %}

@@ -1,0 +1,658 @@
+{% extends "base_laboratorio.html" %}
+
+{% load static %}
+
+{% block contenido %}
+
+
+            <style type="text/css">
+
+#container-main{
+    margin:40px auto;
+    width:95%;
+    min-width:320px;
+    max-width:960px;
+}
+ 
+#container-main h1{
+    font-size: 40px;
+    text-shadow:4px 4px 5px rgb(39, 155, 55);
+}
+ 
+.accordion-container {
+    width: 56.8%;
+    margin: 0 0 20px;
+    clear:both;
+    margin-left: 150px;
+}
+ 
+.accordion-titulo {
+    position: relative;
+    display: block;
+    padding: 20px;
+    font-size: 18px;
+    font-weight: 300;
+    background: #2c3e50;
+    color: #fff;
+    text-decoration: none;
+}
+.accordion-titulo.open {
+    background:rgb(39, 155, 55);
+    color: #fff;
+}
+.accordion-titulo:hover {
+    background: rgb(39, 155, 55);
+}
+ 
+.accordion-titulo span.toggle-icon:before {
+    content:"+";
+}
+ 
+.accordion-titulo.open span.toggle-icon:before {
+    content:"-";
+}
+ 
+.accordion-titulo span.toggle-icon {
+    position: absolute;
+    top: 17px;
+    right: 20px;
+    font-size: 20px;
+    font-weight:bold;
+}
+ 
+.accordion-content {
+    display: none;
+    padding: 20px;
+    overflow: auto;
+}
+ 
+.accordion-content p{
+    margin:0;
+}
+ 
+ 
+@media (max-width: 767px) {
+    .accordion-content {
+        padding: 10px 0;
+    }
+}
+
+
+  
+            .barraSuperior{
+                      
+                      
+                      background-color: rgb(39, 155, 55);
+                      height: 120px;
+                      
+            }
+      
+
+            .tabla {
+                
+                    background-color: transparent;
+                    height:100px;
+                    width:787px;
+                    margin-left: -22px;
+                    margin-top: -20px;
+                    text-align: left;
+            }
+
+            .logo {
+
+                    background: url(http://www.centralhidroelectrica.com/rotador/industrias/ecofroz.jpg);
+                    background-size: 120px;
+                    height: 120px;
+                    width: 120px;
+                    margin-left: 15px;
+                    
+                  
+            }
+
+            .fondo {
+
+                      background-color: rgb(168, 206, 146);
+                      background-size: cover;
+                      height: auto;
+ 
+            }
+
+            /*.fondo:hover
+            {
+                filter: sepia(60%);
+            }*/
+           
+            .label {
+
+                font-family: Verdana, Geneva, Tahoma, sans-serif;
+                font-size: xx-large;
+                margin-left: 50px;
+                color: blanchedalmond;
+            }
+            .entrada {
+                      color: rgb(12, 12, 1);
+                      margin-left: 20px;
+                      width: 230px;
+                      background-color: white;
+                      border: 1px solid  rgb(39, 155, 55);
+                      border-radius: 4px;
+                      height: 30px;
+                      font-size: 15px;
+                      
+                    }
+            
+            .entrada1 {
+                      
+                      margin-left: 50px;
+                      color: rgb(12, 12, 1);
+                      margin-left: 50px;
+                      width: 230px;
+                      background-color: white;
+                      border: 1px solid  rgb(39, 155, 55);
+                      border-radius: 4px;
+                      height: 30px;
+                      font-size: 15px;
+                      
+                    }
+
+            .entrada2 {
+                      
+                      margin-left: 50px;
+                      color: rgb(12, 12, 1);
+                      margin-left: 47px;
+                      width: 230px;
+                      background-color: white;
+                      border: 1px solid  rgb(39, 155, 55);
+                      border-radius: 4px;
+                      height: 30px;
+                      font-size: 15px;
+                      
+                    }
+
+            .agregar {
+                    color: white;
+                    background-color: #2c3e50;
+                    border-radius: 4px;
+                    height: 30px;
+                    width: 30px;
+            }
+
+            .agregar:hover{
+                background-color: rgb(49, 129, 12);
+                color: white;
+                transition: all .3s;
+            }
+    
+            
+
+            .divisor {
+
+                width: 93%;
+                border-radius: 5px;
+                border-color: rgb(39, 155, 55);
+                background-color: rgb(238, 241, 239);
+                margin-left: 40px;
+                
+            }
+
+            .leyenda {
+                
+                margin-left: 20px; 
+                margin-top: 30px;
+                font-size: 23px;
+                color: black;
+            }
+
+            .seleccion{
+
+                width: 230px;
+                background-color: white;
+                border: 2px solid  rgb(39, 155, 55);
+                margin-left: 50px;
+
+
+            }
+
+            .label0 {
+
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                font-size: 30px;
+                text-align: center;
+                margin-top: 100px;
+                color: white;
+                margin-left: 10px;
+
+            }
+
+            .label1 {
+
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                font-size: 17px;
+                margin-left: 60px;
+                margin-top: 25px;
+                color: black;
+                }
+
+            .label2 {
+
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                font-size: 17px;
+                margin-left: 90px;
+                margin-top: 25px;
+                color: black;
+                }
+
+            .titulo_tabla{
+
+                background-color: rgb(39, 155, 55);
+            }
+
+            .boton{
+
+                background-color: #2c3e50;
+                border-radius: 4px;
+                height: 20px;
+                text-align: center;
+            }
+
+            .celdas {
+                background-color: rgb(194, 201, 103);
+                height: 20px;
+                width: 450px;
+                text-align: center;
+                padding: 10px;
+            }
+
+            .celdasl {
+                background-color: rgb(194, 201, 103);
+                height: 20px;
+                width: 450px;
+                text-align: center;
+                padding: 10px;
+                color: black;
+            }
+
+            .celdas_boton {
+                border-color: transparent;
+                color: transparent;
+                height: 20px;
+                width: 10px;
+                
+                
+            }
+
+            
+            .celdas_boton a{
+                display: block;
+                color: white;
+                font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+                text-align: center;
+                padding: 10px;
+                
+            }
+
+            .celdas_boton a:hover {
+                
+                background-color: rgb(238, 16, 16);
+                color: white;
+                transition: all .3s;
+                
+            }
+
+            .titulo {
+                
+                background-color: #2c3e50;
+                height: 50px;
+                background-size: cover;
+                position: relative;
+                z-index: -1;
+                margin-top: 25px;
+            }
+            
+            </style>
+
+               
+
+<body class="fondo">
+        <div><br>
+            <form method="POST" autocomplete="off">
+                {% csrf_token %}
+
+
+                <div class="titulo">
+                    <label class="label0">Parámetros Microbiológicos</label>
+                </div>
+                
+                
+                <br>
+                <br>
+                <br>
+                
+
+                <fieldset class="divisor">
+                            
+                    <legend class="leyenda">Análisis</legend><br>
+                        <label class="label1">Nombre:</label>
+                            <input type="text" name="tipo_analisis_microbiologico" class="entrada" autocomplete="nope">  <input class="agregar" name = "analisis" type="submit" value=" + "><br>
+                           
+                            <br>
+
+                            <div class="accordion-container">
+                                <a id = "#1" href="#1" class="accordion-titulo">Análisis Microbiológicos<span class="toggle-icon"></span></a>
+                                <div class="accordion-content">
+
+                                <table class="tabla">
+
+                                    <thead>
+                                    
+                                        <tr class="titulo_tabla">
+                                                
+                                            <th class="titulo_tabla" style="text-align:center; color: white; height: 30px;">NOMBRE</th>
+                                            <th class="titulo_tabla" style="text-align:center; color: white; height: 30px;">ACCIÓN</th>
+                                                
+                                        </tr>
+
+                                    </thead>
+                            
+                                    <tbody>
+                            
+                                        {% for analisis_microbiologico in analisis_microbiologico %}
+            
+                                        <tr>
+                                            <td class="celdas"><b style="color: black;">{{ analisis_microbiologico.tipo_analisis_microbiologico }}</b></td>
+                                            <td class="celdas_boton"><a href="{% url 'borrar_analisis_microbiologico' analisis_microbiologico.id_analisis_microbiologico %}" style="text-decoration: none; display: block;" class="boton"> Eliminar</a>
+                        
+                                        
+                                        </tr>
+                                        {% empty %}
+                                        <tr>
+                                            <td colspan="2"> no hay analisis microbiológico. </td>
+                                        </tr>
+                                        {% endfor %}
+                                    
+                                    </tbody>
+                                
+                                </table>
+
+                            </div>  
+                        </div>
+                        <br>
+                
+                </fieldset><br> 
+
+                <br> 
+                
+                <fieldset class="divisor">
+                            
+                                <legend class="leyenda">Unidad</legend><br>
+                                <label class="label1">Tipo:</label>
+                                <input type="text" name="tipo_unidad" class="entrada1">  <input class="agregar" name = "unidad" type="submit" value=" + "><br>
+                                <br>
+
+                                <div class="accordion-container">
+                                    <a id = "#2" href="#2" class="accordion-titulo">Unidades<span class="toggle-icon"></span></a>
+                                    <div class="accordion-content">
+
+                                <table class="tabla">
+                                
+                                    <thead>
+
+                                        <tr class="titulo_tabla">
+                                            
+                                            <th class="titulo_tabla" style="text-align:center; color: white; height: 30px;">NOMBRE</th>
+                                            <th class="titulo_tabla" style="text-align:center; color: white; height: 30px;">ACCIÓN</th>
+                                            
+                                        </tr>
+                                </thead>
+                                
+                                        <tbody>
+                                
+                                            {% for unidad in unidades %}
+                
+                                            <tr>
+                                                <td class="celdas"><b>{{ unidad.tipo_unidad }}</b></td>
+                                                <td class="celdas_boton"><a href="{% url 'borrar_unidad' unidad.id_unidad %}" style="text-decoration: none; display: block;" class = "boton"> Eliminar</a>
+                            
+                                            
+                                            </tr>
+                                        {% empty %}
+                                            <tr>
+                                                <td colspan="2"> no hay unidades. </td>
+                                            </tr>
+                                        {% endfor %}
+                                        
+                                        </tbody>
+                                    
+                                    
+                                </table>
+
+                            </div>  
+                        </div>
+                        <br>
+                            
+                </fieldset><br>   
+
+                <fieldset class="divisor">
+                            
+                                <legend class="leyenda">Método</legend><br>
+                                <label class="label1">Nombre:</label>
+                                <input type="text" name="tipo_metodo" class="entrada" autocomplete="nope"> <input class="agregar" name = "nombre_metodo" type="submit" value=" + ">
+                                <br>
+                                <br>
+                                <div class="accordion-container">
+                                    <a id = "#3" href="#3" class="accordion-titulo">Métodos<span class="toggle-icon"></span></a>
+                                    <div class="accordion-content">
+                                        <table class="tabla">
+                                
+                                            <thead>
+
+                                                <tr class="titulo_tabla">
+                                                    
+                                                    <th class="titulo_tabla" style="text-align:center;color: white; height: 30px;">NOMBRE</th>
+                                                    <th class="titulo_tabla" style="text-align:center;color: white; height: 30px;">ACCIÓN</th>
+                                                    
+                                                </tr>
+                                        </thead>
+                                
+                                                <tbody>
+                                        
+                                                    {% for metodo in metodos %}
+                        
+                                                    <tr>
+                                                        <td class="celdas"><b>{{ metodo.tipo_metodo }}</b></td>
+                                                        <td class="celdas_boton"><a href="{% url 'borrar_metodos' metodo.id_metodo %}" style="text-decoration: none; display: block;" class="boton"> Eliminar</a></td>
+                                    
+                                                    
+                                                    </tr>
+                                                {% empty %}
+                                                    <tr>
+                                                        <td colspan="2"> no hay métodos. </td>
+                                                    </tr>
+                                                {% endfor %}
+                                                
+                                                </tbody>
+                                            
+                                            
+                                        </table>
+                                    </div>  
+                                </div>
+
+                            <br>
+                         
+                        </fieldset><br>
+
+                        <fieldset class="divisor">
+                            
+                                <legend class="leyenda">Aprobación</legend><br>
+                                <label  class="label1">Nombre:</label>
+                                <input type="text" name="tipo_aprobacion" class="entrada" autocomplete="nope">  <input class="agregar" name = "aprobacion" type="submit" value=" + "><br>
+                                <br>
+
+                                <div class="accordion-container">
+                                    <a id = "#4" href="#4" class="accordion-titulo">Aprobaciones<span class="toggle-icon"></span></a>
+                                    <div class="accordion-content">
+                                <table class="tabla">
+                                
+                                    <thead>
+
+                                        <tr class="titulo_tabla">
+                                            
+                                            <th class="titulo_tabla" style="text-align:center; color: white; height: 30px;">NOMBRE</th>
+                                            <th class="titulo_tabla" style="text-align:center; color: white; height: 30px;">ACCIÓN</th>
+                                            
+                                        </tr>
+                                </thead>
+                                        <tbody>
+                                
+                                            {% for aprobacion in aprobaciones %}
+                
+                                            <tr>
+                                                <td class="celdas"><b>{{ aprobacion.tipo_aprobacion }}</b></td>
+                                                <td class="celdas_boton"><a href="{% url 'borrar_aprobacion' aprobacion.id_aprobacion %}" style="text-decoration: none; display: block;" class = "boton"> Eliminar</a></td>
+                            
+                                            
+                                            </tr>
+                                        {% empty %}
+                                            <tr>
+                                                <td colspan="2"> no hay aprobaciones. </td>
+                                            </tr>
+                                        {% endfor %}
+                                        
+                                        </tbody>
+                                    
+                                    
+                                </table>
+                            </div>  
+                        </div>
+                        <br>
+                        
+                        </fieldset><br>
+
+                        <fieldset class="divisor">
+                            
+                            <legend class="leyenda">Límite Inferior</legend><br>
+                            <label class="label1">valor:</label>
+                            <input type="text" name="valor_limite_inferior" class="entrada2" autocomplete="nope"> 
+                            
+                            
+                            <input class="agregar" name = "limite" type="submit" value=" + "><br>
+                            <br>
+
+                            <div class="accordion-container">
+                                <a id = "#5" href="#5" class="accordion-titulo">Límites inferiores<span class="toggle-icon"></span></a>
+                                <div class="accordion-content">
+                            <table class="tabla">
+                            
+                                <thead>
+
+                                    <tr class="titulo_tabla">
+                                        
+                                        <th class="titulo_tabla" style="text-align:center; color: white; height: 30px;">VALOR</th>
+                                        <th class="titulo_tabla" style="text-align:center; color: white; height: 30px;">ACCIÓN</th>
+                                       
+                                    </tr>
+                            </thead>
+                                    <tbody>
+                            
+                                        {% for limite_inferior in limite_inferior %}
+            
+                                        <tr>
+                                            <td class="celdasl"><b>{{ limite_inferior.valor_limite_inferior }}</b></td>
+                                            <td class="celdas_boton"><a href="{% url 'borrar_limite_inferior' limite_inferior.id_limite_inferior %}" style="text-decoration: none; display: block;" class = "boton"> Eliminar</a></td>
+                        
+                                        </tr>
+                                    {% empty %}
+                                        <tr>
+                                            <td colspan="3"> no hay límites inferiores. </td>
+                                        </tr>
+                                    {% endfor %}
+                                    
+                                    </tbody>
+                                
+                                
+                            </table>
+                        </div>  
+                    </div>
+                    <br>
+                    
+                    </fieldset><br>
+
+                    <fieldset class="divisor">
+                            
+                        <legend class="leyenda">Límite Superior</legend><br>
+                        <label class="label1">valor:</label>
+                        <input type="text" name="valor_limite_superior" class="entrada2" autocomplete="nope"> 
+                        
+                        
+                        <input class="agregar" name = "limite" type="submit" value=" + "><br>
+                        <br>
+
+                        <div class="accordion-container">
+                            <a id = "#6" href="#6" class="accordion-titulo">Límites Superiores<span class="toggle-icon"></span></a>
+                            <div class="accordion-content">
+                        <table class="tabla">
+                        
+                            <thead>
+
+                                <tr class="titulo_tabla">
+                                    
+                                    <th class="titulo_tabla" style="text-align:center; color: white; height: 30px;">VALOR</th>
+                                    <th class="titulo_tabla" style="text-align:center; color: white; height: 30px;">ACCIÓN</th>
+                                    
+                                </tr>
+                        </thead>
+                                <tbody>
+                        
+                                    {% for limite_superior in limite_superior %}
+        
+                                    <tr>
+                                        <td class="celdasl"><b>{{ limite_superior.valor_limite_superior }}</b></td>
+                                        <td class="celdas_boton"><a href="{% url 'borrar_limite_superior' limite_superior.id_limite_superior %}" style="text-decoration: none; display: block;" class = "boton"> Eliminar</a></td>
+                    
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="3"> no hay límites superiores. </td>
+                                    </tr>
+                                {% endfor %}
+                                
+                                </tbody>
+                            
+                            
+                        </table>
+                    </div>  
+                </div>
+                <br>
+                
+                </fieldset><br>
+                                       
+                    
+                        
+        </form>
+    </div>  
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+       
+        <script>
+    
+    $(".accordion-titulo").click(function(){
+		
+        var contenido=$(this).next(".accordion-content");
+                 
+        if(contenido.css("display")=="none"){ //open		
+           contenido.slideDown(250);			
+           $(this).addClass("open");
+        }
+        else{ //close		
+           contenido.slideUp(250);
+           $(this).removeClass("open");	
+       }
+                                 
+     });
+
+     </script>
+
+</body>
+
+{% endblock contenido %}

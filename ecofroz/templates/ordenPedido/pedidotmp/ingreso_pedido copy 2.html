@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block title %}
+    <h2>Ordenes de Pedidos</h2>
+{% endblock %}
+
+{% block content %}
+<div class="jumbotron" style="width: 75%; margin:auto; padding-top: 25px; margin-top: 50px; margin-bottom: 25px;">
+<h2 class="display-5">Ingreso de Ordenes de Pedido</h2>
+<!-- <h4 class="display-6">Hola {{ user.first_name }} {{ user.last_name }}</h4> -->
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+        <input id="usuario_solicita" type="text" name="usuario_solicita" hidden value="{{ user.id }}">
+        {{ form2.auth_user }}
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label>{{ form2.departamento.label }}</label>
+            {{ form2.departamento }}
+        </div>
+        <div class="form-group col-md-6">
+            <label for="{{ form2.area.area }}">{{ form2.area.label }}</label>
+            {{ form2.area }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="{{ form2.tipoactivo.tipac }}">{{ form2.tipoactivo.label }}</label>
+            {{ form2.tipoactivo }}
+        </div>
+        <div class="form-group col-md-4">
+            <label for="{{ form2.tiempo_vida.tv }}">{{ form2.tiempo_vida.label }}</label>
+            {{ form2.tiempo_vida }}
+        </div>  
+        <div class="form-group col-md-2">
+            <label for="{{ form2.tiempo_tipo.tt }}">{{ form2.tiempo_tipo.label }}</label>
+            {{ form2.tiempo_tipo }}
+        </div>
+    </div>
+    <div class="form-group col-md-12">
+        <label for="{{ form2.numproyecto.numpro }}">{{ form2.numproyecto.label }}</label>
+        {{ form2.numproyecto }}
+    </div>
+    <!-- <div class="form-group col-md-12">
+        <div class="form-check">
+            {{ form2.regimenespecial }}
+            <label for="{{ form2.regimenespecial.regesp }}">{{ form2.regimenespecial.label }}</label>
+        </div>
+    </div> -->
+    <div class="form-group col-md-12">
+        <label for="{{ form.descripcion.desc }}">{{ form.descripcion.label }}</label>
+        {{ form.descripcion }}
+    </div>
+    <div class="form-row">
+        <div class="col-md-10">
+            <label for="{{ form.cantidad.cant }}">{{ form.cantidad.label }}</label>
+            {{ form.cantidad }}
+        </div>
+        <div class="col-md-2">
+            <label for="{{ form.unimedida.uni }}">{{ form.unimedida.label }}</label>
+            {{ form.unimedida }}
+        </div>
+    </div>
+    <div class="form-row" style="margin-top: 10px;">
+        <div class="col-md-6">
+            <label for="{{ form.cantidad.cant }}">{{ form.img_1.label }}</label>
+            {{ form.img_1 }}
+        </div>
+        <div class="col-md-6">
+            <label for="{{ form.unimedida.uni }}">{{ form.img_2.label }}</label>
+            {{ form.img_2 }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-4">
+            <label for="{{ form2.motivo_compra.mc }}">{{ form2.motivo_compra.label }}</label>
+            {{ form2.motivo_compra }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-12">
+            <label for="{{ form2.justificacion_compra.jc }}">{{ form2.justificacion_compra.label }}</label>
+            {{ form2.justificacion_compra }}
+        </div>
+    </div>
+    <div class="form-row" id="reemplazo_accion_div">
+        <div class="col-md-12">
+            <label for="{{ form2.reemplazo_accion.ra }}">{{ form2.reemplazo_accion.label }}</label>
+            {{ form2.reemplazo_accion }}
+        </div>
+        <div class="col-md-12">
+            <label for="{{ form2.reemplazo_observa.ro }}">{{ form2.reemplazo_observa.label }}</label>
+            {{ form2.reemplazo_observa }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12" style="margin-top: 10px;">
+            <button type="submit" class="btn btn-primary">Generar</button>
+        </div>
+    </div>
+</form>
+</div>
+<!-- <div style="float: right; width: 30%; padding: 0px 0px 0px 10px">
+    <h3>Contenido derecho</h3>
+</div> -->
+{% endblock %}
+
+{% block extrajs %}
+<script>
+    $("#reemplazo_accion_div").hide().val("");
+    // $("#reemplazo_accion_label").hide();
+    
+    $("#motivo_compra").change(function(){
+        var opcion = $(this).val();
+
+        if (opcion == "reemplazo_m" || opcion == "reemplazo_o")
+            $("#reemplazo_accion_div").show();
+        else
+            $("#reemplazo_accion_div").hide().val("");
+            // $("#reemplazo_accion_label").hide();
+    });
+
+    function ordenarSelect(id_componente)
+    {
+      var selectToSort = jQuery('#' + id_componente);
+      var optionActual = selectToSort.val();
+      selectToSort.html(selectToSort.children('option').sort(function (a, b) {
+        return a.text === b.text ? 0 : a.text < b.text ? -1 : 1;
+      })).val(optionActual);
+    }
+    $(document).ready(function () {
+      ordenarSelect('selectPaises');
+    });
+
+    function ordenarSelect(id_componente)
+    {
+      var selectToSort = jQuery('#' + id_componente);
+      var optionActual = selectToSort.val();
+      selectToSort.html(selectToSort.children('option').sort(function (a, b) {
+        return a.text === b.text ? 0 : a.text < b.text ? -1 : 1;
+      })).val(optionActual);
+    }
+    $(document).ready(function () {
+      ordenarSelect('tiempo_tipo');
+    });
+</script>
+{% endblock %}

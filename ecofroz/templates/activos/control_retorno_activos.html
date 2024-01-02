@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+{% load l10n %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row" style="margin-top: 25px;">
+    <div class="col-md 18 search">
+      <form class="form-inline my-2 my-lg-0" method="GET">
+          <input class="form-control mr-sm-2" type="text" size="45;" placeholder="Detalle, Serie, OT ó Empresa de Mantenimiento..." name="buscar">
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+      </form>
+    </div>
+    </div>
+  </div>
+
+<br>
+<table class="table table-hover table-dark table-striped table-sm container-fluid" style="table-layout:auto;">  
+  <thead>
+    <tr>
+      <td scope="col"><strong>Orden N°</strong></td>
+      <!-- <td scope="col"><strong>Requisición N°</strong></td> -->
+      <td scope="col"><strong>Solicitante</strong></td>
+      <td scope="col"><strong>Fecha Solicitud Salida</strong></td>
+      <td scope="col"><strong>Fecha Aprox Retorno</strong></td>
+      <td scope="col"><strong>Codigo Activo</strong></td>
+      <td scope="col"><strong>Tipo</strong></td>
+      <td scope="col"><strong>Serie</strong></td>
+      <td scope="col"><strong>Marca</strong></td>
+      <td scope="col"><strong>Detalle</strong></td>
+      <td scope="col"><strong>Motivo Salida</strong></td>
+      <td scope="col"><strong>Empresa Mantenimiento</strong></td>
+      <!-- <td scope="col"><strong>Gestión Bodega</strong></td> -->
+      <td scope="col"><strong>Estado</strong></td>
+      <td scope="col"><strong>Acciones</strong></td>
+    </tr>
+  </thead>
+  <tbody>
+  {% if form %}
+  {% for activo in form  %} 
+    <tr>
+      <td>{{ activo.id }}</td>
+      <!-- <td>{{ activo.orden_mantenimiento|unlocalize }}</td> -->
+      <td>{{ activo.solicitado_por }}</td>
+      <td>{{ activo.fecha_registro }}</td>
+      <td>{{ activo.fecha_estimada_retorno }}</td>
+      <td>{{ activo.activo_codigo }}</td>
+      <td>{{ activo.activo_tipo}}</td>
+      <td>{{ activo.activo_num_serie}}</td>
+      <td>{{ activo.marca }}</td>
+      <td>{{ activo.detalle_activo }}</td>
+      <td>{{ activo.motivo }}</td>
+      <td>{{ activo.empresa_mantenimiento }}</td>
+      
+      <!-- <td>{{ activo.pers_gestiona_bodega }}</td> -->
+      <td>{{ activo.estado }}</td>
+      <td>
+        {% if activo.estado == 'PENDIENTE' %}
+        <a class=" btn btn-success glyphicon glyphicon glyphicon-ok" href="{% url 'activos:aprueba_salida' activo.id %}"></a>
+        {% else %}
+        <a class=" btn btn-secondary glyphicon glyphicon glyphicon-ok" href="#"></a>
+        {% endif %}
+      </td>
+      <td>
+        {% if activo.estado == 'TRANSITO' %}
+        <a class=" btn btn-warning glyphicon glyphicon-transfer help-text='Registrar retorno'" href="{% url 'activos:cambia_retorno_activo' activo.id activo.estado %}"></a>
+        {% endif %}
+      </td>
+      <!-- <td><a class=" btn btn-warning glyphicon glyphicon-print help-text='Imprimir Guia de Salida'" href="{% url 'activos:imprime_guia_salida' activo.id %}"></a></td> -->
+    </tr>
+  {% endfor %}
+  {% else %}
+  <h1>No hay registros</h1>
+  {% endif %}
+  </tbody>
+</table>
+              
+<div class="pagination">
+  <span class="step-links">
+      {% if form.has_previous %}
+          <a href="?page=1">&laquo; inicio</a>
+          <a href="?activo_tipo={{ tipo }}&page={{ form.previous_page_number }}">previo</a>
+      {% endif %}
+
+      <span class="current">
+          Page {{ form.number }} of {{ form.paginator.num_pages }}.
+      </span>
+
+      {% if form.has_next %}
+          <a href="?activo_tipo={{ tipo }}&activo_ubicacion={{ ubicacion }}&page={{ form.next_page_number }}">próximo</a>
+          <a href="?page={{ form.paginator.num_pages }}">último &raquo;</a>
+      {% endif %}
+  </span>
+</div>
+            
+{% endblock content %}
+
+
+{% block extrajs %}
+  <script>
+    function limpiarFormulario() {
+      document.getElementById("form").reset();
+      document.getElementById("form2").reset();
+    }
+  </script>
+{% endblock %}

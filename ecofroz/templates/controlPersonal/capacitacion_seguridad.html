@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block extrahead %}
+{% load widget_tweaks %}
+
+
+<meta charset="utf-8">
+
+<style type="text/css">
+    #salida_activo li {
+     display:inline;
+     margin-left: -10px;
+     padding-left:3px;
+     padding-right:60px;
+    }
+</style> 
+{% endblock %}
+
+{% block title %}
+    <h2>Capacitación Seguridad Física</h2>
+{% endblock %}
+
+{% block content %}
+<!-- <div class="loader"></div> -->
+<div class="container" style="width: 85%; margin:auto; padding-top: 15px; margin-top: 10px; margin-bottom: 25px;">
+<h4>Capacitación Seguridad Física</h4>
+<br>
+<h4>Guardianía</h4>
+<a class="display-5" href="https://drive.google.com/file/d/1JwpiqjKVt1iuSLWyGcbY7BPhfqStpd8p/view?usp=sharing" target="_blank">Procedimiento para realizar el registro de Reporte Diario de Novedades (ECSEG-R-1.1-1)</h5>
+
+
+<br>
+<br>
+
+<div class="row">
+    <div class="col-md-4" style="margin-top: 10px;">
+        <a type="button" class="btn btn-primary button" href="{% url 'personal:listar_novedades' %}">Ir a Registro de Novedades</a>
+    </div>
+</div>
+</form>
+</div>
+
+
+
+
+
+{% endblock %}
+
+{% block extrajs %}
+
+
+
+
+
+{% endblock %}

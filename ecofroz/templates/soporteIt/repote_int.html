@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+<!-- {% load tz %} -->
+
+{% block content %}
+<div class="container" style="margin: 25px auto;">
+  <div class="row">
+    <div class="col-md-6 search">
+      <form class="form-inline my-2 my-lg-0" method="GET">
+        <input class="form-control mr-sm-2" type="text" placeholder="N° Pedido, Descripción" name="buscar" {% if busqueda %} value="{{ busqueda }}" {% endif %}>
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+        <a class="btn btn-secondary my-2 my-sm-0" style="margin-left: 10px;" href="{% url 'soporte:listar_soporte' %}"></button>Limpiar</a>
+      </form>
+    </div>
+    <div class="col-md-6">
+      <a class="btn btn-success rounded-circle" style="float: right;" href="{% url 'soporte:generar_ticket' %}">+</a>
+    </div>
+  </div>
+</div>
+<table class="table table-hover table-dark container" style="margin: 25px auto">
+    <thead>
+      <tr>
+        <th scope="col">Pedido N°</th>
+        <th scope="col">Solicitante</th>
+        <th scope="col">Fecha Solicitud</th>
+        <th scope="col">Tipo Soporte</th>
+        <th scope="col">Descripción</th>
+        <th scope="col">Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for pedido in form %}
+      <tr>
+        <td>{{ pedido.numticket }}</td>
+        <td>{{ pedido.solicita_nombre }} {{ pedido.solicita_apellido }}</td>
+        <td>{{ pedido.fch_solicita|date:'Y-m-d' }}</td>
+        <td>{{ pedido.tipo_problema }}</td>
+        <td>{{ pedido.descripcion_problema }}</td>
+        <td>{{ pedido.estado_solicitud }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

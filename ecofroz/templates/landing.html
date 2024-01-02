@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block extrahead %}
+<style type="text/css">
+  body {
+      background-image: url("/media/img/fondo3.png");
+      background-repeat: no-repeat;
+      /* background-position: center 50px; */
+      background-attachment: fixed;
+      background-size: cover;
+    }
+</style>
+{% endblock %}
+{% block title %}
+{% endblock %}
+
+{% block content %}
+<!-- <div style="float: right; margin-right: 25px; color: white;">
+  <h1 class="display-4" style="text-align: center; text-shadow: 2px 2px 4px #333333;">SIA</h1>
+  <h5 class="display-6" style="text-align: center; text-decoration: underline; text-shadow: 2px 2px 4px #333333;">Sistema Integrado Administrativo</h5>
+</div>   -->
+<!-- <div class="jumbotron container" style="margin-top: 25px;">
+  <h1 class="display-4" style="text-align: center; text-decoration-line: overline underline;">Bienvenidos al Sistema Ecofroz</h1>
+</div> -->
+<section class="py-5" style="margin-top: 50px;">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="card mb-4">
+          <img src="/media/img/administracion.png" class="card-img-top" alt="" width="200px" height="200px">
+          <div class="card-body">
+            <h2 class="card-title"  style="text-align: center; font-size: 18px;">SIA - SISTEMA INTEGRADO ADMINIS.</h2>
+            <!-- <p class="card-text">Hemeroteca, boblioteca virtual.</p> -->
+            <a href="{% url 'sia' %}" class="btn btn-primary">Acceder</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card mb4">
+          <img src="/media/img/prod.jpg" class="card-img-top" alt="" width="200px" height="200px">
+          <div class="card-body">
+            <h2 class="card-title" style="text-align: center; font-size: 18px;">SIE - SISTEMA INTEGRADO ECOFROZ</h2>
+            <!-- <p class="card-text">Sistema de Producción Alicia</p> -->
+            <a href="{% url 'cons' %}" class="btn btn-primary">Acceder</a>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="col-md-3">
+        <div class="card mb4">
+          <img src="/media/img/israel.jpg" class="card-img-top" alt="">
+          <div class="card-body">
+            <h2 class="card-title">Israel</h2>
+            <a href="#" class="btn btn-primary">Acceder</a>
+          </div>
+        </div>
+      </div> -->
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,280 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load l10n %}
+
+{% block extrahead %}
+
+<style>
+
+table {
+  border-collapse: collapse;
+  width: 100%;  
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+
+th {
+  background-color: #4CAF50;
+  color: white;
+}
+
+
+#tabla-reporte{
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#tabla-reporte td, #tabla-reporte th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#tabla-reporte tr:hover {background-color: #ddd;}
+#tabla-reporte tr:hover {background-color: #ddd;}
+
+#tabla-reporte th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}
+
+</style>
+
+
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="container-fluid">
+  <div class="row" style="margin-top: 25px;">
+    <div class="col-12">
+      <form class="form-inline my-2 my-lg-0" method="GET">
+        {% if busqueda %}
+          <input class="form-control mr-sm-2" type="text" size="50;" placeholder="Nombre ó Código del Proyecto..." name="buscar" value="{{busqueda}}">
+        {% else %}
+        <input class="form-control mr-sm-2" type="text" size="50;" placeholder="Nombre ó Código del Proyecto..." name="buscar">
+        {% endif %}  
+        <button class="btn btn-outline-secondary bi bi-search my-2 my-sm-0"  type="submit" title="buscar"></button>
+        <a class="btn btn-outline-secondary my-2 my-sm-0" style="margin-left:4px;" href="{% url 'parametrosglobales:parametros_proyectos' %}">Limpiar</a>
+       
+      </form>
+     
+    </div>
+    
+    </div>
+  </div>
+   
+  
+
+  <pre></pre>
+
+  <div class="col">
+   <div class="row">
+   
+  <div class="col-8">
+  
+    <table id="tabla-reporte">  
+      <thead>
+        <tr>
+            
+            <th scope="col"><strong>Código</strong></th>
+            <th scope="col"><strong>Proyecto</strong></th>
+            <th scope="col"><strong>Fecha Creación</strong></th>
+            <th scope="col"><strong>Fecha Modificación</strong></th>
+            <th scope="col"><strong>Crea/Modifica</strong></th>
+            <th scope="col"><strong>Activo</strong></th>
+            <!-- <th scope="col"><strong>Sub Sector</strong></th> -->
+            <th scope="col"><strong>Opción</strong></th>
+            <th style="background-color:white;border-color: white;"> <a class="btn btn-outline-secondary bi bi-plus-circle-dotted rounded-square" style="float:left;margin-top:-10px;"  title="Nuevo Proyecto" data-toggle="modal" data-target="#exampleModal" href=""></a></th>
+            <!-- <th style="background-color:white;border-color: white;"> <button class="btn btn-outline-secondary bi bi-save rounded-square" id="guarda-estados" style="float:left;margin-top:-10px;margin-left:-10px;" title="Guardar"  ></button></th> -->
+           
+        </tr>
+      </thead>
+    <tbody>
+      {% if queryset %}
+      {% for proyecto in queryset  %} 
+      
+        <tr class="fila">
+          <td>{{ proyecto.codigo_proyecto }}</td>
+          <td>{{ proyecto.nombre_proyecto }}</td>
+          <td>{{ proyecto.fecha_creacion | date:"l d, M Y"}}</td>
+          <td>{{ proyecto.fecha_modifica | date:"l d, M Y"}}</td>
+          <td>{{ proyecto.persona_edita }}</td>
+          
+          {% if proyecto.activo == True %}
+          <td style="text-align: center;"><a href="" class="bi bi-check" style="font-size:30px;"></a></td>
+          {% else %}
+          <td></td>
+          {% endif %}
+          
+        
+          <!-- <td style="align-content: center;"><a class="btn btn-outline-secondary bi bi-pencil-fill"  title="Editar {{proyecto.id}}" data-toggle="modal" data-target="#modal-div" data-whatever="@getbootstrap"></a></td> -->
+          <td style="align-content: center;"><a id="abrirmodal" onclick="actualizar('{{ proyecto.id }}')" class="btn btn-outline-secondary bi bi-pencil-fill"  title="Editar"></a></td>
+         
+        
+
+        </tr>
+      
+      
+     </div>
+    </div>
+  </div>
+  
+  {% endfor %}
+ 
+  {% endif %}
+
+  <div class="pagination">
+    <span class="step-links">
+        {% if queryset.has_previous %}
+            <a href="?page=1">&laquo; inicio</a>
+            <a href="?page={{ queryset.previous_page_number }}">previo</a>
+        {% endif %}
+  
+        <span class="current">
+            Página {{ queryset.number }} de {{ queryset.paginator.num_pages }}.
+        </span>
+  
+        {% if queryset.has_next %}
+            <a href="?page={{ queryset.next_page_number }}">próximo</a>
+            <a href="?page={{ queryset.paginator.num_pages }}">último &raquo;</a>
+        {% endif %}
+    </span>
+  </div>
+
+
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Registro de nuevo proyecto</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+        <form action="{% url 'parametrosglobales:registra_nuevo' %}" method="GET">
+          <label for="codigo_proyecto">Ingrese el Código del Proyecto</label>
+          <input type="text" class="form-control" name="codigo_proyecto" id="codigo_proyecto">
+          <label for="registro_proyecto">Ingrese el nombre del Proyecto</label>
+          <textarea class="form-control" name="registro_proyecto" id="registro_proyecto"  rows="3"></textarea>
+          <pre></pre>
+          
+       
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edita Proyecto</h5>
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+        <form action="{% url 'parametrosglobales:actualiza_estado_proyectos' %}" method="POST">
+          {% csrf_token %}
+          <h6>Código del Proyecto</h6>
+          <input type="text" class="form-control" name="codigo_proye" id="codigo_proye">
+          <pre></pre>
+          <h6>Nombre del Proyecto</h6>
+          <textarea class="form-control" name="registro_proyecto" id="proyecto"  rows="3"></textarea>
+         <input type="text" name="proyec" id="proyec" hidden>
+          
+          
+          <pre></pre>
+          <h6>Estado</h6>
+          <div class="form-group"> 
+            
+          
+            <div>
+                <input type="radio" name="radio" id="sipo"  value="SI" >
+                <label for="sipo">Activo</label>
+            
+                <input type="radio" name="radio" id="nope"  value="NO">
+                <label for="nope">No activo</label>
+              </div>   
+          
+        
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+
+
+
+ 
+
+  
+ 
+ 
+
+{% endblock content %}
+
+{% block extrajs %}
+<script>
+  jQuery(document).ready(function($){
+    $('*[data-href]').on('click', function(){
+      window.location = $(this).data("href");
+    });
+  });
+  
+  const resume_table = document.getElementById("tabla-reporte");
+  const tableRows = document.querySelectorAll('#tabla-reporte tr.fila');
+
+
+  function actualizar(id){
+    $.ajax({
+      url: '/parametrosglobales/ajaxcall/',
+      data:{
+        'id': id,
+      },
+      success: function(data) {
+        $.each(data, function(key, value){
+          $("#proyecto").val(value.proyecto);
+          $("#codigo_proye").val(value.codigo_proye);
+          $("#estado").val(value.estado);
+          $("#proyec").val(value.id);
+          if(value.estado == true){
+          $("#sipo").prop("checked", true);
+          $("#nope").prop("checked", false);
+          }
+          else{
+            $("#nope").prop("checked", true);
+            $("#sipo").prop("checked", false);
+          }
+        }); 
+        $("#exampleModal2").modal('show');
+      }
+    });
+  }
+
+
+</script>
+
+
+{% endblock %}

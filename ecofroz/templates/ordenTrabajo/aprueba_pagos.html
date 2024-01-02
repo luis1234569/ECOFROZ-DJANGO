@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}
+    <h2>Cotizar Ordenes de Pedidos</h2>
+{% endblock %}
+
+{% block extrahead %} 
+{% endblock %}
+
+{% block content %}
+<div class="loader"></div>
+    <div class="container" style="margin: 25px auto;">
+        <table class="table table-bordered table-sm">
+                <tbody>
+                  <tr>
+                    <th class="table-dark" scope="col" style="width: 25%;">N° de Pedido:</th>
+                    <td style='font-size: 11px;'>{{ orden.id }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Usuario Solicitante:</th>
+                    <td>{{ orden.usuario_solicita.first_name }} {{ orden.usuario_solicita.last_name }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Fecha de Solicitud:</th>
+                    <td>{{ orden.fch_genera }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Origen:</th>
+                    <td>{{ orden.get_origen_display }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Número:</th>
+                    <td>{{ orden.numero | default:"--" }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Documento:</th>
+                    <td><a class="card-link" href="/media/{{ orden.documento }}" target="_blank">{{ orden.documento }}</a></td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Observaciones Solicitante:</th>
+                    <td>{{ orden.observaciones_adqui }}</td>
+                  </tr>
+                </tbody>
+        </table>
+      <div class="dropdown-divider"></div>
+        <form class="modal-body" method="GET">
+          <div>
+            <h4 class="display-6">Observaciones/Recomendaciones</h4> 
+            <div>
+              <textarea class="form-control" id="message-text" name="text" rows="5"></textarea>
+            </div>
+          </div>
+          {% if orden.estado != 1 %}
+          <th><button type="submit" class="btn btn-primary" style="margin: 25px auto;" id="enviar" formaction="{% url 'trabajos:aprobado_pago' orden.id %}">Aprobar Pago</button></th>
+          <th><button type="submit" class="btn btn-danger" style="margin: 25px auto;" id="enviar" formaction="{% url 'trabajos:rechazado_pago' orden.id %}">Rechazar</button></th>
+          {% endif %}
+          <!-- {% if orden.estado == 1 %}
+          <th><button type="submit" class="btn btn-warning" style="margin: 25px auto;" id="enviar" formaction="#">Actualizar observaciones</button></th>
+          {% endif %} -->
+        </form>
+      </div>
+    </div>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+  $(window).on("load", function() {
+        $(".loader").fadeOut("slow");
+    });
+
+    $(document).ready(function() {    
+        $('#enviar').on('click', function(){
+            //Añadimos la imagen de carga en el contenedor
+            $(".loader").show();
+            $(window).on("load", function(){
+                $(".loader").fadeOut("slow");
+            });
+        });              
+    }); 
+</script>
+{% endblock %}

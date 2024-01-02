@@ -27,11 +27,16 @@ class activo_areas(models.Model):
 
     def __str__(self):
         return str(self.area_nombre)
+    
+class motivo(models.Model):
+    motivo= mo
 
 class solicita_puesto(models.Model):
-    nombre = models.CharField(max_length=20)
+    ubicacion= models.ForeignKey(activo_ubica, on_delete=models.CASCADE)
+    departamento= models.ForeignKey(activo_depar, on_delete=models.CASCADE)
+    area= models.ForeignKey(activo_areas, on_delete=models.CASCADE)
+    puesto = models.CharField(max_length=20)
     descripcion = models.CharField(max_length=255)
     justificacion = models.CharField(max_length=255)
-    
     def __str__(self):
         return str(self.nombre)

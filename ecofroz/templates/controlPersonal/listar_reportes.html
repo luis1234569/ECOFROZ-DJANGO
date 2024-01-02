@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% load tz %}
+
+{% block extrahead %}
+<style type="text/css">
+
+
+
+/* th, td {
+    border: 1px solid rgb(80, 84, 90);
+    word-wrap: break-word;
+    padding: 4px;
+}
+
+thead th {
+  width: 25%;
+} */
+
+.glyphicon.glyphicon-envelope {
+    font-size: 30px;
+    color:cadetblue;
+}
+
+
+
+</style>
+
+
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container" style="margin: 25px auto;">
+  <div class="row">
+    <div class="col-md 12 search">
+      <form class="form-inline my-2 my-lg-0" method="GET">
+        <input class="form-control mr-sm-2" style="margin-left:-95px;" type="text" size="38;" placeholder="N° Reporte, Asunto.." name="buscar" {% if busqueda %} value="{{ busqueda }}" {% endif %}>
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+        <a class="btn btn-secondary my-2 my-sm-0" style="margin-left: 10px;" href="{% url 'personal:listar_novedades' %}"></button>Limpiar</a>
+      </form>
+    </div>
+    
+      <div class="col-md-6">
+        {% if not perms.controlPersonal.supervisa_reporte_diario %} 
+        <a class="btn btn-lg btn-success rounded-circle" style="float: right;" title="Nuevo Reporte" href="{% url 'personal:ingreso_novedades' %}">+</a>
+        {% endif %}
+      </div>
+      <!-- <a class="btn btn-success" href="">Exportar Excel</a>
+      <a href="{% url 'trabajos:comprasdirectas' %}" class="btn btn-primary">Ver Compras Directas</a>
+      <a href="{% url 'trabajos:aprueba_pagos' %}" class="btn btn-warning">Ver Ordenes de Pago</a> -->
+    
+  </div>
+</div>
+<div style="width: 98%; margin: auto;">
+<table class=" table table-warning table-striped table-hover container">
+    <thead>
+      <tr>
+        <th scope="col">N°</th>
+        <th scope="col">Registra</th>
+        <th scope="col">Fecha Registro</th>
+        <th scope="col">Asunto</th>
+        <th scope="col" >Estado Reporte</th>
+        <th scope="col">Tiene Observaciones</th>        
+        <th scope="col">Ver</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for pedido in form %}
+    
+        <tr>
+        <td>{{ pedido.numreporte }}</td>
+        <td>{{ pedido.guardia1 }}</td>
+        <td>{{ pedido.fchregistro | date:'d M, Y H:m'  }}</td>
+        <td>{{ pedido.asunto  }}</td>
+        {% if pedido.estado == 1 %}
+        <td style="text-align:center"><a class="glyphicon glyphicon-time" style="font-size:30px;color:darkblue" title="Reporte en Construcción"></a></td>
+       {% elif pedido.estado == 2 %}
+       <td style="text-align:center"><a class="glyphicon glyphicon-eye-open" style="font-size:30px;color:darkolivegreen" title="Reporte Visto"></a></td>
+       {% elif pedido.estado == 3 %}
+       <td style="text-align:center"><a class="glyphicon glyphicon-lock" style="font-size:30px;color:chocolate" title="Reporte Recibido y Cerrado"></a></td>
+       
+       {% endif %}
+
+
+        {% if pedido.estado_observaciones_seg == True %}
+        <td style="text-align:center"><a class="glyphicon glyphicon-exclamation-sign" style="font-size:30px;color:crimson" title="El reporte tiene observaciones"></a></td>
+        {% else %}
+        <td style="text-align:center">--</td>
+        {% endif %}
+        <td style="text-align: center;"> 
+          
+            {% if not perms.controlPersonal.supervisa_reporte_diario %} 
+          <a href="{% url 'personal:editar_reporte' pedido.numreporte %}" class="btn glyphicon glyphicon-edit btn-warning"></a><br>
+          {% endif %}
+          
+          {% if perms.controlPersonal.supervisa_reporte_diario %}
+          <a href="{% url 'personal:ver_novedades' pedido.numreporte %}" title="Ver Reporte" class="btn glyphicon glyphicon-eye-open btn-primary"></a><br>
+          {% endif %}
+          {% for foto in pedido.detnovedades.all %}
+      
+          {% if foto.img_1  %}
+          
+          <a class="btn btn-dark glyphicon glyphicon-camera" title="Ver Fotos" href="{% url 'personal:gallery_view' pedido.numreporte %}"></a>
+          {{"<!--" }} 
+          {% endif %}
+          
+        {% endfor %}
+        {{"-->"}} 
+
+       </td> 
+      </tr>
+      {% endfor %}
+    </tbody>
+</table>
+</div>
+
+
+<div class="pagination">
+  <span class="step-links">
+      {% if form.has_previous %}
+          <a href="?page=1">&laquo; inicio</a>
+          <a href="?page={{ form.previous_page_number }}">previo</a>
+      {% endif %}
+
+      <span class="current">
+          Página {{ form.number }} de {{ form.paginator.num_pages }}.
+      </span>
+
+      {% if form.has_next %}
+          <a href="?page={{ form.next_page_number }}">próximo</a>
+          <a href="?page={{ form.paginator.num_pages }}">último &raquo;</a>
+      {% endif %}
+  </span>
+</div>
+
+
+
+{% endblock %}

@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+{% load l10n %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row" style="margin-top: 25px;">
+      <div class="row">
+        
+    <h5>Mis Solicitudes de Salida de Activos</h5>
+  
+    
+    <div class="col-md-8 search">
+      <form class="form-inline my-2 my-lg-0" method="GET">
+          <input class="form-control mr-sm-2" type="text" size="45;" placeholder="Detalle ó Empresa de Mantenimiento..." name="buscar">
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+      </form>
+    </div>
+    <div class="col-md-6">
+      
+    </div>
+  </div>
+  </div>
+</div>
+<br>
+<table class="table table-hover table-striped table-dark table-sm container-fluid" style="table-layout:auto;">  
+  <thead>
+    <tr>
+                    <tr>
+                        <td scope="col"><strong>Orden N°</strong></td>
+                        <td scope="col"><strong>Fecha Registro Salida</strong></td>
+                        <td scope="col"><strong>Cod. Activo</strong></td>
+                        <td scope="col"><strong>Tipo</strong></td>
+                        <td scope="col"><strong>Marca</strong></td>
+                        <td scope="col"><strong>Detalle</strong></td>
+                        <td scope="col"><strong>Motivo</strong></td>
+                        <td scope="col"><strong>Empresa Mantenimiento</strong></td>
+                        <td scope="col"><strong>Estado Activo</strong></td>
+                        <td scope="col"><strong>Opción</strong></td>
+                    </tr>
+                </thead>
+              <tbody>
+                {% if form %}
+                {% for activo in form  %} 
+            
+
+                <tr style="background-color: lightslategrey;"> 
+                      <td>{{ activo.id }}</td>
+                      <td>{{ activo.fecha_registro }}</td>
+                      <td>{{ activo.activo_codigo }}</td>
+                      <td>{{ activo.activo_tipo}}</td>
+                      <td>{{ activo.marca | default:"--" }}</td>
+                      <td>{{ activo.detalle_activo }}</td>
+                      <td>{{ activo.get_sale_por_display | default:"--" }}</td>
+                      <td>{{ activo.empresa_mantenimiento }}</td>
+                      <td>{{ activo.estado }}</td>
+                      <td>
+                       
+                        <a class=" btn btn-primary glyphicon glyphicon-print help-text='Imprimir Guia de Salida'" target="_blank" title="Imprimir Guía de Salida de Activos" href="{% url 'activos:imprime_guia_salida_agri' activo.id %}"></a>
+                    
+                      </td>
+                    </tr>
+              
+             
+              {% endfor %}
+              
+              {% else %}
+              <h1>No hay registros</h1>
+              
+              {% endif %}
+              </tbody>
+              
+              </table>
+              
+              <div class="pagination">
+                <span class="step-links">
+                    {% if form.has_previous %}
+                        <a href="?page=1">&laquo; inicio</a>
+                        <a href="?activo_tipo={{ tipo }}&page={{ form.previous_page_number }}">previo</a>
+                    {% endif %}
+              
+                    <span class="current">
+                        Page {{ form.number }} of {{ form.paginator.num_pages }}.
+                    </span>
+              
+                    {% if form.has_next %}
+                        <a href="?activo_tipo={{ tipo }}&activo_ubicacion={{ ubicacion }}&page={{ form.next_page_number }}">próximo</a>
+                        <a href="?page={{ form.paginator.num_pages }}">último &raquo;</a>
+                    {% endif %}
+                </span>
+              </div>
+            
+{% endblock content %}
+
+
+{% block extrajs %}
+  <script>
+    function limpiarFormulario() {
+      document.getElementById("form").reset();
+      document.getElementById("form2").reset();
+    }
+  </script>
+{% endblock %}

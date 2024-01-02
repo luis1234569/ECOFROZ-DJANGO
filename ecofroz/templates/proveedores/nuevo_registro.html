@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="jumbotron container" style="width: 85%; margin-top: 25px;">
+  <h2 class="display-5">Registro Proveedores</h2>
+  <br>
+
+  <h3 class="display-5">1. Seleccione la Categoría del Proveedor</h3>
+  
+  <br>
+
+
+  <form action="{% url 'proveedores:render_template_x_tipo_proveedor' %}" method="GET">
+  {% csrf_token %}
+    <div class="form-row" style="width: 65%;">         
+      <div class="form-group col-md-6" >
+        <label for="{{ form2.categoria_proveedor.label }}">{{ form2.categoria_proveedor.label }}</label>   
+        {% render_field form2.categoria_proveedor class="form-control" onChange="form.submit();" style="width: 65% margin-left:10px"; %}      
+      </div>
+  </form>
+</div>
+
+{% endblock content %}

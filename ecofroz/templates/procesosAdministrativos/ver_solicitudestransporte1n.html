@@ -1,0 +1,245 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load tz %}
+
+
+{% block extrahead %}
+
+
+{% endblock %}
+
+{% block content %}
+<div class="loader"></div>
+<div class="container-fluid" style="width: 75%; margin:auto; margin-top: 20px; margin-bottom: 20px;">
+        <h5 class="display-6">Detalle de Solicitud de Transporte, Encomiendas, Vales.</h5>
+        <p>
+                <p>
+        
+        
+        <div class="form-row">
+                <div class="form-group col-md-10" >
+
+                        <label><b><u>Información de la Solicitud: </u></b></label>
+                        {% if solic.numpedido.estado1n == 2  %}
+                        <table class=" table table-sm table-secondary table-striped table-responsive{-sm|-md|-lg|-xl|-xxl}" style="margin: 10px auto">
+                        {% else %}
+                        <table class=" table table-sm table-warning table-striped table-responsive{-sm|-md|-lg|-xl|-xxl}" style="margin: 10px auto">
+                        {% endif %}  
+                        <thead>
+                                  
+                                </thead>
+                                <tbody>
+                                
+                                  <tr>
+                                    <td><b>Solicitud N°</b></td>
+                                    <td><b>{{ solic.numpedido.numpedido }}</b></td>
+                                  </tr>
+                                  <tr>
+                                    <td>Solicitante</td>
+                                    <td>{{ solic.numpedido.usuario_solicita }}</td>
+                                  </tr>
+
+                                  <tr>
+                                    <td><b>Ubicación</b></td>
+                                    <td>{{ solic.numpedido.ubica }}</td>
+                                  </tr>
+
+                                  <tr>
+                                        <td>Fecha Solicitud</td>
+                                        <td>{{ solic.numpedido.fchsolicita | timezone:"America/Guayaquil" | date:'d M, Y H:i'}}</td>
+                                  </tr>
+
+                                 
+                                  
+                                  <tr>
+                                        <td>Tipo Solicitud</td>
+                                        <td><b>{{ solic.numpedido.get_tipo_display }}</b></td>
+                                  </tr>
+
+                                  <tr>
+                                    <td>Beneficiario del Vale</td>
+                                    <td>{{ solic.numpedido.beneficiario_vale }}</td>
+                                  </tr>
+
+                                
+                                 {% if solic.numpedido.otra_ruta %}
+                                 <tr>
+                                  <td>Ruta</td>
+                                  <td>N/A</td>
+                               </tr>
+
+                                 <tr>
+                                  <td>Otra Ruta</td>
+                                  <td>{{ solic.numpedido.otra_ruta }} </td>
+                               </tr>
+                               {% else %}
+                               <tr>
+                                <td>Ruta</td>
+                                <td>{{ solic.numpedido.ruta.origen }} => {{ solic.numpedido.ruta.destino }}</td>
+                             </tr>
+
+                                 {% endif %}
+
+                                 {% if solic.numpedido.pasajero %}
+                                 <tr>
+                                  <td>Tarifa Aproximada</td>
+                                  <td><b>{{ solic.numpedido.ruta.tarifa }}</b></td>
+                               </tr>
+                                
+                                 <tr>
+                                  <td>Pasajero</td>
+                                  <td>{{ solic.numpedido.pasajero }}</td>
+                                </tr>
+                                {% endif %}
+
+                                {% if solic.numpedido.otros_pasajeros %}
+                                <tr>
+                                  <td>Otros Pasajeros</td>
+                                  <td>{{ solic.numpedido.otros_pasajeros }}</td>
+                                </tr>
+                                {% endif %}
+
+                                
+                                <tr>
+                                  <td>Fecha Evento</td>
+                                  <td>{{ solic.numpedido.fchevento | timezone:"America/Guayaquil" | date:'d M, Y H:i' }}</td>
+                                </tr>
+                               
+
+                            <tr>
+                              <td>Justificación</td>
+                              <td>{{ solic.numpedido.justificacion }}</td>
+                        </tr>
+
+                          {% if solic.img_1 %}
+                      <tr>
+                        <td>Imagen 1:</td>
+                        <td>
+                          <a class="card-link" href="#" data-toggle="modal" data-target="#img_1" data-whatever="@getbootstrap">{{ solic.img_1 }} </a>
+                      <div class="modal fade" id="img_1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-xl" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div>
+                                  <img src="/media/{{ solic.img_1 }}" class="img-thumbnail rounded" alt="...">
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      {% endif %}
+                      {% if solic.img_2 %}
+                      <tr>
+                        <td>Imagen 2:</td>
+                        <td>
+                          <a class="card-link" href="#" data-toggle="modal" data-target="#img_2" data-whatever="@getbootstrap">{{ solic.img_2 }} </a>
+                      <div class="modal fade" id="img_2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-xl" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div>
+                                  <img src="/media/{{ solic.img_2 }}" class="img-thumbnail rounded" alt="...">
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      {% endif %}
+
+
+
+
+
+                                </tbody>
+                            </table>
+                        
+                          </div>
+                        </div>      
+
+                      
+        
+        
+
+        <!-- <div class="form-row">
+          <div class="form-group col-md-10" >
+
+          <label><b><u>Justificación: </u></b></label>
+          <textarea class="form-control" name="justificacion" id="justificacion" cols="30" rows="4" readonly>{{solic.numpedido.justificacion}}</textarea>
+          </div>
+        </div>
+        
+                 
+         {% render_field solic.usuario_modifica value=user.username class="form-control" readonly="True"   %} -->
+       
+        
+        <form method="POST">
+          {% csrf_token %}
+              {% if solic.numpedido.estado1n == 2  %}
+              <a type="button" style="margin-left: 3px;" class="btn btn-info"  href="{% url 'procesosadministrativos:listar_aprueba_1n' %}">Regresar</a>
+             {% else %}
+             <button type="submit" class="btn btn-info"  id="enviar" name="enviar"  >Autorizar</button>
+               <a type="button" style="margin-left: 3px;" class="btn btn-secondary" data-toggle="modal" data-target="#negarModal" data-whatever="@getbootstrap" href="">Rechazar</a>
+            {% endif %}
+        </div>
+        </form>
+
+<div class="modal fade" id="negarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel" style="color: black;">Observaciones Rechazo de Solicitudes de Transporte, Vales</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form class="modal-body"  method="POST">
+        {% csrf_token %}
+        
+          <div>
+            <label for="notas">Observaciones:</label>
+          </div>  
+          <div> 
+            <textarea class="form-control" id="notas_rechazo" name="notas_rechazo" rows="5" required></textarea>
+          </div>
+
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-primary" id="enviar" name="enviar">Rechazar con Observaciones</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+{% endblock content %}
+
+{% block extrajs %}
+<script>
+  $(window).on("load", function() {
+        $(".loader").fadeOut("slow");
+    });
+
+    $(document).ready(function() {    
+        $('#enviar').on('click', function(){
+            //Añadimos la imagen de carga en el contenedor
+            $(".loader").show();
+            $(window).on("load", function(){
+                $(".loader").fadeOut("slow");
+            });
+        });              
+    });    
+</script>
+
+{% endblock %}

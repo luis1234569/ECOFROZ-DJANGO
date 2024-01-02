@@ -1,0 +1,675 @@
+<nav class="navbar navbar-expand-lg sticky-top navbar-light bg-light" id="nav">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+          <li>
+            <!-- <a class="nav-link bi bi-house-fill" href="http://192.168.27.118/" title="Home"></a> -->
+            <a class="nav-link bi bi-house-fill" href="{% url 'landing' %}" title="Home"></a>
+          </li>
+          <li class="nav-item dropdown">
+            {% if perms.ordenPedido.acceso_pedidos %}
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Requisiciones
+            </a>
+            {% endif %}
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              {% if perms.ordenPedido.acceso_pedidos %}
+              <li class="dropdown-submenu">
+                <a class="dropdown-item dropdown-toggle" href="#">Requisición de Activos</a>
+                <ul class="dropdown-menu">
+                  <li>
+                    {% if perms.ordenPedido.view_ordenespedidos %}
+                      <a class="dropdown-item" href="{% url 'ordenpedido:listar_ordenes' %}">Ingreso Requisiciones</a>
+                    {% endif %}  
+                  </li>
+                  <li>
+                    {% if perms.ordenPedido.aprueba_ordenespedidos %}
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="{% url 'ordenpedido:aprueba_ordenes' %}">Aprobación</a>
+                    {% endif %}
+                  </li>
+                  <li>
+                    {% if perms.ordenPedido.selecciona_cotizapedido %}
+                      <a class="dropdown-item" href="{% url 'ordenpedido:selec_cotiza' %}">Ordenes Cotizadas</a>
+                    {% endif %}
+                  </li>
+                  <li>
+                    {% if perms.ordenPedido.view_cotizapedido %}
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="{% url 'ordenpedido:cotiza_pedidos' %}">Cotización</a>
+                      <a class="dropdown-item" href="{% url 'ordenpedido:ver_compras' %}">Compras</a>
+                    {% endif %}
+                  </li>
+                  <li>
+                    {% if perms.ordenPedido.genera_ordenescompra %}
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="{% url 'ordenpedido:ordenescompra' %}">Autorización Compra</a>
+                      <a class="dropdown-item" href="{% url 'ordenpedido:anular_orden' %}">Anulación de Ordenes</a>
+                    {% endif %}
+                  </li>
+                  <li>
+                    {% if perms.ordenPedido.activa_activos %}
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="{% url 'ordenpedido:activaciones' %}">Activación de Activos</a>
+                    {% endif %}
+                    {% if perms.ordenPedido.facturacion %}
+                      <a class="dropdown-item" href="{% url 'ordenpedido:compras_conta' %}">Compras</a>
+                    {% endif %}
+                  </li>
+                  <li>
+                    {% if perms.ordenPedido.preguntas_experto %}
+                    <!-- <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{% url 'ordenpedido:listar_preguntas_experto' %}">Preguntas Rol Experto</a> -->
+                    {% endif %}
+                  </li>
+                </ul>
+              </li>
+              {% endif %}
+              {% if perms.ordenPedido.acceso_pedidos %}
+              <li class="dropdown-submenu">
+                <a class="dropdown-item dropdown-toggle" href="#">Requisición de Servicios</a>
+                <ul class="dropdown-menu">
+                  <li>
+                    {% if perms.ordenPedido.view_ordenespedidos %}
+                      <a class="dropdown-item" href="{% url 'trabajos:listar_trabajos' %}">Ingreso Requisiciones</a>
+                    {% endif %}
+                      <!-- <a class="dropdown-item" href="{% url 'trabajos:carga-mba' user.id %}">Pedidos MBA</a> -->
+                    {% if perms.ordenPedido.facturas_laboratorio %}
+                      <a class="dropdown-item" href="{% url 'trabajos:listar_pedidos_laboratorio'  %}">Facturas Servicios Calidad</a>
+                    {% endif %}
+                    {% if perms.ordenTrabajo.supervisa_ordenes %}
+                      <a class="dropdown-item" href="{% url 'trabajos:supervisa_pedido' %}">Supervisión de Pedidos</a>
+                    {% endif %}
+                    {% if perms.ordenTrabajo.supervisa_ordenes_ga %}
+                      <a class="dropdown-item" href="{% url 'trabajos:supervisa_pedido1' %}">Supervisión de Pedidos GA</a>
+                    {% endif %}
+                    {% if perms.ordenTrabajo.supervisa_ordenes2 %}
+                      <a class="dropdown-item" href="{% url 'trabajos:supervisa_pedido2' %}">Supervisión de Pedidos 2N</a>
+                    {% endif %}
+                  </li>
+                  <li>
+                    {% if perms.ordenPedido.aprueba_ordenespedidos %}
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="{% url 'trabajos:aprueba_trabajos' %}">Aprobación</a>
+                    {% endif %}
+                  </li>
+                  <li>
+                    {% if perms.ordenPedido.selecciona_cotizapedido %}
+                      <a class="dropdown-item" href="{% url 'trabajos:selec_cotiza' %}">Ordenes Cotizadas</a>
+                    {% endif %}
+                  </li>
+                  <li>
+                    {% if perms.ordenPedido.view_cotizapedido %}
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="{% url 'trabajos:cotiza_trabajos' %}">Cotización</a>
+                      <a class="dropdown-item" href="{% url 'trabajos:ver_compras' %}">Compras</a>
+                    {% endif %}
+                  </li>
+                  <li>
+                    {% if perms.ordenPedido.genera_ordenescompra %}
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="{% url 'trabajos:ordenescompra' %}">Autorización Compra</a>
+                      <a class="dropdown-item" href="{% url 'trabajos:anular_ordenes' %}">Anulación de Ordenes</a>
+                    {% endif %}
+                    {% if perms.ordenPedido.facturacion %}
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="{% url 'trabajos:compras_conta' %}">Compras</a>
+                    {% endif %}
+                  </li>
+                  <li>
+                    {% if perms.ordenPedido.preguntas_experto %}
+                    <!-- <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{% url 'trabajos:listar_preguntas_experto' %}">Preguntas Rol Experto</a> -->
+                    {% endif %}
+                  </li>
+
+                </ul>
+              </li>
+              {% endif %}
+
+              {% if perms.ordenTrabajo.reporte_requisiciones_por_proyecto %}
+              <li class="dropdown-submenu">
+                <a class="dropdown-item dropdown-toggle" href="#">Reportes</a>
+                <ul class="dropdown-menu">
+                  <li>
+                    
+                      <a class="dropdown-item" href="{% url 'trabajos:reporte_proyectos' %}">Requisiciones por Proyecto</a>
+                     
+                  </li>
+               </ul>
+              </li>
+              {% endif %} 
+
+              {% if perms.ordenTrabajo.view_cotizapedido %}
+              <li class="dropdown-submenu">
+                <a class="dropdown-item dropdown-toggle" href="#">Solicitudes</a>
+                <ul class="dropdown-menu">
+                  <li>
+                    
+                      <a class="dropdown-item" href="{% url 'trabajos:listar_solicitudes_anticipos' %}">Solicitud Anticipos</a>
+                      <a class="dropdown-item" href="{% url 'trabajos:listar_aprueba_anticipos_1n' %}">Aprueba Anticipos</a>
+                      <a class="dropdown-item" href="{% url 'trabajos:listar_gestiona_anticipos_2n' %}">Gestiona Anticipos</a>
+
+                  </li>
+               </ul>
+              </li>
+              {% endif %} 
+
+            </ul> 
+          </li>
+          {% if perms.activos.acceso_activos %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Activos
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <!-- <a class="dropdown-item" href="{% url 'activos:registro_nuevov2' %}">Ingreso de Activo</a> -->
+              {% if perms.activos.consulta_edita %}
+                <a class="dropdown-item" href="{% url 'activos:listar_activos' %}">Busqueda de Activos</a>
+              {% endif %}
+              {% if perms.activos.mis_activos %}
+                <a class="dropdown-item" href="{% url 'activos:listar_mis_activos' %}">Mis Activos en Custodio</a>
+              {% endif %}
+              {% if perms.activos.genera_código %}
+                <a class="dropdown-item" href="{% url 'activos:registro_nuevov2' %}">Registro Manual de Activos</a>
+              {% endif %}
+              {% if perms.activos.custom_rep1 %}
+                <a class="dropdown-item" href="{% url 'activos:listar_bajas' %}">Bajas, donaciones, ventas</a>
+              {% endif %}
+              {% if perms.activos.consulta_activos_en_taller %}
+                <a class="dropdown-item" href="{% url 'activos:busqueda_activos_mantenimiento' %}">Activos en Taller</a>
+              {% endif %}
+              {% if perms.activos.movimiento_activos %}
+                <a class="dropdown-item" href="{% url 'activos:busqueda_salida' %}">Movimiento de Activos</a>
+              {% endif %}
+              <!-- <a class="dropdown-item" href="{% url 'activos:busqueda_salida_agr' %}">Movimiento de Activos Proyectos Agrícolas</a> -->
+              {% if perms.activos.autorizacion_salida_activos %}
+                <a class="dropdown-item" href="{% url 'activos:lista_autoriza_dep' %}">Autorización de Salida Activos</a>
+              {% endif %}
+              {% if perms.activos.control_salida_activos %}
+                <a class="dropdown-item" href="{% url 'activos:control_retorno_activos' %}">Control Salida de Activos</a>
+              {% endif %}
+              {% if perms.activos.descargo_activos %}
+                <a class="dropdown-item" href="{% url 'activos:listar_entregas_activos' %}">Descargo de Activos, Custodios</a>
+              {% endif %}
+              {% if perms.activos.change_desc_activo %}
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{% url 'activos:filtrar_activos' %}">Reportes</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{% url 'activos:ultimos_movimientos' %}">Ultimas Modificaciones</a>
+              {% endif %}
+              <!-- Reportes Custom para Jefe de Bodega -->
+              {% if perms.activos.custom_rep1 %} 
+                <a class="dropdown-item" href="{% url 'activos:filtrar_activos2' %}">Reportes</a>
+                {% endif %}
+            </div>
+          </li>
+          {% endif %}
+          <li class="nav-item dropdown">
+            {% if perms.proveedores.acceso_proveedores %}
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Proveedores
+              </a>
+            {% endif %}
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <!-- <a class="dropdown-item" href="{% url 'proveedores:nuevo_registro' %}">Ingreso de Proveedor</a> -->
+            {% if perms.proveedores.acceso_provisional %}
+              <a class="dropdown-item" href="{% url 'proveedores:listar_proveedores' %}">Busqueda y Registro</a>
+              <!-- <a class="dropdown-item" href="{% url 'proveedores:ver_proceso_calificacion' %}">Resumen Proceso de Calificación</a> -->
+            {% endif %}
+            {% if perms.proveedores.lista_adqui %}
+              <!-- <a class="dropdown-item" href="{% url 'proveedores:listar_proveedores_para_adqui' %}">Calificación Interna Ecofroz</a> -->
+            {% endif %}
+            {% if perms.proveedores.acceso_rev_calidad %}
+              <!-- <a class="dropdown-item" href="{% url 'proveedores:listar_proveedores_para_calidad' %}">Revisión de Proveedores Calidad </a> -->
+            {% endif %}
+            {% if perms.proveedores.acceso_provisional %}
+              <a class="dropdown-item" href="{% url 'proveedores:carga_respuestas' %}">Cargar nuevas respuestas</a>
+            {% endif %}
+            {% if perms.proveedores.acceso_auditorias %}
+              <a class="dropdown-item" href="{% url 'proveedores:auditoria' %}">Auditoria y Cambios</a>
+            {% endif %}
+            {% if perms.proveedores.acceso_provisional %}
+              <a class="dropdown-item" href="{% url 'proveedores:ver_preguntas' %}">Reportes</a>
+              <a class="dropdown-item" href="{% url 'proveedores:ver_expiracion_docs' %}">Control Expiración de Documentos</a>
+            {% endif %}
+            {% if perms.usuarios.ingreso_po %}
+              <a class="dropdown-item" href="http://192.168.27.118/prod/material_empaque/ingreso_poliza">Ingreso de Polizas</a>
+            {% endif %}
+            </div>
+          </li>
+          {% if perms.ordenPedido.menu_bodega %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Bodega
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="{% url 'activos:busqueda_movimientos_bodega' %}">Recepción de Activos</a>
+              <a class="dropdown-item" href="{% url 'activos:mueve_bodega' %}">Movimiento interno de Activos a Bodega</a>
+              <a class="dropdown-item" href="{% url 'ordenpedido:recepcion' %}">Registro/Entrega de Activos</a>
+              <a class="dropdown-item" href="{% url 'trabajos:recepcion' %}">Registro/Entrega de Insumos</a>
+              <!-- <a class="dropdown-item" href="{% url 'trabajos:pedidos_mba' %}">Pedidos MBA</a> -->
+              <a class="dropdown-item" href="{% url 'activos:solicitud_salida' %}">Salida de Activos</a>
+              
+              <!-- <a class="dropdown-item" href="{% url 'procesosadministrativos:carga_plan_agri' %}">Cargar Archivo Aplicaciones Semanales</a> -->
+              <!-- <a class="dropdown-item" href="{% url 'procesosadministrativos:gestiona_inventario_agri' %}">Saldos y Egresos Agrícola</a> -->
+              <!-- <a class="dropdown-item" href="{% url 'procesosadministrativos:registra_egreso' %}">Egresos Agrícolas</a> -->
+            </div>
+          </li>
+          {% endif %} 
+          {% if perms.controlPersonal.registro_personal or perms.controlPersonal.registro_contenedor or perms.controlPersonal.registro_ac or perms.controlPersonal.registro_lm or perms.controlPersonal.registro_reporte_diario %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Registros
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              {% if perms.controlPersonal.registro_personal %}
+                <a class="dropdown-item" href="{% url 'personal:registros' %}">Control Personal</a>
+              {% endif %}
+              {% if perms.controlPersonal.registro_ac %}
+                <a class="dropdown-item" href="{% url 'personal:registros_ac' %}">Ingreso Agua Clara</a>
+              {% endif %}
+              {% if perms.controlPersonal.registro_lm %}
+                <a class="dropdown-item" href="{% url 'personal:registros_lm' %}">Ingreso La Merced</a>
+              {% endif %}
+              <!-- {% if perms.controlPersonal.registro_ll %}
+              <a class="dropdown-item" href="{% url 'personal:registros_ll' %}">Ingreso La Laurita</a>
+              {% endif %} -->
+              {% if perms.controlPersonal.registro_la %}
+              <a class="dropdown-item" href="{% url 'personal:registros_la' %}">Ingreso La Avelina</a>
+              {% endif %} 
+              {% if perms.controlPersonal.registro_contenedor %}
+                <a class="dropdown-item" href="{% url 'personal:registro_contenedor' %}">Ingreso Contenedor</a>
+              {% endif %}
+              {% if perms.controlPersonal.registro_reporte_diario %}
+                <a class="dropdown-item" target="_blank" href="{% url 'personal:listar_novedades' %}">Bitácora Digital en linea</a>
+              {% endif %}
+            </div>
+          </li>
+          {% endif %}
+          {% if perms.controlPersonal.reporte_ingresos or perms.controlPersonal.reporte_contenedor or perms.ordenTrabajo.reporte_ga or perms.procesosAdministrativos.reportes_planta %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Reportes
+            </a>
+
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              {% if perms.procesosAdministrativos.reportes_planta %}
+              <li class="dropdown-submenu">
+                <a class="dropdown-item dropdown-toggle" href="#">Monitoreo Planta</a>
+                <ul class="dropdown-menu">
+                  <li>
+                        <!-- <li class="dropdown-submenu">
+                          <a class="dropdown-item dropdown-toggle" href="#">Raytec</a>
+                          <ul class="dropdown-menu">
+                             <li>
+                              <a class="dropdown-item" href="{% url 'procesosadministrativos:consulta_eventos_l1' %}">L1 Live</a>
+                              <a class="dropdown-item" href="{% url 'procesosadministrativos:consulta_eventos_l2' %}">L2 Live</a>
+                              <a class="dropdown-item" href="{% url 'procesosadministrativos:reporte_raytec' %}">Histórico</a>
+                              
+                              </li>
+                          </ul>
+                        </li> -->
+                        
+                        <li class="dropdown-submenu">
+                          <a class="dropdown-item dropdown-toggle" href="#">APA L3</a>
+                          <ul class="dropdown-menu">
+                             <li>
+                              <a class="dropdown-item" href="{% url 'procesosadministrativos:reporte_parecetico_l3' %}">Monitoreo</a>
+                             
+                              </li>
+                          </ul> 
+                        </li>
+
+                        <li class="dropdown-submenu">
+                          <a class="dropdown-item dropdown-toggle" href="#">CLORO L2</a>
+                          <ul class="dropdown-menu">
+                             <li>
+                              <a class="dropdown-item" href="{% url 'procesosadministrativos:reporte_cloro_l2' %}">Monitoreo</a>
+                             
+                              </li>
+                          </ul> 
+                        </li>
+
+
+                          <!-- <li class="dropdown-submenu">
+                            <a class="dropdown-item dropdown-toggle" href="#">ISHIDA</a>
+                            <ul class="dropdown-menu">
+                               <li>
+                                <a class="dropdown-item" href="{% url 'procesosadministrativos:reporte_ishida_r1' %}">R1</a>
+                                <a class="dropdown-item" href="{% url 'procesosadministrativos:reporte_ishida_r2' %}">R2</a>
+                                <a class="dropdown-item" href="{% url 'procesosadministrativos:reporte_ishida_r3' %}">R3</a>
+                                </li>
+                            </ul>
+                          </li> -->
+
+
+
+                  </li>
+                </ul>
+              </li>
+              {% endif %}
+              {% if perms.controlPersonal.busqueda_rapida %}
+                <a class="dropdown-item" href="{% url 'personal:reporte_tablet' %}">Búsqueda rápida Ingresos/Salidas </a>
+              {% endif %}
+              {% if perms.controlPersonal.reporte_ingresos %}
+                <a class="dropdown-item" href="{% url 'personal:reporte_ingresos' %}">Control Personal</a>
+              {% endif %}
+              {% if perms.controlPersonal.reporte_vehiculos %}
+                <a class="dropdown-item" href="{% url 'personal:reporte_vehiculos' %}">Control de Vehículos</a>
+              {% endif %}
+              {% if perms.controlPersonal.reporte_contenedor %}
+                <a class="dropdown-item" href="{% url 'personal:reporte_contenedor' %}">Ingreso Contenedores</a>
+              {% endif %}
+              {% if perms.ordenTrabajo.reporte_ga %}
+                <a class="dropdown-item" href="{% url 'trabajos:reporte_comprasga' %}">Compras Insumos/Trabajos</a>
+              {% endif %}
+
+              
+                
+              
+                 
+                 
+              
+               <!-- <a class="dropdown item" aria-labelledby="navbarDropdownMenuLink"></a>
+                <ul class="dropdown-submenu">
+                  <a class="dropdown-item dropdown-toggle" aria-labelledby="navbarDropdownMenuLink" href="#">Monitoreo Planta</a>
+                </ul> -->
+             
+              
+                <!-- <ul class="dropdown item" aria-labelledby="navbarDropdownMenuLink">
+                
+                  <ul class="dropdown-submenu">
+                    <a class="dropdown-item dropdown-toggle" href="#">Monitoreo Planta</a>
+                    <ul class="dropdown-menu">
+                      
+                        
+                          <li class="dropdown-submenu">
+                            <a class="dropdown-item dropdown-toggle" href="#">Línea 1</a>
+                            <ul class="dropdown-menu">
+                              
+                                
+                                  <li class="dropdown-submenu">
+                                    <a class="dropdown-item dropdown-toggle" href="#">Raytec</a>
+                                    <ul class="dropdown-menu">
+                                      <a class="dropdown-item" href="#">Eventos</a>
+                                      <a class="dropdown-item" href="#">Log</a>
+                                    </ul>
+                                  
+                                  </li>
+                              
+                            </ul>
+                          
+                          
+
+                            <a class="dropdown-item" href="#">Línea 2</a>
+                              <ul class="dropdown-menu">
+                              
+                                <li class="dropdown-submenu">
+                                  <a class="dropdown-item dropdown-toggle" href="#">Raytec2</a>
+                                  <ul class="dropdown-menu">
+                                    <a class="dropdown-item" href="#">Eventos</a>
+                                    <a class="dropdown-item" href="#">Log</a>
+                                  </ul>
+                                  
+                                </li>
+                              
+                              </ul>
+
+                              <a class="dropdown-item" href="#">Línea 3</a>
+                              <ul class="dropdown-menu">
+                              
+                                
+                                <li class="dropdown-submenu">
+                                  <a class="dropdown-item dropdown-toggle" href="#">Raytec3</a>
+                                  <ul class="dropdown-menu">
+                                    <a class="dropdown-item" href="#">Eventos</a>
+                                    <a class="dropdown-item" href="#">Log</a>
+                                  </ul>
+                                  
+                                </li>
+                              
+                              </ul>
+                          
+                      </li>
+                    </ul>
+                  </ul>
+                </ul>
+                 -->
+               
+    
+
+                </ul>
+          </li>
+          {% endif %}
+          {% if perms.controlPersonal.menu_ecofroz %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Ecofroz
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              {% if perms.controlPersonal.persona_directorio %}
+                <a class="dropdown-item" href="{% url 'personal:directorio' %}">Directorio Telefónico</a>
+              {% endif %}
+              {% if perms.controlPersonal.capacitacion %}
+                <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="">Capacitación</a>
+              {% if perms.controlPersonal.capacitacion_guardias %}
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="{% url 'personal:capacitacion_seguridad' %}">Seguridad Física</a></li>
+                </ul>
+              {% endif %}
+                </li>
+              {% endif %}
+
+               <!-- <li class="dropdown-submenu">
+                            <a class="dropdown-item dropdown-toggle" href="#">RRHH</a>
+                            <ul class="dropdown-menu">
+                               <li>
+                                <a class="dropdown-item" href="">Altas/Bajas personal</a>
+                                <a class="dropdown-item" href="">Cuadro Base</a>
+                                 <a class="dropdown-item" href="{% url 'procesosadministrativos:reporte_ishida_r3' %}">R3</a>
+                                </li>
+                            </ul>
+                          </li> -->
+            
+            </ul>
+          </li>
+          {% endif %}
+          {% if perms.usuarios.procesos %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Procesos
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              {% if perms.usuarios.desecho %}
+              <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Desecho & Donaciones</a>
+                <ul class="dropdown-menu">
+                  {% if perms.usuarios.ingresa_solicitud_desecho %}
+                    <li><a class="dropdown-item" href="http://192.168.27.118/prod/desecho/listar">Ingreso/Seguimiento de Solicitudes</a></li>
+                  {% endif %}
+                  {% if perms.usuarios.autoriza_1n_desecho %}
+                    <li><a class="dropdown-item" href="http://192.168.27.118/prod/desecho/aprueba1n">Autorización de Solicitudes Desecho</a></li>
+                  {% endif %}
+                  {% if perms.usuarios.autoriza_1n_donacion %}
+                    <li><a class="dropdown-item" href="http://192.168.27.118/prod/desecho/aprueba1ndona">Autorización de Solicitudes Donaciones</a></li>
+                  {% endif %}
+                  {% if perms.usuarios.autoriza_2n_desecho %}
+                    <li><a class="dropdown-item" href="http://192.168.27.118/prod/desecho/aprueba2n">Salida de Desecho & Donaciones</a></li>
+                  {% endif %}
+                  {% if perms.usuarios.salida_desecho_guardias %}
+                    <li><a class="dropdown-item" href="http://192.168.27.118/prod/desecho/confirma_salida_garita">Salida Desecho & Donaciones</a></li>
+                  {% endif %}
+                  {% if perms.usuarios.reporte_general_desecho %}
+                    <li><a class="dropdown-item" href="http://192.168.27.118/prod/desecho/reporte_solicitudes">Reporte General de Desecho</a></li>
+                  {% endif %}
+                </ul>
+              </li>
+              {% endif %}
+              {% if perms.trabajosInternos.acceso_trabajos_internos %}
+              <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Ordenes de Trabajo Internas</a>
+                <ul class="dropdown-menu">
+                  <li>
+                  {% if perms.trabajosInternos.ingresa_trabajos_internos %}
+                    <a class="dropdown-item" href="{% url 'trabajosinternos:listar_trabajos_internos' %}">Ingreso/Seguimiento de Solicitudes</a>
+                  {% endif %}
+                  {% if perms.trabajosInternos.autoriza_solicitudes_trabajos_internos %}
+                    <a class="dropdown-item" href="{% url 'trabajosinternos:listar1n' %}">Autorización de Solicitudes</a>
+                  {% endif %}
+                  {% if perms.trabajosInternos.gestiona_solicitudes_trabajos_internos %}
+                    <a class="dropdown-item" href="{% url 'trabajosinternos:listar2n' %}">Recepción/Confirmación de Solicitudes</a>
+                  {% endif %}
+                  {% if perms.trabajosInternos.asignaciones_mantenimiento_trabajos_internos %}
+                  <a class="dropdown-item" href="{% url 'trabajosinternos:listar_mantenimiento' %}">Asignaciones Mantenimiento</a>
+                  {% endif %}
+                  </li>
+                </ul>
+              </li>
+              {% endif %}
+
+              
+              {% if perms.usuarios.materia_prima %}
+              <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Materia Prima</a>
+                <ul class="dropdown-menu">
+                  {% if perms.usuarios.inspeccion_materia_prima %}
+                    <li><a class="dropdown-item" href="http://192.168.27.118/prod/recepcionmp/listar_inicio">Inspección y Muestreo</a></li>
+                    <li><a class="dropdown-item" href="http://192.168.27.118/prod/recepcionmp/listar_inspeccion_ac/">Inspección Tr. Agua Clara</a></li>
+                    <li><a class="dropdown-item" href="http://192.168.27.118/prod/recepcionmp/reportes_insp">Fichas de Inspección</a></li>
+                  {% endif %}
+                </ul>
+              </li>
+              {% endif %}
+              {% if perms.usuarios.control_limpieza %}
+              <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Control de Limpieza</a>
+                <ul class="dropdown-menu">
+                  {% if perms.usuarios.ingreso_parametros_cl %}
+                    <li><a class="dropdown-item" href="http://192.168.27.118/prod/control_limpieza/ingreso_tipo">Ingreso Tipo Documento</a></li>
+                    <li><a class="dropdown-item" href="http://192.168.27.118/prod/control_limpieza/ingreso_ubicacion">Ingreso Ubicación</a></li>
+                    <li><a class="dropdown-item" href="http://192.168.27.118/prod/control_limpieza/ingreso_punto_control">Ingreso Punto Control</a></li>
+                  {% endif %}
+                  {% if perms.usuarios.ingreso_programacion_cl %}
+                    <li><a class="dropdown-item" href="http://192.168.27.118/prod/control_limpieza/ingreso_programacion">Ingreso Programación</a></li>
+                  {% endif %}
+                  {% if perms.usuarios.documento_cl %}
+                    <li><a class="dropdown-item" href="http://192.168.27.118/prod/control_limpieza/lista_control">Generación de Control de Limpieza</a></li>
+                  {% endif %}
+                  <li><a class="dropdown-item" href="http://192.168.27.118/prod/control_limpieza/lista_reporte">Reportes de Control de Limpieza</a></li>
+                </ul>
+              </li>
+              {% endif %}
+              {% if perms.usuarios.material_empaque %}
+              <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Material de Empaque</a>
+                <ul class="dropdown-menu">
+                  {% if perms.usuarios.lista_me %}
+                    <li><a class="dropdown-item" href="http://192.168.27.118/prod/material_empaque/lista_me">Ingreso Material de Empaque</a></li>
+                    <li><a class="dropdown-item" href="http://192.168.27.118/prod/material_empaque/reporte_list">Reporte de Material de Empaque</a></li>
+                  {% endif %}
+                </ul>
+              </li>
+              {% endif %}
+              {% if perms.activos.rehistro_salida_activos %}
+                <a class="dropdown-item" href="{% url 'activos:salida_activo' %}">Salida de Activos</a>
+              {% endif %}
+
+              <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Transporte</a>
+                <ul class="dropdown-menu">
+                  
+                  {% if perms.procesosAdministrativos.edicion_rutas_transporte %}
+                    <li><a class="dropdown-item" href="{% url 'procesosadministrativos:administra_eventos' %}">Administración</a></li>
+                   {% endif %}
+                   {% if perms.procesosAdministrativos.solicitudes_transporte %}
+                    <li><a class="dropdown-item" href="{% url 'procesosadministrativos:listar_solicitudes_transporte' %}">Solicitud de Transporte</a></li>
+                    {% endif %} 
+                    {% if perms.procesosAdministrativos.autorizaciones_transporte %}
+                    <li><a class="dropdown-item" href="{% url 'procesosadministrativos:listar_aprueba_1n' %}">Autorización Transporte, Vales</a></li>
+                    {% endif %} 
+                    {% if perms.procesosAdministrativos.vales_combustible %}
+                    <li><a class="dropdown-item" href="{% url 'procesosadministrativos:gestiona_vales' %}">Recepción Solicitud Vales Combustible</a></li>
+                    {% endif %}   
+                    {% if perms.procesosAdministrativos.reporte_transporte %}
+                    <li><a class="dropdown-item" href="{% url 'procesosadministrativos:reporte_transporte' %}">Reporte de Transporte</a></li>
+                    {% endif %}   
+                    {% if perms.activos.rehistro_salida_activos %}
+                    <li><a class="dropdown-item" href="{% url 'procesosadministrativos:verifica_salida_autorizada' %}">Verificación de Salida Personal</a></li>
+                    {% endif %}
+                  </ul>
+              </li>
+
+            </ul>
+          </li> 
+
+          
+
+
+
+
+
+
+          {% endif %}
+          {% if user.is_authenticated %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Opciones
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <!-- <li><a class="dropdown-item" href="#">Parametros Seguridad</a></li> -->
+              <a class="dropdown-item" href="{% url 'password_change' %}">Cambiar Contraseña</a>
+              {% if perms.controlPersonal.registro_chofer %}
+                <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Opciones de Seguridad</a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'personal:listar_chofer' %}">Choferes</a></li>
+                    <li><a class="dropdown-item" href="{% url 'personal:listar_vadministrativos' %}">Vehículos Administrativos</a></li>
+                  
+                  </ul>
+                </li>
+              {% endif %}
+              {% if perms.parametrosGlobales.edicion_proyectos_conta %}
+              <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Parámetros Contabilidad</a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="{% url 'parametrosglobales:parametros_proyectos' %}">Proyectos</a></li>
+                </ul>
+              </li>
+              {% endif %}
+              
+              {% if perms.procesosAdministrativos.edicion_rutas_transporte %}
+              <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Parámetros Administración</a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="{% url 'parametrosglobales:parametros_rutas' %}">Rutas Transporte</a></li>
+                </ul>
+              </li>
+              {% endif %}
+              
+              
+              {% if perms.usuarios.productos_me %}
+                <a class="dropdown-item" href="http://192.168.27.118/prod/material_empaque/producto_list">Productos ME</a>
+              {% endif %}
+
+                
+              {% if user.is_superuser %}
+              {% endif %}
+            </ul>
+          </li>
+          {% endif %}
+          <!-- {% if perms.soporteIt.soporte_interno %}
+          <li class="nav-item">
+          <a class="nav-link" href="{% url 'soporte:listar_soporte_int' %}">Soporte</a>
+          </li>
+          {% endif %} -->
+        </ul>
+        </div>
+        {% if user.is_authenticated %}
+        <div class="col-lg" style="text-align: right;"> 
+          <button type="button"  class="btn btn-outlined-secondary bi bi-bell position-relative"  style="font-size: 20px;" id="notif" onclick="noti('open')"></button>
+          <a href="#" onclick="logout()" id="profile"><img src="/media/img/bg/zorro.png" class="img-thumbnail rounded-circle" width="40" height="40" alt="..."></a>
+        </div>
+        {% else %}
+        <div class="col-mr-6 offset-md-4">
+          <!-- <img src="/media/img/bg/zorro.png" alt=""> -->
+          <a type="button" class="btn btn-outlined-secondary bi bi-box-arrow-in-right" title="Iniciar Sesión"  style="font-size: 20px;" onclick="login()"></a>
+          <!-- <input type="image" src="/media/img/bg/zorro.png"> -->
+        </div>
+        {% endif %}
+    </div>
+    </div>
+</nav>

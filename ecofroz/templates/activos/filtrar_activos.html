@@ -1,0 +1,470 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+
+{% block extrahead %}
+<!DOCTYPE html>
+<style>
+
+
+
+table {
+  border-collapse: collapse;
+  width: 100%;  
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+
+th {
+  background-color: #4CAF50;
+  color: white;
+}
+
+ul.opciones {
+  list-style-type:none;
+}
+
+input[type=text] {
+  border: none;
+  border-bottom: 1px solid #34bdeb ;
+  background-color: none;
+  outline: none;
+  box-shadow: none !important;
+  /* border: none; */
+  border-bottom-color: 1px solid #34bdeb  ;
+}
+
+.button {
+background-color: #4CAF50;
+border: none;
+color: white;
+padding: 4px 20px; */
+text-align: center;
+text-decoration: none;
+display: inline-block;
+font-size: 16px;
+margin: 4px 2px;
+cursor: pointer;
+border-radius: 4px;
+}
+
+.select-box {
+    -webkit-appearance: button;
+    -moz-appearance: button;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -webkit-padding-end: 20px;
+    -moz-padding-end: 20px;
+    -webkit-padding-start: 2px;
+    -moz-padding-start: 2px;
+    background-color: #faf9f7; /* Fallback color if gradients are not supported */
+    background-image: url(../images/select-arrow.png), -webkit-linear-gradient(top, #E5E5E5, #F4F4F4); /* For Chrome and Safari */
+    background-image: url(../images/select-arrow.png), -moz-linear-gradient(top, #E5E5E5, #F4F4F4); /* For old Firefox (3.6 to 15) */
+    background-image: url(../images/select-arrow.png), -ms-linear-gradient(top, #E5E5E5, #F4F4F4); /* For pre-releases of Internet Explorer  10*/
+    background-image: url(../images/select-arrow.png), -o-linear-gradient(top, #E5E5E5, #F4F4F4); /* For old Opera (11.1 to 12.0) */
+    background-image: url(../images/select-arrow.png), linear-gradient(to bottom, #E5E5E5, #F4F4F4); /* Standard syntax; must be last */
+    background-position: center right;
+    background-repeat: no-repeat;
+    border: 1px solid #AAA;
+    border-radius: 2px;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+    color:#262625;
+    font-size: inherit;
+    margin: 0;
+    overflow: hidden;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#tabla-reporte{
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#tabla-reporte td, #tabla-reporte th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#tabla-reporte tr:hover {background-color: #ddd;}
+#tabla-reporte tr:hover {background-color: #ddd;}
+
+#tabla-reporte th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}
+
+
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+<div class="loader"></div>
+  <div class=row>
+    <div class=col>
+ 
+    </div>
+  </div>
+  <form method="GET" id="form" >
+    {% csrf_token %}
+    <div class="row" style="margin-top: 15px;">
+    <div class="container-fluid" style="text-align:center">
+    <button type="button" class="btn btn-secondary glyphicon glyphicon-chevron-down"" data-toggle="collapse" data-target="#demo" title="Vea las opciones de reportes disponibles"></button>
+  </div>
+</div>
+ <div class="row" style="margin-top: 5px;"></div>
+  <div class="row"></div>
+  <!-- <div class="jumbotron container-fluid" id="demo" style="width: 97%;"> -->
+  <div class="container collapse" id="demo">
+    <div class="row">
+      <div class="col-8">
+        <h5>Reportes en <u>línea</u></h5>
+        <div class="col-34">
+          <ul class="opciones">
+          <li><input type="radio" id="xcodigo" name="seleccion" value="codigo" placeholder="Ingrese el código">
+          <label for="xcodigo">Por <u>Código</u>&nbsp;</label>{{ form2.activo_codigo }}<button class="button" type="submit" id="busca_activos" name="busca_activos">Buscar</button></li>
+          <li><input type="radio" id="xubicacion" name="seleccion" value="ubicacion">
+          <label for="xubicacion">Por <u>Ubicacion</u>&nbsp;</label>
+          
+      
+          {% render_field form2.activo_ubica class="select-box" onChange="form.submit();" %}</li>
+          
+          
+          <li><input type="radio" id="xgrupo" name="seleccion" value="grupo">
+            <label for="xgrupo">Por <u>Grupo</u>&nbsp;</label>{% render_field form2.activo_grupo class="select-box" onChange="form.submit();" %} </li>
+          <li><input type="radio" id="xtipo" name="seleccion" value="tipo">
+              <label for="xtipo">Por <u>Tipo</u>&nbsp;</label>{% render_field form2.activo_tipo class="select-box" onChange="form.submit();" %}</li>
+          <li><input type="radio" id="xdepartamento" name="seleccion" value="departamento">
+              <label for="xdepartamento">Por <u>Departamento</u>&nbsp;</label>{% render_field form2.activo_depar class="select-box" onChange="form.submit();" %}</li>
+          <li><input type="radio" id="xsector" name="seleccion" value="sector">
+              <label for="xsector">Por <u>Sector</u>&nbsp;</label>{% render_field form2.activo_area class="select-box" onChange="form.submit();" %}</li>
+          <li><input type="radio" id="xseguros" name="seleccion" value="seguros">
+              <label for="xseguros">Por Ubicación en <u>Archivo de seguros</u></label> {% render_field form2.pestanias_seguros class="select-box" onChange="form.submit();" %}
+            </li>
+          <li><input type="radio" id="xseguros_poliza" name="seleccion" value="seguros_poliza">
+              <label for="xseguros_poliza">Por <u>Póliza de Seguro asignada</u></label> {% render_field form2.poliza_seguros class="select-box" onChange="form.submit();" %}
+            </li> 
+       
+            <li><input type="radio" id="xcustodio" name="seleccion" value="custodio">
+              <label for="custodio">Por <u>Custodio</u></label>
+              <select name="custodio" id="custodio" class="select-box" onchange="form.submit();">
+                <option value="0" selected>----</option>
+                {% for i in personal %}
+                        <option value="{{ i.last_name }}">{{ i.last_name }}&nbsp;{{ i.first_name }}</option>
+                {% endfor %}
+              </select>
+            </li> 
+       
+       
+       
+          </ul>
+        
+        </div>
+
+      </div>
+
+        
+      <div class="col">
+        <h5>Reportes descarga <u>Excel</u></h5>
+        <a><u>Todos</u> los activos ({{ count }}) &nbsp;&nbsp;</a><a class="glyphicon glyphicon-circle-arrow-down" title="Descargar" href="{% url 'activos:dall' %}"></a><br><br>
+        <a><u>Dados de Baja</u>, Donados o Vendidos ({{bajas}}) &nbsp;&nbsp;</a><a class="glyphicon glyphicon-circle-arrow-down" title="Descargar" href="{% url 'activos:dbajas' %}"></a><br><br>
+        <a>Para <u>MBA</u>&nbsp;&nbsp;</a><a class="glyphicon glyphicon-circle-arrow-down" title="Descargar" href="{% url 'activos:to_mba' %}"></a>
+        <br>
+        <br>
+        <a><b>Total Activos con Fotografía: </b>({{cuenta_foto}})</a>
+        <br>
+        <a><b>Total Activos grabados: </b>({{cuenta_grab}})</a>
+        <br>
+        <a><b>Total Activos etiquetados: </b>({{cuenta_eti}})</a>
+      
+      </div>
+    </div>
+  </div>
+
+        </form>
+
+  {% if var %}
+  
+    
+    <div class="container-fluid">
+      <div class="row" style="margin-left: 6px;">
+      <h5 id="heading">Número de registros encontrados: {{ var }}&nbsp; </h5>
+    <a  href="{% url 'activos:to_excelclass' %}">[Exportar a Excel]</a>      
+  </div>
+</div>
+  <br>
+  {% endif %}
+  <div class="container-fluid">
+    <!-- <table class="table table-hover table-dark table-sm container-fluid" style="width:fit-content;"> -->
+      <table id="tabla-reporte">      
+      <thead>
+                    <tr>
+                        <th scope="col"><strong>No</strong></th>
+                        <th scope="col"><strong>Codigo</strong></th>
+                        <th scope="col"><strong>Parte de</strong></th>
+                        <th scope="col"><strong>Ubicación</strong></th>
+                        <th scope="col"><strong>Sector</strong></th>
+                        <!-- <th scope="col"><strong>Sub Sector</strong></th> -->
+                        <th scope="col"><strong>Descripción</strong></th>
+                        <th scope="col"><strong>Tipo</strong></th>
+                        <th scope="col"><strong>Marca</strong></th>
+                        <th scope="col"><strong>Modelo</strong></th>
+                        <th scope="col"><strong>Serie</strong></th>
+                        <th scope="col"><strong>Identificado</strong></th>
+                        <th scope="col"><strong>Foto</strong></th>
+                        <!-- <th scope="col"><strong>Valor Reposi</strong></th> -->
+                        <!-- <th scope="col"><strong>Ultima Modificacion</strong></th> -->
+                        <th scope="col"><strong>Opción</strong></th>
+                    </tr>
+                </thead>
+              <tbody>
+                {% if form %}
+                {% for activo in form  %} 
+                <!-- <tr data-href="{% url 'activos:editar_activos'  activo.desc_activo_codigo.id %}" style="cursor: pointer;"> -->
+                      <td>{{ forloop.counter0|add:form.start_index }}</td>
+                      <td>{{ activo.desc_activo_codigo.activo_codigo }}</td>
+                      <td>{{ activo.desc_activo_codigo.cod_activo_padre | default:"--" }}</td>
+                      <td>{{ activo.desc_activo_codigo.activo_ubica}}</td>
+                      <td>{{ activo.desc_activo_codigo.activo_area }}</td>
+                      <!-- <td>{{ activo.desc_activo_codigo.activo_subsec | default:"--" }}</td> -->
+                      <td>{{ activo.desc_activo_codigo.activo_descripcion }}</td>
+                      <td>{{ activo.desc_activo_codigo.activo_tipo }}</td>
+                      <td>{{ activo.desc_activo_marca | default:"--" }}</td>
+                      <td>{{ activo.desc_activo_modelo | default:"--" }}</td>
+                      <td>{{ activo.desc_activo_num_serie | default:"--" }}</td>
+                      <!-- <td>{{ activo.desc_activo_codigo.activo_valor | default:"" }}</td> -->
+                      <!-- <td>{{ activo.desc_activo_codigo.activo_fecha_modifica }}</td> -->
+                      <td>{{ activo.desc_activo_codigo.grabado }}</td>
+                      
+                      {% if activo.fotos %}
+                      <td>SI</td>
+                      {% else %}
+                      <td>--</td>
+                      {% endif %}
+                      
+                      <td style="align-content: center;"><a class=" btn btn-success glyphicon glyphicon-map-marker" title="Cambia Ubicación Activo" href="{% url 'activos:mover_activos' activo.desc_activo_codigo.id  %}"></a>
+                        <a class=" btn btn-warning glyphicon glyphicon-edit help-text=Editar" title="Editar" href="{% url 'activos:editar_activos'  activo.desc_activo_codigo.id %}"></a>
+                        <!-- <a class="btn btn-warning glyphicon glyphicon-thumbs-down" title="Dar de Baja" data-toggle="modal" data-target="#exampleModalAprob" data-whatever="@getbootstrap" ></a> -->
+                        <!-- {% if perms.activos.genera_código %} -->
+                        <!-- <a class="btn btn-primary glyphicon glyphicon-print" href="{% url 'ordenpedido:crea_pdf' activo.desc_activo_codigo.activo_codigo %}" target="_blank" title="Imprimir Código"></a> -->
+                        <a class="btn btn-dark glyphicon glyphicon-camera" title="Ver Galería" href="{% url 'activos:gallery_view' activo.desc_activo_codigo.id %}" target="_blank"></a>
+                        <!-- {% endif %} -->
+                      </td> 
+                  </tr>
+              
+               
+              {% endfor %}
+              
+              {% else %}
+              <h5>No hay registros</h5>
+              
+              {% endif %}
+              </tbody>
+              
+              </table>
+              
+              <div class="pagination">
+                <span class="step-links">
+                    {% if form.has_previous %}
+                        <a href="?activo_tipo={{ tipo }}&activo_ubica={{ ubicacion }}&activo_grupo={{ grupo }}&activo_depar={{ departamento }}&activo_area={{ area }}&pestanias_seguros={{ seguros }}&poliza_seguros={{ poliza }}&page=1">&laquo; inicio</a>
+                        <a href="?activo_tipo={{ tipo }}&activo_ubica={{ ubicacion }}&activo_grupo={{ grupo }}&activo_depar={{ departamento }}&activo_area={{ area }}&pestanias_seguros={{ seguros }}&poliza_seguros={{ poliza }}&page={{ form.previous_page_number }}">previo</a>
+                    {% endif %}
+              
+                    <span class="current">
+                        Page {{ form.number }} of {{ form.paginator.num_pages }}.
+                    </span>
+              
+                    {% if form.has_next %}
+                        <a href="?activo_tipo={{ tipo }}&activo_ubica={{ ubicacion }}&activo_grupo={{ grupo }}&activo_depar={{ departamento }}&activo_area={{ area }}&pestanias_seguros={{ seguros }}&poliza_seguros={{ poliza }}&page={{ form.next_page_number }}">próximo</a>
+                        <a href="?activo_tipo={{ tipo }}&activo_ubica={{ ubicacion }}&activo_grupo={{ grupo }}&activo_depar={{ departamento }}&activo_area={{ area }}&pestanias_seguros={{ seguros }}&poliza_seguros={{ poliza }}&page={{ form.paginator.num_pages }}">último &raquo;</a>
+                    {% endif %}
+                </span>
+              </div>
+            </div>
+{% endblock content %}
+
+
+
+
+{% block extrajs %}
+<script>
+
+  $("#id_activo_codigo").hide().val("");
+  $("#busca_activos").hide().val("");
+  $("#id_activo_ubica").hide().val("");
+  $("#id_activo_grupo").hide().val("");
+  $("#id_activo_tipo").hide().val("");
+  $("#id_activo_area").hide().val("");
+  $("#id_activo_depar").hide().val("");
+  $("#id_pestanias_seguros").hide().val("");
+  $("#id_poliza_seguros").hide().val("");
+  $("#custodio").hide().val("");
+    
+    
+  $("#xcodigo").on('click', xCodigo)
+  $("#xubicacion").on('click', xUbicacion)
+  $("#xgrupo").on('click', xGrupo)
+  $("#xtipo").on('click', xTipo)
+  $("#xdepartamento").on('click', xDep)
+  $("#xsector").on('click', xSec)
+  $("#xseguros").on('click', xSeg)
+  $("#xseguros_poliza").on('click', xSegPol)
+  $("#xcustodio").on('click', xCustodio)
+  
+//Funciones que ocultan listas de seleccion y campos
+  function xCodigo() {
+  $("#id_activo_codigo").show();
+  $("#busca_activos").show();
+  $("#id_activo_tipo").hide().val("");
+  $("#id_activo_grupo").hide().val("");
+  $("#id_activo_ubica").hide().val(""); 
+  $("#id_activo_depar").hide().val("");
+  $("#id_pestanias_seguros").hide().val("");
+  $("#id_activo_area").hide().val("");
+  $("#id_poliza_seguros").hide().val("");
+  $("#custodio").hide().val("");
+ 
+}
+
+function xUbicacion() {
+  $("#id_activo_ubica").show(); 
+  $("#id_activo_tipo").hide().val("");
+  $("#id_activo_grupo").hide().val(""); 
+  $("#id_activo_depar").hide().val("");
+  $("#id_pestanias_seguros").hide().val("");
+  $("#id_activo_codigo").hide().val("");
+  $("#busca_activos").hide().val("");
+  $("#id_activo_area").hide().val("");
+  $("#id_poliza_seguros").hide().val("");
+  $("#custodio").hide().val("");
+  
+}
+
+function xGrupo() {
+  $("#id_activo_grupo").show();
+  $("#id_activo_ubica").hide().val("");
+  $("#id_activo_tipo").hide().val(""); 
+  $("#id_activo_depar").hide().val("");
+  $("#id_pestanias_seguros").hide().val("");
+  $("#id_activo_codigo").hide().val("");
+  $("#busca_activos").hide().val("");
+  $("#id_activo_area").hide().val("");
+  $("#id_poliza_seguros").hide().val("");
+  $("#custodio").hide().val("");
+}
+  
+function xTipo() {
+  $("#id_activo_tipo").show();
+  $("#id_activo_grupo").hide().val("");
+  $("#id_activo_ubica").hide().val("");
+  $("#id_activo_depar").hide().val("");
+  $("#id_pestanias_seguros").hide().val("");
+  $("#id_activo_codigo").hide().val("");
+  $("#busca_activos").hide().val("");
+  $("#id_activo_area").hide().val("");
+  $("#id_poliza_seguros").hide().val("");
+  $("#custodio").hide().val("");
+  
+}
+
+function xDep() {
+  $("#id_activo_depar").show();
+  $("#id_activo_tipo").hide().val("");
+  $("#id_activo_grupo").hide().val("");
+  $("#id_activo_ubica").hide().val(""); 
+  $("#id_activo_codigo").hide().val("");
+  $("#busca_activos").hide().val("");
+  $("#id_activo_area").hide().val("");
+  $("#id_poliza_seguros").hide().val("");
+  $("#id_pestanias_seguros").hide().val("");
+  $("#custodio").hide().val("");
+}
+
+function xSec() {
+  $("#id_activo_area").show();
+  $("#id_activo_tipo").hide().val("");
+  $("#id_activo_grupo").hide().val("");
+  $("#id_activo_ubica").hide().val(""); 
+  $("#id_activo_codigo").hide().val("");
+  $("#busca_activos").hide().val("");
+  $("#id_activo_depar").hide().val("");
+  $("#id_poliza_seguros").hide().val("");
+  $("#id_pestanias_seguros").hide().val("");
+  $("#custodio").hide().val("");
+
+}
+
+function xSeg() {
+  $("#id_activo_tipo").hide().val("");
+  $("#id_activo_grupo").hide().val("");
+  $("#id_activo_ubica").hide().val(""); 
+  $("#id_activo_codigo").hide().val("");
+  $("#busca_activos").hide().val("");
+  $("#id_activo_depar").hide().val("");
+  $("#id_activo_area").hide().val("");
+  $("#id_pestanias_seguros").show();
+  $("#id_poliza_seguros").hide().val("");
+  $("#custodio").hide().val("");
+
+}
+
+function xSegPol() {
+  $("#id_poliza_seguros").show();
+  $("#id_activo_tipo").hide().val("");
+  $("#id_activo_grupo").hide().val("");
+  $("#id_activo_ubica").hide().val(""); 
+  $("#id_activo_codigo").hide().val("");
+  $("#busca_activos").hide().val("");
+  $("#id_activo_depar").hide().val("");
+  $("#id_activo_area").hide().val("");
+  $("#id_pestanias_seguros").hide().val("");
+  $("#custodio").hide().val("");
+
+}
+
+function xCustodio() {
+  $("#custodio").show();
+  $("#id_activo_codigo").hide().val("");
+  $("#busca_activos").hide();
+  $("#id_activo_tipo").hide().val("");
+  $("#id_activo_grupo").hide().val("");
+  $("#id_activo_ubica").hide().val(""); 
+  $("#id_activo_depar").hide().val("");
+  $("#id_pestanias_seguros").hide().val("");
+  $("#id_activo_area").hide().val("");
+  $("#id_poliza_seguros").hide().val("");
+ 
+}
+
+
+  $(window).on("load", function() {
+        $(".loader").fadeOut("slow");
+    });
+
+    $(document).ready(function() {    
+        $('#enviar').on('click', function(){
+            //Añadimos la imagen de carga en el contenedor
+            $(".loader").show();
+            $(window).on("load",function(){
+                $(".loader").fadeOut("slow");
+            });
+        });              
+    }); 
+
+   
+</script>
+{% endblock %}

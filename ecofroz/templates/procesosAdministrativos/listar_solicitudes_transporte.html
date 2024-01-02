@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+<!-- {% load tz %} -->
+
+{% block extrahead %}
+<style type="text/css">
+
+
+
+</style>
+
+
+
+{% endblock %}
+
+{% block content %}
+<div class="loader"></div>
+<div class="container" style="margin: 25px auto;">
+  <div class="row">
+    <div class="col-md 12 search">
+      <form class="form-inline my-2 my-lg-0" method="GET">
+        <input class="form-control mr-sm-2" style="margin-left:-95px;" type="text" size="40;" placeholder="Busque el número de Solicitud.." name="buscar" {% if busqueda %} value="{{ busqueda }}" {% endif %}>
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+        <a class="btn btn-secondary my-2 my-sm-0" style="margin-left: 3px;" href="{% url 'procesosadministrativos:listar_solicitudes_transporte' %}"></button>Limpiar</a>
+      </form>
+    </div>
+    
+      <div class="col-md-6">
+        
+          <a href="{% url 'procesosadministrativos:ver_rutas_fijas' %}" class="btn btn-outline-secondary" style="float:right; margin-left:3px;" title="Consulta Rutas Programadas">Consulta Rutas Programadas</a>
+          <a href="{% url 'procesosadministrativos:nueva_solicitud' %}" class="btn btn-outline-secondary" style="float:right" title="Nueva Solicitud">Nueva Solicitud</a>
+        
+        </div>
+        <!-- <a class="btn btn-lg btn-success rounded-circle" style="float: right;" title="Nueva Solicitud" href="">+</a> -->
+      </div>
+      <!-- <a class="btn btn-success" href="">Exportar Excel</a>
+      <a href="{% url 'trabajos:comprasdirectas' %}" class="btn btn-primary">Ver Compras Directas</a>
+      <a href="{% url 'trabajos:aprueba_pagos' %}" class="btn btn-warning">Ver Ordenes de Pago</a> -->
+    
+  </div>
+</div>
+<div style="width: 98%; margin: auto;">
+<table class=" table table-sm table-hover table-warning table-striped">
+    <thead>
+      <tr>
+        <th scope="col">N°</th>
+        <th scope="col">Solicita</th>
+        <th scope="col">Pasajero</th>
+        <th scope="col">Fecha Solicitud</th>
+        <th scope="col" style="text-align:center" >Tipo</th>
+        <th scope="col" style="text-align:center"  >Ruta</th>
+        <th scope="col" >Fecha Evento</th>
+        <th scope="col">Estado Aprobador</th>
+        <th scope="col">Estado Administración</th>
+        <!-- <th scope="col">Estado Mant</th> -->
+        <!-- <th scope="col">Observaciones Mant</th> -->
+        
+        
+        <th scope="col">Opciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for pedido in form %}
+    
+        <tr>
+        <td>{{ pedido.numpedido.numpedido }}</td>
+        <td>{{ pedido.numpedido.usuario_solicita }}</td>
+        <td>{{ pedido.numpedido.pasajero | default:"--" }}</td>
+        <td>{{ pedido.numpedido.fchsolicita|date:"M d, H:i" }}</td>
+        <td>{{ pedido.numpedido.get_tipo_display }}</td>
+        <td title="{{ pedido.numpedido.ruta.origen }} => {{ pedido.numpedido.ruta.destino }}">{{ pedido.numpedido.ruta | default:"--"}}</td>
+        <td>{{ pedido.numpedido.fchevento|date:"M d, H:i" }}</td>
+        {% if pedido.numpedido.estado1n == 2  %}
+        <td style="text-align: center;"><i class="glyphicon glyphicon-ok" style="font-size: 2rem; color:darkgreen" title="Aprobado"></i></td>
+        {% else %}
+        <td style="text-align: center;">--</td>
+        {% endif %}
+        
+        <!-- {% if pedido.numpedido.estado2n == 2 %}
+        <td style="text-align: center;"><i class="glyphicon glyphicon-wrench" style="font-size: 2rem; color:chocolate" title="En proceso"></i></td>
+        {% else %}
+        <td style="text-align: center;">--</td>
+        {% endif %} -->
+        
+        {% if pedido.numpedido.estado2n == 4 %}
+        <td style="text-align: center;"><i class="glyphicon glyphicon-ok" style="font-size: 2rem; color:blue" title="Confirmado"></i></td>
+        {% elif pedido.numpedido.estado2n == 2 %}
+        <td style="text-align: center;"><i class="glyphicon glyphicon-wrench" style="font-size: 2rem; color:chocolate" title="En proceso"></i></td>
+        {% elif pedido.numpedido.estado2n == 3 %}
+        <td style="text-align: center;"><i class="glyphicon glyphicon-transfer" style="font-size: 2rem; color:red" title="Devuelta, Notas del gestor: {{pedido.numpedido.observaciones_rechazo2n}}"></i></td>
+        
+        
+        {% else %}
+        <td style="text-align: center;">--</td>
+        {% endif %}
+
+       
+          
+
+
+      <td style="text-align: right">
+      
+        
+
+        {% if pedido.numpedido.estado1n != 2  %}
+          
+        <!-- <a href="{% url 'procesosadministrativos:edita_solicitudes' pedido.numpedido.numpedido %}" class="btn btn-warning glyphicon glyphicon-edit" title="Editar"></a> -->
+        <a href="{% url 'procesosadministrativos:anula' pedido.numpedido.numpedido %}" class="btn btn-warning glyphicon glyphicon-thumbs-down" title="Anular"></a>
+        
+        {% else %}
+
+        {% if pedido.numpedido.estado2n == 4 %}
+        <a href="{% url 'procesosadministrativos:ver_solicitudes' pedido.numpedido.numpedido %}" class="btn btn-primary glyphicon glyphicon-eye-open" title="Ver"></a>
+        <a href="{% url 'procesosadministrativos:imprime_autoriza_salida' pedido.numpedido.numpedido %}" class="btn btn-success glyphicon glyphicon-print" title="Imprimir permiso de salida"></a>
+        {% else %}
+        <!-- <a href="" class="btn btn-secondary glyphicon glyphicon-edit disabled" title="Editar"></a> -->
+        <!-- <a href="" class="btn btn-danger glyphicon glyphicon-thumbs-down disabled" title="Anular"></a> -->
+        <a href="{% url 'procesosadministrativos:ver_solicitudes' pedido.numpedido.numpedido %}" class="btn btn-primary glyphicon glyphicon-eye-open" title="Ver"></a>
+        {% endif %}
+        
+        {% endif %}
+      </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+</table>
+</div>
+
+
+<div class="pagination">
+  <span class="step-links">
+      {% if form.has_previous %}
+          <a href="?page=1">&laquo; inicio</a>
+          <a href="?page={{ form.previous_page_number }}">previo</a>
+      {% endif %}
+
+      <span class="current">
+          Page {{ form.number }} of {{ form.paginator.num_pages }}.
+      </span>
+
+      {% if form.has_next %}
+          <a href="?page={{ form.next_page_number }}">próximo</a>
+          <a href="?page={{ form.paginator.num_pages }}">último &raquo;</a>
+      {% endif %}
+  </span>
+</div>
+
+
+{% endblock %}
+
+{% block extrajs %}
+
+<script>
+
+  $(window).on("load",function() {
+        $(".loader").fadeOut("slow");
+    });
+
+    
+  </script>
+
+{% endblock %}

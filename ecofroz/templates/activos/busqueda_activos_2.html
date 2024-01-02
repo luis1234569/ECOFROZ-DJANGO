@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+
+
+
+{% block content %}
+
+
+<div class="container-fluid">
+  <div class="row" style="margin-top: 25px;">
+    <div class="col-md 18 search">
+      <form class="form-inline my-2 my-lg-0" method="GET">
+          <input class="form-control mr-sm-2" type="text" size="50;" placeholder="Código, Descripción, Custodio, Serie, Cod MBA..." name="buscar">
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+      </form>
+    </div>
+    {% if perms.activos.add_desc_activo %}
+    <div class="col-md-6">
+      <a class="btn btn-success rounded-circle" style="float: right;" title="Nuevo Registro" href="{% url 'activos:registro_nuevov2' %}">+</a>
+    </div>
+    {% endif %}
+    </div>
+  </div>
+</div>
+<br>
+<table class="table table-hover table-dark table-sm container-fluid" style="width: 98%;">  
+  <thead>
+    <tr>
+        <td scope="col" style="width: 35px;"><strong>No</strong></td>
+        <td scope="col"><strong>Codigo</strong></td>
+        <td scope="col"><strong>Parte de</strong></td>
+        <td scope="col"><strong>Ubicación</strong></td>
+        <td scope="col"><strong>Sector</strong></td>
+        <td scope="col"><strong>Sub Sector</strong></td>
+        <td scope="col"><strong>Descripción</strong></td>
+        <td scope="col"><strong>Tipo</strong></td>
+        <td scope="col"><strong>Marca</strong></td>
+        <td scope="col"><strong>Modelo</strong></td>
+        <td scope="col"><strong>Serie</strong></td>
+        <td scope="col"><strong>Valor Reposi</strong></td>
+        <td scope="col" ><strong>Estado</strong></td>
+        <th colspan="3">Opciones</th>
+    </tr>
+  </thead>
+<tbody>
+  {% if form %}
+  {% for activo in form  %} 
+  
+    <tr {% if perms.activos.change_desc_activo %}data-href="{% url 'activos:editar_activos'  activo.desc_activo_codigo.id %}" style="cursor: pointer;"{% endif %}> 
+      <td>{{ forloop.counter0|add:form.start_index }}</td>
+      <td>{{ activo.desc_activo_codigo.activo_codigo }}</td>
+      <td>{{ activo.desc_activo_codigo.cod_activo_padre }}</td>
+      <td>{{ activo.desc_activo_codigo.activo_ubica}}</td>
+      <td>{{ activo.desc_activo_codigo.activo_area | default:"--" }}</td>
+      <td>{{ activo.desc_activo_codigo.activo_subsec | default:"--" }}</td>
+      <td>{{ activo.desc_activo_codigo.activo_descripcion| default:"--" }}</td>
+      <td>{{ activo.desc_activo_codigo.activo_tipo }}</td>
+      <td>{{ activo.desc_activo_marca | default:"--" }}</td>
+      <td>{{ activo.desc_activo_modelo | default:"--" }}</td>
+      <td>{{ activo.desc_activo_num_serie | default:"--" }}</td>
+      <td>{{ activo.desc_activo_codigo.activo_valor| default:"" }}</td>
+      <td>{{ activo.desc_activo_codigo.activo_estado }}</td>
+      {% if perms.activos.change_desc_activo %}
+      <td><a class=" btn btn-success glyphicon glyphicon-map-marker" title="Cambia Ubicación Activo" href="{% url 'activos:mover_activos' activo.desc_activo_codigo.id  %}"></a></td>
+      <td><a class=" btn btn-primary glyphicon glyphicon-edit help-text=Editar" title="Editar" href="{% url 'activos:editar_activos'  activo.desc_activo_codigo.id %}"></a></td> 
+      {% endif %}
+      
+      <td><a style="margin-left:-105px;margin-top:40px;" class="btn btn-warning glyphicon glyphicon-thumbs-down" title="Dar de Baja" href="{% url 'activos:dar_baja' activo.desc_activo_codigo.id activo.desc_activo_codigo.activo_estado %}"></a></td> 
+      
+      {% if perms.activos.delete_desc_activo %}
+      <td><a style="margin-left:-61px;margin-top:40px;" class="btn btn-danger glyphicon glyphicon-trash" title="Eliminar" href="{% url 'activos:eliminar_activos' activo.desc_activo_codigo.id %}"></a></td> 
+      {% endif %}
+    </tr>
+    
+{% endfor %}
+
+{% else %}
+<h1>No hay registros</h1>
+
+{% endif %}
+</tbody>
+
+</table>
+
+<div class="pagination">
+  <span class="step-links">
+      {% if form.has_previous %}
+          <a href="?activo_tipo={{ tipo }}&activo_ubica={{ ubicacion }}&activo_grupo={{ grupo }}&activo_depar={{ departamento }}&activo_area={{ area }}&page=1">&laquo; inicio</a>
+          <a href="?activo_tipo={{ tipo }}&activo_ubica={{ ubicacion }}&activo_grupo={{ grupo }}&activo_depar={{ departamento }}&activo_area={{ area }}&page={{ form.previous_page_number }}">previo</a>
+      {% endif %}
+
+      <span class="current">
+          Page {{ form.number }} of {{ form.paginator.num_pages }}.
+      </span>
+
+      {% if form.has_next %}
+          <a href="?activo_tipo={{ tipo }}&activo_ubica={{ ubicacion }}&activo_grupo={{ grupo }}&activo_depar={{ departamento }}&activo_area={{ area }}&page={{ form.next_page_number }}">próximo</a>
+          <a href="?activo_tipo={{ tipo }}&activo_ubica={{ ubicacion }}&activo_grupo={{ grupo }}&activo_depar={{ departamento }}&activo_area={{ area }}&page={{ form.paginator.num_pages }}">último &raquo;</a>
+      {% endif %}
+  </span>
+</div>
+</div>
+
+{% endblock content %}
+
+{% block extrajs %}
+<script>
+  jQuery(document).ready(function($){
+    $('*[data-href]').on('click', function(){
+      window.location = $(this).data("href");
+    });
+  });
+  // $("#container").on('click-row.bs.table', function(e, row, $element){
+  //   window.location = $(this).data('url');
+  // });
+</script>
+{% endblock %}

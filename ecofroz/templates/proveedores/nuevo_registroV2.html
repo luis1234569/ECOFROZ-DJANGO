@@ -1,0 +1,246 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="jumbotron container" style="width: 85%; margin-top: 25px;">
+  <h2 class="display-5">Registro Proveedores</h2>
+  <p></p>
+  
+
+<form action="{% url 'proveedores:nuevo_registro' %}"method="POST" enctype="multipart/form-data">
+{% csrf_token %}
+  <div class="form-row">  
+      
+      <div class="form-group col-md-6" >
+        <label for="{{ form.respondio_encuesta.label }}">{{ form.respondio_encuesta.label }}</label> 
+        {{ form.respondio_encuesta }}
+        </div> 
+
+        <div class="form-group col-md-6" >
+          <label for="{{ form.fake.label }}"></label> 
+        
+          </div> 
+
+
+      <div class="form-group col-md-9" >
+               <label for="{{ form.nombre_empresa.label }}">{{ form.nombre_empresa.label }}</label>  
+               {{ form.nombre_empresa }} 
+      </div>
+
+      <div class="form-group col-md-3" >
+        <label for="{{ form.ruc.label }}">{{ form.ruc.label }}</label> 
+        {{ form.ruc }}
+      </div> 
+
+      <div class="form-group col-md-9" >
+        <label for="{{ form.nombre_comercial.label }}">{{ form.nombre_comercial.label }}</label>  
+        {{ form.nombre_comercial }} 
+      </div>
+
+      <div class="form-group col-md-3" >
+        <label for="{{ form.calificacion.label }}">{{ form.calificacion.label }}</label> 
+        {{ form.calificacion }}
+        
+  </div> 
+
+  <div class="form-group col-md-12" >
+    <label for="{{ form2.giro_negocio.label }}">{{ form2.giro_negocio.label }}</label> 
+    {{ form2.giro_negocio }}
+</div> 
+
+  <div class="form-group col-md-6" >
+    <label for="{{ form2.actividad.label }}">{{ form2.actividad.label }}</label> 
+    {{ form2.actividad }}
+  </div> 
+
+      <div class="form-group col-md-4" >
+        <label for="{{ form.categoria.label }}">{{ form.categoria.label }}</label> 
+        {{ form.categoria }}
+    </div>
+
+    <div class="form-group col-md-2" >
+      <label for="{{ form2.empresa_tipo.label }}">{{ form2.empresa_tipo.label }}</label> 
+      {{ form2.empresa_tipo }}
+    </div> 
+
+
+      <div class="form-group col-md-6" >
+               <label for="{{ form.direccion_matriz.label }}">{{ form.direccion_matriz.label }}</label> 
+                {{ form.direccion_matriz }}
+      </div> 
+      <div class="form-group col-md-6" >
+              <label for="{{ form.horario_trabajo.label }}">{{ form.horario_trabajo.label }}</label> 
+                {{ form.horario_trabajo }}
+      </div>      
+      <div class="form-group col-md-4" >
+              <label for="{{ form.representante_legal.label }}">{{ form.representante_legal.label }}</label> 
+                {{ form.representante_legal }}
+              
+      </div>       
+      
+
+      <div class="form-group col-md-3" >
+        <label for="{{ form.telefono.label }}">{{ form.telefono.label }}</label> 
+        {{ form.telefono }}
+      
+      </div> 
+
+      <div class="form-group col-md-3" >
+        <label for="{{ form.celular.label }}">{{ form.celular.label }}</label> 
+        {{ form.celular }}
+        
+      </div> 
+
+      <div class="form-group col-md-2" >
+        <label for="{{ form.estado.label }}">{{ form.estado.label }}</label> 
+        {{ form.estado }}
+        <br>
+  </div> 
+
+      <div class="form-group col-md-6" >
+        <label for="{{ form.nombre_contacto_ecofroz.label }}">{{ form.nombre_contacto_ecofroz.label }}</label> 
+        {{ form.nombre_contacto_ecofroz }}
+        
+    </div> 
+  
+   
+    <div class="form-group col-md-3" >
+      <label for="{{ form2.monto_ventas_2018.label }}">{{ form2.monto_ventas_2018.label }}</label> 
+      {{ form2.monto_ventas_2018 }}
+  </div> 
+
+  <div class="form-group col-md-3" >
+    <label for="{{ form2.ventas_ecofroz_2018.label }}">{{ form2.ventas_ecofroz_2018.label }}</label> 
+    {{ form2.ventas_ecofroz_2018 }}
+  </div> 
+
+  <div class="form-group col-md-2" >
+    <label for="{{ form2.antiguedad.label }}">{{ form2.antiguedad.label }}</label> 
+    {{ form2.antiguedad }}
+</div> 
+
+<div class="form-group col-md-3" >
+  <label for="{{ form2.num_trabajadores_fijos.label }}">{{ form2.num_trabajadores_fijos.label }}</label> 
+  {{ form2.num_trabajadores_fijos }}
+</div> 
+
+<div class="form-group col-md-3" >
+  <label for="{{ form2.num_clientes.label }}">{{ form2.num_clientes.label }}</label> 
+  {{ form2.num_clientes }}
+</div> 
+
+<div class="form-group col-md-3" >
+  <label for="{{ form2.num_proveedores.label }}">{{ form2.num_proveedores.label }}</label> 
+  {{ form2.num_proveedores }}
+</div> 
+
+<div class="form-group col-md-8" >
+  <label for="{{ form2.valores_empresa.label }}">{{ form2.valores_empresa.label }}</label> 
+  {{ form2.valores_empresa }}
+</div> 
+
+<div class="form-group col-md-4" >
+  <label for="{{ form2.fake.label }}"></label> 
+ 
+</div> 
+
+<div class="form-group col-md-3" >
+  <label for="{{ form2.tieneweb.label }}">{{ form2.tieneweb.label }}</label> 
+  {{ form2.tieneweb }}
+</div> 
+
+<div class="form-group col-md-6" >
+  <label for="{{ form2.web.label }}">{{ form2.web.label }}</label> 
+  {{ form2.web }}
+</div> 
+
+
+
+<div class="form-group col-md-3" >
+  <label for="{{ form2.anios_como_proveedor.label }}">{{ form2.anios_como_proveedor.label }}</label> 
+  {{ form2.anios_como_proveedor }}
+</div> 
+
+
+
+
+<div class="form-group col-md-8" >
+  <label for="{{ form2.otra_actividad.label }}">{{ form2.otra_actividad.label }}</label> 
+  {{ form2.otra_actividad }}
+</div> 
+
+<div class="form-group col-md-3" >
+  <label for="{{ form2.fake.label }}"></label> 
+</div> 
+
+ 
+<div class="form-group col-md-2" >
+  <label for="{{ form2.subcontrata.label }}">{{ form2.subcontrata.label }}</label> 
+  {{ form2.subcontrata }}
+</div> 
+
+<div class="form-group col-md-8" >
+  <label for="{{ form2.fake.label }}"></label> 
+</div> 
+
+<div class="form-group col-md-8" >
+  <label for="{{ form2.actividades_subcontrtadas.label }}">{{ form2.actividades_subcontratadas.label }}</label> 
+  {{ form2.actividades_subcontratadas }}
+</div> 
+
+  {% if form2 %} 
+  <!-- <div class="form-group col-md-8" >
+    <br>
+    <h3>Para uso interno de Ecofroz S.A</h3>
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.cumple_procedimiento_facturacion.label }}">{{ form2.cumple_procedimiento_facturacion.label }}</label> 
+    {{ form2.cumple_procedimiento_facturacion }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.cumple_procedimiento_entrega.label }}">{{ form2.cumple_procedimiento_entrega.label }}</label> 
+    {{ form2.cumple_procedimiento_entrega }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.cumple_procedimiento_compra.label }}">{{ form2.cumple_procedimiento_compra.label }}</label> 
+    {{ form2.cumple_procedimiento_compra }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.antecedentes_verificados_rep_legal.label }}">{{ form2.antecedentes_verificados_rep_legal.label }}</label> 
+    {{ form2.antecedentes_verificados_rep_legal }}
+    <br>
+    <br>
+  </div> -->
+
+
+
+  {% endif %}
+
+
+
+</div>
+
+
+
+<div class="row" style="width:40%">
+    <button type="submit" style="margin-top:5px; margin-left:25px;" class="btn btn-primary btn-lg">Guardar</button>
+<br>
+<br>
+</div>
+<br>
+<br>
+
+</form>
+</div>
+
+
+{% endblock content %}

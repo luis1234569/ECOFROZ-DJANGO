@@ -1,0 +1,442 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load l10n %}
+{% load widget_tweaks %}
+
+{% block extrahead %}
+
+<style>
+
+<!DOCTYPE html>
+<style>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+table {
+  border-collapse: collapse;
+  width: 100%;  
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+
+th {
+  background-color: #4CAF50;
+  color: white;
+}
+
+ul.opciones {
+  list-style-type:none;
+}
+
+input[type=text] {
+  border: none;
+  border-bottom: 1px solid #34bdeb ;
+  background-color: none;
+  outline: none;
+  box-shadow: none !important;
+  /* border: none; */
+  border-bottom-color: 1px solid #34bdeb  ;
+}
+
+.button {
+background-color: #4CAF50;
+border: none;
+color: white;
+padding: 4px 20px; */
+text-align: center;
+text-decoration: none;
+display: inline-block;
+font-size: 16px;
+margin: 4px 2px;
+cursor: pointer;
+border-radius: 4px;
+}
+
+.select-box {
+    -webkit-appearance: button;
+    -moz-appearance: button;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -webkit-padding-end: 20px;
+    -moz-padding-end: 20px;
+    -webkit-padding-start: 2px;
+    -moz-padding-start: 2px;
+    background-color: #faf9f7; /* Fallback color if gradients are not supported */
+    background-image: url(../images/select-arrow.png), -webkit-linear-gradient(top, #E5E5E5, #F4F4F4); /* For Chrome and Safari */
+    background-image: url(../images/select-arrow.png), -moz-linear-gradient(top, #E5E5E5, #F4F4F4); /* For old Firefox (3.6 to 15) */
+    background-image: url(../images/select-arrow.png), -ms-linear-gradient(top, #E5E5E5, #F4F4F4); /* For pre-releases of Internet Explorer  10*/
+    background-image: url(../images/select-arrow.png), -o-linear-gradient(top, #E5E5E5, #F4F4F4); /* For old Opera (11.1 to 12.0) */
+    background-image: url(../images/select-arrow.png), linear-gradient(to bottom, #E5E5E5, #F4F4F4); /* Standard syntax; must be last */
+    background-position: center right;
+    background-repeat: no-repeat;
+    border: 1px solid #AAA;
+    border-radius: 2px;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+    color:#262625;
+    font-size: inherit;
+    margin: 0;
+    overflow: hidden;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#tabla-reporte{
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#tabla-reporte td, #tabla-reporte th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#tabla-reporte tr:hover {background-color: #ddd;}
+#tabla-reporte tr:hover {background-color: #ddd;}
+
+#tabla-reporte th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}
+
+
+
+</style>
+
+
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="container-fluid">
+  <div class="row" style="margin-top: 25px;">
+     <div class="col-8"> 
+      <div class="container">
+        <h3>Movimiento de Activos.</h3>
+        <h6>Busque y seleccione el activo a Mover</h6>
+        <p>
+          <form method="GET" id="form" >
+      
+              <ul class="opciones">
+              <li><input type="radio" id="xcodigo" name="seleccion" value="codigo" placeholder="Ingrese el código">
+                
+    
+                <label for="xcodigo">Por <u>Código</u>&nbsp;</label>{{ form2.activo_codigo }}<button class="button" type="submit" id="busca_activos" name="busca_activos">Buscar</button></li>
+                
+                <li><input type="radio" id="xtipo" name="seleccion" value="tipo">
+              <label for="xtipo">Por <u>Tipo</u>&nbsp;</label>{% render_field form2.activo_tipo class="select-box" onChange="form.submit();" %}</li>
+              <li><input type="radio" id="xsector" name="seleccion" value="sector">
+              <label for="xsector">Por <u>Sector</u>&nbsp;</label>{% render_field form2.activo_area class="select-box" onChange="form.submit();" %}</li>
+              
+        </form>
+          
+        <form method="GET" id="form2" >
+          <li><input type="radio" id="xmarca" name="seleccion" value="marca">
+            <label for="xmarca">Por <u>Marca</u>&nbsp;</label>{{ form4.desc_activo_marca }}<button class="button" type="submit" id="busca_marca" name="busca_marca">Buscar</button></li>
+          </form>
+        </div>    
+      </div>
+
+  <div class="col">
+    <div class="row" style="margin-top: 25px;">
+        <a class="btn btn-outline-primary" style="margin-left: 163px;" href="{% url 'activos:listar_salida' %}"><b>Mis Ordenes de Salida</b></a>
+      </div>
+      <div class="row"><p></div>
+      <!-- <div class="row">
+        <a class="btn btn-primary" style="margin-left: 125px;" href="{% url 'activos:busqueda_activos_mantenimiento' %}">Activos en Mantenimiento</a>
+      </div> -->
+      <div class="row"><p></div>
+    <div class="row">      
+        <a class="btn btn-outline-primary" style="margin-left: 98px;" href="{% url 'activos:registro_no_encontrados' %}"><b>Reportar Activo no encontrado</b></a>
+      </div>  
+</div>
+
+</div>
+
+  
+
+<br>
+<div class="container-fluid">
+  
+<table id="tabla-reporte">  
+  <thead>
+    <tr>
+        <th scope="col"><strong>No</strong></th>
+        <th scope="col"><strong>Codigo</strong></th>
+        <th scope="col"><strong>Parte de</strong></th>
+        <th scope="col"><strong>Ubicación</strong></th>
+        <th scope="col"><strong>Departamento</strong></th>
+        <th scope="col"><strong>Sector</strong></th>
+        <th scope="col"><strong>Descripción</strong></th>
+        <th scope="col"><strong>Tipo</strong></th>
+        <th scope="col"><strong>Marca</strong></th>
+        <th scope="col"><strong>Modelo</strong></th>
+        <th scope="col" ><strong>Grabado</strong></th>
+        <th scope="col"><strong>Opciones</strong></th>
+    </tr>
+  </thead>
+<tbody>
+  {% for activo in form  %} 
+  
+    <tr>
+      <!-- {% if perms.activos.change_desc_activo %}data-href="{% url 'activos:editar_activos'  activo.desc_activo_codigo.id %}" style="cursor: pointer;"{% endif %}>   -->
+      <td>{{ forloop.counter0|add:form.start_index }}</td>
+      <td>{{ activo.desc_activo_codigo.activo_codigo }}</td>
+      <td>{{ activo.desc_activo_codigo.cod_activo_padre | default:"--" }}</td>
+      <td>{{ activo.desc_activo_codigo.activo_ubica}}</td>
+      <td>{{ activo.desc_activo_codigo.activo_depar | default:"--" }}</td>
+      <td>{{ activo.desc_activo_codigo.activo_area | default:"--" }}</td>
+      <td>{{ activo.desc_activo_codigo.activo_descripcion| default:"--" }}</td>
+      <td>{{ activo.desc_activo_codigo.activo_tipo | default:"--" }}</td>
+      <td>{{ activo.desc_activo_marca | default:"--" }}</td>
+      <td>{{ activo.desc_activo_modelo | default:"--" }}</td>
+      <td>{{ activo.desc_activo_codigo.grabado }}</td>
+      <td style="align-content: center;">
+        <a class="btn btn-primary glyphicon glyphicon-circle-arrow-right" title="Mover activo entre ubicaciones Internas" href="{% url 'activos:registro_movimiento_interno' activo.desc_activo_codigo.activo_codigo %}"></a>
+        <a class="btn btn-warning glyphicon glyphicon-circle-arrow-right" title="Iniciar proceso para salida de activos" href="{% url 'activos:registrosalidaind' activo.desc_activo_codigo.activo_codigo %}"></a>
+        
+        
+        <!-- <a href="{% url 'activos:registrosalidaind' activo.desc_activo_codigo.activo_codigo %}" class="btn btn-success">Solicitar </a> -->
+      </td>
+    </tr>
+  </div>
+
+    <div class="modal fade" id="exampleModalAprob" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel" style="color: black;">Destino Final del Activo</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form class="modal-body" action="{% url 'activos:dar_baja' activo.desc_activo_codigo.id activo.desc_activo_codigo.activo_estado %}" method="GET">
+            <div class="form-group" style="margin-left: 25px;"> 
+            <div>
+                <input type="radio" id="baja" name="destino" value="baja"
+                       checked>
+                <label for="baja">Dar de Baja</label>
+              </div>
+              
+              <div>
+                <input type="radio" id="donado" name="destino" value="donado">
+                <label for="donado">Donación</label>
+              </div>
+              
+              <div>
+                <input type="radio" id="venta" name="destino" value="venta">
+                <label for="venta">Venta</label>
+              </div>
+            </div>
+            
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" name="guardar-destino" class="btn btn-primary" id="enviar" name="enviar">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+    
+{% endfor %}
+
+</tbody>
+
+</table>
+
+
+<div class="pagination">
+  <span class="step-links">
+      {% if form.has_previous %}
+          <a href="?buscar={{ query }}&activo_tipo={{ tipo }}&activo_ubica={{ ubicacion }}&activo_grupo={{ grupo }}&activo_depar={{ departamento }}&activo_area={{ area }}&page=1">&laquo; inicio</a>
+          <a href="?buscar={{ query }}&activo_tipo={{ tipo }}&activo_ubica={{ ubicacion }}&activo_grupo={{ grupo }}&activo_depar={{ departamento }}&activo_area={{ area }}&page={{ form.previous_page_number }}">previo</a>
+      {% endif %}
+
+      <span class="current">
+          Page {{ form.number }} of {{ form.paginator.num_pages }}.
+      </span>
+
+      {% if form.has_next %}
+          <a href="?buscar={{ query }}&activo_tipo={{ tipo }}&activo_ubica={{ ubicacion }}&activo_grupo={{ grupo }}&activo_depar={{ departamento }}&activo_area={{ area }}&page={{ form.next_page_number }}">próximo</a>
+          <a href="?buscar={{ query }}&activo_tipo={{ tipo }}&activo_ubica={{ ubicacion }}&activo_grupo={{ grupo }}&activo_depar={{ departamento }}&activo_area={{ area }}&page={{ form.paginator.num_pages }}">último &raquo;</a>
+      {% endif %}
+      
+  </span>
+</div>
+</div>
+
+
+
+
+
+
+{% endblock content %}
+
+{% block extrajs %}
+
+<script>
+
+
+
+
+$("#id_activo_codigo").hide().val("");
+$("#busca_activos").hide().val("");
+$("#busca_marca").hide().val("");
+$("#id_desc_activo_marca").hide().val("");
+$("#id_activo_ubica").hide().val("");
+$("#id_activo_grupo").hide().val("");
+$("#id_activo_tipo").hide().val("");
+$("#id_activo_area").hide().val("");
+$("#id_activo_depar").hide().val("");
+$("#id_pestanias_seguros").hide().val("");
+$("#id_poliza_seguros").hide().val("");
+  
+  
+$("#xcodigo").on('click', xCodigo)
+$("#xubicacion").on('click', xUbicacion)
+$("#xmarca").on('click', xMarca)
+$("#xtipo").on('click', xTipo)
+$("#xdepartamento").on('click', xDep)
+$("#xsector").on('click', xSec)
+$("#xseguros").on('click', xSeg)
+$("#xseguros_poliza").on('click', xSegPol)
+
+//Funciones que ocultan listas de seleccion y campos
+function xCodigo() {
+$("#id_activo_codigo").show();
+$("#busca_activos").show();
+$("#id_activo_tipo").hide().val("");
+$("#id_activo_grupo").hide().val("");
+$("#id_activo_ubica").hide().val(""); 
+$("#id_activo_depar").hide().val("");
+$("#id_pestanias_seguros").hide().val("");
+$("#id_activo_area").hide().val("");
+$("#id_poliza_seguros").hide().val("");
+$("#id_desc_activo_marca").hide();
+$("#busca_marca").hide();
+//$("#id_activo_codigo").focus();
+document.getElementById("id_activo_codigo").focus();
+}
+
+function xUbicacion() {
+$("#id_activo_ubica").show(); 
+$("#id_activo_tipo").hide().val("");
+$("#id_activo_grupo").hide().val(""); 
+$("#id_activo_depar").hide().val("");
+$("#id_pestanias_seguros").hide().val("");
+$("#id_activo_codigo").hide().val("");
+$("#busca_activos").hide().val("");
+$("#id_activo_area").hide().val("");
+$("#id_poliza_seguros").hide().val("");
+
+}
+
+function xMarca() {
+$("#id_activo_ubica").hide().val("");
+$("#id_activo_tipo").hide().val(""); 
+$("#id_activo_depar").hide().val("");
+$("#id_pestanias_seguros").hide().val("");
+$("#id_activo_codigo").hide().val("");
+$("#busca_activos").hide().val("");
+$("#id_activo_area").hide().val("");
+$("#id_poliza_seguros").hide().val("");
+$("#id_desc_activo_marca").show();
+$("#busca_marca").show();
+document.getElementById("id_desc_activo_marca").focus();
+}
+
+function xTipo() {
+$("#id_desc_activo_marca").hide();
+$("#busca_marca").hide();
+$("#id_activo_tipo").show();
+$("#id_activo_grupo").hide().val("");
+$("#id_activo_ubica").hide().val("");
+$("#id_activo_depar").hide().val("");
+$("#id_pestanias_seguros").hide().val("");
+$("#id_activo_codigo").hide().val("");
+$("#busca_activos").hide().val("");
+$("#id_activo_area").hide().val("");
+$("#id_poliza_seguros").hide().val("");
+
+}
+
+function xDep() {
+$("#id_activo_depar").show();
+$("#id_activo_tipo").hide().val("");
+$("#id_activo_grupo").hide().val("");
+$("#id_activo_ubica").hide().val(""); 
+$("#id_activo_codigo").hide().val("");
+$("#busca_activos").hide().val("");
+$("#id_activo_area").hide().val("");
+$("#id_poliza_seguros").hide().val("");
+$("#id_pestanias_seguros").hide().val("");
+
+}
+
+function xSec() {
+$("#id_activo_area").show();
+$("#id_activo_tipo").hide().val("");
+$("#id_activo_grupo").hide().val("");
+$("#id_activo_ubica").hide().val(""); 
+$("#id_activo_codigo").hide().val("");
+$("#busca_activos").hide().val("");
+$("#id_activo_depar").hide().val("");
+$("#id_poliza_seguros").hide().val("");
+$("#id_pestanias_seguros").hide().val("");
+$("#id_desc_activo_marca").hide();
+$("#busca_marca").hide();
+
+
+}
+
+function xSeg() {
+$("#id_activo_tipo").hide().val("");
+$("#id_activo_grupo").hide().val("");
+$("#id_activo_ubica").hide().val(""); 
+$("#id_activo_codigo").hide().val("");
+$("#busca_activos").hide().val("");
+$("#id_activo_depar").hide().val("");
+$("#id_activo_area").hide().val("");
+$("#id_pestanias_seguros").show();
+$("#id_poliza_seguros").hide().val("");
+
+}
+
+
+
+</script>
+
+
+
+
+
+<script>
+  jQuery(document).ready(function($){
+    $('*[data-href]').on('click', function(){
+      window.location = $(this).data("href");
+    });
+  });
+  // $("#container").on('click-row.bs.table', function(e, row, $element){
+  //   window.location = $(this).data('url');
+  // });
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,235 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+{% load l10n %}
+
+{% block extrahead %}
+<style>
+    body {font-family: Arial;}
+    
+    /* Style the tab */
+    .tab {
+      overflow: hidden;
+      border: 1px solid #ccc;
+      background-color: #f1f1f1;
+    }
+    
+    /* Style the buttons inside the tab */
+    .tab button {
+      background-color: inherit;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.3s;
+      font-size: 17px;
+    }
+    
+    /* Change background color of buttons on hover */
+    .tab button:hover {
+      background-color: #ddd;
+    }
+    
+    /* Create an active/current tablink class */
+    .tab button.active {
+      background-color: #ccc;
+    }
+    
+    /* Style the tab content */
+    .tabcontent {
+      display: none;
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      border-top: none;
+    }
+    
+    /* Style the close button */
+    .topright {
+      float: right;
+      cursor: pointer;
+      font-size: 28px;
+    }
+    
+    .topright:hover {color: red;}
+  </style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row" style="margin-top: 25px;">
+    <div class="form-group col-auto">
+      <form class="form-inline my-2 my-lg-0"  method="GET">
+          <input class="form-control mr-sm-2" type="text" size="70;" placeholder="Código de Activo, Detalle, Serie, N° Orden, Empresa de Mantenimiento..." name="buscar">
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+      </form>
+    </div>
+    <div class="form-group col-auto">
+        <a class="btn btn-success" style="margin-right: 15px;"  href="{% url 'activos:aut_movimientos_activos_excel' %}">Exportar movimientos a Excel</a>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+{% if form %}
+<div>
+<div class="tab" style="margin-top: 25px;">
+  <button class="tablinks" onclick="openTab(event, 'PCotizar')" id="defaultOpen">Solicitudes de Salida ({{ countn }})</button>
+  <button class="tablinks" onclick="openTab(event, 'Cotizadas')">Aprobadas (Ultimas 200)</button>
+</div>
+</div>
+{% else %}
+<div class="tab" style="margin-top: 25px;">
+  <button class="tablinks" onclick="openTab(event, 'Cotizadas')" id="defaultOpen">Aprobadas (Ultimas 200)</button>
+  <button class="tablinks" onclick="openTab(event, 'PCotizar')" >Solicitudes de Salida</button>
+</div>
+{% endif %}
+
+
+<div id="PCotizar" class="tabcontent">
+  
+  <div>
+    <table class="table-dark table-striped table-sm" >
+      {% if form %}
+      
+        <thead>
+          <tr>
+            <td scope="col"><strong>Orden N°</strong></td>
+            <td scope="col"><strong>Persona Solicita</strong></td>
+            <td scope="col"><strong>Fecha Solicita Salida</strong></td>
+            <td scope="col"><strong>Fecha Aprox Retorno</strong></td>
+            <td scope="col"><strong>Cod. Activo</strong></td>
+            <td scope="col"><strong>Tipo</strong></td>
+            <td scope="col"><strong>Marca</strong></td>
+            <td scope="col"><strong>Detalle</strong></td>
+            <td scope="col"><strong>Motivo</strong></td>
+            <td scope="col"><strong>Empresa Mantenimiento</strong></td>
+            <td scope="col"><strong>Estado</strong></td>
+            <td scope="col"><strong>Ver</strong></td>
+       
+       
+          </tr>
+        </thead>
+        <tbody>
+          {% if form %}
+          {% for activo in form  %} 
+              <tr>
+                <td>{{ activo.id }}</td>
+                <td>{{ activo.solicitado_por }}</td>
+                <td>{{ activo.fecha_registro }}</td>
+                <td>{{ activo.fecha_estimada_retorno }}</td>
+                <td>{{ activo.activo_codigo }}</td>
+                <td>{{ activo.activo_tipo}}</td>
+                <td>{{ activo.marca | default:"--" }}</td>
+                <td>{{ activo.detalle_activo }}</td>
+                <td>{{ activo.get_sale_por_display | default:"--" }}</td>
+                <td>{{ activo.empresa_mantenimiento }}</td>
+                <td>{{ activo.estado }}</td>
+                <td>
+                  <a class=" btn btn-primary glyphicon glyphicon-eye-open" title="Ver" href="{% url 'activos:ver_autoriza_seguridad' activo.id %}"></a>
+                  
+                </td>
+                
+
+              </tr>
+        
+         
+        {% endfor %}
+        {% endif %}
+        
+        {% else %}
+          <div class="alert-danger" role="alert">
+            <h3 style="text-align: center;">No hay Solicitudes para gestionar</h3>
+          </div>
+        {% endif %}
+    </table>
+  </div>  
+  <br>
+</div>
+
+<div id="Cotizadas" class="tabcontent">
+  
+  <div>
+    <table class="table-small table-warning table-striped">
+    
+      <thead class="thead-dark" style="text-align: center;">
+        <tr>
+          <td scope="col"><strong>Orden N°</strong></td>
+          <td scope="col"><strong>Persona Solicita</strong></td>
+          <td scope="col"><strong>Fecha Salida</strong></td>
+          <td scope="col"><strong>Fecha Aprox Retorno</strong></td>
+          <td scope="col"><strong>Cod. Activo</strong></td>
+          <td scope="col"><strong>Tipo</strong></td>
+          <!-- <td scope="col"><strong>Serie</strong></td> -->
+          <!-- <td scope="col"><strong>Marca</strong></td> -->
+          <td scope="col"><strong>Detalle</strong></td>
+          <td scope="col"><strong>Motivo</strong></td>
+          <td scope="col"><strong>Empresa Mantenimiento</strong></td>
+          <td scope="col"><strong>Autoriza</strong></td>
+          <td scope='col'><strong>Estado</strong></td>
+        </tr>
+      </thead>
+      <tbody>
+        {% for i in form2 %}
+        <tr>
+          <td>{{ i.id }}</td>
+          <td>{{ i.solicitado_por |slice:":10"}}</td>
+          <td>{{ i.fecha_registro }}</td>
+          <td>{{ i.fecha_estimada_retorno | default:'---' }}</td>
+          <td>{{ i.activo_codigo }}</td>
+          <td>{{ i.activo_tipo }}</td>
+          <!-- <td>{{ i.activo_num_serie | default:'---' }}</td> -->
+          <!-- <td>{{ i.marca | default:'---' }}</td> -->
+          <td>{{ i.detalle_activo }}</td>
+          <td style="column-width: 60px;">{{ i.get_sale_por_display }}</td>
+          <td>{{ i.empresa_mantenimiento }}</td>
+          <td>{{ i.pers_autoriza_seguridad }}</td>
+          <td>{{ i.estado }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+</div>
+
+<!-- <div class="pagination">
+  <span class="step-links">
+      {% if form2.has_previous %}
+          <a href="?page=1">&laquo; inicio</a>
+          <a href="?page={{ form2.previous_page_number }}">previo</a>
+      {% endif %}
+
+      <span class="current">
+          Page {{ form2.number }} of {{ form2.paginator.num_pages }}.
+      </span>
+
+      {% if form2.has_next %}
+          <a href="?page={{ form2.next_page_number }}">próximo</a>
+          <a href="?page={{ form2.paginator.num_pages }}">último &raquo;</a>
+      {% endif %}
+  </span>
+</div> -->
+
+
+<script>
+function openTab(evt, tabName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(tabName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+</script>
+{% endblock %}

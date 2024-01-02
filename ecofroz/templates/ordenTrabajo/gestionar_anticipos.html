@@ -1,0 +1,469 @@
+{% extends 'base.html' %}
+
+
+{% block extrahead %}
+<style>
+    body {font-family: Arial;}
+    
+    /* Style the tab */
+    .tab {
+      overflow: hidden;
+      border: 1px solid #ccc;
+      background-color: #f1f1f1;
+    }
+    
+    /* Style the buttons inside the tab */
+    .tab button {
+      background-color: inherit;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.3s;
+      font-size: 17px;
+    }
+    
+    /* Change background color of buttons on hover */
+    .tab button:hover {
+      background-color: #ddd;
+    }
+    
+    /* Create an active/current tablink class */
+    .tab button.active {
+      background-color: #ccc;
+    }
+    
+    /* Style the tab content */
+    .tabcontent {
+      display: none;
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      border-top: none;
+    }
+    
+    /* Style the close button */
+    .topright {
+      float: right;
+      cursor: pointer;
+      font-size: 28px;
+    }
+    
+    .topright:hover {color: red;}
+
+    .loader{
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background: url('/media/img/load.gif') 50% 50% no-repeat rgb(249,249,249);
+        opacity: .8;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+<div class="loader"></div>
+
+<div class="container-fluid">
+<div class="tab" style="margin-top: 15px;">
+  {% if form %}
+  <button class="tablinks" onclick="openTab(event, 'Pendientes')" id="defaultOpen">Nuevas Solicitudes Anticipos</button>
+  <button class="tablinks" onclick="openTab(event, 'Aprobadas')">Autorizaciones/Rechazos</button>
+  {% else %}
+  <button class="tablinks" onclick="openTab(event, 'Aprobadas')" id="defaultOpen">Autorizaciones/Rechazos</button>
+  <button class="tablinks" onclick="openTab(event, 'Pendientes')" >Nuevas Solicitudes Anticipos</button>
+  {% endif %}
+</div>
+</div>
+
+<div id="Pendientes" class="tabcontent">
+
+  <div>
+
+<table class="table table-hover table-striped table-warning table-sm" style="margin: 1px auto">
+  {%if form %}
+    <thead>
+      <tr>
+        <th scope="col">N°</th>
+        <th scope="col">Solicita</th>
+        <th scope="col">Fecha Solicitud</th>
+        <th scope="col">Aprueba</th>
+        <th scope="col">Fecha aprobación</th>
+        <th scope="col">Proveedor</th>
+        <th scope="col">Valor Anticipo</th>
+        <th scope="col" style="text-align:center">Ver</th>
+        
+      </tr>
+    </thead>
+    <tbody>
+      {% if form %}
+      {% for i in form %}
+      <tr>
+        <td>{{ i.numsolic  }}</td>
+        <td>{{ i.psolicita  }}</td>
+        <td>{{ i.fch_solicita | date:"F d, Y H:i" }}</td>
+        <td>{{ i.usuario_aprueba }}</td>
+        <td>{{ i.fch_aprueba | date:"F d, Y H:i" }}</td>
+        <td>{{ i.prove }}</td>
+      
+        <td>{{ i.valor }}</td>
+      
+      
+        
+        <td style="text-align:right">
+          
+         
+          <!-- <a href="" class="btn btn-warning glyphicon glyphicon-eye-open" title="Ver detalle" data-toggle="modal" data-target="#Add-Event"></a> -->
+          <button class="btn btn-warning glyphicon glyphicon-eye-open" title="Ver detalle" onclick="consulta({{i.numsolic}});"></button>
+        </td>
+      </tr>
+      {% endfor %}
+      {% endif %}
+
+      {% else %}
+            <div class="alert-danger" role="alert">
+              <h3 style="text-align: center;">No hay Solicitudes para gestionar</h3>
+              
+            </div>
+          {% endif %}
+    </tbody>
+</table>
+  
+</div>  
+</div>
+
+<div id="Aprobadas" class="tabcontent">
+ 
+  <div>
+
+    <table class="table table-success table-striped table-sm">
+    
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">N°</th>
+          <th scope="col">Fecha Solicitud</th>
+          <th scope="col">Solicita</th>
+          <th scope="col">Proveedor</th>
+          <th scope="col">Valor</th> 
+          <th scope="col">Obs Solicita</th> 
+          <th scope="col">Fecha Aprobación</th> 
+          <th scope="col">Fecha Gestiona Conta</th> 
+          <th scope="col">Gestiona Conta</th> 
+          <th scope="col">Estado</th> 
+          <th scope="col">Opciones</th> 
+          
+        
+      </tr>
+    </thead>
+    <tbody>
+
+      {% if procesadas %}
+      
+      {% for i in procesadas %}
+      {% if i.aceptado_conta == False %}
+      <tr class="table-danger" >
+      {% else %}  
+      <tr class="table-success" >
+      {% endif %} 
+      
+      <td>{{ i.numsolic  }}</td>
+      <td>{{ i.fch_solicita | date:"F d, Y H:i" }}</td>
+      <td>{{ i.psolicita }}</td>
+      <td>{{ i.prove }}</td>
+      <td>{{ i.valor }}</td>
+      <td>{{ i.observa_solicita|default:"--" }}</td>
+      <td>{{ i.fch_aprueba | date:"F d, Y H:i" }}</td>
+      <td>{{ i.fch_gestiona_cont | date:"F d, Y H:i" }}</td>
+      <td>{{ i.pgestiona_cont }}</td>
+    
+      {% if i.aceptado_conta == True %}
+      <td>APROBADO</td>
+      {% else %}
+      <td>RECHAZADA</td>
+      {% endif %}
+
+      <td style="text-align:right">
+        <a class="btn btn-primary glyphicon glyphicon-eye-open" title="Ver detalle/Cargar Comprobante" href="{% url 'trabajos:revisa_conta' i.numsolic %}"></a>
+      </td>
+        
+      
+      </tr>
+      {% endfor %}
+      {% endif %}
+          
+    </tbody>
+  </table>
+  
+</div>
+
+
+
+<div class="pagination">
+  <span class="step-links">
+      {% if procesadas.has_previous %}
+          <a href="?page=1">&laquo; inicio</a>
+          <a href="?page={{ procesadas.previous_page_number }}">previo</a>
+      {% endif %}
+
+      <span class="current">
+          Page {{ procesadas.number }} of {{ procesadas.paginator.num_pages }}.
+      </span>
+
+      {% if procesadas.has_next %}
+          <a href="?page={{ procesadas.next_page_number }}">próximo</a>
+          <a href="?page={{ procesadas.paginator.num_pages }}">último &raquo;</a>
+      {% endif %}
+  </span>
+</div>
+
+</div>
+
+
+<div class="modal fade" id="Add-Event" tabindex="-1"  aria-labelledby="exampleModalLabel" aria-hidden="True">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Información de la solicitud</h5>
+        <button type="button" class="close" id="cierra-arriba" data-dismiss="modal" aria-label="Close">
+          <span aria-hideen="True">&times;</span>
+        </button>
+      </div>
+      <form method="post" action="" enctype="multipart/form-data" id="formula" name="formula">
+        {% csrf_token %}
+        <div class="modal-boddy">
+          <div class="container">
+            <div class="form-group">
+             
+                    <input class="form-control" name="solic" id="solic" hidden>
+                    <label for="ruta">Proveedor</label>
+                    <input class="form-control" name="rutatexto" id="rutatexto" readonly>
+                    
+                  
+              </div>
+            
+            <div class="form-group" id="nombre_evento">
+          <div class="row">
+              <div class="col-md-4">
+              <label for="origen">Origen Requisición</label>
+              <input type="text" class="form-control" name="origen" id="origen" readonly>
+              </div>
+
+              <div class="col-md-4">
+                <label for="">N° Requisición</label>
+                <input type="text" name="numreq" id="numreq" class="form-control" readonly>
+                </div>
+
+                <div class="col-md-4">
+                  <label for="">Valor Anticipo ($)</label>
+                  <input type="text" name="anticipo" id="anticipo" class="form-control" readonly>
+                </div>
+
+              </div>
+            </div>
+               
+           
+            <div class="form-group" id="evento_desc">
+              <label for="">Notas Solicitante</label>
+              <textarea class="form-control" name="notass" id="notass" rows="2" readonly></textarea>
+            </div>
+
+            <div class="form-group" id="filediv">
+              <label for="">Soportes</label><br>
+              <a name="soportes" id="soportes" href="" target="_blank">Ver Adjunto</a>
+              
+            </div>
+
+            <div class="form-group" id="evento_desc">
+              <label for="">Notas Autorización Gerencia Area</label>
+              <textarea class="form-control" name="autoriza_come" id="autoriza_come" rows="2" readonly></textarea>
+            </div>
+
+            <div class="form-group" id="evento_desc">
+              <label for="">Notas Autorización/Rechazo Contabilidad</label>
+              <textarea class="form-control" name="autoriza_conta" id="autoriza_conta" rows="3"></textarea>
+            </div>
+
+            <div class="form-group" id="filediv">
+              <label for="">Cargar Comprobante</label><br>
+              <input
+                    type="file"
+                    name = "docs"
+                    id = "id_docs"
+                    accept=".pdf,.doc,.jpg,.jpeg,.png,.xlsx,application/msword,application/msexcel" />
+              
+            </div>
+
+          </div>
+        </div>  
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cierra-close" data-dismiss="modal">Close</button>
+          <button type="submit" name="autorizar" onclick="autoriza();" class="btn btn-primary">Aprobar</button>
+          <button type="submit" name="rechazar" onclick="rechaza();" class="btn btn-danger">Rechazar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+
+{% endblock %}
+
+{% block extrajs %}
+
+<script>
+
+  $(window).on("load",function() {
+        $(".loader").fadeOut("slow");
+        $("#soportes").hide();
+    });
+
+    $(document).ready(function() {    
+        $('#enviar').on('click', function(){
+            //Añadimos la imagen de carga en el contenedor
+            $(".loader").show();
+            $(window).on("load",function(){
+                $(".loader").fadeOut("slow");
+            });
+        });              
+    }); 
+
+    // Si se cierra el modal entonces se oculta el link de documentos de soporte
+    $("#Add-Event").on("hidden.bs.modal", function () {
+      $("#soportes").hide();
+      });
+
+
+  function consulta(solic){
+
+    $.ajax({
+        type:"GET",
+        url:'ajaxconsultasolic/',
+        data: {'solic': solic},
+        dataType: "json",
+        success: function (data) {
+          $.each(data, function(key,value) {
+            $("#solic").val(JSON.stringify(value.numsolic));
+            $("#rutatexto").val(JSON.stringify(value.proveedor));
+            $("#numreq").val(JSON.stringify(value.req));
+            $("#anticipo").val(JSON.stringify(value.valor));
+            $("#origen").val(JSON.stringify(value.origen));
+            $("#notass").val(JSON.stringify(value.notas));
+            $("#autoriza_come").val(JSON.stringify(value.notasg));
+            const verifica = value.url;
+            
+            if (verifica || "" ){
+              $("#soportes").attr("href", value.url);
+              $("#soportes").show();
+
+            }
+            
+            $('#Add-Event').modal('show'); 
+            
+          
+            });
+
+          // $('#Add-Event').modal('show'); 
+          
+        
+        },
+        error: function (data) {
+          alert("Existe un error de visualización de datos. Comuníquese con IT");
+         
+        },
+        
+      })
+
+
+    document.getElementById('cierra-close').onclick = function() {
+          $("#soportes").hide();
+          $('#Add-Event').modal('hide');
+          
+        }
+
+    document.getElementById('cierra-arriba').onclick = function() {
+          $("#soportes").hide();
+          $('#Add-Event').modal('hide'); 
+          
+        }
+    
+  }
+
+  function autoriza(){
+    var notas_autoriza = document.getElementById('autoriza_conta').value;
+    var nsolic = document.getElementById('solic').value;
+    // var formData = new FormData(form[0]);
+  
+    $("#formula").submit();
+
+      $.ajax({
+      type:"GET", 
+      url:'ajax_save_autoriza_conta/',
+      data: {'notas': notas_autoriza,'solic':nsolic},
+      // data:formData,
+      // processData: false,
+      // contentType: false,
+      dataType: "json",
+      success: function (data) {
+        alert(data.message);
+        
+        $("#Show-Event").modal('hide');
+        location.reload();
+      
+      },
+      error: function (data) {
+        alert("No se pudo guardar. Comuníquese con IT")
+      }
+    })
+  }
+
+  function rechaza(){
+    var notas_autoriza = document.getElementById('autoriza_conta').value;
+    var nsolic = document.getElementById('solic').value;
+  
+    $("#formula").submit();
+
+      $.ajax({
+      type:"GET", 
+      url:'ajax_save_rechaza_conta/',
+      data: {'notas': notas_autoriza,'solic':nsolic},
+      dataType: "json",
+      success: function (data) {
+        alert(data.message);
+        
+        $("#Show-Event").modal('hide');
+        location.reload();
+      
+      },
+      error: function (data) {
+        alert("No se pudo guardar. Comuníquese con IT")
+      }
+    })
+  }
+
+
+
+  function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
+  }
+
+  // Get the element with id="defaultOpen" and click on it
+  document.getElementById("defaultOpen").click();
+  </script>
+
+{% endblock %}

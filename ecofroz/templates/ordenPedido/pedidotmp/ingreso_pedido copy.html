@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <h2>Ordenes de Pedidos</h2>
+{% endblock %}
+
+{% block content %}
+<form method="POST">
+        {% csrf_token %} 
+    <div class="form-group">
+        <label for="exampleSelect1">Usuario</label>
+        <select class="form-control" id='auth_user' name="auth_user">
+            {% for user in form2.auth_user %}
+            <li>{{ user }}</li>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="exampleSelect1">Departamento</label>
+        <select class="form-control" id='departamentos' name="departaments">
+            {% for dep in form2.departamentos %}
+            <li>{{ dep }}</li>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+         <label for="exampleSelect1">Areas</label>
+        <select class="form-control" id='areas' name="areas">
+            {% for ar in form2.areas %}
+            <li>{{ ar }}</li>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id='regimenespecial' checked='' name="regimenespecial"></input>
+            <label class="custom-control-label" for="customSwitch1">Regimen Especial</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-form-label" for="inputDefault">Proyecto</label>
+        <input type="text" class="form-control" placeholder="Default input" id='proyecto' name="proyecto">
+    </div>
+    <div class="form-group">
+        <label class="col-form-label" for="inputDefault">Fecha</label>
+        <input type="text" class="form-control" placeholder="Default input" id='fchsolicita' name="fchsolicita">
+    </div>
+    <div class="form-group">
+        <label class="col-form-label" for="inputDefault">Tipo de Adquisición</label>
+        <input type="text" class="form-control" placeholder="Default input" id='tipoadquisicion' name="tipoadquisicion">
+    </div>
+    <div class="form-group">
+        <label for="exampleSelect1">Categoria</label>
+        <select class="form-control" id="tipo" name="tipo">
+            {% for cat in form2.tipo %}
+            <li>{{ cat }}</li>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label class="col-form-label" for="inputDefault">Descripcion</label>
+        <input type="text" class="form-control" placeholder="Default input" id='descripcion' name="descripcion">
+    </div>
+    <div class="form-group">
+        <label class="col-form-label" for="inputDefault">Cantidad</label>
+        <input type="text" class="form-control" placeholder="Default input" id='cantidad' name="cantidad">
+    </div>
+    <div class="form-group">
+        <label class="col-form-label" for="inputDefault">Unidad de Medida</label>
+        <input type="text" class="form-control" placeholder="Default input" id='unimedida' name="unimedida">
+    </div>
+    <button type="submit">Generar</button>
+</form>
+{% endblock %}

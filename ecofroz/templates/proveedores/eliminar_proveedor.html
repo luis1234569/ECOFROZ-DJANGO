@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form method="post">
+    {%csrf_token %}
+    <div class="container-fluid" style="margin-top: 10px;">
+    <h3>Confirma que desea eliminar el registro {{object.nombre_empresa}} ?</h3>
+    <button class="btn btn-danger" type="submit">Sí, Eliminar</button>
+    <a class= "btn btn-default" href="{% url 'proveedores:listar_proveedores' %}">Cancelar</a>
+</form>
+</div>
+{% endblock %}
+

@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+{% load filters %}
+
+
+
+
+{% block content %}
+<div class="loader"></div>
+<div class="jumbotron" style="width: 75%; margin:auto; padding-top: 25px; margin-top: 50px; margin-bottom: 25px;">
+        <h2 class="display-5">Registro de Salida de Activos (ECMAN R-1-5)</h2>
+        {% if estado == 1 %}
+                <div class="alert alert-danger col" style="text-align: center;">
+                        <h1>EL ACTIVO NO HA SIDO RECEPCIONADO EN BODEGA</h1>
+                        <h1>COMUNIQUESE CON BODEGA</h1>
+                </div>
+        {% endif %}
+        <form method="POST"> 
+        {% csrf_token %}
+        <div class="form-row">
+                <div class="form-group col-md-4" >
+                        <label for="{{ form2.activo_codigo.label }}">{{ form.activo_codigo.label }}</label>   
+                        {% render_field form.codigo value=codigo class="form-control"  readonly="True" %} 
+                        {% render_field form.departamento class="form-control" hidden=True %} 
+                        {% render_field form.grupo class="form-control" hidden=True %} 
+                        {% render_field form.activo_codigo class="form-control" hidden=True %} 
+<!--                         
+                        {{ form.activo_codigo }}   
+                        {{ form.departamento }}  
+                        {{ form.grupo }}      -->
+                </div>
+        </div>
+        <div class="form-row">
+                <div class="form-group col-md-4" >
+                        <label for="{{ form.activo_tipo.label }}">{{ form.activo_tipo.label }}</label>   
+                        {% render_field form.activo_tipo class="form-control"  readonly="True" %} 
+                </div>
+                <div class="form-group col-md-4" >
+                        <label for="{{ form.activo_num_serie.label }}">{{ form.activo_num_serie.label }}</label> 
+                        {% render_field form.activo_num_serie class="form-control"  readonly="True" %}      
+                </div>
+                <div class="form-group col-md-4" >
+                        <label for="{{ form.marca.label }}">{{ form.marca.label }}</label> 
+                        {% render_field form.marca class="form-control"  readonly="True" %} 
+                </div>
+        </div>
+        <div class="form-row">
+                <div class="form-group col-md-12" >
+                        <label for="{{ form.detalle_activo.label }}">{{ form.detalle_activo.label }}</label> 
+                        {% render_field form.detalle_activo class="form-control"  readonly="True" %} 
+                </div>
+        </div>
+        <div class="form-row">
+
+                <div class="form-group col-md-4">  
+                        <label for="{{ form.sale_por.label }}">{{ form.sale_por.label }}</label> 
+                        {{ form.sale_por }}      
+                </div>
+                <div class="form-group col-md-2" id="retorno">  
+                        <label for="{{ form.retorno.label }}">{{ form.retorno.label }}</label> 
+                        {{ form.retorno }}      
+                </div>
+                <div class="col-md-3" id="fecha_retorno">
+                        <label for="{{ form.fecha_estimada_retorno.label }}">{{ form.fecha_estimada_retorno.label }}</label> 
+                        {{ form.fecha_estimada_retorno }}
+                </div>
+                <div class="col-md-3">
+                        <label for="{{ form.hora_salida.label }}">{{ form.hora_salida.label }}</label> 
+                        {{ form.hora_salida }}
+                </div>
+        </div>
+        <div class="form-row" id="movimientos">
+                <div class="form-group col-md-12">
+                        <h4>Lugar de Movimiento</h4>
+                </div>
+                <div class="form-group col-md-3" >
+                        <label>Departamento</label> 
+                        <select name="depar" id="depar" style="width: 100%;" class="form-control">
+                                <option value="0" selected>----</option>
+                                {% for i in departamento %}
+                                        <option value="{{ i.id }}">{{ i.dep_nombre }}</option>
+                                {% endfor %}
+                        </select>
+                </div>
+                <div class="form-group col-md-3" >
+                        <label>Area</label> 
+                        <select name="areas" id="areas" style="width: 100%;" class="form-control">
+                                <option value="0" selected>----</option>
+                                {% for i in area %}
+                                        <option value="{{ i.area_codigo }}" data-chained="{{ i.area_departamento_id }}">{{ i.area_nombre }}</option>
+                                {% endfor %}
+                        </select>
+                </div>
+        </div>
+        <div class="form-row">
+                <div class="form-group col-md-12" >
+                        <label for="{{ form.motivo.label }}">{{ form.motivo.label }}</label> 
+                        {{ form.motivo }}
+                </div>
+        </div>
+        <div class="form-row">
+                <!-- <div class="form-group col-md-4" >
+                        <label for="{{ form.empresa_mantenimiento.label }}">{{ form.empresa_mantenimiento.label }}</label> 
+                        {{ form.empresa_mantenimiento }}
+                </div>  -->
+
+                <div class="form-group col-md-4" id="proveedor">
+                        <label for="{{ form.empresa_mantenimiento.label }}">{{ form.empresa_mantenimiento.label }}</label>
+                        <select name="proveedor" id="id_proveedor" style="width: 100%;" class="form-control">
+                                <option value="" selected>----</option>
+                                {% for i in proveedor %}
+                                        <option value="{{ i.codigo_id.nombre_empresa }}">{{ i.codigo_id.nombre_empresa }}</option>
+                                {% endfor %}
+                        </select>
+                </div>
+
+                <div class="col-md-6">
+                </div>
+
+                <div class="form-group col-md-12" id="salidas">
+                        <label for="{{ form.num_orden_trabajo.label }}">{{ form.num_orden_trabajo.label }}</label> 
+                        <select name="num_orden_trabajo" id="num_orden_trabajo" style="width: 100%;" class="form-control">
+                                <option value="0" selected>----</option>
+                                {% for i in orden %}
+                                        <option value="{{ i.numtrabajo.numtrabajo }}">{{ i.numtrabajo.numtrabajo }}&nbsp&nbsp{{ i.descripcion }}</option>
+                                {% endfor %}
+                        </select>
+                </div>
+        </div>
+        <div class="form-row">
+                <div class="form-group col-md-4" >
+                        <label for="{{ form.solicitado_por.label }}">{{ form.solicitado_por.label }}</label> 
+                        {% render_field form.solicitado_por value=solicita hidden=True %}
+                        <input type="text" name="usuario" id="usuario" class="form-control" readonly value="{{ user }}">
+                </div>
+        </div>
+        
+                <button id="guardar" name="guardar" type="submit" class="btn btn-primary btn-lg">Enviar</button>
+        </form>
+</div>
+
+{% endblock content %}
+
+{% block extrajs %}
+<script>
+
+$(window).on("load", function() {
+        $(".loader").fadeOut("slow");
+    });
+
+    $(document).ready(function() {    
+        $('#guardar').on('click', function(){
+            //Añadimos la imagen de carga en el contenedor
+            $(".loader").show();
+            $(window).on("load", function(){
+                $(".loader").fadeOut("slow");
+            });
+        });              
+    });   
+
+$(document).ready(function(){
+        var estado = '{{estado}}'
+        if (estado == 1) {
+                $('#guardar').hide();
+        }
+})
+
+  function ordenarSelect(id_componente)
+    {
+      var selectToSort = jQuery('#' + id_componente);
+      var optionActual = selectToSort.val();
+      selectToSort.html(selectToSort.children('option').sort(function (a, b) {
+        return a.text === b.text ? 0 : a.text < b.text ? -1 : 1;
+      })).val(optionActual);
+    }
+    $(document).ready(function () {
+      ordenarSelect('id_activo_codigo');
+    });
+
+    $('#id_activo_codigo').change(function(){
+            $('#id_codigo').val($('#id_activo_codigo option:selected').text())
+    })
+
+  $(document).ready(function(){
+    $('#id_persona_retira').val('{{ user.username }}')
+  })
+
+
+    $(document).ready(function(){
+        let descripcion = '{{ desc }}';
+        document.getElementById('id_detalle_activo').innerHTML = descripcion
+    });
+    $(document).ready(function(){
+        $("#movimientos").hide();
+    });
+    $("#id_sale_por").change(function(){
+        var opcion = $(this).val();
+
+        if (opcion == "4"){
+                $("#movimientos").show();
+                $("#retorno").hide().val("");
+                $("#fecha_retorno").hide().val("");
+                $("#proveedor").hide().val("");
+                $("#salidas").hide().val("");
+                $("#id_proveedor").prop("required",false);
+        }else{
+                $("#movimientos").hide().val("");
+                $("#retorno").show().val("");
+                $("#fecha_retorno").show().val("");
+                $("#proveedor").show().val("");
+                $("#salidas").show().val("");
+                $("#id_proveedor").prop("required",true);
+        }
+    });
+</script>
+
+{% endblock %}

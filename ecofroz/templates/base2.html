@@ -1,0 +1,288 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {%  block extrahead %}
+    {% endblock %}
+
+    <style>
+    #nav
+		{
+			width: 60em; /* 1000 */
+			font-family: 'Open Sans', sans-serif;
+			font-weight: 400;
+			position: absolute;
+			top: 25%;
+			left: 50%;
+			margin-left: -30em; /* 30 480 */
+		}
+
+			#nav > a
+			{
+				display: none;
+			}
+
+			#nav li
+			{
+				position: relative;
+			}
+				#nav li a
+				{
+					color: #fff;
+					display: block;
+				}
+				#nav li a:active
+				{
+					background-color: #c00 !important;
+				}
+
+			#nav span:after
+			{
+				width: 0;
+				height: 0;
+				border: 0.313em solid transparent; /* 5 */
+				border-bottom: none;
+				border-top-color: #efa585;
+				content: '';
+				vertical-align: middle;
+				display: inline-block;
+				position: relative;
+				right: -0.313em; /* 5 */
+			}
+
+			/* first level */
+
+			#nav > ul
+			{
+				height: 3.75em; /* 60 */
+				background-color: #e15a1f;
+			}
+				#nav > ul > li
+				{
+					width: 25%;
+					height: 100%;
+					float: left;
+				}
+					#nav > ul > li > a
+					{
+						height: 100%;
+						font-size: 1.5em; /* 24 */
+						line-height: 2.5em; /* 60 (24) */
+						text-align: center;
+					}
+						#nav > ul > li:not( :last-child ) > a
+						{
+							border-right: 1px solid #cc470d;
+						}
+						#nav > ul > li:hover > a,
+						#nav > ul:not( :hover ) > li.active > a
+						{
+							background-color: #cc470d;
+						}
+
+
+				/* second level */
+
+				#nav li ul
+				{
+					background-color: #cc470d;
+					display: none;
+					position: absolute;
+					top: 100%;
+				}
+					#nav li:hover ul
+					{
+						display: block;
+						left: 0;
+						right: 0;
+					}
+						#nav li:not( :first-child ):hover ul
+						{
+							left: -1px;
+						}
+						#nav li ul a
+						{
+							font-size: 1.25em; /* 20 */
+							border-top: 1px solid #e15a1f;
+							padding: 0.75em; /* 15 (20) */
+						}
+							#nav li ul li a:hover,
+							#nav li ul:not( :hover ) li.active a
+							{
+								background-color: #e15a1f;
+							}
+
+
+		@media only screen and ( max-width: 62.5em ) /* 1000 */
+		{
+			#nav
+			{
+				width: 100%;
+				position: static;
+				margin: 0;
+			}
+		}
+
+		@media only screen and ( max-width: 40em ) /* 640 */
+		{
+			html
+			{
+				font-size: 75%; /* 12 */
+			}
+
+			#nav
+			{
+				position: relative;
+				top: auto;
+				left: auto;
+			}
+				#nav > a
+				{
+					width: 3.125em; /* 50 */
+					height: 3.125em; /* 50 */
+					text-align: left;
+					text-indent: -9999px;
+					background-color: #e15a1f;
+					position: relative;
+				}
+					#nav > a:before,
+					#nav > a:after
+					{
+						position: absolute;
+						border: 2px solid #fff;
+						top: 35%;
+						left: 25%;
+						right: 25%;
+						content: '';
+					}
+					#nav > a:after
+					{
+						top: 60%;
+					}
+
+				#nav:not( :target ) > a:first-of-type,
+				#nav:target > a:last-of-type
+				{
+					display: block;
+				}
+
+
+			/* first level */
+
+			#nav > ul
+			{
+				height: auto;
+				display: none;
+				position: absolute;
+				left: 0;
+				right: 0;
+			}
+				#nav:target > ul
+				{
+					display: block;
+				}
+				#nav > ul > li
+				{
+					width: 100%;
+					float: none;
+				}
+					#nav > ul > li > a
+					{
+						height: auto;
+						text-align: left;
+						padding: 0 0.833em; /* 20 (24) */
+					}
+						#nav > ul > li:not( :last-child ) > a
+						{
+							border-right: none;
+							border-bottom: 1px solid #cc470d;
+						}
+
+
+				/* second level */
+
+				#nav li ul
+				{
+					position: static;
+					padding: 1.25em; /* 20 */
+					padding-top: 0;
+				}
+		}
+
+    </style>
+
+
+    
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{%  block tittle %} Sistema Ecofroz {% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/tercer_menu.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="/resources/demos/style.css"> -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'css/icon.css' %}">
+    <link rel="stylesheet" href="{% static 'css/alternativo.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+</head>
+<body>
+  <nav id="nav" role="navigation">
+    <a href="#nav" title="Show navigation">Show navigation</a>
+    <a href="#" title="Hide navigation">Hide navigation</a>
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li>
+            <a href="/" aria-haspopup="true">Blog</a>
+            <ul>
+                <li><a href="/">Design</a></li>
+                <li><a href="/">HTML</a></li>
+                <li><a href="/">CSS</a></li>
+                <li><a href="/">JavaScript</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="/" aria-haspopup="true">Work</a>
+            <ul>
+                <li><a href="/">Web Design</a></li>
+                <li><a href="/">Typography</a></li>
+                <li><a href="/">Front-End</a></li>
+            </ul>
+        </li>
+        <li><a href="/">About</a></li>
+    </ul>
+</nav>  
+
+
+
+    <div class="container-fluid">
+        {% block content %}
+        {% endblock %}    
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
+    <!-- <script src="https://raw.githubusercontent.com/tuupola/jquery_chained/master/jquery.chained.remote.min.js"></script> -->
+    <!-- <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script> -->
+
+    <script src="{% static 'js/add-formset.js' %}"></script>
+    <!-- <script src="{% static 'js/jquery.chained.js' %}"></script> -->
+    <script src="{% static 'js/js.cookie.js' %}"></script>
+    <script src="{% static 'js/dynamic-formset.js' %}"></script>
+    <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'js/doubletaptogo.js' %}"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
+
+    {% block extrajs %}
+    {% endblock %}
+
+    <script>
+      $( '#nav li:has(ul)' ).doubleTapToGo();
+    </script>
+</body>
+</html>

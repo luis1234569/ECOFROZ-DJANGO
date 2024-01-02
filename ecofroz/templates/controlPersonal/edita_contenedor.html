@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block title %}
+    <h2>Ordenes de Pedidos</h2>
+{% endblock %}
+
+{% block content %}
+<body>
+<div class="jumbotron row" style="width: 40%; margin:auto; padding-top: 25px; margin-top: 50px; margin-bottom: 25px;">
+    <div class="col-12"><h3 class="display-5">Edición de Contenedores</h3></div>
+    <form>
+        <div class="form-row">
+          <!-- <div class="form-group col-md-6">
+            <label>Chofer</label>
+            <input type="text" class="form-control" id="chofer">
+          </div> -->
+          <div class="form-group col-md-6">
+            <label for="inputState">Chofer</label>
+            <select id="inputState" class="form-control">
+              <option selected>Choose...</option>
+              <option>...</option>
+            </select>
+          </div>
+          <div class="form-group col-md-6">
+            <label>Placa</label>
+            <input type="text" class="form-control" id="placa" value="{{ form.placa }}">
+          </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Contenedor Ingresa</label>
+              <input type="text" class="form-control" id="contenedori" value="{{ form.num_contenedor_ingreso }}">
+            </div>
+            <div class="form-group col-md-6">
+              <label>Contenedor Salida</label>
+              <input type="text" class="form-control" id="contenedors" value="{{ form.num_contenedor_salida }">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+              <label>Sello 1</label>
+              <input type="text" class="form-control" id="sello_1">
+            </div>
+            <div class="form-group col-md-4">
+              <label>Sello 2</label>
+              <input type="text" class="form-control" id="sello_2">
+            </div>
+            <div class="form-group col-md-4">
+                <label>Sello 3</label>
+                <input type="text" class="form-control" id="sello_3">
+              </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <label>Sello Basc 1</label>
+            <input type="text" class="form-control" id="sello_basc_1">
+          </div>
+          <div class="form-group col-md-4">
+            <label>Sello Basc 2</label>
+            <input type="text" class="form-control" id="sello_basc_2">
+          </div>
+          <div class="form-group col-md-4">
+              <label>Sello Basc 3</label>
+              <input type="text" class="form-control" id="sello_basc_3">
+            </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <label>Sello Ecofroz 1</label>
+            <input type="text" class="form-control" id="sello_eco_1">
+          </div>
+          <div class="form-group col-md-4">
+            <label>Sello Ecofroz 2</label>
+            <input type="text" class="form-control" id="sello_eco_2">
+          </div>
+          <div class="form-group col-md-4">
+              <label>Sello Ecofroz 3</label>
+              <input type="text" class="form-control" id="sello_eco_3">
+            </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <label>Sello Naviera</label>
+            <input type="text" class="form-control" id="sello_naviera">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Editar</button>
+      </form>
+</div>
+</body>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+// function inputCharacters(event) {
+//     // Si el evento es una tecla Enter
+//     if (event.key === 'Enter') {
+//         $("#fch_ingreso").val('06/03/2020');
+//         // event.preventDefault();
+//         // document.registrop.submit();
+//     }
+// }
+
+// $(document).ready(function(){
+//     document.write(d.getDate());
+// });
+
+// Si pulsamos tecla en un Input
+$("#persona").keydown(function (e){
+    // Capturamos qué telca ha sido
+    var keyCode= e.which;
+    // Si la tecla es el Intro/Enter
+    if (keyCode == 13){
+        var d= new Date();
+
+        var dia = d.getDate() < 10 ? '0' + d.getDate() : d.getDate();
+        var mes =  ("0" + (d.getMonth() + 1));
+        var anio = d.getFullYear(); 
+        var hh = d.getHours() < 10 ? '0' + d.getHours() : d.getHours();
+        var mm = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes();
+
+        var fechatotal = anio + "-"+ mes +"-" + dia
+        var fechatxt = anio + mes + dia
+        var hora = hh + ":" + mm
+    //    alert(fechatotal);
+    // Evitamos que se ejecute eventos
+        $("#fch").val(fechatotal);
+        $("#fch_txt").val(fechatxt);
+        $("#fch_txts").val(fechatxt);
+        $("#hr").val(fechatotal + " " + hora);
+        $("#hr_txt").val(hora);
+    // event.preventDefault();
+        document.registrop.submit();
+    // Devolvemos falso
+    //  return false;
+   }
+ });
+
+ $("button").on("click", function(e){
+    var d= new Date();
+
+    var dia = d.getDate() < 10 ? '0' + d.getDate() : d.getDate();
+    var mes =  ("0" + (d.getMonth() + 1));
+    var anio = d.getFullYear(); 
+    var hh = d.getHours() < 10 ? '0' + d.getHours() : d.getHours();
+    var mm = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes();
+
+    var fechatotal = anio + "-"+ mes +"-" + dia
+    var fechatxt = anio + mes + dia
+    var hora = hh + ":" + mm
+
+    var fecha2_txt = '{{ fch }}'
+    var hora2 = '{{ hora }}'
+
+    // $("#fch").val(fechatotal);
+    $("#fch_txt").val(fechatxt);
+    // $("#hr").val(fechatotal + " " + hora);
+    $("#hr_txt3").val(fechatotal + " " + hora2);
+ });
+
+var comprueba = '{{msje2}}'
+if (comprueba == 'Error') {
+  $(document).ready(function(){
+    alert('{{ msje }}');
+  })
+};
+
+// jQuery(function($){
+//    $("#contenedori").mask("AAAA999999-9", {placeholder:" ",completed:function(){alert("completed!");}});
+//    $("#contenedors").mask("AAAA999999-9", {placeholder:" ",completed:function(){alert("completed!");}});
+// });
+</script>
+{% endblock %}

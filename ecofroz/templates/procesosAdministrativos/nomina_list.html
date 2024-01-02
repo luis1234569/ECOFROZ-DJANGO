@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load l10n %}
+
+{% block extrahead %}
+
+<style>
+
+table {
+  border-collapse: collapse;
+  width: 100%;  
+}
+
+th, td {
+
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+
+th {
+  background-color: #4CAF50;
+  color: white;
+}
+
+
+#tabla-reporte{
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#tabla-reporte td, #tabla-reporte th {
+  border: 1px solid #ddd;
+  padding: 0px;
+}
+
+#tabla-reporte tr:hover {background-color: #ddd;}
+#tabla-reporte tr:hover {background-color: #ddd;}
+
+#tabla-reporte th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}
+
+ul.opciones {
+  list-style-type:none;
+}
+
+</style>
+
+
+{% endblock %}
+
+
+{% block content %}
+
+
+ 
+    <table id="tabla-reporte">  
+      <thead>
+        <tr>
+            
+            <th scope="col"><strong>CODIGO</strong></th>
+            <th scope="col"><strong>APELLIDO</strong></th>
+            <th scope="col"><strong>NOMBRE</strong></th>
+        </tr>
+      </thead>
+    <tbody>
+      {% for i in page_obj  %} 
+      
+        <tr class="fila">
+          <td>{{ i.nomina_id }}</td>
+          <td>{{ i.nomina_ape }}</td>
+          <td>{{ i.nomina_nom }}</td>
+        </tr>
+     </div>
+    </div>
+  </div>
+  
+  {% endfor %}
+ 
+
+{% endblock content %}
+
+{% block extrajs %}
+<script>
+
+</script>
+
+
+{% endblock %}

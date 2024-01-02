@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="es">
+    <head>
+    <meta charset="utf-8">
+    <title>Reporte PDF</title>
+    <style>
+        @page {
+            size: a4;
+             /* top right bottom left */
+            margin: 1cm;
+            }
+
+        @font-face {
+            font-family: "Verdana";
+            src: url("verdana.ttf");
+        }
+
+        html {
+            font-family: Verdana;
+        }
+
+        h1 {
+            font-size:150%; 
+            text-align: center;
+            /* -pdf-outline-level: 0; */
+        }
+
+        table {
+            width: 100%;
+            border: 0.5;
+            border-style: solid;
+            border-color: black;
+        }
+
+        td {
+            /* top right bottom left */
+            padding: 5px 5px 0 5px;
+            vertical-align: middle;
+            font-size: 10pt;
+        }
+
+        th {
+            padding: 5px 5px 0 5px;
+            vertical-align: middle;
+            font-size: 10pt;        }
+
+        .box01{
+            width: 600px;
+            height: 300px;
+            border: 5px solid red;
+            background: white;
+            color: black;
+            display: flex;
+            align-items: flex-end;
+        }
+    </style>
+</head>
+<body>
+    <div style="width: 100%; background-color: aqua;">
+        <table style="border: none;">
+            <tr>
+                <td>
+                    <!-- <div id="logo_content"><img src="media/img/bg/logo.jpg" height="100px" alt=""></div> -->
+                    <div id="logo_content"><img src="https://www.ecofroz.com/static/media/logo-ecofroz-nuevo-small.jpg" height="100px" alt=""></div>
+                </td>
+                <td style="text-align: right; padding: -8px 0 -8px 0;">
+                    <h5>ECSEG-R-2.1-15</h5>
+                    <!-- <h4>Edición:0</h4> -->
+                </td>
+            </tr>
+        </table>
+    </div>
+    <h1>Acta de entrega de equipos y bienes</h1>
+    <div style="width: 100%;">
+        <table style="border-style: none;">
+            <tr>
+                <td>
+                    <strong><label>Fecha de Entrega Acta: </label></strong>
+                    {{ fch_entrega | date:"d/m/Y" }}
+                </td> 
+            </tr>
+            <tr>
+                <td>
+                    <strong><label>Custodio: </label></strong>
+                    {{ custodio }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label><strong>Departameto: </strong></label>
+                    {{ departamento }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label><strong>Sector: </strong></label>
+                    {{ sector }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label><strong>Entrega Acta:</strong>................................................. Responsable de Activos</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label><strong>Recibe:</strong> {{ custodio }} ........................................</label>
+                </td>
+            </tr>
+        </table>
+    </div>	
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th colspan="5">
+                        Descripción de el(los) Activo(s):
+                    </th>
+                </tr>
+                <tr>
+                    <th>
+                        N°
+                    </th>
+                    <th>
+                        Activo Código
+                    </th>
+                    <th>
+                        Ubicación
+                    </th>
+                    <th>
+                        Tipo
+                    </th>
+                    <th>
+                        Descripción
+                    </th>
+                    <th>
+                        Grabado/Etiqueta
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in reg %}
+                <tr>
+                    <td style="width: 5%;">
+                        {{forloop.counter}}
+                    </td>
+                    <td style="width: 10%;">
+                        {{ i.desc_activo_codigo.activo_codigo }}
+                    </td>
+                    <td style="width: 15%;">
+                        {{ i.desc_activo_codigo.activo_ubica }}
+                    </td>
+                    <td style="width: 25%;">
+                        {{ i.desc_activo_codigo.activo_tipo }}
+                    </td>
+                    <td style="width: 45%;">
+                        {{ i.desc_activo_codigo.activo_descripcion }}
+                    </td>
+                    <td style="width: 20%;">
+                        {{ i.desc_activo_codigo.grabado }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

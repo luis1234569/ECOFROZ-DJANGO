@@ -1,0 +1,143 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+
+    {%  block extrahead %}
+    {% endblock %}
+
+    <link rel="stylesheet" href="{%  static 'css/bootstrap.min.css '%}">
+  <!--  <link rel="stylesheet" href="<//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"> -->
+    <!-- Latest compiled and minified CSS -->
+<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
+
+<!-- Optional theme -->
+<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"> -->
+
+<!-- Latest compiled and minified JavaScript -->
+<!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
+
+  
+    <title>{%  block tittle %} Document {% endblock %}</title>
+    
+    <style type="text/css">
+      body{
+        padding: 0;
+        margin: 0;
+      }
+      .dropdown-menu ul{
+        list-style: none;
+        margin: 0;
+
+      }
+      .dropdown ul li{
+        padding: 15px;
+        width: 230px;
+        background-color: rgb(59, 63, 66);
+        border-top: 1px solid #BDC3C7;
+      }
+      .dropdown-menu ul li{
+        padding: 14px;
+        position: relative;
+        width: 240px;
+        background-color: rgb(59, 63, 66);
+        border-top: 1px solid #BDC3C7;
+      }
+      .dropdown ul ul{
+        transition: all 0.3s;
+        opacity: 0;
+        position: absolute;
+        visibility: hidden;
+        left: 83%;
+        top: 22%;
+
+      }
+      .dropdown ul li:hover > ul {
+        opacity: 1;
+        visibility: visible;
+      }
+     
+      .dropdown-menu ul li a{
+        color:#fff;
+        text-decoration: none;
+        
+      }
+
+      .dropdown ul li a{
+        color:#fff;
+        text-decoration: none;
+        
+      }
+
+    </style>
+
+</head>
+<body>
+<header>
+{% block navbar %}
+
+
+    <div class="bs-docs-section clearfix">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="bs-component">
+                 <nav class="navbar navbar-default">
+                     <div class="container-fluid">
+                        <div class="navbar-header">
+                          <a class="navbar-brand" href="{% url 'home' %}">Home</a>
+                        </div>
+                       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                         <ul class="nav navbar-nav">
+                            <li class="dropdown">
+                              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Manejo de Proveedores <span class="caret"></span></a>
+                              <ul class="dropdown-menu" role="menu">
+                                
+                                <li><a href="{% url 'listar_proveedores' %}">Búsqueda / Modificación</a></li>
+      
+                                <li><a href="{% url 'nuevo_registro' %}">Nuevo Registro</a></li>
+                                <li><a href="{#}">Reportes Filtrados</a></li>
+                                <li><a href="{#}">Ultimos Movimientos</a></li>
+                              </ul>
+                            </li>
+                           
+                         </ul> 
+                         <ul class="nav navbar-nav navbar-right">
+                              <li class="dropdown"><a href="http://www.ecofroz.com" onclick="pageTracker._link(this.href); return false;">Ecofroz S.A</a>
+                              </li>
+                             <li class="dropdown">
+                              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Opciones<span class="caret"></span></a>
+                              <ul class="dropdown-menu" role="menu">
+                                 <li><a href="{#}">Salir</a></li>
+                              </ul>
+                            </li>
+                         </ul>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+              </div>
+          </div>
+      </div>
+
+
+   {% endblock %}
+</header>
+<div class="container">
+    {% block content %}
+    <div class="container">
+    </div>
+    <h5>Principal</h5>
+    {% endblock %}
+</div>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+ <!--<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script> -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    {% block footer %}
+
+    {% endblock %}
+
+    {% block extrajs %}
+    {% endblock %}
+</body>
+</html>

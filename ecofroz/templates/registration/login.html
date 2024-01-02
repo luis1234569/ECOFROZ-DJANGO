@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+Ingreso
+{% endblock %}
+{% block navbar %}
+{% endblock %}
+{% block menu %}
+{% endblock %}
+{% block content %}
+{% if user.is_authenticated %}
+
+{% else %}
+<div class="jumbotron" style="width: 30%; margin:auto; padding-top: 25px; margin-top: 50px; margin-bottom: 25px;">
+    <h2 class="display-5">Ingreso Sistema</h2>
+<form method="POST" novalidate>
+    {% csrf_token %}
+    {{ form|crispy }}
+    <div class="form-group">
+        <input class="btn btn-primary" type="submit" value="Ingresar">
+        <a href="#" class="btn btn-link">Olvidé mi contraseña</a>
+     </div>
+</form>
+</div>
+{% endif %}
+{% endblock %}

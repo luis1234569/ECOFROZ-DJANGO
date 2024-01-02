@@ -1,0 +1,125 @@
+
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+
+{% block extrahead %}
+
+<style>
+  body {
+        background-color:cadetblue
+      }
+
+  th, td {
+  text-align: left;
+  padding: 8px;
+}
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+
+
+{% for nombre in proveedor %}  
+<div class="container-fluid" style="width: 95%; margin-top: 25px;">
+<div class="row">
+  <div class=".col-12">
+    <div class="row">
+    <h5 style="margin-left: 100px;">Fichas de {{ nombre.codigo_id.nombre_empresa }}{{ nombre.codigo_id.id }}</h5>
+    </div>
+    <div class="row"><p></div>
+    <div class="row">
+    <a style="margin-left: 100px;" class="btn btn-outline-success" title="Volver a Documentos del Proveedor" href="{% url 'proveedores:ver_documentos' nombre.codigo_id.id %}"><b>Volver a Documentos del Proveedor</b></a>
+    </div>  
+  </div>
+</div>
+    
+    
+  {% endfor %}
+  
+
+  <form enctype="multipart/form-data" method="POST">
+    {% csrf_token %}
+    {{ documentos_list.management_form }}
+    
+    <div class="modal fade" id="modal-progress" data-backdrop="static" data-keyboard="false">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Uploading...</h4>
+          </div>
+          <div class="modal-body">
+            <div class="progress">
+              <div class="progress-bar" role="progressbar" style="width: 0%;">0%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+   
+
+    {# 3. TABLE TO DISPLAY THE UPLOADED DOCS #}
+    <div class="container"  style="width: 95%; margin-top: 25px;">
+    <table id="gallery" class="table table-bordered">
+      <thead>
+        <tr>
+          <th style="width: 5%;">No</th>
+          <th>Nombre Ficha Utiliza Ecofroz</th>
+          <th>Documento</th>
+          
+        </tr>
+      </thead>
+      <tbody>
+        {% for documento in documentos_list %}
+          <tr>
+            <td style="width: 5%;"><strong>{{ forloop.counter }}</strong></td>
+            <td>{%render_field documento.nombre_ficha class="form-control" %}</td> 
+            <td>{{ documento.archivo }}</td> 
+            
+            
+            
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <p>
+      
+
+ 
+
+  
+  <div class="row" style="width:40%">
+  <button type="submit" style="margin-top:5px;" class="btn btn-primary btn-lg">Guardar</button>
+  </div>
+<br>
+
+</form>
+
+  
+  </div>
+    
+    
+
+
+{% endblock content %}
+
+
+{% block extrajs %}
+{% load static %}
+
+<script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+<script src="{% static 'js/jquery-file-upload/js/vendor/jquery.ui.widget.js' %}"></script>
+<script src="{% static 'js/jquery-file-upload/js/jquery.iframe-transport.js' %}"></script>
+<script src="{% static 'js/jquery-file-upload/js/jquery.fileupload.js' %}"></script>
+
+<script src="{% static 'js/basic-upload.js' %}"></script>
+
+
+
+{% endblock %}

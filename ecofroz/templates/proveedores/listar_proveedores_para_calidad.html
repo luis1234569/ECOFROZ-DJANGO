@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+
+<head>
+<style  type="text/css">
+
+table, th, td {
+border: 1px solid Black;}
+
+/* make the table a 100% wide by default */
+table {
+width: 100%;}
+
+/* if the browser window is at least 800px-s wide: */
+@media screen and (min-width: 800px) {
+  table {
+  width: 90%;}
+}
+
+/* if the browser window is at least 1000px-s wide: */
+@media screen and (min-width: 1000px) {
+  table {
+  width: 80%;}
+}
+
+
+</style>
+
+</head>
+
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row" style="margin-top: 25px;">
+    <div class="col-md 18 search">
+      <form class="form-inline my-2 my-lg-0" method="GET">
+        <input class="form-control mr-sm-2" type="text" size="65;" placeholder="RUC, Razon Social, Giro de Negocio ó Producto Principal..." name="buscar">
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+      </form>
+    </div>
+      <div class="col-md-6">
+        <!-- <a class="btn btn-success rounded-circle" style="float: right;" title="Nuevo Proveedor" href="{% url 'proveedores:nuevo_registro' %}">+</a> -->
+      </div>
+    </div>
+  </div>
+<br>
+<table class="table table-hover table-striped table-dark table-sm container-fluid" style="width: 98%;">
+  <thead>
+    <tr>
+        <td scope="col"><strong>No</strong></td>
+        <td scope="col"><strong>RUC</strong></td>
+        <td scope="col"><strong>Razón Social</strong></td>
+        <td scope="col"><strong>Fecha Solicitud Revisión</strong></td>
+        <td style="text-align: center;" scope="col"><strong>Categoría</strong></td>
+        <td scope="col"><strong>Giro de Negocio</strong></td>
+        <td scope="col"><strong>Observaciones Calidad</strong></td>
+        <td style="text-align: center;" scope="col"><strong>Aprobado Calidad</strong></td>
+        <td style="text-align: center;" scope="col"><strong>Califique Proveedor</strong></td>
+    </tr>
+  </thead>
+<tbody>
+  {% if form %}
+  {% for proveedor in form  %} 
+    <!-- <tr data-href="{% url 'proveedores:editar_proveedor'  proveedor.codigo_id.id %}" style="cursor: pointer;">  -->
+      <tr>
+      <td>{{ forloop.counter0|add:form.start_index }}</td>
+      <td>{{ proveedor.codigo_id.ruc }}</td>
+      <td>{{ proveedor.codigo_id.nombre_empresa }}</td>
+      <td>{{ proveedor.fecha_enviado_a_calidad | default:"--" }}</td>
+      <td style="text-align: center;">{{ proveedor.codigo_id.categoria | default:"--" }}</td>
+      <td>{{ proveedor.giro_negocio | default:"--" }}</td>
+      <td>{{ proveedor.observaciones_calidad | default:"--" }}</td>
+      
+      <td style="text-align: center;"></tdstyle>{{ proveedor.revisado_por_calidad | yesno:"SI,NO" }}</td>
+      <!-- <td style="text-align: center;">{{ proveedor.codigo_id.calificacion | default:"--" }}&nbsp;{{ proveedor.codigo_id.grade | default:"--" }}</td> -->
+
+      <td style="text-align: center;">
+        <a class="btn btn-primary glyphicon glyphicon-eye-open" title="Calificar Proveedor" href="{% url 'proveedores:califica_ecofroz_calidad'  proveedor.codigo_id.id %}"></a>
+      </td>
+       </tr>
+
+ 
+{% endfor %}
+
+{% else %}
+<h1>No hay registros</h1>
+
+{% endif %}
+</tbody>
+
+</table>
+
+<div class="pagination container-fluid" style="width: 98%;">
+  <span class="step-links">
+      {% if form.has_previous %}
+          <a href="?page=1">&laquo; inicio</a>
+          <a href="?page={{ form.previous_page_number }}">previo</a>
+      {% endif %}
+
+      <span class="current">
+          Page {{ form.number }} of {{ form.paginator.num_pages }}.
+      </span>
+
+      {% if form.has_next %}
+          <a href="?page={{ form.next_page_number }}">próximo</a>
+          <a href="?page={{ form.paginator.num_pages }}">último &raquo;</a>
+      {% endif %}
+  </span>
+</div>
+
+{% endblock content %}
+
+{% block extrajs %}
+<script>
+  jQuery(document).ready(function($){
+    $('*[data-href]').on('click', function(){
+      window.location = $(this).data("href");
+    });
+  });
+</script>
+{% endblock %}

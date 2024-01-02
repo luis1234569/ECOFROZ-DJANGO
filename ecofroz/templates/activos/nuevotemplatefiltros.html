@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+
+
+{% block content %}
+<div class="jumbotron container-fluid" style="margin-top: 5px;">
+  <h5 class="display-5" style="margin-top: -25px;">Reportes Filtrados</h5>
+        <form method="GET" id="form" >
+            {% csrf_token %}
+            <div class="form-row">
+              <div class="form-group col-md-3">
+                  <label>{{ form2.activo_codigo.label }}</label>
+                  {{ form2.activo_codigo }}
+              </div>
+              <div class="form-group col-md-3">
+                <label for="{{ form2.area.area }}">{{ form2.activo_grupo.label }}</label>
+                {{ form2.activo_grupo }} 
+              </div>
+              <div class="form-group col-md-3">
+                <label>{{ form2.activo_tipo.label }}</label>
+                {{ form2.activo_tipo }}
+              </div>
+          
+              <div class="form-group col-md-3">
+                  <label for="{{ form2.area.area }}">{{ form2.activo_ubica.label }}</label>
+                  {% render_field form2.activo_ubica class="form-control" %}
+              </div>
+              <div class="form-group col-md-3">
+                <label for="{{ form2.fake }}"></label>
+            </div>
+
+              <div class="form-group col-md-3">
+                  <label>{{ form2.activo_depar.label }}</label>
+                  {% render_field form2.activo_depar class="form-control" %}
+              </div>
+
+              <div class="form-group col-md-3">
+                  <label for="{{ form2.area.area }}">{{ form2.activo_area.label }}</label>
+                  {% render_field form2.activo_area class="form-control" %}
+              </div>
+          
+              <div class="form-group col-md-3">
+                  <label for="{{ form2.pestanias_seguros.lbel }}">{{ form2.pestanias_seguros.label }}</label>
+                  {% render_field form2.pestanias_seguros class="form-control" %}
+            
+             </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12" style="margin-top: 10px;">
+                <button class="btn btn-warning my-2 my-sm-0" type="reset" onclick="location.href='{% url 'activos:filtrar_activos' %}'">Limpiar</button> 
+                <button class="btn btn-primary my-2 my-sm-0" type="submit">Buscar</button>        
+              </div>
+          </div>
+        </form>
+</div>
+  {% if var %}
+  <div class="container-fluid">
+    <h3 style="float: left;margin-top:5px; margin-right: 10px;" id="heading">Número de registros encontrados: {{ var }} </h3>
+    <button class="btn btn-success" style="margin-top: 5px;" type="button" onclick="location.href='{% url 'activos:to_excelclass' %}'">Exportar a Excel</button>      
+    <button class="btn btn-info" style="margin-top: 5px;" type="button" onclick="location.href='{% url 'activos:to_mba' %}'">Exportar para MBA</button>
+  </div>
+  <br>
+  {% endif %}
+  <div class="container-fluid">
+    <!-- <table class="table table-hover table-dark table-sm container-fluid" style="width: 99%;"> -->
+      <table class="table table-hover table-dark table-sm container-fluid" style="width:fit-content;">      
+      <thead>
+                    <tr>
+                        <td scope="col"><strong>No</strong></td>
+                        <td scope="col"><strong>Codigo</strong></td>
+                        <td scope="col"><strong>Parte de</strong></td>
+                        <td scope="col"><strong>Ubicación</strong></td>
+                        <td scope="col"><strong>Sector</strong></td>
+                        <td scope="col"><strong>Sub Sector</strong></td>
+                        <td scope="col"><strong>Descripción</strong></td>
+                        <td scope="col"><strong>Tipo</strong></td>
+                        <td scope="col"><strong>Marca</strong></td>
+                        <td scope="col"><strong>Modelo</strong></td>
+                        <td scope="col"><strong>Serie</strong></td>
+                        <td scope="col"><strong>Valor</strong></td>
+                        <td scope="col"><strong>Ultima Modificacion</strong></td>
+                    </tr>
+                </thead>
+              <tbody>
+                {% if form %}
+                {% for activo in form  %} 
+                <tr {% if perms.activos.change_desc_activo %}data-href="{% url 'activos:editar_activos'  activo.desc_activo_codigo.id %}" style="cursor: pointer;"{% endif %}>
+                      <td>{{ forloop.counter0|add:form.start_index }}</td>
+                      <td>{{ activo.desc_activo_codigo.activo_codigo }}</td>
+                      <td>{{ activo.desc_activo_codigo.cod_activo_padre | default:"--" }}</td>
+                      <td>{{ activo.desc_activo_codigo.activo_ubica}}</td>
+                      <td>{{ activo.desc_activo_codigo.activo_area }}</td>
+                      <td>{{ activo.desc_activo_codigo.activo_subsec | default:"--" }}</td>
+                      <td>{{ activo.desc_activo_codigo.activo_descripcion }}</td>
+                      <td>{{ activo.desc_activo_codigo.activo_tipo }}</td>
+                      <td>{{ activo.desc_activo_marca | default:"--" }}</td>
+                      <td>{{ activo.desc_activo_modelo | default:"--" }}</td>
+                      <td>{{ activo.desc_activo_num_serie | default:"--" }}</td>
+                      <td>{{ activo.desc_activo_codigo.activo_valor | default:"" }}</td>
+                      <td>{{ activo.desc_activo_codigo.activo_fecha_modifica }}</td>
+                  </tr>
+              
+               
+              {% endfor %}
+              
+              {% else %}
+              <h1>No hay registros</h1>
+              
+              {% endif %}
+              </tbody>
+              
+              </table>
+              
+              <div class="pagination">
+                <span class="step-links">
+                    {% if form.has_previous %}
+                        <a href="?activo_tipo={{ tipo }}&activo_ubica={{ ubicacion }}&activo_grupo={{ grupo }}&activo_depar={{ departamento }}&activo_area={{ area }}&pestanias_seguros={{ seguros }}&page=1">&laquo; inicio</a>
+                        <a href="?activo_tipo={{ tipo }}&activo_ubica={{ ubicacion }}&activo_grupo={{ grupo }}&activo_depar={{ departamento }}&activo_area={{ area }}&pestanias_seguros={{ seguros }}&page={{ form.previous_page_number }}">previo</a>
+                    {% endif %}
+              
+                    <span class="current">
+                        Page {{ form.number }} of {{ form.paginator.num_pages }}.
+                    </span>
+              
+                    {% if form.has_next %}
+                        <a href="?activo_tipo={{ tipo }}&activo_ubica={{ ubicacion }}&activo_grupo={{ grupo }}&activo_depar={{ departamento }}&activo_area={{ area }}&pestanias_seguros={{ seguros }}&page={{ form.next_page_number }}">próximo</a>
+                        <a href="?activo_tipo={{ tipo }}&activo_ubica={{ ubicacion }}&activo_grupo={{ grupo }}&activo_depar={{ departamento }}&activo_area={{ area }}&pestanias_seguros={{ seguros }}&page={{ form.paginator.num_pages }}">último &raquo;</a>
+                    {% endif %}
+                </span>
+              </div>
+            </div>
+{% endblock content %}
+
+
+
+
+{% block extrajs %}
+<script>
+  jQuery(document).ready(function($){
+    $('*[data-href]').on('click', function(){
+      window.location = $(this).data("href");
+    });
+  });
+
+</script>
+{% endblock %}

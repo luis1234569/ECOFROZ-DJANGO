@@ -1,0 +1,203 @@
+{% extends 'base.html' %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block title %}
+    <h2>Ordenes de Pedidos</h2>
+{% endblock %}
+
+{% block content %}
+<div class="jumbotron" style="width: 75%; margin:auto; padding-top: 25px; margin-top: 50px; margin-bottom: 25px;">
+<h2 class="display-5">Ingreso de Ordenes de Pedido</h2>
+<!-- <h4 class="display-6">Hola {{ user.first_name }} {{ user.last_name }}</h4> -->
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+        <input id="usuario_solicita" type="text" name="usuario_solicita" hidden value="{{ user.id }}">
+        {{ form2.auth_user }}
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label>Departamento Solicitante</label>
+            <select class="form-control" id="depar" name="depar" required>
+                {% for dp in depar %}
+                    <option value="{{dp.id}}">{{dp.dep_nombre|capfirst}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="{{ form2.area.area }}">Area Solicitante</label>
+            <select class="form-control" id="depar" name="depar" required>
+                {% for ar in area %}
+                    <option value="{{ar.area_codigo}}">{{ar.area_nombre|capfirst}}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <!-- <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="{{ form2.tipoactivo.tipac }}">{{ form2.tipoactivo.label }}</label>
+            {{ form2.tipoactivo }}
+        </div>
+        <div class="form-group col-md-4">
+            <label for="{{ form2.tiempo_vida.tv }}">{{ form2.tiempo_vida.label }}</label>
+            {{ form2.tiempo_vida }}
+        </div>  
+        <div class="form-group col-md-2">
+            <label for="{{ form2.tiempo_tipo.tt }}">{{ form2.tiempo_tipo.label }}</label>
+            {{ form2.tiempo_tipo }}
+        </div>
+    </div> -->
+    <div class="form-row">
+        <div class="form-group col-md-12">
+            <label for="{{ form2.numproyecto.numpro }}">Proyecto</label>
+            <input class="form-control" type="text">
+        </div>
+    </div>
+    <!-- <div class="form-group col-md-12">
+        <div class="form-check">
+            {{ form2.regimenespecial }}
+            <label for="{{ form2.regimenespecial.regesp }}">{{ form2.regimenespecial.label }}</label>
+        </div>
+    </div> -->
+    <div>
+        <table class="table table-borderless">
+            <thead class="thead-dark">
+                <th>Item</th>
+                <th>Tipo</th>
+                <th>Descripción</th>
+                <th>Cantidad</th>
+            </thead>
+            <tbody>
+                {% for i in 'x'|rjust:'5' %}
+                <tr>
+                    <th scope="row">
+                        {{forloop.counter}}
+                    </th>
+                    <td>
+                        <select class="form-control" id="depar" name="depar" required>
+                            <option value="0" selected>-----</option>
+                            {% for tp in tipo %}
+                                <option value="{{tp.id}}">{{tp.tipo_nombre|capfirst}}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td>
+                        <input class="form-control" type="text">
+                    </td>
+                    <td>
+                        <input class="form-control" type="text">
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <!-- <div class="form-group col-md-12">
+        <label for="{{ form.descripcion.desc }}">{{ form.descripcion.label }}</label>
+        {{ form.descripcion }}
+    </div> -->
+    <!-- <div class="form-row">
+        <div class="col-md-10">
+            <label for="{{ form.cantidad.cant }}">{{ form.cantidad.label }}</label>
+            {{ form.cantidad }}
+        </div>
+        <div class="col-md-2">
+            <label for="{{ form.unimedida.uni }}">{{ form.unimedida.label }}</label>
+            {{ form.unimedida }}
+        </div>
+    </div> -->
+    <!-- <div class="form-row" style="margin-top: 10px;">
+        <div class="col-md-6">
+            <label for="{{ form.cantidad.cant }}">{{ form.img_1.label }}</label>
+            {{ form.img_1 }}
+        </div>
+        <div class="col-md-6">
+            <label for="{{ form.unimedida.uni }}">{{ form.img_2.label }}</label>
+            {{ form.img_2 }}
+        </div>
+    </div> -->
+    <div class="form-row">
+        <div class="from-goup col-md-6">
+            <label for="{{ form2.motivo_compra.mc }}">Motivo de Compra</label>
+            <select class="form-control" name="motivo_compra" id="motivo_compra">
+                <option value="1">Remplazo por Obsolescencia</option>
+                <option value="2">Remplazo por Mejora</option>
+                <option value="3" selected>Nuevo</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-12">
+            <label for="{{ form2.justificacion_compra.jc }}">Justificación de Compra</label>
+            <textarea class="form-control" name="jc" id="jc" cols="30" rows="10"></textarea>
+        </div>
+    </div>
+    <div class="form-row" id="reemplazo_accion_div">
+        <div class="col-md-12">
+            <label for="{{ form2.reemplazo_accion.ra }}">Acción de Equipo Reemplazado</label>
+            <select class="form-control" name="er" id="er">
+                <option value="1">Reparación</option>
+                <option value="2">Dada de Baja</option>
+                <option value="3">Backup</option>
+                <option value="4">Reubicación</option>
+            </select>
+        </div>
+        <div class="col-md-12">
+            <label for="{{ form2.reemplazo_observa.ro }}">Observación de Reemplazo</label>
+            <textarea class="form-control" name="or" id="or" cols="30" rows="10"></textarea>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12" style="margin-top: 10px;">
+            <button type="submit" class="btn btn-primary">Generar</button>
+        </div>
+    </div>
+</form>
+</div>
+<!-- <div style="float: right; width: 30%; padding: 0px 0px 0px 10px">
+    <h3>Contenido derecho</h3>
+</div> -->
+{% endblock %}
+
+{% block extrajs %}
+<script>
+    $("#reemplazo_accion_div").hide().val("");
+    // $("#reemplazo_accion_label").hide();
+    
+    $("#motivo_compra").change(function(){
+        var opcion = $(this).val();
+
+        if (opcion == "1" || opcion == "2")
+            $("#reemplazo_accion_div").show();
+        else
+            $("#reemplazo_accion_div").hide().val("");
+            // $("#reemplazo_accion_label").hide();
+    });
+
+    function ordenarSelect(id_componente)
+    {
+      var selectToSort = jQuery('#' + id_componente);
+      var optionActual = selectToSort.val();
+      selectToSort.html(selectToSort.children('option').sort(function (a, b) {
+        return a.text === b.text ? 0 : a.text < b.text ? -1 : 1;
+      })).val(optionActual);
+    }
+    $(document).ready(function () {
+      ordenarSelect('selectPaises');
+    });
+
+    function ordenarSelect(id_componente)
+    {
+      var selectToSort = jQuery('#' + id_componente);
+      var optionActual = selectToSort.val();
+      selectToSort.html(selectToSort.children('option').sort(function (a, b) {
+        return a.text === b.text ? 0 : a.text < b.text ? -1 : 1;
+      })).val(optionActual);
+    }
+    $(document).ready(function () {
+      ordenarSelect('tiempo_tipo');
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,6 @@
+agricola externo
+
+en el documento para imprimir en el en cabezado de cada lote hora aplicacion temperatura y velocidad del viento
+
+al final del documento firma del tecnico y del supervisor
+

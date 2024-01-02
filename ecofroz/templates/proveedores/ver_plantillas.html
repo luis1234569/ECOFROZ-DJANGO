@@ -1,0 +1,303 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+
+
+
+{% block extrahead %}
+<!DOCTYPE html>
+<style>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+table {
+  border-collapse: collapse;
+  width: 100%;  
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+
+
+
+ul.opciones {
+  list-style-type:none;
+}
+
+input[type=text] {
+  border: none;
+  border-bottom: 1px solid #34bdeb ;
+  background-color: none;
+  outline: none;
+  box-shadow: none !important;
+  /* border: none; */
+  border-bottom-color: 1px solid #34bdeb  ;
+}
+
+input[type=number] {
+  border: none;
+  border-bottom: 1px solid #34bdeb ;
+  background-color: none;
+  outline: none;
+  box-shadow: none !important;
+  /* border: none; */
+  border-bottom-color: 1px solid #34bdeb  ;
+}
+
+.button {
+background-color: #4CAF50;
+border: none;
+color: white;
+padding: 4px 20px; */
+text-align: center;
+text-decoration: none;
+display: inline-block;
+font-size: 16px;
+margin: 4px 2px;
+cursor: pointer;
+border-radius: 4px;
+}
+
+
+
+.select-box {
+     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    -webkit-appearance: button;
+    -moz-appearance: button;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -webkit-padding-end: 20px;
+    -moz-padding-end: 20px;
+    -webkit-padding-start: 2px;
+    -moz-padding-start: 2px;
+    background-color: #faf9f7; /* Fallback color if gradients are not supported */
+    background-image: url(../images/select-arrow.png), -webkit-linear-gradient(top, #E5E5E5, #F4F4F4); /* For Chrome and Safari */
+    background-image: url(../images/select-arrow.png), -moz-linear-gradient(top, #E5E5E5, #F4F4F4); /* For old Firefox (3.6 to 15) */
+    background-image: url(../images/select-arrow.png), -ms-linear-gradient(top, #E5E5E5, #F4F4F4); /* For pre-releases of Internet Explorer  10*/
+    background-image: url(../images/select-arrow.png), -o-linear-gradient(top, #E5E5E5, #F4F4F4); /* For old Opera (11.1 to 12.0) */
+    background-image: url(../images/select-arrow.png), linear-gradient(to bottom, #E5E5E5, #F4F4F4); /* Standard syntax; must be last */
+    background-position: center right;
+    background-repeat: no-repeat;
+    border: 1px solid #AAA;
+    outline: 0px;
+    border-radius: 2px;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+    color:#262625;
+    font-size: inherit;
+    margin: 0;
+    overflow: hidden;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#tabla-reporte{
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#tabla-reporte td, #tabla-reporte th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#tabla-reporte tr:hover {background-color: #ddd;}
+#tabla-reporte tr:hover {background-color: #ddd;}
+
+#tabla-reporte th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}
+
+
+#categoria-label{
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  margin-left:25px;
+  
+  /* border-collapse: collapse;
+  width: 100%; */
+}
+
+.categoria-label2{
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  margin-left:25px;
+  
+  /* border-collapse: collapse;
+  width: 100%; */
+}
+
+#contenedor{
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  margin-top:25px;
+}
+
+#filas{
+  padding:8px;
+}
+
+#categoria3{
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  margin-left:35px;
+}
+
+#proveedor1{
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  margin-left:35px;
+}
+
+#proveedor2{
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  margin-left:23px;
+}
+
+#list-segmento{
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  margin-left:23px;
+}
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+ 
+<div class="container-fluid" id="contenedor">  
+<div class=row>
+    <div class="col-12">
+        <form method="GET" id="form" >
+            {% csrf_token %}
+            
+            <div class=row id="filas" >
+            <label for="{{ form.categoria_proveedor.label }}" id="categoria-label">Seleccione la Categoría</label>&nbsp;
+            {% render_field form.categoria_proveedor id="categoria" class="select-box" onChange="form.submit();"   %} 
+            </div>
+            
+            <div class=row id="filas">
+              <label class="categoria-label2" id="label_maspreguntas">Desea insertar una nueva pregunta?</label>&nbsp;&nbsp;
+              <select name="maspreguntas" id="maspreguntas" class="select-box">
+                <option value="--" selected="selected">--</option>
+                <option value="SI">SI</option>
+                </select>
+              
+            </div>
+              <div class=row id="filas">
+                <label class="categoria-label2" id="label_posicion">En qué posición?</label>&nbsp;&nbsp;
+                <input type="number" id="posicion" name="posicion" min="1" max="100" id="posicion">
+  
+              </div>
+            
+              <div class=row id="filas">
+                <label class="categoria-label2" id="label_encabezado">Escriba el encabezado de la pregunta</label>&nbsp;&nbsp;
+                <input type="text"  name="nuevapregunta" id="encabezado" size="100">
+  
+              </div>
+
+
+    </div>
+  
+            </form>    
+      
+        
+      </div>
+    
+
+              {% if form %}
+               
+                    <div class="container-fluid" style="margin-top: 10px;">
+                  <table class="table table-hover table-striped table-dark table-sm container-fluid" style="width:99%;">      
+                  <thead> 
+                   
+                    <tr>
+                    <td scope="col"><strong>Posición</strong></td>
+                    <td scope="col"><strong>Pregunta</strong></td>
+                      
+                  </tr>
+                    
+                  </thead>      
+          
+            
+            <tbody>
+              {% if plantilla %}
+              {% for valores in plantilla  %} 
+                  <tr>
+        
+                  <td>{{ valores.ordenamiento }}</td>
+                  <td>{{ valores.pregunta_id.pregunta }}</td>
+                  <tr>
+              {% endfor %}
+            
+            {% else %}
+            <h1>No hay registros</h1>
+            
+            {% endif %}
+            </tbody>
+              
+              </table>
+            </div>
+
+            {% endif %}
+              
+              {% endblock content %}
+              
+{% block extrajs %}
+<script>
+
+              $(window).on("load", function() {
+        $(".loader").fadeOut("slow");
+    });
+
+    $(document).ready(function() {    
+        $('#enviar').on('click', function(){
+            //Añadimos la imagen de carga en el contenedor
+            $(".loader").show();
+            $(window).on("load", function(){
+                $(".loader").fadeOut("slow");
+            });
+        }); 
+
+        // if($('#categoria_proveedor').value ==  )
+
+    }); 
+
+
+
+
+    // $("#maspreguntas").hide().val("");
+    // $("#label_maspreguntas").hide().val("");
+    // $("#label_posicion").hide().val("");
+    // $("#posicion").hide().val("");
+    // $("#label_encabezado").hide().val("");
+    // $("#encabezado").hide().val("");
+
+   
+            
+                 
+    
+      
+      
+
+   
+
+    // if($("#categoria_proveedor").val() != 'undefined'){
+    //   console.log("#categoria_proveedor").val();
+    //   $("#maspreguntas").show();
+    //   $("#label_maspreguntas").show();
+    // }
+
+
+  </script>
+              
+
+              {% endblock %}

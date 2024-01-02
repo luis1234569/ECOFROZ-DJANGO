@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form>
+    {%csrf_token %}
+    <div class="container" style="margin-left:-5px;margin-top:5px;">
+    <h3>Registro almacenado. Desea realizar otro registro?</h3>
+    <a class= "btn btn-success" href="{% url 'activos:salida_activos_func' %}">Sí, Nuevo registro</a>
+    <a class= "btn btn-default" href="{% url 'activos:listar_activos' %}">No. Salir</a>
+</form>
+</div>
+{% endblock %}
+

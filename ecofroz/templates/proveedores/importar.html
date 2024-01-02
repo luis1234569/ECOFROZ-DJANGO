@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+
+% block extrahead %}
+<!DOCTYPE html>
+<style>
+
+#salto-linea-ancho{
+    margin-top: 80px;
+    width: 250px;
+  }
+
+</style>
+
+{% block content %}  
+<!-- <div class="row">
+  <div class="col-6">
+    <a type="button" style="margin-top: 25px;margin-left: 110px;" class="btn btn-warning" href="{% url 'proveedores:ver_plantillas' %}">Revise y edite las plantillas de carga de respuestas</a>
+  </div>
+  <div class="col-6"></div>
+</div> -->
+<div class="jumbotron container" style="width: 95%; margin-top: 25px;">
+    <h3>Carga de Respuestas del formulario de Proveedores Ecofroz</h3>
+    <h6 class="display-5">En esta sección usted podrá realizar la carga de respuestas de proveedores por primera vez o la recalificación si el proveedor ha contestado en años anteriores el formulario de calificación.</h6>
+    
+    <div class="container" id="salto-linea-ancho">
+    <p></p>
+    </div>
+  
+    <h5>Paso 1. Seleccione el Proveedor</h5>
+    
+    <div class="container" id="salto-linea-ancho"></div>
+  
+  
+    <form action="{% url 'proveedores:carga_respuestas' %}" method="GET">
+    {% csrf_token %}
+      <div class="form-row" style="width: 85%;">         
+        <div class="form-group col-md-6" >
+          <label for="{{ form.nombre_empresa.label }}">{{ form.nombre_empresa.label }}</label>   
+          {% render_field form.nombre_empresa class="form-control" onChange="form.submit();" style="width: 65% margin-left:10px"; %}      
+        </div>
+    </form>
+    
+    <div class="container" id="salto-linea-ancho"></div>
+
+    {% if nombre_empresa %}
+    {% if fecha_responde_encuesta %}
+    <p id="mensaje_1">Este proveedor ya ha respondido la encuesta de proveedores de Ecofroz en:&nbsp;{{ fecha_responde_encuesta}}&nbsp;.Desea cargar nuevas respuestas para recalificación? Las respuestas previas serán guardadas y archivadas para consulta histórica.</p>
+    <div class="container" id="salto-linea-ancho"></div>
+    <button type="button" id="muestra_campo_cargar" style="margin-top:5px;" class="btn btn-primary">Sí,Cargar</button>
+    <a type="button" id="recarga_pagina" style="margin-top:5px;margin-left:8px;" class="btn btn-warning" href="{% url 'proveedores:carga_respuestas' %}">No,Cancelar</a>
+
+    
+    {% else %}
+    <p id="mensaje_2">Este proveedor no tiene registros de respuestas anteriores. Se cargarán respuestas por primera vez?</p>
+    <div class="container" id="salto-linea-ancho"></div>
+    <button type="button" id="muestra_campo_cargar" style="margin-top:5px;" class="btn btn-primary">Sí,Cargar</button>
+    <a type="button" id="recarga_pagina" style="margin-top:5px;margin-left:8px;" class="btn btn-warning" href="{% url 'proveedores:carga_respuestas' %}">No,Cancelar</a>
+    {% endif %}
+    {% else %}
+    
+    
+    {% endif %}
+
+
+    <h5 id="titulo_carga_excel">Paso 2. Cargue el archivo Excel de respuestas</h5>
+    <div class="container" id="salto-linea-ancho">
+        <p></p>
+        </div>
+
+ <form method="post" action="{% url 'proveedores:carga_respuestas' %}" enctype="multipart/form-data">  
+  {% csrf_token %}  
+  <input type="hidden" name="nombre_empresa" value={{nombre_empresa}} >  
+  <input type="file" id="input_cargar" name="xlsfile">  
+  <div class="container" id="salto-linea-ancho">
+    <p></p>
+    </div>
+    <button type="submit" id="cargar_archivo" style="margin-top:5px;" class="btn btn-primary btn-lg">Cargar</button>
+    
+ </form>  
+
+</div>
+
+{% endblock content %} 
+
+{% block extrajs %}
+<script>
+  
+$("#titulo_carga_excel").hide().val("");
+$("#input_cargar").hide().val("");
+$("#cargar_archivo").hide().val("");
+
+$("#muestra_campo_cargar").on('click', mostrarInput)
+
+function mostrarInput() {
+  $("#muestra_campo_cargar").hide().val("");
+  $("#recarga_pagina").hide().val("");
+  $("#titulo_carga_excel").show();
+  $("#input_cargar").show().val("");
+  $("#cargar_archivo").show().val("");
+  
+} 
+
+
+</script>
+
+{% endblock %}

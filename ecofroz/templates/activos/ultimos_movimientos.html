@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+
+{% block content %}
+<!-- <div class="jumbotron jumbotron-fluid" style="width: 85%; margin:auto;"> -->
+    <!-- <h2 class="display-3">Búsqueda Filtrada de Activos</h2> -->
+
+<br>
+<table class="table table-hover">
+  <thead>
+    <tr>
+        <td scope="col"><strong>No</strong></td>
+        <td scope="col"><strong>Codigo</strong></td>
+        <td scope="col"><strong>Parte de</strong></td>
+        <td scope="col"><strong>Ubicación</strong></td>
+        <td scope="col"><strong>Area</strong></td>
+        <td scope="col"><strong>Descripción</strong></td>
+        <td scope="col"><strong>Fecha Última Modificación</strong></td>
+        <td scope="col"><strong>Modificado por</strong></td>
+        <td scope="col"><strong>Acciones</strong></td>
+    </tr>
+  </thead>
+<tbody>
+  {% if form %}
+  {% for activo in form  %} 
+    <tr class="table-active"> 
+      <td>{{ forloop.counter }}</td>
+      <td>{{ activo.desc_activo_codigo.activo_codigo }}</td>
+      <td>{{ activo.desc_activo_codigo.cod_activo_padre | default:"--" }}</td>
+      <td>{{ activo.desc_activo_codigo.activo_ubica}}</td>
+      <td>{{ activo.desc_activo_codigo.activo_area }}</td>
+      <td>{{ activo.desc_activo_codigo.activo_descripcion }}</td>
+      <td>{{ activo.desc_activo_codigo.activo_fecha_modifica }}</td>
+      <td>{{ activo.desc_activo_codigo.usuario_modifica }}</td>
+      <td>
+        {% if perms.activos.change_desc_activo %}
+        <a class="btn btn-primary" href="{% url 'activos:editar_activos'  activo.desc_activo_codigo.id %}">Revisar</a>
+        {% endif %}
+      </td>
+    </tr>
+
+ 
+{% endfor %}
+
+{% else %}
+<h1>No hay registros</h1>
+
+{% endif %}
+</tbody>
+
+</table>
+
+<div class="pagination">
+  <span class="step-links">
+      {% if form.has_previous %}
+          <a href="?page=1">&laquo; inicio</a>
+          <a href="?page={{ form.previous_page_number }}">previo</a>
+      {% endif %}
+
+      <span class="current">
+          Page {{ form.number }} of {{ form.paginator.num_pages }}.
+      </span>
+
+      {% if form.has_next %}
+          <a href="?page={{ form.next_page_number }}">próximo</a>
+          <a href="?page={{ form.paginator.num_pages }}">último &raquo;</a>
+      {% endif %}
+  </span>
+</div>
+
+{% endblock content %}

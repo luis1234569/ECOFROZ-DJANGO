@@ -1,0 +1,80 @@
+<html>
+  <head>
+    <style type="text/css">
+      a:link{
+        color: rgb(1, 58, 182);
+      }
+      .btn {
+        display: inline-block;
+        font-weight: 400;
+        text-decoration: none;
+        color:rgb(1, 58, 182);
+        text-align: center;
+        vertical-align: middle;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        background-color: transparent;
+        border: 1px solid transparent;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        border-radius: 0.25rem;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+      }
+      .btn-primary {
+        color: rgb(1, 58, 182);
+        background-color: #007bff;
+        border-color: #007bff;
+      }
+      .btn-primary:hover {
+        color: rgb(92, 92, 92);
+        background-color: #0069d9;
+        border-color: #0062cc;
+      }
+    </style>
+  </head> 
+  <body>
+      <table style="border: 1px;" cellspacing='0' cellpadding='10'>
+          <tbody>
+            <tr>
+              <td scope="col" style='font-size: 11px;'>N° de Ticket:</td>
+              <td style='font-size: 11px;'>{{ mail.numticket }}</td>
+            </tr>
+            <tr>
+              <td scope="col" style='font-size: 11px;'>Código Solicitante:</td>
+              <td style='font-size: 11px;'>{{ mail.solicita_codigo }}</td>
+            </tr>
+            <tr>
+              <td scope="col" style='font-size: 11px;'>Usuario Solicitante:</td>
+              <td style='font-size: 11px;'>{{ mail.solicita_nombre }} {{ mail.solicita_apellido }}</td>
+            </tr>
+            <tr>
+              <td scope="col" style='font-size: 11px;'>Ubicación:</td>
+              <td style='font-size: 11px;'>{{ mail.ubicacion.ubica_nombre }}</td>
+            </tr>
+            <tr>
+              <td scope="col" style='font-size: 11px;'>Departamento:</td>
+              <td style='font-size: 11px;'>{{ mail.numtrabajo.dep_nombre }}</td>
+            </tr>
+            <tr>
+              <td scope="col" style='font-size: 11px;'>Area:</td>
+              <td style='font-size: 11px;'>{{ mail.area.dep_nombre }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Tipo de Soporte</th>
+              <td>{{ mail.tipo_problema.get_tipo_display }}</td>
+            </tr>
+            <tr>
+              <td scope="col" style='font-size: 11px;'>Descripciòn:</td>
+              <td style='font-size: 11px;'>{{ mail.descripcion_problema }}</td>
+            </tr>
+          </tbody>
+      </table>
+    <div>
+      <a class="btn btn-primary" href="http://192.168.27.118">Acceso al sistema</a>
+    </div>
+  </body>
+</html>

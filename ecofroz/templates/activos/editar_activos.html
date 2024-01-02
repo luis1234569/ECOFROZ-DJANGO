@@ -1,0 +1,315 @@
+
+{% extends 'base.html' %}
+
+{% load bootstrap %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+
+<div class="jumbotron container" style="width: 85%;">
+    <!-- <h2 class="display-5">Edición de Activos</h2> -->
+<form method="POST" enctype="multipart/form-data">
+{% csrf_token %}
+  <!-- {{ form.as_p }}  -->
+  <!-- {{ form2.as_p }} -->
+
+  
+    <div class="form-row">
+      <div class="col-12">
+        <h2 class="display-5">Edición de&nbsp;<u>{{activo.activo_codigo}}</u></h2>&nbsp;<a href="{% url 'activos:gallery_view' activo.id %}">Ver Fotografías de este activo</a>
+        
+      </div>
+    </div>
+      <!-- <div class="col-5">
+        
+      </div> -->
+      <br>
+      <div class="form-row">
+        <div class="form-group col-md-3" >
+        <label for="{{ form.grabado.label }}">{{ form.grabado.label }}</label>  
+               {% render_field form.grabado %}
+        
+      </div>
+      <div class="form-group col-md-9">
+        <label for="{{ form2.motivo_no_se_puede_identificar.label }}">{{ form2.motivo_no_se_puede_identificar.label }}</label>  
+               {{form2.motivo_no_se_puede_identificar}}
+
+      </div>
+    </div>
+  
+ 
+  <!-- <div class="row" style="width: 40%">  -->
+  {% render_field form.activo_nomenclatura style="visibility:hidden;"  %}
+
+  <!-- {% render_field form.activo_nomenclatura  %} -->
+
+  <div class="form-row">  
+      <div class="form-group col-md-3" >
+               <label for="{{ form.activo_codigo.label }}">{{ form.activo_codigo.label }}</label>  
+               <!-- {{ form.activo_codigo }}  -->
+               {% render_field form.activo_codigo readonly='True'  %}
+      </div>
+      <div class="form-group col-md-3" >
+               <label for="{{ form.cod_activo_padre.label }}">{{ form.cod_activo_padre.label }}</label> 
+                {{ form.cod_activo_padre }}
+      </div> 
+      <div class="form-group col-md-3" >
+              <label for="{{ form.activo_grupo.label }}">{{ form.activo_grupo.label }}</label> 
+                {{ form.activo_grupo }}
+      </div>      
+      <div class="form-group col-md-3" >
+              <label for="{{ form.activo_tipo.label }}">{{ form.activo_tipo.label }}</label> 
+                {{ form.activo_tipo }}
+              <br>
+      </div>       
+
+  <div class="form-group col-md-3" >
+          <label for="{{ form.activo_ubica.label }}">{{ form.activo_ubica.label }}</label> 
+          {{ form.activo_ubica }}
+          <br>
+  </div> 
+  
+    <div class="form-group col-md-3" >
+          <label for="{{ form.activo_depar.label }}">{{ form.activo_depar.label }}</label> 
+          {{ form.activo_depar }}
+    </div> 
+
+    <div class="form-group col-md-3" >
+          <label for="{{ form.activo_area.label }}">{{ form.activo_area.label }}</label> 
+          {{ form.activo_area }}
+          <br>
+    </div> 
+
+    <div class="form-group col-md-3" >
+        <label for="{{ form.activo_subsec.label }}">{{ form.activo_subsec.label }}</label> 
+        {{ form.activo_subsec }}
+        <br>
+  </div> 
+
+
+</div>
+
+  <div class="form-group" >
+          <label for="{{ form.activo_descripcion.label }}">{{ form.activo_descripcion.label }}</label> 
+          {{ form.activo_descripcion }}
+          <br>
+  </div> 
+
+   <div class="form-row">  
+  <div class="form-group col-md-4" >
+    <label for="{{ form2.desc_activo_proveedor.label }}">{{ form2.desc_activo_proveedor.label }}</label> 
+    {% render_field form2.desc_activo_proveedor %}
+    
+</div> 
+
+  
+    <div class="form-group col-md-4" >
+          <label for="{{ form.activo_valor.label }}">{{ form.activo_valor.label }}</label> 
+          {% render_field form.activo_valor placeholder="0.00" data-mask="999999.99" %}
+          <!-- {{ form.activo_valor }} -->
+    </div> 
+
+    
+    
+    <div class="form-group col-md-4" >
+        <label for="{{ form.activo_valor_compra.label }}">{{ form.activo_valor_compra.label }}</label> 
+        {% render_field form.activo_valor_compra placeholder="0.00" data-mask="999999.99" %}
+        <!-- {{ form.activo_valor_compra  }} -->
+    </div> 
+
+    <div class="form-group col-md-2" >
+      <label for="{{ form.orden_de_pedido.label }}">{{ form.orden_de_pedido.label }}</label> 
+      {% render_field form.orden_de_pedido readonly="True" %}
+      <!-- {{ form.activo_valor_compra  }} -->
+  </div> 
+
+  <div class="form-group col-md-2" >
+    <label for="{{ form2.desc_activo_fecha_ingre.label }}">{{ form2.desc_activo_fecha_ingre.label }}</label> 
+    {{ form2.desc_activo_fecha_ingre }}
+    
+</div> 
+    
+    <div class="form-group col-md-4" >
+        <label for="{{ form.numero_factura.label }}">{{ form.numero_factura.label }}</label> 
+        {{ form.numero_factura }}
+    </div> 
+    
+    <div class="form-group col-md-4" >
+        <label for="{{ form2.desc_activo_codigo_mba.label }}">{{ form2.desc_activo_codigo_mba.label }}</label> 
+        {{ form2.desc_activo_codigo_mba }}
+        <br>
+        
+    </div> 
+
+   
+
+    <!-- <div class="form-group col-md-3" style="margin-top:7px;" >
+      <label for="{{ form2.fake.label }}"></label>  
+      {{ form2.desc_activo_fecha_ingre | attr:"type:date"  }}
+      {{ form2.desc_activo_fecha_ingre  }} -->
+      
+       <br>
+      <!-- <br>
+  </div>   -->
+
+   
+
+  
+
+    <div class="form-group col-md-6">
+        <label for="{{ form2.desc_activo_custodio.label }}">{{ form2.desc_activo_custodio.label }}</label> 
+        {% render_field form2.desc_activo_custodio readonly="True" %}
+    </div> 
+
+    <div class="form-group col-md-6">
+      
+  </div> 
+
+    <div class="form-group col-md-4">
+        <label for="{{ form2.desc_activo_num_serie.label }}">{{ form2.desc_activo_num_serie.label }}</label> 
+          {{ form2.desc_activo_num_serie }}
+    </div> 
+
+    <div class="form-group col-md-4">
+      <label for="{{ form2.desc_activo_marca.label }}">{{ form2.desc_activo_marca.label }}</label> 
+      {{ form2.desc_activo_marca }}
+    </div>
+
+    <div class="form-group col-md-4">
+        <label for="{{ form2.desc_activo_modelo.label }}">{{ form2.desc_activo_modelo.label }}</label> 
+         {{ form2.desc_activo_modelo }}
+    </div>
+
+
+   
+
+    <div class="form-group col-md-6">
+        <label for="{{ form2.desc_activo_num_motor.label }}">{{ form2.desc_activo_num_motor.label }}</label> 
+        {{ form2.desc_activo_num_motor }}
+        <br>
+        <br>
+    </div>
+
+    <div class="form-group col-md-3">
+        <label for="{{ form2.desc_activo_num_placa_vehiculo.label }}">{{ form2.desc_activo_num_placa_vehiculo.label }}</label> 
+           {{ form2.desc_activo_num_placa_vehiculo }}
+        <br>
+        </div> 
+    
+       
+ 
+    <div class="form-group col-md-6" >
+              <label for="{{ form2.desc_activo_pc_procesador.label }}">{{ form2.desc_activo_pc_procesador.label }}</label> 
+              {{ form2.desc_activo_pc_procesador }}
+    </div> 
+
+    <div class="form-group col-md-6" >
+              <label for="{{ form2.desc_activo_pc_memoria.label }}">{{ form2.desc_activo_pc_memoria.label }}</label> 
+              {{ form2.desc_activo_pc_memoria }}
+    <br>
+    <br>
+    
+    </div>  
+
+
+    <div class="form-group col-md-4" >
+        <label for="{{ form.pestanias_seguros.label }}">{{ form.pestanias_seguros.label }}</label> 
+        {{ form.pestanias_seguros }}
+    </div>  
+
+    <div class="form-group col-md-3">
+      <label for="{{ form.poliza_seguros.label }}">{{ form.poliza_seguros.label }}</label> 
+      {{ form.poliza_seguros }}
+    </div> 
+
+    <div class="form-group col-md-3"> 
+            <label for="{{ form.incendios.label }}">{{ form.incendios.label }}</label> 
+            {% render_field form.incendios  %}
+            <br>
+    </div>
+
+    <label for="Fotos">Zona de Carga de Fotografías</label>
+    <div class="form-group col-md-6">
+      <label for="{{ form2.kake }}">{{ form2.fake }}</label> 
+         {{ form2.fake }}
+      <br>
+      </div> 
+
+    <div class="form-group col-md-6"> 
+    {{ form3.management_form }}
+    {% for form in form3 %}
+    {{ form|crispy }}
+    {% endfor %}
+
+    <input type="text" value="{{pk}}" hidden="True" />
+    
+    <br>
+  </div>
+
+  <div class="form-group col-md-6">
+    <label for="{{ form2.fake }}">{{ form2.fake }}</label> 
+       {{ form2.fake }}
+    <br>
+    </div> 
+
+    <div class="form-group col-md-3"> 
+      <label for="{{ form2.desc_activo_usuario_modifica.label }}">{{ form2.desc_activo_usuario_modifica.label }}</label> 
+      {% render_field form2.desc_activo_usuario_modifica readonly='True' %}
+    </div>
+
+    <div class="form-group col-md-6">
+      <label for="{{ form2.kake }}">{{ form2.fake }}</label> 
+         {{ form2.fake }}
+      <br>
+      </div> 
+
+        <!-- <div class="form-group col-md-6" >
+            <label for="{{ form2.desc_activo_motivo_modifica.label }}">{{ form2.desc_activo_motivo_modifica.label }}</label> 
+            {{ form2.desc_activo_motivo_modifica }}
+        <br><br>
+
+    </div> -->
+    
+
+    
+    <div class="row" style="width:40%">
+      <button type="submit" style="margin-top:5px;margin-left:20px;" class="btn btn-primary btn-lg">Guardar</button>
+  <br>
+  <br>
+  </div>
+
+    </form>
+</div>
+
+
+{% endblock content %}
+
+{% block extrajs %}
+<script>
+  $(document).ready(function(){
+    $('#id_desc_activo_usuario_modifica').val('{{ user.username }}')
+
+    // alert('hola')
+
+    var fecha = "{{ fecha }}"
+    // alert(fecha)
+    var fecha2 = new Date(fecha)
+    // alert(fecha2)
+    var dia = fecha2.getDate() < 10 ? '0' + fecha2.getDate() : fecha2.getDate();
+    // alert(dia)
+    var mes =  fecha2.getMonth() + 1;
+    var mes = (mes < 10) ? '0' + mes : mes;
+    var anio = fecha2.getFullYear(); 
+
+    var fecha3 = anio + "-"+ mes + "-" + dia
+    // alert(fecha3)
+
+    $("#id_desc_activo_fecha_ingre").val(fecha3) 
+  })
+</script>
+
+
+
+{% endblock %}

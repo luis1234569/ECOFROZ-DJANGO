@@ -1,0 +1,233 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load tz %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block title %}
+    <h2>Verificación Salida de Personal</h2>
+{% endblock %}
+
+{% block content %}
+<body>
+<div style="float: right; margin-right: 18px;">
+    <script type="text/javascript">
+        //<![CDATA[
+        var  today = new Date();
+        var d = today.getDate() < 10 ? '0' + today.getDate() : today.getDate();
+        var m = today.getMonth() + 1;
+        var y = today.getFullYear();
+        var h = today.getHours();
+        var mi = today.getMinutes();
+        var se = today.getSeconds();
+        var mes = (m < 10) ? '0' + m : m;
+            document.write('Fecha Actual: ' + d + '/' + mes + '/' + y);
+        //]]> 
+    </script>
+</div>
+<div class="jumbotron row" style="width: 98%; margin:auto; padding-top: 25px; margin-top: 50px; margin-bottom: 25px;">
+<div class="col-12"><h3 class="display-5">Verificación Autorización Salida de Personal</h3></div>
+<!-- <h4 class="display-6">Hola {{ user.first_name }} {{ user.last_name }}</h4> -->
+<div class="col">
+<form method="GET" name="registrop" action="{% url 'procesosadministrativos:verifica_salida_autorizada' %}">
+    <div class="form-group row">
+        <label class="col-sm-3 col-form-label" style="margin-top:25px;">N° orden de Transporte</label>
+        <div class="col-sm-3">
+            <div class="input-group mb-3">
+            <input class="form-control" type="text" name="numpedido" id="numpedido" autofocus value="{{ codigo }}" style="margin-left:-125px;margin-top:25px;text-transform: uppercase;">
+            <button type="submit" class="btn btn-primary" style="margin-top:22px;margin-left:3px;">Consultar</button>
+            {% if form or consulta %}
+            <a class="btn btn-secondary" style="margin-top:22px;margin-left:3px;" href="{% url 'procesosadministrativos:verifica_salida_autorizada' %}">Reset</a>
+            {% endif %}
+        </div>
+        </div>
+        
+    </div>
+</form>
+
+
+{% if form %}
+    {% if form.estado1n == 2 %}
+    <div class="alert alert-success col" style="text-align: center;">
+        <h1>SOLICITUD AUTORIZADA</h1>
+    </div>
+
+
+    <div class="container-fluid" style="width: 70%; margin:auto; margin-top: 35px; margin-bottom: 15px;">
+        <h5 class="display-6">Información de la Solicitud</h5>
+        <p>
+                <p>
+        
+        
+        <div class="form-row">
+                <div class="form-group col-md-10" >
+
+                      
+                        <table class=" table table-sm table-info table-striped table-responsive{-sm|-md|-lg|-xl|-xxl}" style="margin: 10px auto">
+                     
+                        <thead>
+                                  
+                                </thead>
+                                <tbody>
+                                
+                                  <tr>
+                                    <td><b>Solicitud N°</b></td>
+                                    <td><b>{{ form.numpedido }}</b></td>
+                                  </tr>
+                                  
+                                  <tr>
+                                    <td><b>Ubicación</b></td>
+                                    <td>{{ form.ubica }}</td>
+                                  </tr>
+
+                                  <tr>
+                                        <td>Fecha Solicitud</td>
+                                        <td>{{ form.fchsolicita | timezone:"America/Guayaquil" | date:'d M, Y H:i'}}</td>
+                                  </tr>
+
+                                
+                                 {% if form.otra_ruta %}
+                                 <tr>
+                                  <td>Ruta</td>
+                                  <td>N/A</td>
+                               </tr>
+
+                                 <tr>
+                                  <td>Otra Ruta</td>
+                                  <td>{{ form.otra_ruta }} </td>
+                               </tr>
+                               {% else %}
+                               <tr>
+                                <td>Ruta</td>
+                                <td>{{ form.ruta.origen }} => {{ form.ruta.destino }}</td>
+                             </tr>
+
+                                 {% endif %}
+
+                                 {% if form.pasajero %}
+                                 
+                                 <tr>
+                                  <td>Pasajero</td>
+                                  <td>{{ form.pasajero }}</td>
+                                </tr>
+                                {% endif %}
+
+                                {% if form.otros_pasajeros %}
+                                <tr>
+                                  <td>Otros Pasajeros</td>
+                                  <td>{{ form.otros_pasajeros }}</td>
+                                </tr>
+                                {% endif %}
+
+                                
+                                <tr>
+                                  <td>Fecha Evento</td>
+                                  <td>{{ form.fchevento | timezone:"America/Guayaquil" | date:'d M, Y H:i' }}</td>
+                                </tr>
+                               
+
+                          
+
+                          
+
+
+                                </tbody>
+                            </table>
+                        
+                          </div>
+                        </div>      
+
+              
+
+
+
+
+    {% elif form.estado1n == 1 %}
+    <div class="alert alert-danger col" style="text-align: center;">
+        <h1>SOLICITUD NO AUTORIZADA</h1>
+    </div>
+    {% endif %}
+
+
+{% endif %}
+
+
+</body>
+</div>
+</div>
+
+{% endblock %}
+
+{% block extrajs %}
+<script>
+// Si pulsamos tecla en un Input
+$("#codigo").keydown(function (e){
+    // Capturamos qué telca ha sido
+    var keyCode= e.which;
+    // Si la tecla es el Intro/Enter
+    if (keyCode == 13){
+        var d= new Date();
+
+        var dia = d.getDate() < 10 ? '0' + d.getDate() : d.getDate();
+        var mes =  ("0" + (d.getMonth() + 1));
+        var anio = d.getFullYear(); 
+        var hh = d.getHours() < 10 ? '0' + d.getHours() : d.getHours();
+        var mm = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes();
+
+        var fechatotal = anio + "-"+ mes +"-" + dia
+        var fechatxt = anio + mes + dia
+        var hora = hh + ":" + mm
+    //    alert(fechatotal);
+    // Evitamos que se ejecute eventos
+        $("#fch").val(fechatotal);
+        $("#fch_txt").val(fechatxt);
+        $("#fch_txts").val(fechatxt);
+        $("#hr").val(fechatotal + " " + hora);
+        $("#hr_txt").val(hora);
+    // event.preventDefault();
+        document.registrop.submit();
+    // Devolvemos falso
+    //  return false;
+   }
+ });
+
+ $("#saleac").on("click", function(e){
+    var d= new Date();
+
+    var dia = d.getDate() < 10 ? '0' + d.getDate() : d.getDate();
+    var mes =  ("0" + (d.getMonth() + 1));
+    var anio = d.getFullYear(); 
+    var hh = d.getHours() < 10 ? '0' + d.getHours() : d.getHours();
+    var mm = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes();
+
+    var fechatotal = anio + "-"+ mes +"-" + dia
+    var fechatxt = anio + mes + dia
+    var hora = hh + ":" + mm
+
+    var fecha2_txt = '{{ fch }}'
+    var hora2 = '{{ hora }}'
+
+    // $("#fch").val(fechatotal);
+    $("#fch_txt").val(fechatxt);
+    // $("#hr").val(fechatotal + " " + hora);
+    $("#hr_txt3").val(fechatotal + " " + hora2);
+ });
+
+var comprueba = '{{msje2}}'
+if (comprueba == 'Error') {
+  $(document).ready(function(){
+    alert('{{ msje }}');
+  })
+};
+
+$("#saleac").click(function(){
+    $("#sale_activo").submit();
+});
+
+// jQuery(function($){
+//    $("#contenedori").mask("AAAA999999-9", {placeholder:" ",completed:function(){alert("completed!");}});
+//    $("#contenedors").mask("AAAA999999-9", {placeholder:" ",completed:function(){alert("completed!");}});
+// });
+</script>
+{% endblock %}

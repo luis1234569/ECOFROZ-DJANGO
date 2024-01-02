@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+<!-- {% load tz %} -->
+
+{% block content %}
+<div class="container" style="margin: 25px auto;">
+  <div class="row">
+    <div class="col-md-6 search">
+      <form class="form-inline my-2 my-lg-0" method="GET">
+        <input class="form-control mr-sm-2" type="text" placeholder="N° Pedido, Descripción" name="buscar" {% if busqueda %} value="{{ busqueda }}" {% endif %}>
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+       
+      </form>
+    </div>
+    <div class="col-md-6">
+      <a class="btn btn-success rounded-circle" style="float: right;" href="{% url 'trabajos:generar_ingreso_laboratorio' %}">+</a>
+    </div>
+  </div>
+</div>
+<table class="table table-hover table-dark container" style="margin: 25px auto">
+    <thead>
+      <tr>
+        <th scope="col">N° Pedido</th>
+        <!-- <th scope="col">Solicitante</th> -->
+        <!-- <th scope="col">Regimen Especial</th> -->
+        <th scope="col">Fecha Solicitud</th>
+        <th scope="col">Descripción</th>
+        <th scope="col">Proveedor</th>
+        <th scope="col">Valor</th>
+        <th scope="col">Estado Autorizador</th>
+        {% if perms.ordenPedido.change_ordenespedidos or perms.ordenPedido.delete_ordenespedidos %}
+        <th scope="col">Opciones</th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for pedido in form %}
+      <tr>
+        <td>{{ pedido.pedido.numtrabajo }}</td>
+        <!-- <td>{{ pedido.numtrabajo.usuario_solicita.first_name }} {{ pedido.numtrabajo.usuario_solicita.last_name }}</td> -->
+        <!-- <td>{{ pedido.regimenespecial }}</td> -->
+        <td>{{ pedido.fecha|date:'Y-m-d' }}</td>
+        <!-- <td>{{ pedido.numtrabajo.get_tipo_pedi_display }}</td> -->
+        <td>{{ pedido.descripcion }}</td>
+
+        <td>{{ pedido.proveedor }}</td>
+        <td>{{ pedido.valor }}</td>
+        
+        {% if pedido.estado == 1 %}
+          <td>Aprobado</td>
+        {% elif pedido.estado == 0 %}
+          <td>Rechazado</td>
+        {% else %}
+          <td>Por Aprobar</td>
+        {% endif %}
+        <!-- <td>
+          <a href="{% url 'trabajos:duplicar_trabajo' pedido.pedido.numtrabajo %}" class="btn btn-warning glyphicon glyphicon-duplicate" title="Duplicar"></a>
+        </td> -->
+        
+        
+       
+        {% if perms.ordenPedido.change_ordenespedidos %}
+        <td>
+          <!-- {% if pedido.numtrabajo.aprobado == 1 %}
+          <a href="#" class="btn btn-secondary glyphicon glyphicon-edit" title="Editar"></a>
+        {% else %}
+          <a href="{% url 'trabajos:editar_trabajo' pedido.pedido.numtrabajo %}" class="btn btn-primary glyphicon glyphicon-edit" title="Editar"></a>
+        {% endif %} -->
+          {% if pedido.estado == 1 %}
+          <a href="#" class="btn btn-secondary glyphicon glyphicon-remove" title="Eliminar"></a>
+          {% else %}
+          <a href="{% url 'trabajos:eliminar_trabajo' pedido.pedido.numtrabajo %}" class="btn btn-danger glyphicon glyphicon-remove" title="Eliminar"></a>
+          {% endif %}
+        </td>
+        {% endif %}
+        
+        
+      </tr>
+      {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

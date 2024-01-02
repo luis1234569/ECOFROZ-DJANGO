@@ -1,0 +1,391 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block title %}
+    <h2>Ordenes de Pedidos</h2>
+{% endblock %}
+
+{% block content %}
+<body>
+<div style="float: right; margin-right: 18px;">
+    <script type="text/javascript">
+        //<![CDATA[
+        var  today = new Date();
+        var d = today.getDate() < 10 ? '0' + today.getDate() : today.getDate();
+        var m = today.getMonth() + 1;
+        var y = today.getFullYear();
+        var h = today.getHours();
+        var mi = today.getMinutes();
+        var se = today.getSeconds();
+        var mes = (m < 10) ? '0' + m : m;
+            document.write('Fecha Actual: ' + d + '/' + mes + '/' + y);
+        //]]> 
+    </script>
+</div>
+<div class="jumbotron row" style="width: 98%; margin:auto; padding-top: 30px; margin-bottom: 10px; background-color: sienna; color: white;">
+<!-- <div class="col-12"><h3 class="display-5">Registro de Contenedores</h3></div> -->
+<!-- <h4 class="display-6">Hola {{ user.first_name }} {{ user.last_name }}</h4> -->
+<div class="col">
+<form method="GET" name="registrop" action="{% url 'personal:registro_contenedor' %}">
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" style="margin-top:25px;">Conductor C.I</label>
+        <div class="col-sm-3">
+            <input class="form-control" type="text" name="persona" id="persona" autofocus value="{{ cedula }}" style="margin-left:-85px;margin-top:25px;">
+            <input type="text" class="form-control" name="fch" id="fch" hidden>
+            <input type="text" class="form-control" name="fch_txts" id="fch_txts" hidden>
+            <input class="form-control" type="text" name="hr_txt" id="hr_txt" hidden>
+        </div>
+        <div class="col-6"><h4 class="display-5" style="margin-top:10px;">Registro de Contenedores</h4></div>
+    </div>
+</form>
+
+{% if datos %}
+<form action="{% url 'personal:registro_contenedor' %}" method="POST" id="conte">
+    {% csrf_token %}
+    <div class="form-group row">
+        <label class="col-sm-1 col-form-label">Fecha</label>
+        <div class="col-sm-2">
+            <input type="text" class="form-control" name="fch2" id="fch2" value="{{ fch }}" readonly>
+            <input type="text" name="fch_txt" id="fch_txt" hidden>
+        </div>
+        <label class="col-sm-1 col-form-label">Hora</label>
+        <div class="col-sm-2">
+            <input class="form-control" type="text" name="hr_txt2" id="hr_txt2" style="margin-left:-45px;" value="{{ hora }}" readonly>
+            <input type="text" name="hr_txt3" id="hr_txt3" hidden>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-1 col-form-label">Nombre</label>
+        <div class="col-sm-4">
+            <input class="form-control" type="text" name="nombre" id="nombre" value="{{ datos.nombres }}" readonly>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-1 col-form-label">Empresa</label>
+        <div class="col-sm-4">
+            <input class="form-control" type="text" name="empresa" id="empresa" value="{{ datos.transportista.transportista }}" readonly>
+        </div>
+        <div class="col-sm-1" hidden>
+            <input class="form-control" type="text" name="empresa_id" id="empresa_id" value="{{ datos.transportista.id }}" readonly>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-1 col-form-label">Placa</label>
+        <div class="col-sm-4">      
+            {% if consul %}
+            <input class="form-control" type="text" name="placa" id="placa_id" value="{{ consul.placa }}" readonly>
+            <!-- <select class="form-control" id="placa" name="placa">
+                <option value="{{consul.placa.id}}">{{consul.placa.placa|capfirst}}</option>
+            </select> -->
+            {% else %}
+            <input class="form-control" type="text" name="placa" id="placa_id" value="{{ datos.placa.placa }}" data-mask = "SSS9999" style="text-transform: uppercase;">
+            <!-- <select class="form-control" id="placa" name="placa" required>
+                {% for pl in placa %}
+                    <option value="{{pl.id}}" {% if pl.id == datos.placa.id %} selected {% endif %}>{{pl.placa|capfirst}}</option>
+                {% endfor %}
+            </select> -->
+            {% endif %}
+        </div>
+        {% if estado == 'i' %}
+        <label class="col-sm-1 col-form-label">Contenedor Ingreso</label>
+        <div class="col-sm-4">
+            <input class="form-control" type="text" name="contenedori" id="contenedori" required data-mask = "SSSS9999999" style="text-transform: uppercase;">
+        </div>
+        {% else %}
+        <label class="col-sm-1 col-form-label">Contenedor Salida</label>
+        <div class="col-sm-3">
+            <input class="form-control" type="text" name="contenedors" id="contenedors" required data-mask = "SSSS9999999" style="text-transform: uppercase;">
+        </div>
+        <label class="col-sm-1 col-form-label">Sale Solo Cabezal</label>
+        <div class="col-sm-2">
+            <input type="checkbox" name="solocabezal" id="solocabezal" style="transform: scale(1.5);" onclick="deshabilitaCampos()">
+        </div>
+        {% endif %}
+    </div>
+    {% if estado == 'i' %}
+    <div class="form-group row">
+        <label class="col-sm-1 col-form-label">Sello 1</label>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" name="sello_1" id="sello_1">
+        </div>
+        <label class="col-sm-1 col-form-label">Sello 2</label>
+        <div class="col-sm-3">
+            <input class="form-control" type="text" name="sello_2" id="sello_2">
+        </div>
+        <label class="col-sm-1 col-form-label">Sello 3</label>
+        <div class="col-sm-3">
+            <input class="form-control" type="text" name="sello_3" id="sello_3">
+        </div>
+    </div>
+    {% else %}
+    <div class="form-group row">
+        <label class="col-sm-1 col-form-label">Sello Basc 1</label>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" name="sello_basc_1" id="sello_basc_1">
+        </div>
+        <label class="col-sm-1 col-form-label">Sello Basc 2</label>
+        <div class="col-sm-3">
+            <input class="form-control" type="text" name="sello_basc_2" id="sello_basc_2">
+        </div>
+        <label class="col-sm-1 col-form-label">Sello Basc 3</label>
+        <div class="col-sm-3">
+            <input class="form-control" type="text" name="sello_basc_3" id="sello_basc_3">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-1 col-form-label">Sello Ecofroz 1</label>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" name="sello_eco_1" id="sello_eco_1">
+        </div>
+        <label class="col-sm-1 col-form-label">Sello Ecofroz 2</label>
+        <div class="col-sm-3">
+            <input class="form-control" type="text" name="sello_eco_2" id="sello_eco_2">
+        </div>
+        <label class="col-sm-1 col-form-label">Sello Ecofroz 3</label>
+        <div class="col-sm-3">
+            <input class="form-control" type="text" name="sello_eco_3" id="sello_eco_3">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-1 col-form-label">Sello Naviera</label>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" name="sello_naviera" id="sello_naviera" required>
+        </div>
+
+        <div class="col-sm-2">
+            <label class="col-sm-1 col-form-label" style="margin-left:-12px;">Destino</label>
+        </div>
+        <div class="col-sm-2">
+            <select name="destino" id="destino" class="form-control" style="margin-left:-100px;" required>
+                <option value="GY">Guayaquil</option>
+                <option value="PS">Posorja</option>
+              </select>
+            </label>
+        </div>
+    </div>
+    {% endif %}
+    <input type="text" name="chofer" id="chofer" value="{{ cedula }}"  hidden>
+    <input class="form-control" hidden type="text" name="user" id="user" value="{{ user.id }}">
+
+    <button type="submit" class="btn btn-lg btn-primary">Guardar</button>
+    
+</form>
+{% endif %}
+</div>
+</div>
+
+<div class="container-fluid">
+    <table class="table table-sm table-striped">
+        <thead class="thead-dark" style="text-align: center;">
+            <tr>
+                <!-- <th>N°</th> -->
+                <th>Chofer</th>
+                <th>Placa</th>
+                <th>Contenedor Ingreso</th>
+                <th>Nombre</th>
+                <th>Fecha Ingreso</th>
+                <th>Hora Ingreso</th>
+                <th>Contenedor Salida</th>
+                <th>Fecha Salida</th>
+                <th>Hora Salida</th>
+                <th>Destino</th>
+                <th>Hora Llegada</th>
+                <th>Solo Cabezal</th>
+            </tr>
+        </thead>
+        <tbody style="text-align: center;">
+            {% for i in datos_consul %}
+            <tr>
+                <!-- <td>{{ forloop.revcounter }}</td> -->
+                <td>{{ i.chofer.cedula }}</td>
+                <td>{{ i.placa }}</td>
+                <td>{{ i.num_contenedor_ingreso }}</td>
+                <td>{{ i.chofer.nombres |slice:":18" }}</td>
+                <td>{{ i.fch_ingreso | date:"b d" }}</td>
+                <td>{{ i.hr_ingreso_txt }}</td>
+                <td>{{ i.num_contenedor_salida | default:"--" }}</td>
+                <td>{{ i.fch_salida | date:"b d" | default:"--" }}</td>
+                <td>{{ i.hr_salida_txt | default:"--" }}</td>
+                <td>{{ i.get_destino_display | default:"--" }}</td>
+                {% if i.destino == 'GY' %}
+                <td>{{ i.tmaxgye | default:"--" | date:"b d, H:i" }}</td>
+                {% elif i.destino == 'PS' %}
+                <td>{{ i.tmaxpsj | default:"--" | date:"b d, H:i" }}</td>
+                {% elif i.destino == None %}
+                <td>--</td>
+                {% endif %}
+                {% if i.solo_cabezal == True %}
+                <td>
+                    <a href="#" class="glyphicon glyphicon-ok" title="Sí"></a>
+                </td>
+                {% else %}
+                <td>
+                    <a href="#">--</a>
+                </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+</body>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+
+function deshabilitaCampos() {
+  // Get the checkbox
+  var checkBox = document.getElementById("solocabezal");
+
+  if (checkBox.checked == true){
+    
+    $("#contenedors").attr("disabled", "disabled"); 
+    $("#sello_basc_1").attr("disabled", "disabled"); 
+    $("#sello_basc_2").attr("disabled", "disabled"); 
+    $("#sello_basc_3").attr("disabled", "disabled"); 
+    $("#sello_eco_1").attr("disabled", "disabled"); 
+    $("#sello_eco_2").attr("disabled", "disabled"); 
+    $("#sello_eco_3").attr("disabled", "disabled"); 
+    $("#sello_naviera").attr("disabled", "disabled"); 
+  } else {
+   
+    $("#contenedors").removeAttr("disabled"); 
+    $("#sello_basc_1").removeAttr("disabled"); 
+    $("#sello_basc_2").removeAttr("disabled"); 
+    $("#sello_basc_3").removeAttr("disabled"); 
+    $("#sello_eco_1").removeAttr("disabled"); 
+    $("#sello_eco_2").removeAttr("disabled"); 
+    $("#sello_eco_3").removeAttr("disabled"); 
+    $("#sello_naviera").removeAttr("disabled"); 
+    
+
+  }
+}
+
+
+$("#persona").keydown(function (e){
+    // Capturamos qué telca ha sido
+    var keyCode= e.which;
+    // Si la tecla es el Intro/Enter
+    if (keyCode == 13){
+        var d= new Date();
+
+        var dia = d.getDate() < 10 ? '0' + d.getDate() : d.getDate();
+        var mes =  d.getMonth() + 1;
+        var mes = (mes < 10) ? '0' + mes : mes;
+        var anio = d.getFullYear(); 
+        var hh = d.getHours() < 10 ? '0' + d.getHours() : d.getHours();
+        var mm = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes();
+
+        var fechatotal = anio + "-"+ mes +"-" + dia
+        var fechatxt = anio.toString() + mes.toString() + dia.toString()
+        var hora = hh + ":" + mm
+    //    alert(fechatotal);
+    // Evitamos que se ejecute eventos
+        $("#fch").val(fechatotal);
+        $("#fch_txt").val(fechatxt);
+        $("#fch_txts").val(fechatxt);
+        $("#hr").val(fechatotal + " " + hora);
+        $("#hr_txt").val(hora);
+    // event.preventDefault();
+        document.registrop.submit();
+    // Devolvemos falso
+    //  return false;
+   }
+ });
+
+ $("button").on("click", function(e){
+    var d= new Date();
+
+    var dia = d.getDate() < 10 ? '0' + d.getDate() : d.getDate();
+    var mes =  d.getMonth() + 1;
+    var mes = (mes < 10) ? '0' + mes : mes;
+    var anio = d.getFullYear(); 
+    var hh = d.getHours() < 10 ? '0' + d.getHours() : d.getHours();
+    var mm = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes();
+
+    var fechatotal = anio + "-"+ mes +"-" + dia
+    var fechatxt = anio.toString() + mes.toString() + dia.toString()
+    var hora = hh + ":" + mm
+
+    var fecha2_txt = '{{ fch }}'
+    var hora2 = '{{ hora }}'
+
+    // $("#fch").val(fechatotal);
+    $("#fch_txt").val(fechatxt);
+    // $("#hr").val(fechatotal + " " + hora);
+    $("#hr_txt3").val(fechatotal + " " + hora2);
+ });
+
+var comprueba = '{{msje2}}'
+if (comprueba == 'Error') {
+  $(document).ready(function(){
+    alert('{{ msje }}');
+  })
+};
+
+$("#conte").submit(function(){
+    if (checkBox.checked != true){
+        let placa = $("#placa_id").val();
+        let contenedori = $("#contenedori").val();
+        let contenedors = $("#contenedors").val();
+        let consul = "{{ estado }}"
+        
+        if (consul == "i"){
+            if (placa.length < 7){
+                alert("La Placa debe contener 7 digitos");
+                return false;
+            } else if (contenedori.length < 11) {
+                alert("El número de contenedor de ingreso debe contener 11 digitos");
+                return false;
+            } else {
+                return true
+            };
+        } else {
+            if (contenedors.length < 11) {
+                alert("El número de contenedor de salida debe contener 11 digitos");
+                return false;
+            } else {
+                return true
+            };
+        };
+    }
+});
+
+
+
+
+
+// jQuery(function($){
+//    $("#contenedori").mask("AAAA999999-9", {placeholder:" ",completed:function(){alert("completed!");}});
+//    $("#contenedors").mask("AAAA999999-9", {placeholder:" ",completed:function(){alert("completed!");}});
+// });
+
+// function validacion() {
+//     let placa = document.getElementById("placa_id").val();
+//     let contenedori = document.getElementById("contenedori").val();
+
+//     alert(placa);
+//     alert(contenedori)
+
+//     if (placa.length < 7) {
+//         // Si no se cumple la condicion...
+//         alert('[ERROR] El campo debe tener un valor de...');
+//         return false;
+//     }
+//     else if (contenedori.length < 11) {
+//         // Si no se cumple la condicion...
+//         alert('[ERROR] El campo debe tener un valor de...');
+//         return false;
+//     }
+//     // Si el script ha llegado a este punto, todas las condiciones
+//     // se han cumplido, por lo que se devuelve el valor true
+//     return true;
+// }
+</script>
+{% endblock %}

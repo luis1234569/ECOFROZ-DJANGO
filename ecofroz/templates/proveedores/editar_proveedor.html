@@ -1,0 +1,508 @@
+
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+{% load filters %}
+
+{% block extrahead %}
+<style type="text/css">
+    #id_numero_de_fichas[type=number] {
+      width: 20%;
+      border: 2px solid rgb(196, 200, 212);
+      border-radius: 4px;
+    }
+
+    #id_respondio_encuesta{
+      width: 15%;
+      border: 2px solid rgb(196, 200, 212);
+      border-radius: 4px;
+    }
+
+    #id_proveedor_critico{
+      width: 25%;
+      border: 2px solid rgb(196, 200, 212);
+      border-radius: 4px;
+    }
+
+    #id_proveedor_mant_externo{
+      width: 25%;
+      border: 2px solid rgb(196, 200, 212);
+      border-radius: 4px;
+    }
+
+    #id_proveedor_ruta_fija{
+      width: 25%;
+      border: 2px solid rgb(196, 200, 212);
+      border-radius: 4px;
+    }
+
+    #id_color_en_calendario{
+      width: 25%;
+      border: 2px solid rgb(196, 200, 212);
+      border-radius: 4px;
+    }
+
+    #id_asientos{
+      width: 25%;
+      border: 2px solid rgb(196, 200, 212);
+      border-radius: 4px;
+    }
+
+    #id_proveedor_revisado{
+      width: 25%;
+      border: 2px solid rgb(196, 200, 212);
+      border-radius: 4px;
+    }
+
+    #id_tiene_fichas{
+      width: 15%;
+      border: 2px solid rgb(196, 200, 212);
+      border-radius: 4px;
+    }
+
+
+    th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+.caja {
+  margin-top: 10px;
+}
+
+.span-mod {
+   position: relative;
+   top: 0em;
+   left: 0em;
+   /* background-color: lime; */
+}
+
+.subtitulos {
+  font-weight: bold;
+}
+
+
+
+.carpetas {
+  color:khaki;
+  left: 1em;
+}
+
+.enlace {
+  position: relative;
+  left: 1.5em;
+}
+
+.centrado {
+  text-align:center;
+}
+
+</style> 
+{% endblock %}
+
+{% block content %}
+<div class="container caja" style="width: 95%; margin-top: 25px;">
+
+
+  <div class="row">
+    <div class="col-12">
+  <h3 class="display-5">Edición de&nbsp;{{object.nombre_empresa}}</h3>
+   </div>
+
+  <div class="row">
+    <div class="col-8">
+  <label for="{{ proveedor.fecha_modificacion.label }}"><b>Fecha Última Modificación:</b></label>
+  {{ proveedor.fecha_modifica }}
+</div>
+  </div>
+
+<div class="row">
+  <div class="col-8">
+<label for="{{ proveedor.modificado_por.label }}"><b>Modificado por:</b></label>
+{%render_field form.usuario_modifica readonly=True disabled="True" %}
+</div>
+<pre></pre>
+
+<div class="row">
+  <div class="col-8">
+<label for="{{ proveedor.modificado_por.label }}"><b>Fecha Responde Cuestionario:</b></label>
+{{ proveedor.fecha_eleboracion | default:"--" }}
+</div>
+
+
+
+<form enctype="multipart/form-data" method="POST">
+{% csrf_token %}
+
+{%render_field form.usuario_modifica value=user.username readonly="True" style="visibility:hidden;" %}
+
+
+  <div class="form-row">  
+     
+    <div class="form-group col-md-3" >
+      <label for="{{ form.respondio_encuesta.label }}">{{ form.proveedor_critico.label }}</label> 
+      {{ form.proveedor_critico }}
+      </div> 
+  
+
+    <div class="form-group col-md-3" >
+      <label for="{{ form.respondio_encuesta.label }}">{{ form.proveedor_revisado.label }}</label> 
+      {{ form.proveedor_revisado }}
+      </div> 
+
+      <div class="form-group col-md-3" >
+        <label>Mantenimiento Externo</label> 
+        {{ form2.proveedor_mant_externo }}
+        </div> 
+        
+  </div>
+
+{% if object.categoria.id == 17 %}
+  <div class="form-row">
+    <div class="col-md-2" >
+      <label for="{{ form2.proveedor_ruta_fija.label }}">{{ form2.proveedor_ruta_fija.label }}</label> 
+      {{ form2.proveedor_ruta_fija }}
+      </div> 
+
+      <div class="col-md-3" >
+        <label for="asientos">Asientos</label>
+      </div> 
+
+      <div class="col-md-3" style="margin-left:-200px;" >
+          <select name="asientos" id="id_asientos">
+            <option value="{{asientocount}}" selected="{{asientocount}}">{{asientocount}}</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+          </select>
+        </div> 
+  
+
+  <div class="col-md-4" >
+    <label for="" style="margin-left:-150px;">Color</label>
+  
+
+      <select name="color" id="id_color_en_calendario" style="width:100px;">
+        <option value="{{color}}" selected="{{color}}">{{color | default:"--"}}</option>
+        <option value="AZUL">AZUL</option>
+        <option value="VERDE">VERDE</option>
+        <option value="ROJO">ROJO</option>
+        <option value="NARANJA">NARANJA</option>
+      
+      </select>
+    </div> 
+</div>
+
+<br>
+  {% endif %}
+
+  <div class="form-row">
+      <div class="form-group col-md-6" >
+               <label for="{{ form.nombre_empresa.label }}">{{ form.nombre_empresa.label }}</label>  
+               {{ form.nombre_empresa }} 
+      </div>
+
+      <div class="form-group col-md-6" >
+        <label for="{{ form.nombre_comercial.label }}">{{ form.nombre_comercial.label }}</label>  
+        {{ form.nombre_comercial }} 
+      </div>
+
+      <div class="form-group col-md-4" >
+        <label for="{{ form.categoria.label }}">{{ form.categoria.label }}</label> 
+        {{ form.categoria }}
+    </div>
+
+    <div class="form-group col-md-2" >
+      <label for="{{ form2.empresa_tipo.label }}">{{ form2.empresa_tipo.label }}</label> 
+      {{ form2.empresa_tipo }}
+    </div> 
+
+    <div class="form-group col-md-6" >
+      <label for="{{ form.calificacion.label }}">{{ form.calificacion.label }}</label> 
+      {%render_field form.calificacion readonly="True" %}
+      <br>
+</div> 
+
+    
+  
+      <div class="form-group col-md-6" >
+        <label for="{{ form2.giro_negocio.label }}">{{ form2.giro_negocio.label }}</label> 
+        {{ form2.giro_negocio }}
+    </div> 
+
+    <div class="form-group col-md-6" >
+      <label for="{{ form2.actividad.label }}">{{ form2.actividad.label }}</label> 
+      {{ form2.actividad }}
+    </div> 
+    
+    
+    
+    <div class="form-group col-md-12" >
+      <label for="{{ form2.otra_actividad.label }}">{{ form2.otra_actividad.label }}</label> 
+      {{ form2.otra_actividad }}
+    </div> 
+
+
+     
+      <div class="form-group col-md-6" >
+               <label for="{{ form.direccion_matriz.label }}">{{ form.direccion_matriz.label }}</label> 
+                {{ form.direccion_matriz }}
+      </div> 
+      <div class="form-group col-md-6" >
+              <label for="{{ form.horario_trabajo.label }}">{{ form.horario_trabajo.label }}</label> 
+                {{ form.horario_trabajo }}
+      </div>      
+      <div class="form-group col-md-3" >
+              <label for="{{ form.representante_legal.label }}">{{ form.representante_legal.label }}</label> 
+                {{ form.representante_legal }}
+              
+      </div>       
+      <div class="form-group col-md-3" >
+        <label for="{{ form.ruc.label }}">{{ form.ruc.label }}</label> 
+        {{ form.ruc }}
+      </div> 
+
+      <div class="form-group col-md-3" >
+        <label for="{{ form.telefono.label }}">{{ form.telefono.label }}</label> 
+        {{ form.telefono }}
+      
+      </div> 
+
+      <div class="form-group col-md-3" >
+        <label for="{{ form.celular.label }}">{{ form.celular.label }}</label> 
+        {{ form.celular }}
+        
+      </div> 
+
+      <div class="form-group col-md-6" >
+        <label for="{{ form.nombre_contacto_ecofroz.label }}">{{ form.nombre_contacto_ecofroz.label }}</label> 
+        {{ form.nombre_contacto_ecofroz }}
+        
+      </div> 
+  
+
+      <div class="form-group col-md-6" >
+        <label for="{{ form2.fake }}"></label> 
+      </div>
+
+    <div class="form-group col-md-3" >
+      <label for="{{ form2.monto_ventas_2018.label }}">{{ form2.monto_ventas_2018.label }}</label> 
+      {% render_field form2.monto_ventas_2018 placeholder="000000,00" data-mask="9999999999.99" required="True" %}
+  </div>
+  
+  <div class="form-group col-md-3" >
+    <label for="{{ form2.monto_ventas_2019.label }}">{{ form2.monto_ventas_2019.label }}</label> 
+    {% render_field form2.monto_ventas_2019 placeholder="000000,00" data-mask="9999999999.99" required="True" %}
+</div> 
+
+<div class="form-group col-md-3" >
+  <label for="{{ form2.monto_ventas_2020.label }}">{{ form2.monto_ventas_2020.label }}</label> 
+  {% render_field form2.monto_ventas_2020 placeholder="000000,00" data-mask="9999999999.99" required="True" %}
+</div>
+
+<div class="form-group col-md-3" >
+  <label for="{{ form2.monto_ventas_2021.label }}">{{ form2.monto_ventas_2021.label }}</label> 
+  {% render_field form2.monto_ventas_2021 placeholder="000000,00" data-mask="9999999999.99" required="True" %}
+</div>
+
+
+
+
+<div class="form-group col-md-3" >
+  <label for="{{ form2.ventas_ecofroz_2018.label }}">{{ form2.ventas_ecofroz_2018.label }}</label> 
+  {% render_field form2.ventas_ecofroz_2018 placeholder="000000,00" data-mask="9999999999.99" required="True" %}
+</div> 
+
+<div class="form-group col-md-3" >
+  <label for="{{ form2.ventas_ecofroz_2019.label }}">{{ form2.ventas_ecofroz_2019.label }}</label> 
+  {% render_field form2.ventas_ecofroz_2019 placeholder="000000,00" data-mask="9999999999.99" required="True"%}
+</div> 
+
+<div class="form-group col-md-3" >
+  <label for="{{ form2.ventas_ecofroz_2020.label }}">{{ form2.ventas_ecofroz_2020.label }}</label> 
+  {% render_field form2.ventas_ecofroz_2020 placeholder="000000,00" data-mask="9999999999.99" required="True" %}
+</div>
+
+<div class="form-group col-md-3" >
+  <label for="{{ form2.ventas_ecofroz_2021.label }}">{{ form2.ventas_ecofroz_2021.label }}</label> 
+  {% render_field form2.ventas_ecofroz_2021 placeholder="000000,00" data-mask="9999999999.99" required="True" %}
+</div>
+
+
+  <div class="form-group col-md-3" >
+    <label for="{{ form2.antiguedad.label }}">{{ form2.antiguedad.label }}</label> 
+    {{ form2.antiguedad }}
+</div> 
+
+<div class="form-group col-md-3" >
+  <label for="{{ form2.num_trabajadores_fijos.label }}">{{ form2.num_trabajadores_fijos.label }}</label> 
+  {{ form2.num_trabajadores_fijos }}
+</div> 
+
+<div class="form-group col-md-3" >
+  <label for="{{ form2.num_clientes.label }}">{{ form2.num_clientes.label }}</label> 
+  {{ form2.num_clientes }}
+</div> 
+
+<div class="form-group col-md-3" >
+  <label for="{{ form2.num_proveedores.label }}">{{ form2.num_proveedores.label }}</label> 
+  {{ form2.num_proveedores }}
+</div> 
+
+<div class="form-group col-md-8" >
+  <label for="{{ form2.valores_empresa.label }}">{{ form2.valores_empresa.label }}</label> 
+  {{ form2.valores_empresa }}
+</div> 
+
+
+<div class="form-group col-md-6" >
+  <label for="{{ form2.web.label }}">{{ form2.web.label }}</label> 
+  {{ form2.web }}
+</div> 
+
+<div class="form-group col-md-6" >
+</div>
+<div class="form-group col-md-12" >
+</div>
+
+<!-- <div class="form-group col-md-6" >
+  <label id="id_fichas_label" for="{{ form2.tiene_fichas.label }}">{{ form2.tiene_fichas.label }}</label> 
+  {{ form2.tiene_fichas }}
+</div> 
+
+<div class="form-group col-md-6" >
+</div>
+
+<div class="form-group col-md-4" >
+  <label id="id_numero_de_fichas_label" for="{{ form2.numero_de_fichas.label }}">{{ form2.numero_de_fichas.label }}</label> 
+  {{ form2.numero_de_fichas }}
+</div>  -->
+
+<!-- <div class="form-group col-md10" >
+ 
+</div>
+
+<div class="form-group col-md-8" >
+  <label id="observaciones_administrativas" for="{{ form2.observaciones_administrativas.label }}">{{ form2.observaciones_administrativas.label }}</label> 
+  {{ form2.observaciones_administrativas }}
+  
+</div>  -->
+
+<!-- Campos de preguntas calificacion interna Ecofroz (No quitar)  -->
+
+  {% render_field form2.cumple_procedimiento_facturacion class="select-box" style="visibility:hidden;"  %}
+
+
+  {% render_field form2.cumple_procedimiento_entrega class="select-box" style="visibility:hidden;" %}
+
+
+  {% render_field form2.cumple_procedimiento_compra class="select-box" style="visibility:hidden;" %}
+
+
+  {% render_field form2.contesta_reclamos_administrativos class="select-box" style="visibility:hidden;" %}
+
+
+  {% render_field form2.contesta_reclamos_calidad class="select-box" style="visibility:hidden;" %}
+
+  
+  
+
+<div class="form-group col-md-6" >
+  <label id="id_num_documentos_solicitados_categoria_label">Documentos Solicitados (<b>{{vec_count}}</b>) / Documentos Entregados (<b><u><a href="{% url 'proveedores:ver_documentos' object.id %}">{{entregados_count}}</a></u></b>)</label> 
+</div> 
+
+
+
+<div class="form-group col-md-12" >
+  <button style="margin-top: 40px; color:mediumblue;" type="button"  id="mascampos"  class="btn btn" onclick="true">Clic aqui para ver más información de Documentos Solicitados</button>
+
+</div> 
+
+
+
+
+{#  TABLA PARA MOSTRAR DOCUMENTOS SOLICITADOS #}
+    <div class="container"  style="width: 85%; margin-top: 25px;">
+    <table id="gallery" class="table table-bordered">
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Documento Solicitado</th>
+          <th>Documento Cargado</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for documento in vec %}
+          <tr>
+            <td><strong>{{ forloop.counter }}</strong></td>
+            <td>{{ documento.documento_sol }}</td>
+            <td>{{ documento.cargado }}</td>
+            
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
+
+ 
+  <div class="form-group col-md-10" >
+  </div>
+  
+  
+
+  
+
+ 
+
+<div class="form-group col-md-3">
+    <button type="submit" style="margin-top:5px;margin-bottom: 25px;" class="btn btn-primary btn-lg">Guardar</button>
+<br>
+<br>
+</div>
+<br>
+<br>
+
+</form>
+</div>
+
+
+{% endblock content %}
+
+{% block extrajs %}
+<script>
+   
+   $("#id_num_documentos_solicitados_categoria_label").hide().val("");
+   $("#id_num_documentos_solicitados_categoria").hide().val("");
+   $("#lista").hide().val("");
+   $("#gallery").hide().val("");
+  
+   
+   
+ 
+   $("#mascampos").on('click', firstClick)
+   function firstClick() {
+   //alert("First Clicked");
+   $("#id_num_documentos_solicitados_categoria_label").show();
+   $("#id_num_documentos_solicitados_categoria").show();
+   $("#lista").show();
+   $("#gallery").show();
+   
+   
+
+   
+   $("#mascampos").hide().val("");
+
+   }   
+
+   
+
+
+</script>
+              
+{% endblock %}

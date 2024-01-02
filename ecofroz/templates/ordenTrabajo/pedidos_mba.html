@@ -1,0 +1,87 @@
+
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="loader"></div>
+<div class="container" style="width: 82%; margin-top: 25px;">
+<h2 class="display-5">Pedidos MBA</h2>
+</div>
+<div class="container p-3 my-3 bg-dark text-white" style="width: 82%; margin-top: 25px;">
+  <br>
+  <div class="well text-muted text-center" style="padding-top: 2rem; padding-bottom: 2rem;">
+    <span class="glyphicon glyphicon-arrow-down" style="font-size: 2rem;"></span>
+    <h3>Arrastre los documentos aquí</h3>
+  </div>
+</div>
+    <div class="modal fade" id="modal-progress" data-backdrop="static" data-keyboard="false">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Uploading...</h4>
+          </div>
+          <div class="modal-body">
+            <div class="progress">
+              <div class="progress-bar" role="progressbar" style="width: 0%;">0%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- <button type="button" class="btn btn-primary js-upload-photos">
+      <span class="glyphicon glyphicon-cloud-upload"></span> Upload documentos
+    </button>
+    </div> -->
+    
+    {# 2. FILE INPUT TO BE USED BY THE PLUG-IN #}
+    <input id="fileupload" type="file" name="documentos" multiple
+           style="display: none;"
+           data-url="{% url 'trabajos:carga-mba' user.id %}"
+           data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'
+           doneStr="Cargado">
+    
+    {# 3. TABLE TO DISPLAY THE UPLOADED DOCS #}
+    <div class="container"  style="width: 85%; margin-top: 25px;">
+    <table id="gallery" class="table table-bordered">
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Documentos Cargados</th>
+          <th>Fecha</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for doc in documentosmba %}
+          <tr>
+            <td><strong>{{ forloop.counter }}</strong></td>
+            <td><a href="{{ doc.documentos.url }}">{{ doc.documentos.name }}</a></td>          
+            <td>{{ doc.fch_carga }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+{% endblock content %}
+
+
+{% block extrajs %}
+{% load static %}
+<script>
+    $(window).on("load", function() {
+        $(".loader").fadeOut("slow");
+    });
+    </script>
+    
+<script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+<script src="{% static 'js/jquery-file-upload/js/vendor/jquery.ui.widget.js' %}"></script>
+<script src="{% static 'js/jquery-file-upload/js/jquery.iframe-transport.js' %}"></script>
+<script src="{% static 'js/jquery-file-upload/js/jquery.fileupload.js' %}"></script>
+
+<script src="{% static 'js/basic-upload.js' %}"></script>
+{% endblock %}

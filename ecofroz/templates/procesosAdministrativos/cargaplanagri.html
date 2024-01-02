@@ -1,0 +1,240 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+
+% block extrahead %}
+<!DOCTYPE html>
+<style>
+
+#salto-linea-ancho{
+    margin-top: 80px;
+    width: 250px;
+  }
+
+</style>
+
+{% block content %}  
+<!-- <div class="row">
+  <div class="col-6">
+    <a type="button" style="margin-top: 25px;margin-left: 110px;" class="btn btn-warning" href="{% url 'proveedores:ver_plantillas' %}">Revise y edite las plantillas de carga de respuestas</a>
+  </div>
+  <div class="col-6"></div>
+</div> -->
+<div class="jumbotron container" style="width: 95%; margin-top: 15px;">
+  <form method="post" action="{% url 'procesosadministrativos:carga_plan_agri' %}" enctype="multipart/form-data">
+  <h3>Carga de Planificacion Egresos Agrícola Semanal</h3>
+  
+  <div class="container" id="salto-linea-ancho">
+  <p></p>
+  </div>
+
+  <h5>Paso 1. Seleccione la Hacienda, Mes y la Semana</h5>
+  
+  <label for="proyecto">Proyecto:</label>
+
+  <select name="proyecto" id="proyecto" onchange="mostrarMes()">
+    <option value=0 default>--</option>
+    <option value=1>Agua Clara</option>
+    <option value=2>La Merced</option>
+    <option value=3>Avelina</option>
+    <option value=4>Los Molles</option>
+    <option value=5>Kosher</option>
+
+  </select>
+
+
+  <label for="mes">Mes:</label>
+
+  <select name="mes" id="mes" disabled onchange="mostrarSemana()">
+    <option value=0 default>--</option>
+    <option value=1>Enero</option>
+    <option value=2>Febrero</option>
+    <option value=3>Marzo</option>
+    <option value=4>Abril</option>
+    <option value=5>Mayo</option>
+    <option value=6>Junio</option>
+    <option value=7>Julio</option>
+    <option value=8>Agosto</option>
+    <option value=9>Septiembre</option>
+    <option value=10>Octubre</option>
+    <option value=11>Noviembre</option>
+    <option value=12>Diciembre</option>
+  </select>
+
+
+  <label for="semana">Semana:</label>
+
+  <!-- <select name="semana" id="semana" disabled onchange="mostrarInput()"></select> -->
+
+  <select id="semana" disabled onchange="mostrarInput()">
+    <option value="--">--</option>
+    <!-- Aquí se generan las opciones del 1 al 52 -->
+    <script>
+      for (let i = 1; i <= 52; i++) {
+        document.write('<option value="' + i + '">' + i + '</option>');
+      }
+    </script>
+  </select>
+
+
+  <!-- <input type="text" name="semana" id="semana" disabled> -->
+  <!-- <select name="semana" id="semana" disabled onchange="mostrarInput()" >
+    <option value=0 default>--</option>
+    <option value=1>1</option>
+    <option value=2>2</option>
+    <option value=3>3</option>
+    <option value=4>4</option>
+    <option value=5>5</option>
+    <option value=6>6</option>
+    <option value=7>7</option>
+    <option value=8>8</option>
+    <option value=9>9</option>
+    <option value=10>10</option>
+    <option value=11>11</option>
+    <option value=12>12</option>
+    <option value=13>13</option>
+    <option value=14>14</option>
+    <option value=15>15</option>
+    <option value=16>16</option>
+    <option value=17>17</option>
+    <option value=18>18</option>
+    <option value=19>19</option>
+    <option value=20>20</option>
+    <option value=21>21</option>
+    <option value=22>23</option>
+    <option value=24>24</option>
+    <option value=25>25</option>
+  
+  </select> -->
+
+
+  <div class="container" id="salto-linea-ancho">
+
+
+  </div>
+
+
+    <div class="container" id="salto-linea-ancho">
+    <p></p>
+    </div>
+  
+ 
+
+    <h5 id="titulo_carga_excel">Paso 2. Cargue el archivo Excel de Inventario Semanal</h5>
+    <div class="container" id="salto-linea-ancho">
+        <p></p>
+        </div>
+
+   
+  {% csrf_token %}  
+  <input type="hidden" name="nombre_empresa" value={{nombre_empresa}} >  
+  <input type="file" id="input_cargar" name="xlsfile">  
+  <div class="container" id="salto-linea-ancho">
+    <p></p>
+    </div>
+    <button type="submit" id="cargar_archivo" style="margin-top:5px;" class="btn btn-primary btn-lg">Cargar</button>
+    
+ </form>  
+
+</div>
+
+{% endblock content %} 
+
+{% block extrajs %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
+
+<script>
+
+
+$(document).ready(function(){
+  var mensaje = '{{ mensaje }}'
+  if (mensaje == 1){
+    alert("Actualizado con Éxito!!")
+  }
+  else{
+
+  }
+  
+  const numerosValidos = [];
+    for (let i = 1; i <= 52; i++) {
+        numerosValidos.push(i.toString());
+    }
+
+    $('#semana').autocomplete({
+        source: numerosValidos,
+        minLength: 1 // Mostrar sugerencias después de ingresar al menos un carácter
+    });
+
+    $('#semana').on('input', function() {
+        let numero = $(this).val();
+        
+        if (numerosValidos.indexOf(numero) === -1) {
+            $(this).val(''); // Limpiar el campo si el número no está en la lista
+            alert('Ingrese un número del 1 al 52');
+        }
+    });
+});
+
+
+
+
+$("#titulo_carga_excel").hide().val("");
+$("#input_cargar").hide().val("");
+$("#cargar_archivo").hide().val("");
+
+$("#muestra_campo_cargar").on('click', mostrarInput)
+
+function mostrarMes() {
+  $('#mes').removeAttr('disabled');
+ 
+} 
+
+
+function mostrarSemana() {
+  $('#semana').removeAttr('disabled');
+ 
+} 
+
+function mostrarInput() {
+  $("#muestra_campo_cargar").hide().val("");
+  $("#recarga_pagina").hide().val("");
+  $("#titulo_carga_excel").show();
+  $("#input_cargar").show().val("");
+  $("#cargar_archivo").show().val("");
+  
+} 
+
+
+  
+//     success: function(data) {
+//         response($.map(data, function(item) {
+//           return {
+//             label: item[2],
+//             value: item[0]
+//           };
+//         }));  
+//     },
+//     select: function(event, ui) {
+    
+//     $("#rutanumsw").val(ui.item.id);
+//     $("#rutasw").val(ui.item.label);
+//     return false;
+//   } ,
+//     focus: function(event, ui) {
+//     $("#rutasw").val(ui.item.id);
+//     return false;
+//   },
+//     change: function (event, ui) {
+//         if (ui.item == null){ 
+//          //here is null if entered value is not match in suggestion list
+//             $(this).val((ui.item ? ui.item.id : ""));
+//         }
+//     }
+// })
+
+
+</script>
+
+{% endblock %}

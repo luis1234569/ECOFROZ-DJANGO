@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}
+    <h2>Consulta Detalle de Solicitudes de Salida de Activos</h2>
+{% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block content %}
+<div class="loader"></div>
+
+    <div class="container" style="margin: 25px auto;">
+        <table class="table table-bordered table-sm">
+                <tbody>
+                  <tr>
+                    <th class="table-dark" scope="col" style="width: 25%;">N° de Orden:</th>
+                    <td style='font-size: 18px; font-weight: bold;'>{{ detalle.id }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col" style="width: 25%;">N° de Requisición:</th>
+                    <td style='font-size: 18px; font-weight: bold;'>{{ detalle.orden_mantenimiento|default:'----' }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Persona que Solicita:</th>
+                    <td>{{ detalle.solicitado_por | default:'--' }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Departamento Solicitante:</th>
+                    <td>{{ dep }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Fecha de Salida:</th>
+                    <td>{{ detalle.fecha_registro }}</td>
+                  </tr>
+                  <tr>
+                    <tr>
+                      <th class="table-dark" scope="col">Fecha Aproximada de Retorno:</th>
+                      <td>{{ detalle.fecha_estimada_retorno }}</td>
+                    </tr>
+                    <tr>
+                      <th class="table-dark" scope="col">Tipo de Activo:</th>
+                      <td>{{ detalle.activo_tipo | default:'--' }}</td>
+                    </tr>
+                    <tr>
+                      <th class="table-dark" scope="col">Serie:</th>
+                      <td>{{ detalle.activo_num_serie | default:'--' }}</td>
+                    </tr>
+                    <tr>
+                      <th class="table-dark" scope="col">Marca:</th>
+                      <td>{{ detalle.marca | default:'--' }}</td>
+                    </tr>
+                    <tr>
+                      <th class="table-dark" scope="col">Empresa de Mantenimiento:</th>
+                      <td>
+                        <select name="proveedor1" id="proveedor1">
+                          <option value="">----</option>
+                          {% for i in proveedor %}
+                            <option value="{{ i.codigo_id.nombre_empresa }}" {% if detalle.empresa_mantenimiento == i.codigo_id.nombre_empresa %} selected {% endif %}>{{ i.codigo_id.nombre_empresa }}</option>
+                          {% endfor %}
+                        </select>
+                    </td>
+                    </tr>
+                    <!-- <tr>
+                      <th class="table-dark" scope="col">Movimiento Departamento:</th>
+                      <td>{{ depar | default:'--' }}</td>
+                    </tr>
+                    <tr>
+                      <th class="table-dark" scope="col">Movimiento Area:</th>
+                      <td>{{ area | default:'--' }}</td>
+                    </tr>
+                  <tr> -->
+                    <th class="table-dark" scope="col">Descripción del Activo:</th>
+                    <td>{{ detalle.detalle_activo | default:'--' }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Motivo de Salida:</th>
+                    <td>{{ detalle.motivo | default:'--' }}</td>
+                  </tr>
+                </tbody>
+        </table>
+        <form action="{% url 'activos:autoriza_salida' detalle.id %}" method="GET">
+          <div style="margin-top: 10px;">
+            <h4 class="display-6">Observaciones/Recomendaciones</h4> 
+            <div>
+              <input type="text" name="proveedor" id="proveedor" hidden>
+              <textarea class="form-control" id="observa" name="observa" rows="5"></textarea>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary" style="margin-top: 25px;">Autorizar</button>     
+        </form>
+      </div>
+
+
+
+{% endblock %}
+
+{% block extrajs %}
+<script>
+  $(window).on("load", function() {
+        $(".loader").fadeOut("slow");
+    });
+
+    $(document).ready(function() {    
+        $('#enviar').on('click', function(){
+            //Añadimos la imagen de carga en el contenedor
+            $(".loader").show();
+            $(window).on("load", function(){
+                $(".loader").fadeOut("slow");
+            });
+        });              
+    });    
+
+  $(document).ready(function(){
+    $('#pers_gestiona_bodega').val('{{ user.username }}')
+    $('#proveedor').val('{{ detalle.empresa_mantenimiento }}')
+  })
+  $("#proveedor1").change(function(){
+    $("#proveedor").val($(this).val())
+  });
+</script>
+
+{% endblock %}

@@ -1,0 +1,499 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+
+
+
+{% block extrahead %}
+<!DOCTYPE html>
+<style>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+table {
+  border-collapse: collapse;
+  width: 100%;  
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+
+
+
+ul.opciones {
+  list-style-type:none;
+}
+
+input[type=text] {
+  border: none;
+  border-bottom: 1px solid #34bdeb ;
+  background-color: none;
+  outline: none;
+  box-shadow: none !important;
+  /* border: none; */
+  border-bottom-color: 1px solid #34bdeb  ;
+}
+
+input[type=number] {
+  border: none;
+  border-bottom: 1px solid #34bdeb ;
+  background-color: none;
+  outline: none;
+  box-shadow: none !important;
+  /* border: none; */
+  border-bottom-color: 1px solid #34bdeb  ;
+  width: 80px;
+}
+
+.button {
+background-color: #4CAF50;
+border: none;
+color: white;
+padding: 4px 20px; */
+text-align: center;
+text-decoration: none;
+display: inline-block;
+font-size: 16px;
+margin: 4px 2px;
+cursor: pointer;
+border-radius: 4px;
+}
+
+
+
+.select-box {
+    -webkit-appearance: button;
+    -moz-appearance: button;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -webkit-padding-end: 20px;
+    -moz-padding-end: 20px;
+    -webkit-padding-start: 2px;
+    -moz-padding-start: 2px;
+    background-color: #faf9f7; /* Fallback color if gradients are not supported */
+    
+    background-position: center right;
+    background-repeat: no-repeat;
+    border: 1px solid #AAA;
+    outline: 0px;
+    border-radius: 4px;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+    color:#262625;
+    font-size: inherit;
+    margin: 0;
+    overflow: hidden;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#tabla-reporte{
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#tabla-reporte td, #tabla-reporte th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#tabla-reporte tr:hover {background-color: #ddd;}
+#tabla-reporte tr:hover {background-color: #ddd;}
+
+#tabla-reporte th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}
+
+#salto-linea-ancho{
+  margin-top: 20px;
+  width: 150px;
+}
+
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+<div class="loader"></div>
+  <div class=row>
+    <div class=col>
+ 
+    </div>
+  </div>
+        <form method="GET" id="form" >
+            {% csrf_token %}
+            <div class="row"> 
+              <div class="container-fluid" style="text-align:center;margin-top: 15px;">
+                <!-- <a class="btn btn-warning" type="submit" id="actualiza_contadores" name="actualiza_contadores" href="{% url 'proveedores:actualiza_contadores' %}">Haga clic para actualizar los contadores</a> -->
+             
+              </div>
+             
+             <!-- {% if form4 %}
+             {{ form4.as_p }}
+             {% endif %} -->
+
+             <div class="container" id="demo">
+              <div class="row">
+                <div class="col-10">
+                  <h5>Estado General del Proceso de&nbsp;<u>Calificación</u></h5>
+                  <div class="col-34">
+                    <ul class="opciones">
+                      
+                    <li><input type="radio" id="xcategoria" name="seleccion" value="ubicacion">
+                    <label for="xcategoria">Por <u>Categoria</u>&nbsp;</label>
+                    {% render_field form3.categoria_proveedor  class="select-box" onChange="form.submit();" %}</li>
+                      
+                    </form>
+
+                    <form method="GET" id="form3" action="{% url 'proveedores:ver_proceso_calificacion' %}" >
+                      {% csrf_token %}
+
+                    <li><input type="radio" id="xproveedor" name="seleccion" value="codigo" placeholder="Seleccione el proveedor">
+                    <label for="xproveedor">Por <u>Proveedor</u>&nbsp;</label>
+                    {% render_field form.nombre_empresa id="id_nombre_empresa" class="select-box" onChange="form.submit();" %}</li>
+                  
+                    <li><input type="radio" id="xproveedorcritico" name="seleccion">
+                      <label for="xproveedorcritico">Filtrar <u>Proveedores Críticos</u>&nbsp;</label>
+                      <select class="select-box" name="criticos" id="criticos" onChange="form.submit();">
+                        <option value="">-----</option>
+                        <option value="todos">Todos</option>
+                      </select></li>
+                   
+
+
+                  </form>
+              
+                  
+                </div>
+              </div>
+            </div>
+          
+            <br>             
+        
+                
+                    <div class="container-fluid" style="margin-top: -10px;">
+                <!-- <table class="table table-hover table-dark table-sm container-fluid" style="width: 99%;"> -->
+                  <table class="table table-hover table-striped table-dark table-sm container-fluid" style="width:99%;">      
+                  <thead> 
+                   
+
+                    <tr>
+                    <td scope="col"><strong>No</strong></td>
+                    <td scope="col"><strong>Proveedor</strong></td>
+                    <td scope="col"><strong>Categoria</strong></td>
+                    
+                    <td scope="col" style="text-align: center;"><strong>Calificación</strong></td>
+                    <td scope="col" style="width: 150px; text-align: center;"><strong>Respondió Encuesta</strong></td>
+                    <td scope="col" style="width: 150px; text-align: center;"><strong>Documentación Completa</strong></td>
+                    <td scope="col" style="width: 150px; text-align: center;"><strong>Revisado Administración</strong></td>
+                    <td scope="col" style="width: 150px; text-align: center;"><strong>Enviado a Calidad</strong></td>
+                    <td scope="col" style="width: 150px; text-align: center;"><strong>Aprobado por Calidad</strong></td>
+                    
+                    <td scope="col" style="width: 12px;"><strong>Opciones</strong></td>
+                  </tr>
+                  </thead>      
+          <tbody>
+            {% if query %}
+            {% for proveedor in query  %} 
+            {% if proveedor.revisado_por_calidad is False %}
+              <tr style="background-color: rgb(49, 51, 53);"> 
+                <td>{{ forloop.counter }}</td>
+                <td>{{ proveedor.codigo_id.nombre_empresa }}</td>
+                
+                <td>{{ proveedor.codigo_id.categoria }}</td>
+                
+                <td style="text-align: center;">{{ proveedor.codigo_id.calificacion | default:"--"}}&nbsp;{{ proveedor.codigo_id.grade | default:"--" }}</td>
+                
+                <td style="text-align:center;">
+                {% if proveedor.codigo_id.respondio_encuesta is True %}
+                <a class="enlace"  title="Documentación completa" href=""></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h4 class="glyphicon glyphicon-ok" style="color:green;"></h4>
+                {% else %}
+                 <a class="enlace"  title="Documentación completa" href=""></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h4 class="glyphicon glyphicon-remove" style="color:red;"></h4>
+                {% endif %}
+                </td>
+
+                <td style="text-align:center;">
+                  {% if proveedor.cumple_entrega_docs == "SI" %}
+                  <a class="enlace"  title="Documentación completa" href=""></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h4 class="glyphicon glyphicon-ok" style="color:green;"></h4>
+                  {% else %}
+                  <a class="enlace"  title="Documentación completa"></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h4 class="glyphicon glyphicon-remove" style="color:red;"></h4>
+                  {% endif %}
+                </td>
+
+                <td style="text-align:center;">
+                  {% if proveedor.codigo_id.proveedor_revisado is True %}
+                  <a class="enlace" title="Revisado Administración" href=""></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h4 class="glyphicon glyphicon-ok" style="color:green;"></h4>
+                  {% else %}
+                  <a class="enlace" title="Revisado Administración" href=""></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h4 class="glyphicon glyphicon-remove" style="color:red;"></h4>
+                  {% endif %}
+                </td>
+
+                <td style="text-align:center;">
+                  {% if proveedor.enviado_a_calidad is True %}
+                  <a class="enlace" title="Enviado a Calidad" href=""></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h4 class="glyphicon glyphicon-ok" style="color:green;"></h4>
+                  {% else %}
+                  {% if proveedor.codigo_id.categoria.id == 19 or proveedor.codigo_id.categoria.id == 15 or proveedor.codigo_id.categoria.id == 16 or proveedor.codigo_id.categoria.id == 17   %}
+                  <a class="enlace" title="Enviado a Calidad" href=""></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h4 style="color:rgb(252, 249, 249);margin-top: -25px;">--</h4>
+                  {% else %}
+                  <a class="enlace" title="Enviado a Calidad" href=""></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h4 class="glyphicon glyphicon-remove" style="color:red;"></h4>
+                  {% endif %}
+                  {% endif %}
+                 
+                </td>
+                <td style="text-align:center;">
+                  {% if proveedor.revisado_por_calidad is True %}
+                <a class="enlace" title="Aprobado Calidad" href=""></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h4 class="glyphicon glyphicon-ok" style="color:green;"></h4>
+                  {% else %}
+                  {% if proveedor.codigo_id.categoria.id == 19 or proveedor.codigo_id.categoria.id == 15 or proveedor.codigo_id.categoria.id == 16 or proveedor.codigo_id.categoria.id == 17   %}
+                <a class="enlace" title="Aprobado Calidad" href=""></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h4 style="color:rgb(252, 249, 249);margin-top: -25px;">--</h4>
+                {% else %}
+                <a class="enlace" title="Enviado a Calidad" href=""></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h4 class="glyphicon glyphicon-remove" style="color:red;"></h4>
+                {% endif %}
+                {% endif %}
+                 
+                </td>
+              
+                <td>
+                  <a class="btn btn-warning glyphicon glyphicon-edit" style="margin-left: 20px;" title="Ver/Editar Proveedor" href="{% url 'proveedores:editar_proveedor' proveedor.codigo_id.id %}"></a>
+                </td>
+
+                <td>
+                  <a class="btn btn-primary glyphicon glyphicon-paperclip" title="Documentos de Respaldo" href="{% url 'proveedores:ver_documentos'  proveedor.codigo_id.id %}"></a>
+                </td>
+                </tr>
+            
+                {% else %}
+                 
+                <tr> 
+                  <tr style="background-color: rgb(104, 106, 109);"> 
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ proveedor.codigo_id.nombre_empresa }}</td>
+                    
+                    <td>{{ proveedor.codigo_id.categoria }}</td>
+                    
+                    <td style="text-align: center;">{{ proveedor.codigo_id.calificacion | default:"--"}}&nbsp;{{ proveedor.codigo_id.grade | default:"--" }}</td>
+                    
+                    <td style="text-align:center;">
+                    {% if proveedor.codigo_id.respondio_encuesta is True %}
+                    <a class="enlace"  title="Documentación completa" href=""></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h4 class="glyphicon glyphicon-ok" style="color:green;"></h4>
+                    {% else %}
+                     <a class="enlace"  title="Documentación completa" href=""></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h4 class="glyphicon glyphicon-remove" style="color:red;"></h4>
+                    {% endif %}
+                    </td>
+    
+                    <td style="text-align:center;">
+                      {% if proveedor.cumple_entrega_docs == "SI" %}
+                      <a class="enlace"  title="Documentación completa" href=""></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h4 class="glyphicon glyphicon-ok" style="color:green;"></h4>
+                      {% else %}
+                      <a class="enlace"  title="Documentación completa"></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h4 class="glyphicon glyphicon-remove" style="color:red;"></h4>
+                      {% endif %}
+                    </td>
+    
+                    <td style="text-align:center;">
+                      {% if proveedor.codigo_id.proveedor_revisado is True %}
+                      <a class="enlace" title="Revisado Administración" href=""></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h4 class="glyphicon glyphicon-ok" style="color:green;"></h4>
+                      {% else %}
+                      <a class="enlace" title="Revisado Administración" href=""></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h4 class="glyphicon glyphicon-remove" style="color:red;"></h4>
+                      {% endif %}
+                    </td>
+    
+                    <td style="text-align:center;">
+                      {% if proveedor.enviado_a_calidad is True %}
+                      <a class="enlace" title="Enviado a Calidad" href=""></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h4 class="glyphicon glyphicon-ok" style="color:green;"></h4>
+                      {% else %}
+                      <a class="enlace" title="Enviado a Calidad" href=""></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h4 class="glyphicon glyphicon-remove" style="color:red;"></h4>
+                      {% endif %}
+                     
+                    </td>
+                    <td style="text-align:center;">
+                      {% if proveedor.revisado_por_calidad is True %}
+                    <a class="enlace" title="Aprobado Calidad" href=""></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h4 class="glyphicon glyphicon-ok" style="color:green;"></h4>
+                      {% else %}
+                    <a class="enlace" title="Aprobado Calidad" href=""></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h4 class="glyphicon glyphicon-remove" style="color:red;"></h4>
+                    {% endif %}
+                     
+                    </td>
+                    
+                    <td>
+                      <a class="btn btn-warning glyphicon glyphicon-edit" style="margin-left: 20px;" title="Ver/Editar Proveedor" href="{% url 'proveedores:editar_proveedor' proveedor.codigo_id.id %}"></a>
+                    </td>
+    
+                    <td>
+                      <a class="btn btn-primary glyphicon glyphicon-paperclip" title="Documentos de Respaldo" href="{% url 'proveedores:ver_documentos'  proveedor.codigo_id.id %}"></a>
+                    </td>
+                    </tr>
+                  
+            {% endif %}  
+            {% endfor %}
+              
+               
+
+                {% else %}
+                <h4>No hay registros</h4>
+            
+
+                {% endif %}
+            
+
+              
+
+              
+              </tbody>
+              
+              </table>
+            </div>
+
+              
+              {% endblock content %}
+              
+              {% block extrajs %}
+              <script>
+               
+              
+              // Lineas para mostrar todos los campos ocultos
+              
+              //   jQuery(document).ready(function($){
+              //     $(document).on( 'frmFormComplete', function( event, form, response ) {
+              // var formID = $(form).find('input[name="id_nombre_empresa"]').val();
+              // });
+                
+              
+              $("#id_nombre_empresa").hide().val("");
+              $("#id_categoria_proveedor").hide().val("");
+              
+              $("#nombre_empresa").hide().val("");
+              
+              $("#criticos").hide().val("");
+              
+              
+              
+                  
+                
+                $("#xproveedor").on('click', xProveedor)
+                $("#xproveedorcritico").on('click', xProveedorCritico)
+                $("#xcategoria").on('click', xCategoria)
+                
+               
+                
+              //Funciones que ocultan listas de seleccion y campos
+              function MuestraOpcionCat() {
+                $("#categoria2").show();
+                $("#segmento2").hide().val("");
+                $("#id_busca_activos").hide().val("");
+                $("#id_nombre_empresa").hide().val("");
+                $("#id_categoria_proveedor").hide().val("");
+                $("#calificacionminima").hide().val("");
+                $("#calificacionmaxima").hide().val("");
+                $("#busca_calificacion").hide().val("");
+                $("#segmento2").hide().val(""); 
+               
+              } 
+              
+              
+              
+              function xProveedor() {
+                $("#id_giro").hide().val("");
+                $("#id_busca_giro").hide().val("");
+                $("#id_busca_activos").hide().val("");
+                $("#id_nombre_empresa").show();
+                $("#id_categoria_proveedor").hide().val("");
+                $("#calificacionminima").hide().val("");
+                $("#calificacionmaxima").hide().val("");
+                $("#busca_calificacion").hide().val("");
+                $("#segmento2").hide().val(""); 
+                $("#categoria2").hide().val("");
+               
+              }
+              
+              function xProveedorCritico() {
+                $("#id_giro").hide().val("");
+                $("#id_busca_giro").hide().val("");
+                $("#id_busca_activos").hide().val("");
+                $("#id_nombre_empresa").hide().val("");
+                $("#id_categoria_proveedor").hide().val("");
+                $("#calificacionminima").hide().val("");
+                $("#calificacionmaxima").hide().val("");
+                $("#busca_calificacion").hide().val("");
+                $("#segmento2").hide().val(""); 
+                $("#categoria2").hide().val("");
+                $("#criticos").show();
+               
+              }
+              
+              
+              
+              function xCategoria() {
+                $("#id_giro").hide().val("");
+                $("#id_busca_giro").hide().val("");
+                $("#id_busca_activos").hide().val("");
+                $("#id_nombre_empresa").hide().val("");
+                $("#id_categoria_proveedor").show();
+                $("#calificacionminima").hide().val("");
+                $("#calificacionmaxima").hide().val("");
+                $("#busca_calificacion").hide().val("");
+                $("#segmento2").hide().val(""); 
+                $("#categoria2").hide().val("");
+               
+              }
+              
+            
+              
+         
+              
+              jQuery(document).ready(function($){
+                                $('*[data-href]').on('click', function(){
+                                  window.location = $(this).data("href");
+                                });
+                              });
+                              
+                            </script>
+                            
+                            <script>
+                              function ordenarSelect(id_componente)
+                                {
+                                  var selectToSort = jQuery('#' + id_componente);
+                                  var optionActual = selectToSort.val();
+                                  selectToSort.html(selectToSort.children('option').sort(function (a, b) {
+                                    return a.text === b.text ? 0 : a.text < b.text ? -1 : 1;
+                                  })).val(optionActual);
+                                }
+                                $(document).ready(function () {
+                                  ordenarSelect('id_categoria_proveedor');
+                                  
+                                  
+                                });
+              
+              
+                                $(window).on("load", function() {
+                      $(".loader").fadeOut("slow");
+                  });
+              
+                  $(document).ready(function() {    
+                      $('#enviar').on('click', function(){
+                          //Añadimos la imagen de carga en el contenedor
+                          $(".loader").show();
+                          $(window).on("load", function(){
+                              $(".loader").fadeOut("slow");
+                          });
+                      });              
+                  }); 
+              
+                 
+                            </script>
+                            
+              
+                            {% endblock %}

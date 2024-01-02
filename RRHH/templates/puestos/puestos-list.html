@@ -1,129 +1,55 @@
-{% extends 'base.html' %}
-<!-- {% load tz %} -->
-{% block extrahead %}
+{% extends "layout/base.html" %}
 
+{% block subhead %}
 <style>
+    #titulo {
+        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    }
 
-#titulo {
-  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-}
+    #tabla-reporte {
+        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
 
-#tabla-reporte{
-  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-  
-}
+    }
 
-#anuladas {
-  text-align: center;
-  color: #fff;
-  background-color:darkgoldenrod;
-}
-
+    #anuladas {
+        text-align: center;
+        color: #fff;
+        background-color: darkgoldenrod;
+    }
 </style>
-{% endblock %}
+{% endblock subhead %}
+
 {% block content %}
 <div class="container" style="margin: 25px auto;">
-  <div class="row">
-    <div class="col-md-6 search">
-      <form class="form-inline my-2 my-lg-0" method="GET">
-        <input class="form-control mr-sm-2" type="text" placeholder="N° Pedido, Descripción" name="buscar" {% if busqueda %} value="{{ busqueda }}" {% endif %}>
-        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
-        <a class="btn  btn-secondary my-2 my-sm-0" style="margin-left: 10px;" href="{% url 'ordenpedido:listar_ordenes' %}"></button>Limpiar</a>
-      </form>
+    <div class="row">
+        <div class="col-md-6 search">
+        </div>
     </div>
-    <div class="col-md-6">
-      <a class="btn btn-lg btn-success rounded-circle" style="float: right;" href="{% url 'ordenpedido:generar_orden' %}" title="Nuevo Pedido">+</a>
-    </div>
-  </div>
 </div>
 <div class="container">
-  <h4 id="titulo">Requisición de Activos</h4>
+    <h4 id="titulo">Requisición de Activos</h4>
 </div>
 <table class="table table-dark table-small table-striped container-fluid" style="margin: 5px auto" id="tabla-reporte">
 
     <thead>
-      <tr>
-        <th scope="col">Pedido N°</th>
-        <th scope="col">Solicitante</th>
-        <th scope="col">Fecha Solicitud</th>
-        <th scope="col">Tipo Activo</th>
-        <th scope="col">Descripción</th>
-        <th scope="col">Estado Aprobación</th>
-        <!-- {% if perms.ordenPedido.change_ordenespedidos or perms.ordenPedido.delete_ordenespedidos %}
-        <th scope="col">Opciones</th>
-        {% endif %} -->
-      </tr>
+        <tr>
+            <th scope="col">Pedido N°</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Descripción</th>
+            <th scope="col">Justificación</th>
+        </tr>
     </thead>
     <tbody>
-      {% for pedido in form %}
-      <tr>
-        <td>{{ pedido.numpedido.numpedido }}</td>
-        <td>{{ pedido.numpedido.usuario_solicita.first_name }} {{ pedido.numpedido.usuario_solicita.last_name }}</td>
-        <td>{{ pedido.numpedido.fchsolicita|date:'Y-m-d' }}</td>
-        <td>{{ pedido.numpedido.tipoactivo }}</td>
-        <td>{{ pedido.descripcion }}</td>
-        <!-- {% if pedido.numpedido.aprobado == 1 %}
-          <td>Aprobado</td>
-        {% elif pedido.numpedido.aprobado == 0 %}
-          <td>Rechazado</td>
-        {% elif pedido.numpedido.aprobado == 2 %}
-          <td style="color:rgb(230, 168, 11)"><b>Anulada</b></td>
-        {% else %}
-          <td>Pendiente</td>
-        {% endif %}
-        <td>
-        {% if pedido.numpedido.aprobado != 2 %}
-          <a href="{% url 'ordenpedido:duplicar_orden' pedido.numpedido.numpedido %}" class="btn btn-warning glyphicon glyphicon-duplicate" title="Duplicar"></a>
-        {% else %}
-          <a href="#" class="btn btn-secondary glyphicon glyphicon-duplicate" title="Duplicar"></a>
-        {% endif %}
-        {% if perms.ordenPedido.change_ordenespedidos %}
-          {% if pedido.numpedido.aprobado == 1 or pedido.numpedido.aprobado == 2  %}
-            <a href="#" class="btn btn-secondary glyphicon glyphicon-edit" title="Editar"></a>
-          {% else %}
-            <a href="{% url 'ordenpedido:editar_orden' pedido.numpedido.numpedido %}" class="btn btn-primary glyphicon glyphicon-edit" title="Editar"></a>
-          {% endif %}
-        {% endif %}
-        {% if perms.ordenPedido.delete_ordenespedidos %}
-          {% if pedido.numpedido.aprobado == 1 or pedido.numpedido.aprobado == 2 %}
-          <a href="#" class="btn btn-secondary glyphicon glyphicon-remove" title="Eliminar"></a>
-          {% else %}
-          <a href="{% url 'ordenpedido:eliminar_pedido' pedido.numpedido.numpedido %}" class="btn btn-danger glyphicon glyphicon-remove" title="Eliminar"></a>
-          {% endif %}
-        {% endif %}
-        {% if pedido.numpedido.aprobado != 2 %}
-          {% if pedido.numpedido.entrega_solicita != True %}
-          <a href="{% url 'ordenpedido:recibe_producto' pedido.numpedido.numpedido %}" class="btn btn-success glyphicon glyphicon-ok" title="Confirmar Producto Recibido"></a>
-          {% else %}
-          <a href="#" class="btn btn-secondary glyphicon glyphicon-ok" title="Confirmar Producto Recibido"></a>
-          {% endif %}
-        {% else %}
-          <a href="#" class="btn btn-secondary glyphicon glyphicon-ok" title="Confirmar Producto Recibido"></a>
-        {% endif %}
-        {% if pedido.numpedido.estado_precotiza == True %}
-        <a href="{% url 'ordenpedido:revisa_cotizacion' pedido.numpedido.numpedido %}" class="btn btn-warning glyphicon glyphicon-eye-open" title="Ver Pre Cotización"></a>
-          {% endif %}
-        </td> -->
-      </tr>
-      {% endfor %}
+        {% for item in puestosSolicitados %}
+        <tr>
+            <td>{{ item.id }}</td>
+            <td>{{ item.puesto }}</td>
+            <td>{{ item.descripcion }}</td>
+            <td>{{ item.justificacion }}</td>
+        </tr>
+        {% endfor %}
     </tbody>
+
 </table>
 
-<!-- <div class="pagination">
-  <span class="step-links">
-      {% if form.has_previous %}
-          <a href="?page=1">&laquo; inicio</a>
-          <a href="?page={{ form.previous_page_number }}">previo</a>
-      {% endif %}
-
-      <span class="current">
-          Page {{ form.number }} of {{ form.paginator.num_pages }}.
-      </span>
-
-      {% if form.has_next %}
-          <a href="?page={{ form.next_page_number }}">próximo</a>
-          <a href="?page={{ form.paginator.num_pages }}">último &raquo;</a>
-      {% endif %}
-  </span>
-</div>
-{% endblock %} -->
+{% endblock content %}

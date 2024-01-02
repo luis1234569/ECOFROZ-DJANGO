@@ -1,7 +1,12 @@
 from django.views.generic import CreateView, ListView
-from .models import *
+from .models import solicita_puesto
 from django.shortcuts import render
-# Create your views here.
-class ListarPedidosPuesto(ListView):
-    model = solicita_puesto
-    template_name = 'puestos/puestos-list.html'
+    
+def ListarPedidosPuesto(request):
+
+    puestosSolicitados= solicita_puesto.objects.all()
+    context={
+        'puestosSolicitados': puestosSolicitados
+    }
+    
+    return render(request, 'puestos/puestos-list.html', context)

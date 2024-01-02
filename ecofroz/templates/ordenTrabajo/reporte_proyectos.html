@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+<!-- {% load tz %} -->
+
+{% block extrahead %}
+<style type="text/css"> 
+ 
+
+</style>
+
+{% endblock %}
+
+{% block content %}
+<div class="loader"></div>
+<div class="container" style="margin:auto; padding-top: 25px; margin-top: 15px; margin-bottom: 25px;margin-left:5px;">
+  <div class="row">
+    <div class="col">
+      <form id="formu" name="formu" class="form-inline my-2 my-lg-0" method="GET">
+        <label">Proyecto</label><br>
+      
+            <select name="numproyecto" id="numproyecto" class="form-control" onChange="form.submit();">
+              {% if pseleccionado %}
+                <option value="{{ pseleccionado.id }}">{{ pseleccionado.nombre_proyecto }}</option>
+                {% for p in proy %}
+                <option value="{{ p.id }}">{{ p.nombre_proyecto }}</option>
+                {% endfor %}
+              {% else %}
+              <option value="">------------</option>
+              {% for p in proy %}
+              <option value="{{ p.id }}">{{ p.nombre_proyecto }}</option>
+              {% endfor %}
+            {% endif %}
+
+            </select>
+    </div>
+    
+    {% if pseleccionado %}
+    <div class="col">
+        <label for="inicio" style="margin-right: 10px;">DESDE:</label><br>
+        <input type="date" name="desde" id="desde" style="margin-top:-8px;" class="form-control" name="inicio" value="{{ inicio }}" required>
+   </div>
+   <div class="col">
+        <label for="fin" style="margin-right: 10px;">HASTA:</label><br>
+        <input type="date" name="hasta" id="hasta" style="margin-top:-8px;" class="form-control" name="fin" value="{{ fin }}" onChange="form.submit();" required>
+    </div>
+    
+
+  
+
+    <div class="col" style="margin-top:23px;">
+      <a class="btn btn-secondary" href="{% url 'trabajos:reporte_proyectos' %}">Limpiar</a>
+    </div>
+    <div class="col" style="margin-top:23px;margin-left: -70px;">
+      <a class="btn btn-success" href="{% url 'trabajos:reporte_compras_por_proyecto' %}">Excel</a>
+    </form> 
+      
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+
+   
+
+  <div class="container-fluid">
+  <table class=" table table-sm table-success" style="margin: 25px auto; width: 100%;">
+    <thead>
+      <tr>
+        <tr>
+          <th scope="col">Pedido</th>
+          <th scope="col">Origen</th>
+          <th scope="col">Solicita</th>
+          <th scope="col">Departamento</th>
+          <th scope="col">Fch Aprueba</th>
+          <th scope="col">Tipo</th>
+          <th scope="col">Proyecto</th>
+          <th scope="col">Descripción</th>
+          <th scope="col">Proveedor</th>
+          <th scope="col">Valor</th>
+          <th scope="col">Analista</th>
+         
+        </tr>
+        </thead>
+        <tbody style="text-align: center;">
+            
+            
+              {% for pedido in activos %}
+             
+              <!-- <tr style="cursor: pointer;" data-href="" title="Fecha Solicitud:&nbsp;{{ pedido.numtrabajo.fchsolicita|date:'d-M-Y' }}&#10;Fecha Aprobación Gerente Area:&nbsp;{{ pedido.numtrabajo.fchaprueba|date:'d-M-Y'}}&#10;Fecha Cotización:&nbsp;{{ pedido.numtrabajo.fchcotiza|date:'d-M-Y'}}&#10;Fecha Selecciona Cotización Gerente Área:&nbsp;{{ pedido.numtrabajo.fchselectcotiza|date:'d-M-Y'|default:'--'}}&#10;Fecha Aprobación Gerencia Administrativa:&nbsp;{{ pedido.numtrabajo.fchgenerac|date:'d-M-Y'|default:'--'}}  " >  -->
+              <tr>
+                {% if pedido.app_origen == '1' %}
+                <td><a href="{% url 'ordenpedido:generarcompra' pedido.orden %}">{{ pedido.orden }}</a></td>
+                {% elif pedido.app_origen == '2' %}
+                <td><a href="{% url 'trabajos:generarcompra' pedido.orden %}">{{ pedido.orden }}</a></td>
+                {% endif %}
+                <td>{{ pedido.get_app_origen_display }}</td>
+
+                <td>{{ pedido.solicita }} </td>
+                <td>{{ pedido.departamento }}</td>
+                <td>{{ pedido.fecha_aprueba_compra | date:'l d M, Y' }}</td>
+                <td>{{ pedido.tipo }}</td>
+                <td>{{ pedido.proyecto | default:'--' }}</td>
+                <td>{{ pedido.descripcion | default:'--' | slice:":100" }}</td>
+                <td>{{ pedido.proveedor | default:'--' }}</td>
+                <td>{{ pedido.valor | default:'--' }}</td>
+                <td style="text-align: center;">{{ pedido.analista  | default:'--' | slice:":7" }}</td>
+               
+
+              </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</div>
+<div class="pagination">
+  <span class="step-links">
+      {% if activos.has_previous %}
+          {% if hasta %}
+          <a href="?numproyecto={{ pseleccionado.id }}&desde={{ inicio }}&hasta={{ fin }}&page=1">&laquo; inicio</a>
+          <a href="?numproyecto={{ pseleccionado.id }}&desde={{ inicio }}&hasta={{ fin }}&page={{ activos.previous_page_number }}">previo</a>
+          {% else %}
+          <a href="?numproyecto={{ pseleccionado.id }}&page=1">&laquo; inicio</a>
+          <a href="?numproyecto={{ pseleccionado.id }}&page={{ activos.previous_page_number }}">previo</a>
+          {% endif %}
+      {% endif %}
+
+      <span class="current">
+          Page {{ activos.number }} of {{ activos.paginator.num_pages }}.
+      </span>
+
+      {% if activos.has_next %}
+          {% if hasta %}
+          <a href="?numproyecto={{ pseleccionado.id }}&desde={{ inicio }}&hasta={{ fin }}&page={{ activos.next_page_number }}">próximo</a>
+          <a href="?numproyecto={{ pseleccionado.id }}&desde={{ inicio }}&hasta={{ fin }}&page={{ activos.paginator.num_pages }}">último &raquo;</a>
+          {% else %}
+          <a href="?numproyecto={{ pseleccionado.id }}&page={{ activos.next_page_number }}">próximo</a>
+          <a href="?numproyecto={{ pseleccionado.id }}&page={{ activos.paginator.num_pages }}">último &raquo;</a>
+          {% endif %}
+      {% endif %}
+  </span>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+
+
+var comprueba = '{{msje2}}'
+if (comprueba == 'Error') {
+  $(document).ready(function(){
+    alert('{{ msje }}');
+  })
+};
+
+$(window).on("load", function() {
+        $(".loader").fadeOut("slow");
+    });
+
+$("#formu").submit(function(e) {
+        
+            $(".loader").show();
+            $(window).on("load", function(){
+                $(".loader").fadeOut("slow");
+            });
+        });              
+   
+
+
+
+</script>
+{% endblock %}

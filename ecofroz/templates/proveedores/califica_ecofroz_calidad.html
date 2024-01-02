@@ -1,0 +1,706 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+
+{% block extrahead %}
+<!DOCTYPE html>
+<style>
+
+table {
+  border-collapse: collapse;
+  width: 100%;  
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+ul.opciones {
+  list-style-type:none;
+}
+
+input[type=text] {
+  border: none;
+  border-bottom: 1px solid #34bdeb ;
+  background-color: none;
+  outline: none;
+  box-shadow: none !important;
+  /* border: none; */
+  border-bottom-color: 1px solid #34bdeb  ;
+}
+
+input[type=number] {
+  border: none;
+  border-bottom: 1px solid #34bdeb ;
+  background-color: none;
+  outline: none;
+  box-shadow: none !important;
+  /* border: none; */
+  border-bottom-color: 1px solid #34bdeb  ;
+  width: 80px;
+}
+
+.button {
+  background-color: #4daefd; /* Green */
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+.button1 {
+  background-color: white; 
+  color: black; 
+  border: 2px solid ;
+}
+
+.button1:hover {
+  background-color: #4daefd;;
+  color: white;
+}
+
+
+.select-box {
+    -webkit-appearance: button;
+    -moz-appearance: button;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -webkit-padding-end: 20px;
+    -moz-padding-end: 20px;
+    -webkit-padding-start: 2px;
+    -moz-padding-start: 2px;
+    background-color: #faf9f7; /* Fallback color if gradients are not supported */
+    
+    background-position: center right;
+    background-repeat: no-repeat;
+    border: 1px solid #AAA;
+    outline: 0px;
+    border-radius: 2px;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+    color:#262625;
+    font-size: inherit;
+    margin: 0;
+    overflow: hidden;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#tabla-reporte{
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#tabla-reporte td, #tabla-reporte th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#tabla-reporte tr:hover {background-color: #ddd;}
+#tabla-reporte tr:hover {background-color: #ddd;}
+
+#tabla-reporte th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}
+
+#salto-linea-ancho{
+  margin-top: 20px;
+  width: 150px;
+}
+
+.caja {
+  margin-top: 10px;
+}
+
+.carpetas {
+  color:rgb(236, 219, 61);
+  left: 1em;
+}
+
+.carpetas_vacias {
+  color:rgb(240, 235, 197);
+  left: 1em;
+}
+
+
+.enlace {
+  position: relative;
+  left: 1.5em;
+}
+
+.enlace_roto {
+  position: relative;
+  left: 1.5em;
+  color:rgb(180, 193, 199);
+}
+
+
+</style>
+
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid" style="width: 90%; margin-top: 25px;">
+  <h3 class="display-5">Calificación del proveedores Ecofroz. Uso Interno del Dep. de Calidad</h3>
+  <br>
+  
+  <form enctype="multipart/form-data" method="POST">
+{% csrf_token %}
+  <div class="form-row">  
+
+    <div class="form-group col-xs-12 col-md-8 form-inline" >
+      <label for="{{ form.nombre_empresa.label }}">Usted está viendo la documentación de:&nbsp;&nbsp;</label>
+      <input type="text" size="60px;" value="{{ form.nombre_empresa }}" readonly="True"> 
+      
+    </div>
+
+    <div class="form-group col-md-8 form-inline" >
+      <label for="{{ form.categoria.label }}">Ubicado en la categoría:&nbsp;&nbsp;</label> 
+      <input type="text" size="45px;" value="{{ form.categoria }}" readonly="True"> 
+    </div>
+
+    <div class="form-group col-md-8" >
+    </div>
+    
+    <div class="form-group col-md-10" >
+      <h5>Observaciones Administrativas sobre este proveedor</h5> 
+      {% if observaciones_administrativas == None %}
+      <textarea id="comentarios_adminis" name="comentarios_adminis" rows="3" cols="10" class="form-control" readonly="True"></textarea>
+      {% else  %}
+      <textarea id="comentarios_adminis" name="comentarios_adminis" rows="3" cols="10" class="form-control" readonly="True">{{ observaciones_administrativas }}</textarea>
+      {% endif %}
+      
+      <br>
+    </div>
+  
+  
+  </div>
+
+    
+  {% if form.categoria.id == 20 %}
+<div class="container caja">
+  <br>
+
+<!-- SUBCATEGORIAS AGRICOLAS (NO BORRAR): SE USAN CON LA LLAMADA A 
+    1 FICHAS TECNICAS Pesticidas
+    2 FICHAS TECNICAS Foliares
+    3. FICHAS TECNICAS Fertilizantes
+    4. FICHAS TECNICAS MATERIA ORGANICA
+
+    13. FICHAS TECNICAS SEMILLAS
+
+    5. REGISTROS AGROCALIDAD PESTICIDAS
+    6. REGISTROS AGROCALIDAD Foliares
+    7. REGISTROS AGROCALIDAD Fertilizantes
+    8. REGISTROS AGROCALIDAD MAteria Orgánica
+
+    14. REGISTROS AGROCALIDAD SEMILLAS
+
+    9. MSDS PESTICIDAS
+    10. MSDS Foliares
+    11. MSDS Fertilizantes
+    12. MSDS Materia Orgánica
+
+    15. MSDS Semillas
+    16.Etiquetas de productos Foliares
+    17. Etiquetas de productos Pesticidas
+    18. Etiquetas de productos Fertilizantes
+    19. Etiquetas de productos MAteria Orgánica
+    20. Etiquetas de productis Semillas
+
+    21. Análisis Pesticidas
+    22. Análsis Foliares
+    23. Análisis Fertilizantes
+    24. Analsiis Materia Orgánica
+    25. Análisis Semillas
+
+    26. Certificados Pesticidas
+    27. Certificados Foliares
+    28. Certificados Fertilizantes
+    29. Certificados MAO
+    30. Certificados Semillas-->
+
+
+
+  <div class="row">
+    {% if pes.respuesta == 'SI' %}
+    <div class="col">
+      <h5 class="centrado">Pesticidas<b>&nbsp;<a style="color:green;" class="glyphicon glyphicon-ok"></a></b></h5>
+      <div class="row span-mod container">
+      {% if ficha_pes %}
+        <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace"  title="Fichas Técnicas" href="{% url 'proveedores:ver_docu_subcates_calidad' form.id 1 %}"><b>Fichas Técnicas</b></a>
+      {% else %}
+        <h4 class="glyphicon glyphicon-folder-close carpetas_vacias"></h4>&nbsp;&nbsp;<label class="enlace_roto"><b>Fichas Técnicas</b></label>
+      {% endif %}
+      {% if agro_pes %}
+      <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace"  title="Regitros Agrocalidad/MAGAP" href="{% url 'proveedores:ver_docu_subcates_calidad' form.id 5 %}"><b>Agrocalidad</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      {% else %}
+      <h4 class="glyphicon glyphicon-folder-close carpetas_vacias"></h4>&nbsp;&nbsp;<label class="enlace_roto"><b>Agrocalidad</b></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      {% endif %}
+      {% if msds_pes %}
+      <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Hojas MSDS" href="{% url 'proveedores:ver_docu_subcates_calidad' form.id 9 %}"><b>Hojas MSDS</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      {% else %}
+      <h4 class="glyphicon glyphicon-folder-close carpetas_vacias"></h4>&nbsp;&nbsp;<label class="enlace_roto"><b>Hojas MSDS</b></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      {% endif %}
+      {% if eti_pes %}
+      <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Etiquetas" href="{% url 'proveedores:ver_docu_subcates_calidad' form.id 17 %}"><b>Etiquetas</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      {% else %}
+      <h4 class="glyphicon glyphicon-folder-close carpetas_vacias"></h4>&nbsp;&nbsp;<label class="enlace_roto"><b>Etiquetas</b></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      {% endif %}
+      {% if ana_pes %}
+      <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Análisis" href="{% url 'proveedores:ver_docu_subcates_calidad' form.id 21 %}"><b>Análisis</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      {% else %}
+      <h4 class="glyphicon glyphicon-folder-close carpetas_vacias"></h4>&nbsp;&nbsp;<label class="enlace_roto"><b>Análisis</b></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      {% endif %}
+      {% if certi_pes %}
+      <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Certificados" href="{% url 'proveedores:ver_docu_subcates_calidad' form.id 26 %}"><b>Certificados</b></a>&nbsp;
+      {% else %}
+      <h4 class="glyphicon glyphicon-folder-close carpetas_vacias"></h4>&nbsp;&nbsp;<label class="enlace_roto"><b>Certificados</b></label>&nbsp;&nbsp;&nbsp;
+      {% endif %}
+    </div>
+</div>
+    
+    {% else %}
+    <div class="col">
+        <h5 class="centrado">Pesticidas<b>&nbsp;<a style="color:red;" class="glyphicon glyphicon-remove"></a></b></h5>
+    </div> 
+    {% endif %}
+
+    {% if fol.respuesta == 'SI' %}
+    <div class="col">
+      <h5 class="centrado">Foliares<b>&nbsp;<a style="color:green;" class="glyphicon glyphicon-ok"></a></b></h5>
+      <div class="row span-mod container">
+    {% if ficha_fol %}
+    <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace"  title="Fichas Tecnicas" href="{% url 'proveedores:ver_docu_subcates_calidad' form.id 2 %}"><b>Fichas Tecnicas</b></a>
+    {% else %}
+    <h4 class="glyphicon glyphicon-folder-close carpetas_vacias"></h4>&nbsp;&nbsp;<label class="enlace_roto"><b>Fichas Técnicas</b></label>
+    {% endif %}
+    {% if agro_fol %}
+    <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Regitros Agrocalidad/MAGAP" href="{% url 'proveedores:ver_docu_subcates_calidad' form.id 6 %}"><b>Agrocalidad</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    {% else %}
+    <h4 class="glyphicon glyphicon-folder-close carpetas_vacias"></h4>&nbsp;&nbsp;<label class="enlace_roto"><b>Agrocalidad</b></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    {% endif %}
+    {% if msds_fol %}
+    <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Hojas MSDS" href="{% url 'proveedores:ver_docu_subcates_calidad' form.id 10 %}"><b>Hojas MSDS</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    {% else %}
+    <h4 class="glyphicon glyphicon-folder-close carpetas_vacias"></h4>&nbsp;&nbsp;<label class="enlace_roto"><b>Hojas MSDS</b></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    {% endif %}
+    {% if eti_fol %}
+    <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Etiquetas" href="{% url 'proveedores:ver_docu_subcates_calidad' form.id 16 %}"><b>Etiquetas</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    {% else %}
+    <h4 class="glyphicon glyphicon-folder-close carpetas_vacias"></h4>&nbsp;&nbsp;<label class="enlace_roto"><b>Etiquetas</b></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    {% endif %}
+    {% if ana_fol %}
+    <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Análisis" href="{% url 'proveedores:ver_docu_subcates_calidad' form.id 22 %}"><b>Análisis</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    {% else %}
+    <h4 class="glyphicon glyphicon-folder-close carpetas_vacias"></h4>&nbsp;&nbsp;<label class="enlace_roto"><b>Análisis</b></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    {% endif %}
+    {% if certi_fol %}
+    <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Certificados" href="{% url 'proveedores:ver_docu_subcates_calidad' form.id 27 %}"><b>Certificados</b></a>&nbsp;
+    {% else %}
+    <h4 class="glyphicon glyphicon-folder-close carpetas_vacias"></h4>&nbsp;&nbsp;<label class="enlace_roto"><b>Certificados</b></label>&nbsp;&nbsp;&nbsp;
+    {% endif %}
+  </div>
+  </div>
+  {% else %}
+    <div class="col">
+        <h5 class="centrado">Foliares<b>&nbsp;<a style="color:red;" class="glyphicon glyphicon-remove"></a></b></h5>
+    </div> 
+  {% endif %}
+
+  {% if fer.respuesta == 'SI' %}
+    <div class="col">
+      <h5 class="centrado">Fertilizantes<b>&nbsp;<a style="color:green;" class="glyphicon glyphicon-ok"></a></b></h5>
+    <div class="row span-mod container">
+  {% if ficha_fer %}
+    <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Fichas Tecnicas" href="{% url 'proveedores:ver_docu_subcates_calidad' form.id 3 %}"><b>Fichas Tecnicas</b></a>
+  {% else %}
+  <h4 class="glyphicon glyphicon-folder-close carpetas_vacias"></h4>&nbsp;&nbsp;<label class="enlace_roto"><b>Fichas Técnicas</b></label>
+  {% endif %}
+  {% if agro_fer %}
+  <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Regitros Agrocalidad/MAGAP" href="{% url 'proveedores:ver_docu_subcates_calidad' form.id 7 %}"><b>Agrocalidad</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  {% else %}
+  <h4 class="glyphicon glyphicon-folder-close carpetas_vacias"></h4>&nbsp;&nbsp;<label class="enlace_roto"><b>Agrocalidad</b></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  {% endif %}  
+  {% if msds_fer %}
+  <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Hojas MSDS" href="{% url 'proveedores:ver_docu_subcates_calidad' form.id 11 %}"><b>Hojas MSDS</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  {% else %} 
+  <h4 class="glyphicon glyphicon-folder-close carpetas_vacias"></h4>&nbsp;&nbsp;<label class="enlace_roto"><b>Hojas MSDS</b></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  {% endif %}
+  {% if eti_fer %}
+  <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Etiquetas" href="{% url 'proveedores:ver_docu_subcates_calidad' form.id 18 %}"><b>Etiquetas</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  {% else %}
+  <h4 class="glyphicon glyphicon-folder-close carpetas_vacias"></h4>&nbsp;&nbsp;<label class="enlace_roto"><b>Etiquetas</b></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  {% endif %}
+  {% if ana_fer %}
+  <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Análisis" href="{% url 'proveedores:ver_docu_subcates_calidad' form.id 23 %}"><b>Análisis</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  {% else %}
+  <h4 class="glyphicon glyphicon-folder-close carpetas_vacias"></h4>&nbsp;&nbsp;<label class="enlace_roto"><b>Análisis</b></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  {% endif %}
+  {% if certi_fer %}
+  <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Certificados" href="{% url 'proveedores:ver_docu_subcates_calidad' form.id 28 %}"><b>Certificados</b></a>&nbsp;
+  {% else %}
+  <h4 class="glyphicon glyphicon-folder-close carpetas_vacias"></h4>&nbsp;&nbsp;<label class="enlace_roto"><b>Certificados</b></label>&nbsp;&nbsp;&nbsp;
+  {% endif %}
+
+</div>
+  </div>
+  {% else %}
+    <div class="col">
+        <h5 class="centrado">Fertilizantes<b>&nbsp;<a style="color:red;" class="glyphicon glyphicon-remove"></a></b></h5>
+    </div> 
+  {% endif %}
+
+  {% if mao.respuesta == 'SI' %}
+    <div class="col">
+      <h5 class="centrado">Materia Orgánica<b>&nbsp;<a style="color:green;" class="glyphicon glyphicon-ok"></a></b></h5>
+      <div class="row span-mod container">
+      {% if ficha_mao %}
+      <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Fichas Tecnicas" href="{% url 'proveedores:ver_docu_subcates_calidad' form.id 4 %}"><b>Fichas Tecnicas</b></a>&nbsp;
+      {% else %}
+      <h4 class="glyphicon glyphicon-folder-close carpetas_vacias"></h4>&nbsp;&nbsp;<label class="enlace_roto"><b>Fichas Técnicas</b></label>
+      {% endif %}
+      {% if agro_mao %}
+      <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Regitros Agrocalidad/MAGAP" href="{% url 'proveedores:ver_docu_subcates_calidad' form.id 8 %}"><b>Agrocalidad</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      {% else %}
+      <h4 class="glyphicon glyphicon-folder-close carpetas_vacias"></h4>&nbsp;&nbsp;<label class="enlace_roto"><b>Agrocalidad</b></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      {% endif %}
+      {% if msds_mao %} 
+      <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Hojas MSDS" href="{% url 'proveedores:ver_docu_subcates_calidad' form.id 12 %}"><b>Hojas MSDS</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      {% else %}
+      <h4 class="glyphicon glyphicon-folder-close carpetas_vacias"></h4>&nbsp;&nbsp;<label class="enlace_roto"><b>Hojas MSDS</b></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      {% endif %}
+      {% if eti_mao %}
+      <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Etiquetas" href="{% url 'proveedores:ver_docu_subcates_calidad' form.id 19 %}"><b>Etiquetas</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      {% else %}
+      <h4 class="glyphicon glyphicon-folder-close carpetas_vacias"></h4>&nbsp;&nbsp;<label class="enlace_roto"><b>Etiquetas</b></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      {% endif %}
+      {% if ana_mao %}
+      <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Análisis" href="{% url 'proveedores:ver_docu_subcates_calidad' form.id 24 %}"><b>Análisis</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      {% else %}
+      <h4 class="glyphicon glyphicon-folder-close carpetas_vacias"></h4>&nbsp;&nbsp;<label class="enlace_roto"><b>Análisis</b></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      {% endif %}
+      {% if certi_mao %}
+      <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Certificados" href="{% url 'proveedores:ver_docu_subcates_calidad' form.id 29 %}"><b>Certificados</b></a>&nbsp;
+      {% else %}
+      <h4 class="glyphicon glyphicon-folder-close carpetas_vacias"></h4>&nbsp;&nbsp;<label class="enlace_roto"><b>Certificados</b></label>&nbsp;&nbsp;&nbsp;
+      {% endif %}
+    
+    </div>
+    </div>
+  {% else %}
+    <div class="col">
+        <h5 class="centrado">Materia Orgánica<b>&nbsp;<a style="color:red;" class="glyphicon glyphicon-remove"></a></b></h5>
+    </div> 
+  {% endif %}
+
+
+  {% if sem.respuesta == 'SI' %}
+    <div class="col">
+      <h5 class="centrado">Semillas<b>&nbsp;<a style="color:green;" class="glyphicon glyphicon-ok"></a></b></h5>
+      <div class="row span-mod container">
+        {% if ficha_sem %}
+        <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Fichas Tecnicas" href="{% url 'proveedores:ver_docu_subcates_calidad' form.id 13 %}"><b>Fichas Tecnicas</b></a>&nbsp;
+        {% else %}
+        <h4 class="glyphicon glyphicon-folder-close carpetas_vacias"></h4>&nbsp;&nbsp;<label class="enlace_roto"><b>Fichas Técnicas</b></label>
+       {% endif %}
+       {% if agro_sem %}
+        <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Regitros Agrocalidad/MAGAP" href="{% url 'proveedores:ver_docu_subcates_calidad' form.id 14 %}"><b>Agrocalidad</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      {% else %}
+      <h4 class="glyphicon glyphicon-folder-close carpetas_vacias"></h4>&nbsp;&nbsp;<label class="enlace_roto"><b>Agrocalidad</b></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      {% endif %} 
+      {% if msds_sem %} 
+      <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Hojas MSDS" href="{% url 'proveedores:ver_docu_subcates_calidad' form.id 15 %}"><b>Hojas MSDS</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      {% else %}
+      <h4 class="glyphicon glyphicon-folder-close carpetas_vacias"></h4>&nbsp;&nbsp;<label class="enlace_roto"><b>Hojas MSDS</b></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      {% endif %}  
+      {% if eti_sem %}
+      <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Etiquetas" href="{% url 'proveedores:ver_docu_subcates_calidad' form.id 20 %}"><b>Etiquetas</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      {% else %}
+      <h4 class="glyphicon glyphicon-folder-close carpetas_vacias"></h4>&nbsp;&nbsp;<label class="enlace_roto"><b>Etiquetas</b></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      {% endif %}
+      {% if ana_sem %}
+      <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Análisis" href="{% url 'proveedores:ver_docu_subcates_calidad' form.id 25 %}"><b>Análisis</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      {% else %}
+      <h4 class="glyphicon glyphicon-folder-close carpetas_vacias"></h4>&nbsp;&nbsp;<label class="enlace_roto"><b>Análisis</b></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      {% endif %}
+      {% if certi_sem %}
+      <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Certificados" href="{% url 'proveedores:ver_docu_subcates_calidad' form.id 30 %}"><b>Certificados</b></a>&nbsp;
+      {% else %}
+      <h4 class="glyphicon glyphicon-folder-close carpetas_vacias"></h4>&nbsp;&nbsp;<label class="enlace_roto"><b>Análisis</b></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      {% endif %}
+    
+    </div>
+  </div>
+  {% else %}
+    <div class="col">
+        <h5 class="centrado">Semillas<b>&nbsp;<a style="color:red;" class="glyphicon glyphicon-remove"></a></b></h5>
+    </div> 
+  {% endif %}
+
+
+
+</div>
+</div>
+
+    
+{% endif %} 
+
+
+  
+    <div class="row">
+      <div style="margin-left: 15px;" class="btn-group">
+
+        
+       
+        {% if form.categoria.id != 2 and form.categoria.id != 5 and form.categoria.id != 10 and form.categoria.id != 20 and form.categoria.id != 1 and form.categoria.id != 19 and form.categoria.id != 8 and form.categoria.id != 9  %}
+        <a type="button" style="margin-left: 0px;" class="btn btn-secondary" title="Ver Fichas" href="{% url 'proveedores:ver_fichas_calidad' form.id %}">Ver Fichas Técnicas de este proveedor</a>
+        {% endif %}
+        {% if form.categoria.id == 11 or form.categoria.id == 3 or form.categoria.id == 13 or form.categoria.id == 14 or form.categoria.id == 12 %}
+        <a type="button" style="margin-left: 3px;" class="btn btn-secondary" title="Ver Hojas MSDS" href="{% url 'proveedores:ver_msds_calidad' form.id %}">Ver Hojas MSDS</a>
+        {% endif %}
+        {% if form.categoria.id == 3 or form.categoria.id == 13 or form.categoria.id == 12 or form.categoria.id == 14 %}
+        <a type="button" style="margin-left: 3px;" class="btn btn-secondary" title="Ver Etiquetas de Productos" href="{% url 'proveedores:ver_etiquetas_calidad' form.id %}">Ver Etiquetas de Productos</a>
+        {% endif %}
+      </div>
+    
+  </div>
+  <br>
+  </div>  
+    {# 3. TABLE TO DISPLAY THE UPLOADED DOCS #}
+    
+    
+    <div class="container-fluid"  style="width: 90%;">
+    {% if form.categoria.id != 20 %}
+    <table id="gallery" class="table table-bordered">
+      <thead>
+        <tr>
+          <th style="width: 5%;">No</th>
+          <th>Documentos Entregados</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for documento in documentos_list %}
+          <tr>
+            <td style="width: 5%;"><strong>{{ forloop.counter }}</strong></td>
+            <td><a href="{{ documento.archivos.url }}">{{ documento.nombre_corto }}</a></td>
+           
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+
+    <div class="form-group col-md-12 " >
+      <label for="{{ form.fake }}"></label> 
+      
+    </div>
+
+
+    {% if preguntas_validacion_categoria %}
+    <div class="form-group col-md-10" >
+      <h5>Formulario de preguntas de la categoría para Calidad</h5> 
+    </div>
+    <div class="form-group col-md-12" >
+
+    {% for valor in preguntas_validacion_categoria %}  
+
+    
+      <label>{{forloop.counter}})&nbsp;{{ valor.pregunta.pregunta_nombre_corto }}</label>
+      <select name="{{valor.pregunta.id}}" class="select-box" value="{{ valor.respuesta }}">
+        {{ valor.respuesta  }}
+        {% if valor.respuesta == 'SI' %}
+      <option selected="selected" value="SI">SI</option>
+      <option value="NO">NO</option>
+      <option value="NA">No APLICA</option>
+    
+    
+      {% elif valor.respuesta == None or valor.respuesta == "" or valor.respuesta == 'None' %}
+      <option selected="selected" value="">--</option>
+      <option value="SI">SI</option>
+      <option value="NO">NO</option>
+      <option value="NA">NO APLICA</option>
+
+      {% elif valor.respuesta == 'NA' %}
+      <option selected="selected" value="NA">NO APLICA</option>
+      <option value="SI">SI</option>
+      <option value="NO">NO</option>
+      
+      {% else %}
+      <option selected="selected" value="NO">NO</option>
+      <option value="SI">SI</option>
+      <option value="NA">NO APLICA</option>
+      
+      {% endif %}
+    </select>
+      <br> 
+
+    {% endfor %}
+      
+    </div>
+      <br>
+    {% endif %}
+
+
+
+
+    <div class="form-group col-md-10" >
+      <h5>Retroalimentación interna</h5> 
+    </div>
+    
+  {% for valor in detalle %}  
+
+  <div class="form-group col-md-12" >
+    <label>1) ¿El proveedor encuestado cumple frecuentemente con el procedimiento de facturacion?</label> 
+    <select name="proc-facturacion" id="proc-facturacion" class="select-box" value="{{valor.cumple_procedimiento_facturacion_calidad}}">
+      {{ valor.cumple_procedimiento_facturacion_calidad  }}
+      {% if valor.cumple_procedimiento_facturacion_calidad == 'True' %}
+      <option selected="selected" value="True">SI</option>
+      <option value="False">NO</option>
+      <option value="None">--</option>
+    
+      {% elif valor.cumple_procedimiento_facturacion_calidad == None or valor.cumple_procedimiento_facturacion_calidad == "" or valor.cumple_procedimiento_facturacion_calidad == 'None' %}
+      <option selected="selected" value="">--</option>
+      <option value="True">SI</option>
+      <option value="False">NO</option>
+      
+      
+      {% else %}
+      <option selected="selected" value="False">NO</option>
+      <option value="True">SI</option>
+      <option value="None">--</option>
+      
+      {% endif %}
+    </select>
+    <br>
+    
+    <label>2) ¿El proveedor encuestado cumple muy frecuentemente con el procedimiento de entrega? </label> 
+    <select name="proc-entrega" id="proc-entrega" class="select-box" value="{{valor.cumple_procedimiento_entrega}}">
+      {% if valor.cumple_procedimiento_entrega_calidad == 'True' %}
+      <option selected="selected" value="True">SI</option>
+      <option value="False">NO</option>
+      <option value="None">--</option>
+    
+      {% elif valor.cumple_procedimiento_entrega_calidad == None or valor.cumple_procedimiento_entrega_calidad == 'None' or valor.cumple_procedimiento_entrega_calidad == "" %}
+      <option selected="selected" value="None">--</option>
+      <option value="True">SI</option>
+      <option value="False">NO</option>
+      
+      
+      {% else %}
+      <option selected="selected" value="False">NO</option>
+      <option value="True">SI</option>
+      <option value="None">--</option>
+      
+      {% endif %}
+    </select>
+    <br>
+
+    <label>3) ¿El proveedor encuestado cumple muy frecuentemente con el procedimiento de compra? </label> 
+    <select name="proc-compra" id="proc-compra" class="select-box" value="{{valor.cumple_procedimiento_compra}}">
+      {% if valor.cumple_procedimiento_compra_calidad == 'True' %}
+      <option selected="selected" value="True">SI</option>
+      <option value="False">NO</option>
+      <option value="None">--</option>
+    
+      {% elif valor.cumple_procedimiento_compra_calidad == 'None' or valor.cumple_procedimiento_compra_calidad == None or valor.cumple_procedimiento_compra_calidad == "" %}
+      <option selected="selected" value="None">--</option>
+      <option value="True">SI</option>
+      <option value="False">NO</option>
+      
+      
+      {% else %}
+      <option selected="selected" value="False">NO</option>
+      <option value="True">SI</option>
+      <option value="None">--</option>
+      
+      {% endif %}
+    </select>
+    <br>
+    
+    
+    <label>4) El proveedor contesta los reclamos dentro del tiempo esperado?</label> 
+    <select name="reclamos" id="reclamos" class="select-box" value="{{valor.contesta_reclamos_calidad}}">
+      {% if valor.contesta_reclamos_calidad == 'True' %}
+      <option selected="selected" value="True">SI</option>
+      <option value="False">NO</option>
+      <option value="None">--</option>
+    
+      {% elif valor.contesta_reclamos_calidad == 'None' or valor.contesta_reclamos_calidad == None or valor.contesta_reclamos_calidad == ""  %}
+      <option selected="selected" value="None">--</option>
+      <option value="True">SI</option>
+      <option value="False">NO</option>
+      
+      
+      {% else %}
+      <option selected="selected" value="False">NO</option>
+      <option value="True">SI</option>
+      <option value="None">--</option>
+      
+      {% endif %}
+    </select>
+    <br>
+    <br>
+
+    
+    <label><b>5) La documentación de este proveedor ha sido revisasa y cuenta con la aceptación del Departamento de Calidad<b></label> 
+    <select name="combo" id="combo" class="select-box" value="{{valor.revisado_por_calidad}}">
+     
+      {% if valor.revisado_por_calidad == True %}
+      <option selected="selected" value="True">SI</option>
+      <option value="False">NO</option>
+      
+      
+      {% else %}
+      <option selected="selected" value="False">NO</option>
+      <option value="True">SI</option>
+      
+      
+      {% endif %}
+    </select>
+    <br>
+    <br>
+    
+
+
+  </div>
+
+  <div class="form-group col-md-10" >
+    <h5>Observaciones del Departamento de Calidad</h5> 
+    {% if valor.observaciones_calidad == 'None' or valor.observaciones_calidad == None or valor.observaciones_calidad == ""  %}
+    <textarea id="comentarios" name="comentarios" rows="5" cols="10" class="form-control"></textarea>
+    {% else %}
+    <textarea id="comentarios" name="comentarios" rows="5" cols="10" class="form-control">{{valor.observaciones_calidad}}</textarea>
+    {% endif %}
+    <br>
+  </div>
+
+  {% endfor %}
+
+<div class="row" style="width:40%"></div>
+    <button type="submit" style="margin-top:5px;" class="btn btn-primary btn-lg">Enviar</button>
+    
+<br>
+<br>
+</div>
+<br>
+<br>
+
+
+
+
+
+{% endblock content %}

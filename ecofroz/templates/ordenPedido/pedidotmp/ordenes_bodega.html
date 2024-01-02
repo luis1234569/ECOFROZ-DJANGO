@@ -1,0 +1,227 @@
+{% extends 'base.html' %}
+<!-- {% load tz %} -->
+{% block extrahead %}
+  <style>
+    body {font-family: Arial;}
+    
+    /* Style the tab */
+    .tab {
+      overflow: hidden;
+      border: 1px solid #ccc;
+      background-color: #f1f1f1;
+    }
+    
+    /* Style the buttons inside the tab */
+    .tab button {
+      background-color: inherit;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.3s;
+      font-size: 17px;
+    }
+    
+    /* Change background color of buttons on hover */
+    .tab button:hover {
+      background-color: #ddd;
+    }
+    
+    /* Create an active/current tablink class */
+    .tab button.active {
+      background-color: #ccc;
+    }
+    
+    /* Style the tab content */
+    .tabcontent {
+      display: none;
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      border-top: none;
+    }
+    
+    /* Style the close button */
+    .topright {
+      float: right;
+      cursor: pointer;
+      font-size: 28px;
+    }
+    
+    .topright:hover {color: red;}
+  </style>
+{% endblock %}
+
+{% block content %}
+<div class="loader"></div>
+<div class="container" style="margin: 25px auto;">
+  <div class="row">
+    <div class="col-md 12 search">
+      <form class="form-inline my-2 my-lg-0" method="GET">
+        <input class="form-control mr-sm-2" type="text" placeholder="Buscar..." name="buscar">
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+      </form>
+    </div>
+  </div>
+</div>
+<div style="margin: 25px auto;">
+  <div class="tab">
+    <button class="tablinks" onclick="openTab(event, 'PAprobar')" id="defaultOpen">Adquisiciones Para Activar</button>
+    <button class="tablinks" onclick="openTab(event, 'Aprobados')">Adquisiciones Activadas</button>
+  </div>
+
+  <div id="PAprobar" class="tabcontent">
+    <span onclick="this.parentElement.style.display='none'" class="topright">&times</span>
+    <div>
+      <table class="table table-hover table-dark">
+        <h2>Ordenes Para Aprobación</h2>
+        {% if form %}
+          <thead>
+            <tr>
+              <th scope="col">Pedido</th>
+              <th scope="col">Usuario</th>
+              <th scope="col">Departamento</th>
+              <th scope="col">Area</th>
+              <!-- <th scope="col">Regimen Especial</th> -->
+              <th scope="col">Proyecto</th>
+              <th scope="col">Fecha Solicitud</th>
+              <th scope="col">Tipo Activo</th>
+              <th scope="col">Estado</th>
+              <th scope="col">Opciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for pedido in form %}
+            <tr class="table-active">
+              <td>{{ pedido.numpedido }}</td>
+              <td>{{ pedido.usuario_solicita }}</td>
+              <td>{{ pedido.departamento }}</td>
+              <td>{{ pedido.area }}</td>
+              <!-- <td>{{ pedido.regimenespecial }}</td> -->
+              <td>{{ pedido.numproyecto }}</td>
+              <td>{{ pedido.fchsolicita|date:'Y-m-d' }}</td>
+              <td>{{ pedido.tipoactivo }}</td>
+              {% if pedido.genera_compra == 1 %}
+                <td>Generado</td>
+              {% endif %}
+              <td>
+                <form action="{% url 'ordenpedido:aprobado' pedido.numpedido %}" method="GET">
+                  <button type="submit" name="aprobar" class="btn btn-primary">Recepción</button>
+                </form>
+              </td>
+              <td>
+                <form action="{% url 'ordenpedido:editar_pedido' pedido.numpedido %}" method="GET">
+                  <button type="submit" name="aprobar" class="btn btn-success">Codificación</button>
+                </form>
+              </td>
+              <td>
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap">Entrega</button>
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel" style="color: black;">Ingrese la persona a la que realiza la entrega</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <form class="modal-body" action="{% url 'ordenpedido:rechazado' pedido.numpedido %}" method="GET">
+                        <div class="form-group">
+                          <textarea class="form-control" id="message-text" name="text"></textarea>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                          <button type="submit" name="rechazar" class="btn btn-primary">Enviar</button>
+                        </div>
+                      </form>
+                    </div>
+                    </div>
+                  </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+          {% else %}
+            <div class="alert-danger" role="alert">
+              <h3 style="text-align: center;">No Hay Adquisisciones Para Activar</h3>
+            </div>
+          {% endif %}
+      </table>
+    </div>  
+  </div>
+
+  <div id="Aprobados" class="tabcontent">
+    <span onclick="this.parentElement.style.display='none'" class="topright">&times</span>
+    <div>
+      <table class="table table-borderless">
+        <h2>Ordenes Aprobadas</h2>
+        <thead class="thead-dark" style="text-align: center;">
+          <tr>
+            <th>Pedido</th>
+            <th>Usuario</th>
+            <th>Departamento</th>
+            <th>Area</th>
+            <!-- <th>Regimen Especial</th> -->
+            <th>Proyecto</th>
+            <th>Fecha Solicitud</th>
+            <th>Tipo Activo</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for aprobado in form2 %}
+          <tr>
+            <td>{{ aprobado.numpedido }}</td>
+            <td>{{ aprobado.usuario_solicita }}</td>
+            <td>{{ aprobado.departamento }}</td>
+            <td>{{ aprobado.area }}</td>
+            <!-- <td>{{ aprobado.regimenespecial }}</td> -->
+            <td>{{ aprobado.numproyecto }}</td>
+            <td>{{ aprobado.fchsolicita|date:'Y-m-d' }}</td>
+            <td>{{ aprobado.tipoactivo }}</td>
+            {% if pedido.genera_compra == 1 %}
+              <td>Generado</td>
+            {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+      </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+  function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
+  }
+
+  // Get the element with id="defaultOpen" and click on it
+  document.getElementById("defaultOpen").click();
+
+  $(window).on("load", function() {
+        $(".loader").fadeOut("slow");
+    });
+
+    $(document).ready(function() {    
+        $('#enviar').on('click', function(){
+            //Añadimos la imagen de carga en el contenedor
+            $(".loader").show();
+            $(window).on("load", function(){
+                $(".loader").fadeOut("slow");
+            });
+        });              
+    });   
+</script>
+{% endblock %}

@@ -1,0 +1,425 @@
+{% extends 'base.html' %}
+<!-- {% load tz %} -->
+
+{% block extrahead %}
+<style>
+    
+    <style type="text/css">
+
+
+
+table {
+  border-collapse: collapse;
+  width: 100%;  
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+  
+}
+
+/* tr:nth-child(even){background-color: #f2f2f2} */
+
+th {
+  color: rgb(100, 95, 95);
+}
+
+
+#tabla-reporte{
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#tabla-reporte td, #tabla-reporte th {
+  border: 1px solid rgb(109, 106, 106);
+  padding: 8px;
+}
+
+#tabla-reporte tr:hover {background-color: #ddd;}
+#tabla-reporte tr:hover {background-color: #ddd;}
+
+#tabla-reporte th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #3d3d41;
+  color: white;
+}
+
+ul {
+    list-style-type: none;
+}
+
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+
+  <div class="container-fluid" style="margin-top: 25px;">
+    <div class="row">
+      <div class="col-md 12 search">
+        <form class="form-inline my-2 my-lg-0" method="GET">
+          <input class="form-control mr-sm-2" size="65px;" type="text" placeholder="Filtre por: N° Pedido, Descripción, Departamento, Solicitante ó Analista" name="buscar" {% if busqueda %} value="{{ busqueda }}" {% endif %}>
+          <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+          <a class="btn btn-secondary my-2 my-sm-0" style="margin-left: 3px;" href="{% url 'trabajos:cotiza_trabajos' %}"></button>Limpiar</a>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  
+  {% if form %}
+
+  <div class="tab" style="margin-top: 25px;">
+    <button class="tablinks" onclick="openTab(event, 'PCotizar')" id="defaultOpen">Ordenes Para Cotizar</button>
+    <button class="tablinks" onclick="openTab(event, 'Cotizadas')" >Ordenes Cotizadas</button>
+  </div>
+  {% else %}
+  <div class="tab" style="margin-top: 25px;">
+    <button class="tablinks" onclick="openTab(event, 'Cotizadas')" id="defaultOpen">Ordenes Cotizadas</button>
+    <button class="tablinks" onclick="openTab(event, 'PCotizar')" >Ordenes Para Cotizar</button>
+  </div>
+  {% endif %}
+
+  <div id="PCotizar" class="tabcontent">
+    
+    <div style="width: 98%; margin: auto; margin-top:5px;">
+
+      <!-- <div class="input-group input-group-sm mb-3 mt-4">
+        <input type="text" class="form-control" onkeyup="searchFunction()" id="search" style="margin-top:-5px;" placeholder="Search for..">
+      </div> -->
+    
+      <table id="tabla-reporte">
+        <!-- <h2>Ordenes Para Cotizar</h2> -->
+        {% if form %}
+          <thead>
+            <tr id="chk-th">
+              <th scope="col">N° Pedido</th>
+              <th scope="col">Solicita</th>
+              <th scope="col">Departamento</th>
+              <!-- <th scope="col">Area</th> -->
+              <!-- <th scope="col">Regimen Especial</th> -->
+              <!-- <th scope="col">Proyecto</th> -->
+              <th scope="col">Fecha Aprobación</th>
+              <th scope="col">Tipo</th>
+              <th scope="col" WIDTH="260px">Descripción</th>
+              <!-- <th scope="col">Orden Referencial</th> -->
+              <!-- <th scope="col">Estado</th> -->
+              <th scope="col" WIDTH="200px">Justifica/Observa</th>
+              {% if perms.ordenPedido.add_cotizapedido %}
+              <th scope="col" style="text-align:center">Opciones</th>
+              {% endif %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for pedido in form %}
+            <!-- <tr class="table-active"> -->
+              {% if pedido.numtrabajo.estado_precotiza == True %}
+              <tr style="color:white;background-color: lightslategrey;" ></tr>
+              
+              {% else %}
+              <tr style="color:white;background-color: rgb(66, 75, 87);"> 
+               {% endif %}
+              <td>{{ pedido.numtrabajo.numtrabajo }}</td>
+              <td>{{ pedido.numtrabajo.usuario_solicita.first_name }} {{ pedido.numtrabajo.usuario_solicita.last_name }}</td>
+              <td>{{ pedido.numtrabajo.departamento }}</td>
+              <!-- <td>{{ pedido.numpedido.area }}</td> -->
+              <!-- <td>{{ pedido.regimenespecial }}</td> -->
+              <!-- <td>{{ pedido.numtrabajo.numproyecto }}</td> -->
+              <td>{{ pedido.numtrabajo.fchaprueba|date:'d-M-Y' }}</td>
+              <td>{{ pedido.numtrabajo.tipo_pedi }}</td>
+              <td>{{ pedido.descripcion }}</td>
+              <!-- <td>{{ pedido.numtrabajo.orden_referencial | default:'--' }}</td> -->
+              <!-- {% if pedido.numtrabajo.estado_cotiza == 1 %}
+                <td>Cotizado</td>
+              {% elif pedido.numtrabajo.genera_compra == 2 %}
+                <td>Devuelto</td>
+              {% else %}
+                <td>Pendiente</td>
+              {% endif %} -->
+              <td>{{ pedido.numtrabajo.justificacion_compra | default:'--' }}</td>
+              {% if perms.ordenPedido.add_cotizapedido %}
+              <td style="text-align:left">
+                {% if pedido.numtrabajo.estado_responde_precotiza == True %}
+                <!-- <a href="{% url 'trabajos:valida_cotizacion' pedido.numtrabajo.numtrabajo %}" class="btn btn-success glyphicon glyphicon-share" title="Pre Cotización con Respuesta"></a> -->
+                <form action="{% url 'trabajos:valida_cotizacion' pedido.numtrabajo.numtrabajo %}" method="GET">
+                  <!-- <a href="{% url 'trabajos:valida_cotizacion' pedido.numtrabajo.numtrabajo %}" class="btn btn-warning glyphicon glyphicon-share" title="Pre Cotizar"></a> -->
+                  <button class="btn btn-success glyphicon glyphicon-share" title="Pre Cotizar"></button>  
+                  {% if busqueda %}
+                   {% if form2.number > 1 %} 
+                   <input type="text" name="path" value="{{request.path}}?buscar={{busqueda}}&page={{form2.number}}" hidden>
+                    {% else %}
+                   <input type="text" name="path" value="{{request.path}}?buscar={{busqueda}}" hidden>
+                    {% endif %}
+                   {% endif %}
+                </form>
+                
+                {% else %}
+              <form action="{% url 'trabajos:valida_cotizacion' pedido.numtrabajo.numtrabajo %}" method="GET">
+                <!-- <a href="{% url 'trabajos:valida_cotizacion' pedido.numtrabajo.numtrabajo %}" class="btn btn-warning glyphicon glyphicon-share" title="Pre Cotizar"></a> -->
+                <button class="btn btn-warning glyphicon glyphicon-share" title="Pre Cotizar"></button>  
+                {% if busqueda %}
+                 {% if form2.number > 1 %} 
+                 <input type="text" name="path" value="{{request.path}}?buscar={{busqueda}}&page={{form2.number}}" hidden>
+                  {% else %}
+                 <input type="text" name="path" value="{{request.path}}?buscar={{busqueda}}" hidden>
+                  {% endif %}
+                 {% endif %}
+              </form>
+                {% endif %}
+                <a href="{% url 'trabajos:cotizar_trabajo' pedido.numtrabajo.numtrabajo %}" class="btn btn-primary glyphicon glyphicon-tags" title="Cotizar y enviar para selección"></a>
+                {% endif %}
+                <a href="{% url 'trabajos:anula_ordenes_confirma' pedido.numtrabajo.numtrabajo %}" class="btn btn-danger glyphicon glyphicon-ban-circle" title="Anula Orden"></a>
+              </td>
+              
+            </tr>
+            {% endfor %}
+          </tbody>
+          {% else %}
+            <div class="alert-danger" role="alert">
+              <h3 style="text-align: center;">No Hay Ordenes Para Cotizar</h3>
+            </div>
+          {% endif %}
+      </table>
+      <div class="pagination">
+        <span class="step-links">
+            {% if form.has_previous %}
+            <a href="?buscar={{busqueda}}&page=1">&laquo; inicio</a>
+            <a href="?buscar={{busqueda}}&page={{ form.previous_page_number }}">previo</a>
+            {% endif %}
+      
+            <span class="current">
+                Page {{ form.number }} of {{ form.paginator.num_pages }}.
+            </span>
+      
+            {% if form.has_next %}
+            <a href="?buscar={{busqueda}}&page={{ form.next_page_number }}">próximo</a>
+            <a href="?buscar={{busqueda}}&page={{ form.paginator.num_pages }}">último &raquo;</a>
+            {% endif %}
+        </span>
+      </div>
+    </div>  
+  </div>
+
+  <div id="Cotizadas" class="tabcontent">
+   
+     
+      <table class="table table-sm" id="pcotizadas" >
+        <!-- <h3>Ordenes Cotizadas</h3> -->
+        <p style="color:#0cb11a">Verde: Ordenes > US $.1000</p>
+       
+        <thead class="thead-dark" style="text-align: center;" >
+          
+          <tr id="chk-th"  >
+            <th>N° Pedido</th>
+            <th>Solicita</th>
+            <th>Departamento</th>
+            <th>Tipo</th>
+            <th>Descripción</th>
+            <th>Analista</th>
+            <th>Fecha Cotización</th>
+            <th>Gerente Area</th>
+            <th>Aprob. Administrativa</th>
+            <th>Ver</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          {% for aprobado in form2 %}
+           {% if aprobado.numtrabajo.compra_directa == False %}
+           <tr class="table-active" style="background-color: #28a745; color:#ffffff;"  title="Compra Directa:&nbsp;{{ aprobado.numtrabajo.compra_directa | yesno:'SI,NO' }}&#10;Fecha Solicita:&nbsp;{{ aprobado.numtrabajo.fchsolicita|date:'d-M-Y' }}&#10;Fecha Aprobación Gerente Area:&nbsp;{{ aprobado.numtrabajo.fchaprueba|date:'d-M-Y'}}&#10;Fecha Cotización:&nbsp;{{ aprobado.numtrabajo.fchcotiza|date:'d-M-Y'}}&#10;Fecha Selecciona Cotización Gerente Área:&nbsp;{{ aprobado.numtrabajo.fchselectcotiza|date:'d-M-Y'|default:'--'}}&#10;Fecha Aprobación Gerencia Administrativa:&nbsp;{{ aprobado.numtrabajo.fchgenerac|date:'d-M-Y'|default:'--'}}  " > 
+           {% elif aprobado.numtrabajo.compra_directa == True %}  
+           <tr class="table-active" style="background-color:rgb(236, 234, 230); color:#080808;" title="Compra Directa:&nbsp;{{ aprobado.numtrabajo.compra_directa | yesno:'SI,NO' }}&#10;Fecha Solicita:&nbsp;{{ aprobado.numtrabajo.fchsolicita|date:'d-M-Y' }}&#10;Fecha Aprobación Gerente Area:&nbsp;{{ aprobado.numtrabajo.fchaprueba|date:'d-M-Y'}}&#10;Fecha Cotización:&nbsp;{{ aprobado.numtrabajo.fchcotiza|date:'d-M-Y'}}  " > 
+        
+            {% endif %}
+            <td>{{ aprobado.numtrabajo.numtrabajo }}</td>
+            <td>{{ aprobado.numtrabajo.usuario_solicita.first_name }} {{ aprobado.numtrabajo.usuario_solicita.last_name }}</td>
+            <td>{{ aprobado.numtrabajo.departamento }}</td>
+            <!-- <td>{{ aprobado.numtrabajo.area }}</td> -->
+             
+            <!-- <td>{{ aprobado.numtrabajo.numproyecto }}</td> -->
+            <!-- <td>{{ aprobado.numtrabajo.fchsolicita|date:'Y-m-d' }}</td> -->
+            <td>{{ aprobado.numtrabajo.tipo_pedi }}</td>
+            <td>{{ aprobado.descripcion }}</td>
+            <td>{{ aprobado.numtrabajo.usuario_cotiza | default:"--" }}</td>
+            <td>{{ aprobado.numtrabajo.fchcotiza|date:'d-M-Y' | default:"--" }}</td> 
+            <!-- <td>{{ aprobado.numtrabajo.orden_referencial | default:'--' }}</td> -->
+            {% if aprobado.numtrabajo.select_cotiza == True %}
+              <td>Cotización Seleccionada</td>
+            {% else %}
+              <td>Pendiente</td>
+            {% endif %}
+            {% if aprobado.numtrabajo.genera_compra == 1 %}
+              <td>Aprobado</td>
+            {% elif aprobado.numtrabajo.genera_compra == 0 %}
+              <td>Rechazado</td>
+            {% else %}
+              <td>Pendiente</td>
+            {% endif %}
+          <td><a class="btn btn-warning glyphicon glyphicon-eye-open" href="{% url 'trabajos:look_cotiza' aprobado.numtrabajo.numtrabajo %}"></a></td>
+          
+          </tr>
+          
+          {% endfor %}
+        </tbody>
+      </table>
+      <div class="pagination">
+        <span class="step-links">
+            {% if form2.has_previous %}
+            <a href="?buscar={{busqueda}}&page=1">&laquo; inicio</a>
+            <a href="?buscar={{busqueda}}&page={{ form2.previous_page_number }}">previo</a>
+            {% endif %}
+      
+            <span class="current">
+                Page {{ form2.number }} of {{ form2.paginator.num_pages }}.
+            </span>
+      
+            {% if form2.has_next %}
+            <a href="?buscar={{busqueda}}&page={{ form2.next_page_number }}">próximo</a>
+            <a href="?buscar={{busqueda}}&page={{ form2.paginator.num_pages }}">último &raquo;</a>
+            {% endif %}
+        </span>
+      </div>
+      </div>
+  </div>
+  <div>
+  <span class="text-danger" id="no-data"></span>
+
+  
+
+  <script>
+
+
+
+function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
+  }
+
+  // Get the element with id="defaultOpen" and click on it
+  document.getElementById("defaultOpen").click();
+
+  function searchFunction(){
+    let input, filter, table, tr, td, j;
+    input = document.getElementById("search");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("pcotizar");
+    tr = table.getElementsByTagName("tr");
+    
+
+    for (j=0; j < tr.length ; j++ ){
+
+        td = tr[j].getElementsByTagName("td");
+        msg = document.getElementById("no-data");
+
+        if (td.length > 0){
+            if (td[0].innerHTML.toLocaleUpperCase().indexOf(filter) > -1 ||
+            td[1].innerHTML.toLocaleUpperCase().indexOf(filter) > -1 ||
+            td[2].innerHTML.toLocaleUpperCase().indexOf(filter) > -1 ||
+            td[3].innerHTML.toLocaleUpperCase().indexOf(filter) > -1 ||
+            td[4].innerHTML.toLocaleUpperCase().indexOf(filter) > -1 ||
+            td[5].innerHTML.toLocaleUpperCase().indexOf(filter) > -1 ||
+            td[6].innerHTML.toLocaleUpperCase().indexOf(filter) > -1 ){
+            tr[j].style.display = "";
+              msg.innerHTML = "";
+            }
+            else {
+              tr[j].style.display = "none";
+            } 
+        }
+        if (td.length == 0){
+          msg.innerHTML = "No existe"
+        }
+
+    }
+
+  }
+
+  function searchFunction2(){
+    let input, filter, table, tr, td, j;
+    input = document.getElementById("search2");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("pcotizadas");
+    tr = table.getElementsByTagName("tr");
+    
+
+    for (j=0; j < tr.length ; j++ ){
+
+        td = tr[j].getElementsByTagName("td");
+        msg = document.getElementById("no-data");
+
+        if (td.length > 0){
+            if (td[0].innerHTML.toLocaleUpperCase().indexOf(filter) > -1 ||
+            td[1].innerHTML.toLocaleUpperCase().indexOf(filter) > -1 ||
+            td[2].innerHTML.toLocaleUpperCase().indexOf(filter) > -1 ||
+            td[3].innerHTML.toLocaleUpperCase().indexOf(filter) > -1 ||
+            td[4].innerHTML.toLocaleUpperCase().indexOf(filter) > -1 ||
+            td[5].innerHTML.toLocaleUpperCase().indexOf(filter) > -1 ||
+            td[6].innerHTML.toLocaleUpperCase().indexOf(filter) > -1 ){
+            tr[j].style.display = "";
+              msg.innerHTML = "";
+            }
+            else {
+              tr[j].style.display = "none";
+            } 
+        }
+        if (td.length == 0){
+          msg.innerHTML = "No existe"
+        }
+
+    }
+
+  }
+
+
+
+  </script>
+{% endblock %}

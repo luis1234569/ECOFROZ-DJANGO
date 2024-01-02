@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="form-row" style="margin-top: 25px;margin-left: -200px;">
+      <div class="container">
+        <div class="row">
+        <div class="col-sm">
+    <h5>Las respuestas se cargaron correctamente..</h5>
+
+    <div style="margin-left: 15px;" class="btn-group">
+      <a type="button" class= "btn btn-primary"  href="{% url 'proveedores:listar_proveedores' %}">Regresar a Búsqueda de Proveedores</a>
+      <a type="button" style="margin-left: 3px;" class="btn btn-outline-secondary" href="{% url 'proveedores:editar_proveedor' codigo_id %}">Editar Info. General</a>
+      <a type="button" style="margin-left: 3px;" class="btn btn-outline-secondary" href="{% url 'proveedores:resp_encuesta' codigo_id %}">Ver Respuestas Encuesta</a>
+      <a type="button" style="margin-left: 3px;" class="btn btn-outline-secondary" href="{% url 'proveedores:ver_documentos' codigo_id %}">Ver Documentos</a>
+    
+    </div>
+    
+</div>
+</div>
+</div>  
+</div>
+</div>
+
+{% endblock %}
+

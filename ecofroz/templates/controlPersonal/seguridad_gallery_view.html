@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block extrahead %}
+
+<style>
+.photo_gallery {
+    display: flex;    
+}
+
+.photo_gallery a {
+        display: inline-block;
+        height: 300px;
+    }
+
+.photo_gallery img {
+        object-position: center;
+        object-fit:scale-down;
+        height: 100%;
+        width: 100%;
+    }
+
+
+    
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/simplelightbox/2.7.0/simple-lightbox.css" integrity="sha512-8WAX0xL/cHZ38RXoX2gtuqkAwmDVAzGwoFVmHvn46IDHGWOjTHx0vcl9OapNrfOzpFtql0SNkv+0y0b5Fm8ZkA==" crossorigin="anonymous" />
+
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container" style="margin-top: 15px;">
+    <div class="row">
+        <div class="col-md-8">
+            <h4>Fotos adjuntas de reporte N°&nbsp;<u>{{reporte.numreporte }} </u></h4><br>
+        </div>
+            <div class="col-md-4">  
+            <a style="float: right;" class=" btn btn-primary" title="Regresar a Listar Reporte" href="{% url 'personal:listar_novedades'%}">Regresar a Reportes</a>
+   
+        </div>
+            <!-- PHOTO GALLERY -->
+<div class="row">
+    <section class="photo_gallery" style="margin-top: 15px;">
+      {% for gallery_image in reporte.detnovedades.all %}
+      {% if gallery_image.img_1 %}
+      <a href="{{ gallery_image.img_1.url }}"><img src="{{ gallery_image.img_1.url }}" alt="" title="" /></a>
+      {% endif %}
+      {% if gallery_image.img_2 %}
+      <a href="{{ gallery_image.img_2.url }}"><img src="{{ gallery_image.img_2.url }}" alt="" title="" /></a>
+      {% endif %}
+      {% endfor %}
+  </section>
+    
+</div>
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/simplelightbox/2.7.0/simple-lightbox.min.js" integrity="sha512-ZajFBgnksNp8Rj+AbmYe8ueOu45HiSjtf3QpqnRbHlq719m6VK0FkbYIqQ8wEnlVuJ1i9pC+z6Z9ewmDnUTMCg==" crossorigin="anonymous"></script>
+
+
+
+{% endblock content %}
+
+
+{% block extrajs %}
+
+<script>
+    var gallery = new SimpleLightbox('.photo_gallery a');
+</script>
+
+
+
+{% endblock %}

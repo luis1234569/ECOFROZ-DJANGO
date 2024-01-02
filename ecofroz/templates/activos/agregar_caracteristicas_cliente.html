@@ -1,0 +1,173 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+            <style type="text/css">
+
+            .barraSuperior{
+                      
+                      opacity: 0.8;
+                      background-color: rgb(39, 155, 55);
+                      height: 120px;
+                      
+            }
+            
+            .cliente {
+                      
+                      color:  rgb(39, 39, 37);
+                      opacity: 0.8;
+                      background-color: rgba(39, 132, 155, 0.698);
+                      height:100px;
+                      width:1300px;
+                      margin: auto;
+                      text-align: left;
+                      border: 2px solid  rgba(39, 60, 155, 0.521);
+                      border-radius: 10px;
+                      
+                      /*vertical-align: middle;*/
+                      
+
+                    }
+
+            .analisis {
+                      
+                      color:  rgb(39, 39, 37);
+                      opacity: 0.8;
+                      background-color: rgba(39, 132, 155, 0.698);
+                      height:350px;
+                      width:970px;
+                      margin: 25px;
+                      top: 20px;
+                      text-align: left;
+                      border: 2px solid  rgba(39, 60, 155, 0.521);
+                      border-radius: 10px;
+                      
+                    }
+
+            .tabla {
+                    color:  rgb(39, 39, 37);
+                    opacity: 0.8;
+                    background-color: rgba(39, 132, 155, 0.698);
+                    height:800px;
+                    width:1000px;
+                    margin-left: 27px;
+                    margin-top: 20px;
+                    text-align: left;
+                    border: 2px solid  rgba(39, 60, 155, 0.521);
+                    border-radius: 5px;
+                
+
+            }
+
+            .logo {
+
+                    background: url(http://www.centralhidroelectrica.com/rotador/industrias/ecofroz.jpg);
+                    background-size: 120px;
+                    height: 120px;
+                    width: 120px;
+                    margin-left: 15px;
+                    
+                  
+            }
+
+            .fondo {
+
+                      
+                      background: url(https://alkemi.es/wp-content/uploads/2017/08/45720416_m.jpg);
+                      background-size: cover;
+                      height: 657px;
+      
+            }
+
+            /*.fondo:hover
+            {
+                filter: sepia(60%);
+            }*/
+           
+            .label {
+
+                font-family: Verdana, Geneva, Tahoma, sans-serif;
+                font-size: xx-large;
+                
+                color: blanchedalmond;
+            }
+            .entrada {
+                      color: rgb(12, 12, 1);
+                      margin-left: 20px;
+                      border: 2px solid rgb(49, 129, 12);
+                      border-radius: 10px;
+                      
+                    }
+
+            .boton {
+                    color:rgb(49, 129, 12);
+                    border: 2px solid rgb(49, 129, 12);
+                    border-radius: 10px;
+            }
+            #scroll{
+                      border:1px solid;
+                      height:300px;
+                      width:800px;
+                      overflow-y:scroll;
+                      overflow-x:hidden;
+                    }
+            
+            </style>
+                <meta charset="utf-8"/></meta>
+            
+    </head>
+
+    <div class="barraSuperior">
+        <div class="logo"></div>
+      </div>
+    <div class="fondo">   
+    <body>
+        
+        <div><br>
+            <form method="POST">
+                {% csrf_token %}
+                    <div class="cliente"><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="label">Cliente:</label>
+                        <input type="text" name="nombre" class="entrada"><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="label">Código:</label>
+                        <input type="text" name="codigo" class="entrada">
+                        
+                    </div>
+                        
+                            
+                        <div id = "scroll" style="text-align:center;" class="tabla">
+                            <table class="table table-striped">
+                                
+                                
+                                <tbody>
+                        
+                                    {% for analisis in analisis %}
+        
+                                    <tr>
+                                        <td><b>{{ analisis.nombre }}</b></td>
+                                        <td><a class = "btn btn-success"> Parametros</a> <a class = "btn btn-success">Editar</a></td>
+                    
+                                    
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="2"> no hay analisis. </td>
+                                    </tr>
+                                {% endfor %}
+                                
+                                </tbody>
+                            
+                            
+                            </table>
+
+                        
+                    </div>
+                    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />                    
+            
+                    </form>
+        </div>            
+    </body>
+</div>
+</html>

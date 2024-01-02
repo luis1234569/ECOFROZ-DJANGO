@@ -1,0 +1,71 @@
+
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+{% load filters %}
+
+{% block extrahead %}
+<!DOCTYPE html>
+<style>
+
+
+</style>
+
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<div class="jumbotron container" style="width: 85%;">
+    <h2 class="display-5">Reportar Observaciones para {{ pk }}</h2>
+    <br>
+
+    
+<form method="POST" id="form">
+{% csrf_token %}
+
+<div class="row">
+       
+<div class="form-group col-md-10" >
+    <label for="{{ form.descripcion.label }}">{{ form.descripcion.label }}</label> 
+    {% render_field form.descripcion class="form-control"  %}
+    
+</div> 
+</div>
+   
+<div class="row">
+  <div class="form-group col-md-3" >
+          <label for="{{ form.grabado.label }}">{{ form.grabado.label }}</label> 
+          {% render_field form.grabado class="form-control" %}
+    </div>      
+  </div> 
+
+
+  <div class="row">
+    <div class="form-group col-md-3" >
+        <label for="{{ form.usuario_registra.label }}">{{ form.usuario_registra.label }}</label> 
+        {% render_field form.usuario_registra value=user.username class="form-control" readonly="True" %}
+        <br>
+    </div> 
+</div>
+
+        <div class="row">
+            <button type="submit"  class="btn btn-primary btn-lg">Enviar</button>
+        <br>
+        
+        </div>
+
+    </form>
+</div>
+
+
+{% endblock content %}
+
+{% block extrajs %}
+<script>
+   
+  
+</script>
+{% endblock %}

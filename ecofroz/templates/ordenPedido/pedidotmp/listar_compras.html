@@ -1,0 +1,260 @@
+{% extends 'base.html' %}
+<!-- {% load tz %} -->
+
+{% block extrahead %}
+<style type="text/css">
+table {
+  border-collapse: collapse;
+  width: 100%;  
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+  
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+
+th {
+  color: rgb(100, 95, 95);
+}
+
+
+#tabla-reporte{
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#tabla-reporte td, #tabla-reporte th {
+  border: 1px solid rgb(109, 106, 106);
+  padding: 8px;
+}
+
+#tabla-reporte tr:hover {background-color: #ddd;}
+#tabla-reporte tr:hover {background-color: #ddd;}
+
+#tabla-reporte th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #3d3d41;
+  color: white;
+}
+
+  ul {
+    list-style-type: none;
+}
+
+
+
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid" style="margin: 25px auto;">
+  <div class="row">
+    <div class="col-md-6">
+      <form class="form-inline my-2 my-lg-0" method="GET">
+        <input class="form-control mr-sm-2" type="text" size="50;" placeholder="N° Pedido, Descripción, Proveedor ó Analista Compras" name="buscar" {% if busqueda %} value="{{ busqueda }}" {% endif %}>
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+        <a class="btn btn-secondary my-2 my-sm-0" style="margin-left: 3px;" href="{% url 'ordenpedido:ordenescompra' %}"></button>Limpiar</a>
+      </form>
+  
+  </div>
+  <div class="col-md-2">
+  </div>
+
+    <div class="col-md-4">
+      <a class="btn btn-success" href="{% url 'ordenpedido:reporte_compras' %}">Exportar a Excel</a>
+    </div>
+
+  </div>
+</div>
+<table id="tabla-reporte"> 
+    <thead>
+      <tr>
+        <th scope="col" style="width: 78px">N°</th>
+        <th scope="col" style="width: 110px">Usuario</th>
+        <th scope="col" style="width: 160px">Departamento</th>
+        <!-- <th scope="col">Area</th> -->
+        <!-- <th scope="col">Regimen Especial</th> -->
+        <!-- <th scope="col">Proyecto</th> -->
+        <th scope="col" style="width: 100px">F Solicita</th>
+        <th scope="col" style="width: 150px">Tipo</th>
+        <th scope="col" style="width: 200px;">Descripción</th>
+        <th scope="col" style="width: 150px">Proveedor</th>
+        <th scope="col" style="width: 90px">Valor</th>
+        <th scope="col" style="width: 100px">Estado</th>
+        <th scope="col" style="width: 108px">Analista</th>
+        <th scope="col" style="width: 100px">Ver</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for pedido in form %}
+      {% if pedido.numpedido.genera_compra == 1 %}
+      <tr style="color:white;background-color: rgb(51, 64, 80);cursor: pointer;" title="Fecha Solicita:&nbsp;{{ pedido.numpedido.fchsolicita|date:'d-M-Y' }}&#10;Fecha Aprobación Gerente Area:&nbsp;{{ pedido.numpedido.fchaprueba|date:'d-M-Y'}}&#10;Fecha Cotización:&nbsp;{{ pedido.numpedido.fchcotiza|date:'d-M-Y'}}&#10;Fecha Selecciona Cotización Gerente Área:&nbsp;{{ pedido.numpedido.fchselectcotiza|date:'d-M-Y'|default:'--'}}&#10;Fecha Aprobación Gerencia Administrativa:&nbsp;{{ pedido.numpedido.fchgenerac|date:'d-M-Y'|default:'--'}}  " > 
+      {% else %}
+      <tr style="color:white;background-color: lightslategrey;cursor:pointer" data-href="" style="cursor: pointer;" title="Fecha Solicita:&nbsp;{{ pedido.numpedido.fchsolicita|date:'d-M-Y' }}&#10;Fecha Aprobación Gerente Area:&nbsp;{{ pedido.numpedido.fchaprueba|date:'d-M-Y'}}&#10;Fecha Cotización:&nbsp;{{ pedido.numpedido.fchcotiza|date:'d-M-Y'}}&#10;Fecha Selecciona Cotización Gerente Área:&nbsp;{{ pedido.numpedido.fchselectcotiza|date:'d-M-Y'|default:'--'}}&#10;Fecha Aprobación Gerencia Administrativa:&nbsp;{{ pedido.numpedido.fchgenerac|date:'d-M-Y'|default:'--'}}  " > 
+         
+      {% endif %}
+        <td>{{ pedido.numpedido.numpedido }}</td>
+        <td>{{ pedido.numpedido.usuario_solicita.first_name | slice:":1" }}.&nbsp;{{pedido.numpedido.usuario_solicita.last_name | slice:":8" }}</td>
+        <td>{{ pedido.numpedido.departamento.dep_nombre | slice:":12" }}</td>
+        <td>{{ pedido.numpedido.fchsolicita|date:'l d M' }}</td>
+        <td>{{ pedido.numpedido.tipoactivo.tipo_nombre | slice:":12" }}</td>
+        <td>{{ pedido.descripcion | slice:":80" }}...</td>
+        <td>{{ pedido.empresa_cotiza | slice:":12" | default:'--' }}</td>
+        <td>{{ pedido.valor }}</td>
+        {% if pedido.numpedido.genera_compra == 1 %}
+          <td>Aprobado</td>
+        {% else %}
+          <td>Pendiente</td>
+        {% endif %}
+        <td>{{ pedido.numpedido.usuario_cotiza | default:'--' }}</td>
+        <td>
+          <a href="{% url 'ordenpedido:generarcompra' pedido.numpedido.numpedido %}" class="btn btn-primary glyphicon glyphicon-eye-open" title="Ver"></a>
+          <!-- {% if pedido.numpedido.estado_consulta_experto == 1 %}
+          <a class="btn btn-warning glyphicon glyphicon-envelope" title="Consulta Experto Técnico enviada" id="asig" data-toggle="modal" data-target="#asignadoa" data-whatever="@getbootstrap" href="" onclick="asigna({{pedido.numpedido.numpedido}})"></a>
+          {% elif pedido.numpedido.estado_consulta_experto == 2 %}
+          <a class="btn btn-success glyphicon glyphicon-envelope" title="Consulta con respuesta" id="asig" data-toggle="modal" data-target="#asignadoa" data-whatever="@getbootstrap" href="" onclick="asigna({{pedido.numpedido.numpedido}})"></a>
+          {% else %}
+          <a class="btn btn-secondary glyphicon glyphicon-envelope" title="Realiza consulta para rol experto" id="asig" data-toggle="modal" data-target="#asignadoa" data-whatever="@getbootstrap" href="" onclick="asigna({{pedido.numpedido.numpedido}})"></a>
+          {% endif %} -->
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+</table>
+
+<div class="pagination">
+  <span class="step-links">
+      {% if form.has_previous %}
+          <a href="?page=1">&laquo; inicio</a>
+          <a href="?page={{ form.previous_page_number }}">previo</a>
+      {% endif %}
+
+      <span class="current">
+          Page {{ form.number }} of {{ form.paginator.num_pages }}.
+      </span>
+
+      {% if form.has_next %}
+          <a href="?page={{ form.next_page_number }}">próximo</a>
+          <a href="?page={{ form.paginator.num_pages }}">último &raquo;</a>
+      {% endif %}
+  </span>
+</div>
+
+<div class="modal fade" id="asignadoa" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel" style="color: black;">Consulta para Rol Experto. Pedido Nº
+        <label id="numpe1" name="numpe1"></label> </h5>
+       
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+       
+      </div>
+      
+      
+        <form class="modal-body" action="{% url 'ordenpedido:consulta_expertos' %}" method="GET">
+      
+          
+      <div class="form-group" style="margin-top:-5px;">
+      
+        {{ form2.as_p  }}
+
+        <!-- {% for i in asignado %}
+         <p>{{i.id}}</p>
+         {% endfor %} -->
+        
+          <div>
+            <p style="margin-top:-5px;">Consulta:</p>
+          </div>  
+          <div> 
+            <textarea style="margin-top:-5px;" class="form-control"  id="pregunta" name="pregunta" rows="4" cols="59"></textarea>
+            <input type="text" id="numpe" name="numpe" hidden>
+            
+          </div>
+          <div>
+            <p>Respuesta Rol Experto:</p>
+          </div> 
+          <div> 
+            <textarea style="margin-top:-5px;" class="form-control"  id="respuesta" name="respuesta" rows="4" cols="59"></textarea>
+            
+          </div>
+
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-primary" id="enviar" name="enviar">Enviar</button>
+        </div>
+      </form>
+      
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
+
+{% block extrajs %}
+<script>
+  
+  function asigna(e){
+     console.log(e)
+     $("#numpe").val(e)
+     $("#numpe1").text(e)
+     $("#pregunta").text("")
+    
+      
+      $.ajax({
+        url:"{% url 'ordenpedido:recupera_preguntas' %}",
+        type: "GET",
+        data:{
+          'numpe':e
+        },
+        dataType: "json",
+      }).done(function (data) {
+        if (!data.hasOwnProperty("error")){
+          $("#pregunta").text("")
+          $("#respuesta").text("")
+          $("#pregunta").attr("readonly", false);
+          $("#respuesta").attr("readonly", "readonly");
+          $("#enviar").attr("hidden", false);
+            $.each((data), function(key, value){
+                console.log(data)
+                
+                $("#pregunta").text(value.pregunta)
+                $("#respuesta").text(value.respuesta)
+
+                if(value.estado == 1 || value.estado == 2){
+                $("#pregunta").attr("readonly", "readonly"); 
+                $("#enviar").attr("hidden", "hidden"); 
+                } 
+                
+            });
+            return false;
+        }
+      }).fail(function (jqXHR, textStatus, errorThrown ) {
+        console.log(textStatus + ': ' + errorThrown);
+      
+      })
+      
+    }
+  
+  $('#asignadoa').on('hidden.bs.modal', function (e) {
+  $(this)
+    
+    .find("input[type=checkbox], input[type=radio]")
+       .prop("checked", "")
+       .end();
+})
+  
+</script>
+{% endblock %}

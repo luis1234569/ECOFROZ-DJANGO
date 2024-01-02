@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}
+    <h2>Cotizar Ordenes de Pedidos</h2>
+{% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block content %}
+    <div class="container" style="margin: 25px auto;">
+        <table class="table table-bordered table-sm">
+                <tbody>
+                  {% for form in cot %}
+                  <tr>
+                    <th class="table-dark" scope="col" style="width: 25%;">N° de Orden:</th>
+                    <td style='font-size: 16px;'><u>{{ form.numtrabajo.numtrabajo }}</u></td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Compra Directa:</th>
+                    <td>{{ form.numtrabajo.compra_directa | yesno:"SI,NO" }}</a></td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Usuario Solicitante:</th>
+                    <td>{{ form.numtrabajo.usuario_solicita }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Departamento Solicitante:</th>
+                    <td>{{ form.numtrabajo.departamento }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Area Solicitante:</th>
+                    <td>{{ form.numtrabajo.area }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Tipo</th>
+                    <td>{{ form.numtrabajo.tipo_pedi }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Proyecto:</th>
+                    <td>{{ form.numtrabajo.numproyecto | default:"--" }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Descripción:</th>
+                    <td>{{ form.descripcion }}</td>
+                  </tr>
+                  {% if form.numtrabajo.orden_referencial %}
+                  <tr>
+                    <th class="table-dark" scope="col">Orden Referencial:</th>
+                    <td><a href="http://{{ request.META.HTTP_HOST }}/trabajos/generarcompra/{{ form.numtrabajo.orden_referencial }}">{{ form.numtrabajo.orden_referencial | default:"--" }}</a></td>
+                  </tr>
+                  {% endif %}
+                  <tr>
+                    <th class="table-dark" scope="col">Justificación Compra:</th>
+                    <td>{{ form.numtrabajo.justificacion_compra }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Observaciones Adquisiciones:</th>
+                    <td>{{ form.numtrabajo.cotiza_observa }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Observaciones Autorizador:</th>
+                    <td>{{ form.numtrabajo.observa_selec_cot | default:"--" }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Observaciones Administrativas:</th>
+                    <td>{{ form.numtrabajo.observa_compra | default:"--" }}</td>
+                  </tr>
+
+                  {% if form.cotiza_Ref %}
+                  <tr>
+                    <th class="table-dark" scope="col">Cotización Referencial:</th>
+                    <td><a class="card-link" href="/media/{{ form.cotiza_Ref }}" target="_blank">{{ form.cotiza_Ref }}</a></td>
+                  </tr>
+                  {% endif %}
+                  {% if form.otros_doc %}
+                  <tr>
+                    <th class="table-dark" scope="col">Otros Documentos:</th>
+                    <td><a class="card-link" href="/media/{{ form.otros_doc }}" target="_blank">{{ form.otros_doc }}</a></td>
+                  </tr>
+                  {% endif %}
+                  {% if form.otros_doc_adqui %}
+                  <tr>
+                    <th class="table-dark" scope="col">Otros Documentos Adquisiciones:</th>
+                    <td><a class="card-link" href="/media/{{ form.otros_doc_adqui }}" target="_blank">{{ form.otros_doc_adqui }}</a></td>
+                  </tr>
+                  {% endif %}
+
+                  
+
+
+                  {% if form.img_1 %}
+                  <tr>
+                    <th class="table-dark" scope="col">Imagen 1:</th>
+                    <td>
+                      <a class="card-link" href="#" data-toggle="modal" data-target="#img_1" data-whatever="@getbootstrap">{{ form.img_1 }}</a>
+                      <div class="modal fade" id="img_1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div>
+                              <img src="/media/{{ form.img_1 }}" class="img-thumbnail rounded" alt="...">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endif %}
+                  {% if form.img_2 %}
+                  <tr>
+                    <th class="table-dark" scope="col">Imagen 2:</th>
+                    <td>
+                      <a class="card-link" href="#" data-toggle="modal" data-target="#img_2" data-whatever="@getbootstrap">{{ form.img_2 }}</a>
+                      <div class="modal fade" id="img_2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div>
+                              <img src="/media/{{ form.img_2 }}" class="img-thumbnail rounded" alt="...">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endif %}
+                  {% endfor %}
+                </tbody>
+        </table>
+      <div class="dropdown-divider" style="margin: 25px auto;"></div>
+      <h4 class="display-6">Cotizaciones</h4>
+      <div style="margin: 25px auto">
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <!-- <th>Id</th> -->
+              
+              <th>Provedor</th>
+              <th>Valor</th>
+              <th>Selección</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for detalle in detalle %}
+            <tr>
+              <!-- <td>{% render_field detalle.id disabled=True %}</td> -->
+              
+              <td>{% render_field detalle.empresa_cotiza disabled=True %}</td>
+              <td>{% render_field detalle.valor disabled=True %}</td>
+              <td>{% render_field detalle.cotiza_seleccion disabled=True %}</td>
+              <td>
+                <a href="http://{{ request.META.HTTP_HOST }}/media/{{detalle.pdf_cotiza.value}}" target="blank_">Ver</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="container" style="margin: 25px auto;">
+      {% for f in cot %}
+      {% if f.numtrabajo.compra_directa == True %}
+      <a href="{% url 'trabajos:regresacd_cotizacion' f.numtrabajo.numtrabajo %}" class="button btn btn-warning" >Devolver Orden a Cotizaciones</a>
+      {% endif %}
+    </div>
+      {% endfor %}
+
+{% endblock %}

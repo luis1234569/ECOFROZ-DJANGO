@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+<!-- {% load tz %} -->
+
+{% block extrahead %}
+<style>
+    body {font-family: Arial;}
+    
+    /* Style the tab */
+    .tab {
+      overflow: hidden;
+      border: 1px solid #ccc;
+      background-color: #f1f1f1;
+    }
+    
+    /* Style the buttons inside the tab */
+    .button {
+      background-color: inherit;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.3s;
+      font-size: 17px;
+    }
+    
+    /* Change background color of buttons on hover */
+    .button:hover {
+      background-color: #ddd;
+    }
+    
+    /* Create an active/current tablink class */
+    .button.active {
+      background-color: #ccc;
+    }
+    
+    /* Style the tab content */
+    .tabcontent {
+      display: none;
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      border-top: none;
+    }
+    
+    /* Style the close button */
+    .topright {
+      float: right;
+      cursor: pointer;
+      font-size: 28px;
+    }
+    
+    .topright:hover {color: red;}
+  </style>
+{% endblock %}
+
+{% block content %}
+<div class="container" style="margin: 25px auto;">
+  <div class="row">
+    <div class="col-md 12 search">
+      <form class="form-inline my-2 my-lg-0" method="GET">
+        <input class="form-control mr-sm-2" type="text" placeholder="Pedido" name="buscar" {% if busqueda %} value="{{ busqueda }}" {% endif %}>
+        <button id='buscar' class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+        <a class="btn btn-secondary my-2 my-sm-0" style="margin-left: 10px;" href="{% url 'trabajos:pedidos_mba' %}"></button>Limpiar</a>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="tab" style="margin-top: 25px;">
+  <a class="tablinks button" onclick="openTab(event, 'PMba')" id="defaultOpen">Ordenes MBA Pendientes</a>
+  <a class="tablinks button" onclick="openTab(event, 'GMba')">Ordenes Gestionadas</a>
+</div>
+<div id="PMba" class="tabcontent">
+  <span onclick="this.parentElement.style.display='none'" class="topright">&times</span>
+  <div>
+    <table class="table table-hover table-dark table-striped container table-condensed">
+      <h2>Ordenes Para Gestionar</h2>
+        <thead>
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Fecha de Envío</th>
+            <th scope="col">Usuario</th>
+            <th scope="col">Pedido MBA</th>
+            <th scope="col">Fecha de Acualización</th>
+            <th scope="col">Opciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for pedido in pedidos %}
+          <tr>
+            <td>{{ pedido.id }}</td>
+            <td>{{ pedido.fch_carga }}</td>
+            <td>{{ pedido.usuario_solicita }}</td>
+            <td><a href="http://{{ request.META.HTTP_HOST }}/media/{{ pedido.documentos }}" target="_blank">{{ pedido.documentos }}</a></td>
+            <td>{{ pedido.ordenar }}</td>
+            <td>
+              <a href="{% url 'trabajos:gestionamba' pedido.id %}" class="btn btn-primary glyphicon glyphicon-ok"> Gestionado</a>
+            </td>
+            <td>
+              <form id="form" enctype="multipart/form-data" action="{% url 'trabajos:actualiza-mba' %}" method="POST" onchange="actualizaArchivo()">
+                {% csrf_token %}
+                <input type="file" name="documentos" hidden id="archivo">
+                <input type="text" name="id" id="id" hidden>
+                <button type="submit" class="btn btn-success glyphicon glyphicon-cloud-upload" id="actualiza"> Actualizar</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+    </table>
+  </div>  
+</div>
+
+<div id="GMba" class="tabcontent">
+  <span onclick="this.parentElement.style.display='none'" class="topright">&times</span>
+  <div>
+    <table class="table table-hover table-dark table-striped container table-condensed">
+      <h2>Ordenes Gestionadas</h2>
+        <thead>
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Fecha de Envío</th>
+            <th scope="col">Usuario</th>
+            <th scope="col">Pedido MBA</th>
+            <th scope="col">Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for gest in gestionados %}
+          <tr>
+            <td>{{ gest.id }}</td>
+            <td>{{ gest.fch_carga }}</td>
+            <td>{{ gest.usuario_solicita }}</td>
+            <td><a href="http://{{ request.META.HTTP_HOST }}/media/{{ pedido.documentos }}" target="_blank">{{ gest.documentos }}</a></td>
+            {% if gest.estado_gestion %}
+              <td>GESTIONADO</td>
+            {% else %}
+              <td>PENDIENTE</td>
+            {% endif %}
+          </tr>
+          {% endfor %}
+        </tbody>
+    </table>
+  </div>  
+</div>
+
+<script>
+  function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
+  }
+
+  // Get the element with id="defaultOpen" and click on it
+  document.getElementById("defaultOpen").click();
+  </script>
+
+{% endblock %}
+
+{% block extrajs %}
+{% load static %}
+<script>  
+  function actualizaArchivo() {
+    // alert('cambio');
+    document.getElementById('form').submit();
+  }
+  $("button").click(function(e) {
+    var bot = this.id;
+    if (bot != 'buscar'){
+      e.preventDefault();
+
+      var filaactual = $(this).closest("tr"); // obtiene la fila actual
+      var id = filaactual.find("td:eq(0)").text(); //obtener el valor del primer td de la fila actual;
+      $('#id').val(id);
+      
+      $("#archivo").trigger("click");
+    }
+  });
+  
+    $(window).on("load", function() {
+        $(".loader").fadeOut("slow");
+    });
+    </script>
+{% endblock %}

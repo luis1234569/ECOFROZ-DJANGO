@@ -1,0 +1,217 @@
+{% extends 'base.html' %}
+
+{% block extrahead %}
+{% load widget_tweaks %}
+
+
+<meta charset="utf-8">
+
+<style type="text/css">
+    #salida_activo li {
+     display:inline;
+     margin-left: -10px;
+     padding-left:3px;
+     padding-right:60px;
+    }
+</style> 
+{% endblock %}
+
+{% block title %}
+    <h2>Ordenes de Pedidos</h2>
+{% endblock %}
+
+{% block content %}
+<div class="loader"></div>
+<div class="container" style="width: 85%; margin:auto; padding-top: 15px; margin-top: 10px; margin-bottom: 25px;">
+
+<h4 class="display-5">Bitácora Digital en linea (ECSEG-R-1.1-1)</h4>
+<br>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+        <!-- {{form.usuario_solicita}} -->
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label>Reporte N°</label><br>
+            <input type="text" class="form-control" value="{{reporte}}" readonly>
+            
+            
+        </div>
+        <div class="form-group col-md-4">
+            <label>{{form.fchregistro.label}}</label>
+            {{ form.fchregistro }}
+        </div>
+
+        <div class="form-group col-md-4">
+          
+        </div>
+
+        <pre></pre>
+        {% if estado != 3 %}
+        <div class="form-group col-md-4">
+            <label>Guardia N° 1:</label>
+            {{ form3.guardia1 }}
+        </div>
+
+        <div class="form-group col-md-4">
+            <label>Guardia N° 2:</label>
+            {{ form3.guardia2 }}
+        </div>
+
+        <div class="form-group col-md-10">
+            <label>{{form.asunto.label}}</label>
+            {{ form.asunto }}
+            
+        </div>
+
+        <div class="form-group col-md-2">
+        </div>
+
+    </div>
+  
+    <div class="form-row">
+    
+    <div class="form-group col-md-10">
+        <label>{{form.observaciones_guardias.label}}</label>
+        {{form.observaciones_guardias}}
+    </div>  
+
+    <div class="form-group col-md-10">
+        <label>{{form.observaciones_seg.label}}</label>
+        {{form.observaciones_seg}}
+    </div>
+    
+
+    <div class="form-group col-md-12">
+        
+        <!-- {{form2.img_1}}
+        
+
+        
+        {{form2.img_2}} -->
+    
+
+</div>
+
+    </div>
+    
+    
+    
+    <div class="row">
+        <div class="col-md-12" style="margin-top: 10px;">
+            <button type="submit" class="btn btn-lg btn-primary button" id="enviar" name="enviar">Guardar</button>
+        </div>
+    </div>
+</form>
+</div>
+
+{% elif estado == 3 %}
+    <div class="form-group col-md-4">
+        <label>Guardia N° 1:</label>
+        {% render_field form3.guardia1 disabled="disabled" %}
+    </div>
+
+    <div class="form-group col-md-4">
+        <label>Guardia N° 2:</label>
+        {% render_field form3.guardia2 disabled="disabled" %}
+    </div>
+
+    <div class="form-group col-md-10">
+        <label>{{form.asunto.label}}</label>
+        {% render_field form.asunto readonly="True" %}
+    </div>
+
+    <div class="form-group col-md-2">
+    </div>
+
+</div>
+
+<div class="form-row">
+
+<div class="form-group col-md-10">
+    <label>{{form.observaciones_guardias.label}}</label>
+    {% render_field form.observaciones_guardias readonly="readonly" %}
+</div>  
+
+<div class="form-group col-md-10">
+    <label>{{form.observaciones_seg.label}}</label>
+    {{form.observaciones_seg}}
+</div>
+</div>
+
+<div class="row">
+    <div class="col-md-12" style="margin-top: 10px;">
+        <a type="button" class="btn btn-lg btn-primary button" href="{% url 'personal:listar_novedades' %}">Regresar</a>
+    </div>
+</div>
+</form>
+</div>
+
+
+{% endif %}
+
+
+{% endblock %}
+
+{% block extrajs %}
+<script>
+ 
+
+
+
+    $(window).on("load", function() {
+        $(".loader").fadeOut("slow");
+    });
+
+    $(document).ready(function() {    
+        $('#enviar').on('click', function(){
+            var incompletos = false
+            $('.in').each(function(){
+                if ($(this).val().trim() == ''){
+                    incompletos = true
+                }
+            });
+            if (incompletos == false){
+                //Añadimos la imagen de carga en el contenedor
+                $(".loader").show();
+                $(window).on("load", function(){
+                    $(".loader").fadeOut("slow");
+                });
+            }
+        });              
+    });    
+
+    function ordenarSelect(id_componente)
+    {
+      var selectToSort = jQuery('#' + id_componente);
+      var optionActual = selectToSort.val();
+      selectToSort.html(selectToSort.children('option').sort(function (a, b) {
+        return a.text === b.text ? 0 : a.text < b.text ? -1 : 1;
+      })).val(optionActual);
+    }
+
+    $(document).ready(function () {
+      ordenarSelect('id_guardia1');
+    });
+
+    $(document).ready(function () {
+      ordenarSelect('id_guardia2');
+    });
+
+    $(document).ready(function(){
+        document.getElementById("id_guardia1").value = "{{ persona_registra }}";
+        document.getElementById("id_guardia2").value = "{{ sguardia }}";
+        $('#id_observaciones_seg').attr('readonly','readonly');
+    });
+
+
+    
+
+</script>
+
+
+{% load static %}
+
+
+{% endblock %}

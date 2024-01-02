@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block title %}
+    <h2>Ordenes de Pedidos</h2>
+{% endblock %}
+
+{% block content %}
+<div class="jumbotron" style="width: 75%; margin:auto; padding-top: 25px; margin-top: 50px; margin-bottom: 25px;">
+<h2 class="display-5">Ingreso de Ordenes de Pedido</h2>
+<!-- <h4 class="display-6">Hola {{ user.first_name }} {{ user.last_name }}</h4> -->
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+        <input id="usuario_solicita" type="text" name="usuario_solicita" hidden value="{{ user.id }}">
+        {{ form.auth_user }}
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label>{{ form.departamento.label }}</label>
+            {{ form.departamento }}
+        </div>
+        <div class="form-group col-md-4">
+            <label>{{ form.area.label }}</label>
+            {{ form.area }}
+        </div>
+        <div class="form-group col-md-4">
+            <label>{{ form.numproyecto.label }}</label>
+            {{ form.numproyecto }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-4">
+            <label>{{ form.motivo_compra.label }}</label>
+            {{ form.motivo_compra }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-12">
+            <label>{{ form.justificacion_compra.label }}</label>
+            {{ form.justificacion_compra }}
+        </div>
+    </div>
+    <div class="form-row" id="reemplazo_accion_div">
+        <div class="col-md-12">
+            <label>{{ form.reemplazo_accion.label }}</label>
+            {{ form.reemplazo_accion }}
+        </div>
+        <div class="col-md-12">
+            <label>{{ form.reemplazo_observa.label }}</label>
+            {{ form.reemplazo_observa }}
+        </div>
+    </div>
+
+
+
+    {{ form2.management_form }}
+    <div class="border" style="margin-top: 10px;">
+        <table style="width: 100%;">
+            <thead class="table thead-dark">
+                <th>Tipo</th>
+                <th>Descripción</th>
+                <th>Cant.</th>
+                <th>Vida</th>
+                <th>Tipo</th>
+                <th>Imagen</th>
+                <th>+/-</th>
+            </thead>
+            <tbody>
+                {% for i in form2 %}
+                <tr class="add-row">
+                    <td style="width: 12%;">{{i.tipoactivo}}</td>
+                    <td style="width: 45%;">{{i.descripcion}}</td>
+                    <td style="width: 5%;">{{i.cantidad}}</td>
+                    <td style="width: 5%;">{{i.tiempo_vida}}</td>
+                    <td style="width: 8%;">{{i.tiempo_tipo}}</td>
+                    <td style="width: 23%;">{{i.img_1}}</td>
+                    <td style="width: 2%;">
+                        <div class="input-group-append">
+                            <button class="btn btn-success add-form-row">+</button>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="row" style="margin-top: 10px; background-color: transparent;">
+        <div class="col-md-12">
+            <label>{{ form.cotiza_ref.label }}</label>
+            {{ form.cotiza_ref }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12" style="margin-top: 10px;">
+            <button type="submit" class="btn btn-primary">Generar</button>
+        </div>
+    </div>
+</form>
+</div>
+
+
+
+<!-- <table id="id_forms_table" cellpadding="0" cellspacing="5">
+    <thead>
+        <tr>
+            <th>Item</th>
+            <th>Tipo</th>
+            <th>Descripción</th>
+            <th>Cantidad</th>
+            <th>Unidad</th>
+            <th>Tiempo Vida</th>
+            <th>Tipo</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for i in form2 %}
+        <tr id="{{ i.prefix }}-row" class="dynamic-form">
+            <td {% if forloop.first %} class="hidden"{% endif %}>{{ forloop.first }}</td>
+            <td></td>
+            <td>{{i.tipoactivo}}</td>
+            <td>{{i.descripcion}}</td>
+            <td>{{i.cantidad}}</td>
+            <td>{{i.unimedida}}</td>
+            <td>{{i.tiempo_vida}}</td>
+            <td>{{i.tiempo_tipo}}</td>
+            <td>{{i.img_1}}</td>
+            <td {% if forloop.first %} hidden {% endif %}>
+                <a id="remove-{{ i.prefix }}-row" href="javascript:void(0)" class="delete-row btn btn-danger">-</a>
+            </td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td colspan="4"><a href="javascript:void(0)" class="add-row btn btn-success">+</a></td>
+        </tr>
+    </tbody>
+</table>
+{{ form2.management_form }}
+<div>
+    <input type="submit" value=" Find &raquo; " />
+</div> -->
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript">
+    $("#reemplazo_accion_div").hide().val("");
+    // $("#reemplazo_accion_label").hide();
+
+    $("#motivo_compra").change(function(){
+        var opcion = $(this).val();
+
+        if (opcion == "reemplazo_m" || opcion == "reemplazo_o")
+            $("#reemplazo_accion_div").show();
+        else
+            $("#reemplazo_accion_div").hide().val("");
+            // $("#reemplazo_accion_label").hide();
+    });
+
+    // $(function () {
+    //     $('.add-row').click(function() {
+    //         return addForm(this, 'form');
+    //     });
+    //     $('.delete-row').click(function() {
+    //         return deleteForm(this, 'form');
+    //     })
+    // })
+
+    $(document).on('click', '.add-form-row', function(e){
+        e.preventDefault();
+        cloneMore('.add-row:last', 'form');
+        return false;
+    });
+
+    $(document).on('click', '.remove-form-row', function(e){
+        e.preventDefault();
+        deleteForm('form', $(this));
+        return false;
+    });
+
+</script>
+{% endblock %}

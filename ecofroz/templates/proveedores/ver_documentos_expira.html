@@ -1,0 +1,438 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+
+
+
+{% block extrahead %}
+<!DOCTYPE html>
+<style>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+table {
+  border-collapse: collapse;
+  width: 100%;  
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+
+
+
+ul.opciones {
+  list-style-type:none;
+}
+
+input[type=text] {
+  border: none;
+  border-bottom: 1px solid #34bdeb ;
+  background-color: none;
+  outline: none;
+  box-shadow: none !important;
+  /* border: none; */
+  border-bottom-color: 1px solid #34bdeb  ;
+}
+
+input[type=number] {
+  border: none;
+  border-bottom: 1px solid #34bdeb ;
+  background-color: none;
+  outline: none;
+  box-shadow: none !important;
+  /* border: none; */
+  border-bottom-color: 1px solid #34bdeb  ;
+}
+
+.button {
+background-color: #4CAF50;
+border: none;
+color: white;
+padding: 4px 20px; */
+text-align: center;
+text-decoration: none;
+display: inline-block;
+font-size: 16px;
+margin: 4px 2px;
+cursor: pointer;
+border-radius: 4px;
+}
+
+
+
+.select-box {
+     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    -webkit-appearance: button;
+    -moz-appearance: button;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -webkit-padding-end: 20px;
+    -moz-padding-end: 20px;
+    -webkit-padding-start: 2px;
+    -moz-padding-start: 2px;
+    background-color: #faf9f7; /* Fallback color if gradients are not supported */
+    background-image: url(../images/select-arrow.png), -webkit-linear-gradient(top, #E5E5E5, #F4F4F4); /* For Chrome and Safari */
+    background-image: url(../images/select-arrow.png), -moz-linear-gradient(top, #E5E5E5, #F4F4F4); /* For old Firefox (3.6 to 15) */
+    background-image: url(../images/select-arrow.png), -ms-linear-gradient(top, #E5E5E5, #F4F4F4); /* For pre-releases of Internet Explorer  10*/
+    background-image: url(../images/select-arrow.png), -o-linear-gradient(top, #E5E5E5, #F4F4F4); /* For old Opera (11.1 to 12.0) */
+    background-image: url(../images/select-arrow.png), linear-gradient(to bottom, #E5E5E5, #F4F4F4); /* Standard syntax; must be last */
+    background-position: center right;
+    background-repeat: no-repeat;
+    border: 1px solid #AAA;
+    outline: 0px;
+    border-radius: 2px;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+    color:#262625;
+    font-size: inherit;
+    margin: 0;
+    overflow: hidden;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#tabla-reporte{
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#tabla-reporte td, #tabla-reporte th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#tabla-reporte tr:hover {background-color: #ddd;}
+#tabla-reporte tr:hover {background-color: #ddd;}
+
+#tabla-reporte th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}
+
+
+#categoria-label{
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  margin-left:25px;
+  
+  /* border-collapse: collapse;
+  width: 100%; */
+}
+
+#contenedor{
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  margin-top:10px;
+}
+
+#filas{
+  padding:8px;
+}
+
+#categoria3{
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  margin-left:35px;
+}
+
+#proveedor1{
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  margin-left:35px;
+}
+
+#proveedor2{
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  margin-left:23px;
+}
+
+#list-segmento{
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  margin-left:23px;
+}
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+ <div class="loader"></div>
+<div class="container-fluid" id="contenedor">  
+<div class="row">
+    <div class="col-6">
+        <form method="GET" id="form" >
+            {% csrf_token %}
+            <div class="row" id="filas" >
+              <div class="col">
+              <label><strong>Criterio:</strong></label>
+            </div>
+            <div class="col">
+              <a href="{% url 'proveedores:ver_expiracion_docs' %}" class="button btn-sm btn-primary my-2 my-sm-0" style="margin-left:-250px;">Reset</a>
+            </div>
+              <div>
+                <input type="radio" style="margin-left:10px;" id="prove" name="destino" value="prove">
+                <label for="prove">Por Proveedor</label>
+                <input type="radio" style="margin-left:10px;" id="docu" name="destino" value="docu">
+                <label for="docu">Por Documento</label>
+                <input type="radio" style="margin-left:10px;" id="fec" name="destino" value="fec">
+                <label for="fec">Entre Fechas</label>
+                
+                </div>
+              
+              
+            <div class="row" id="fila_proveedor" style="margin-left:10px;" >
+              <div class="col-10">
+            <label for="{{ form.nombre_empresa.label }}" id="proveedor">Seleccione el Proveedor</label>
+            {% render_field form.nombre_empresa class="form-control" onChange="form.submit();" %} 
+            </div>
+            <!-- <div class="col-6">
+            <input type="checkbox"  id="todos-prove" name="todos-prove" style="margin-top:10px;">
+              <label for="todos-prove">Todos</label>
+            </div> -->
+
+            </div>
+            <div class="row" id="fila_documento" style="margin-left:10px;">
+              <div class="col-10">
+            <label for="documento">Escoja el Documento</label>
+            <!-- {{ form.nombre_documento}} -->
+
+            <select name="documento" id="documento" class="form-control" onChange="form.submit();">
+              <option value="" selected>---</option>
+              <option value="RUC">RUC</option>
+              <option value="CUMPLIMIENTO_IESS">CUMPLIMIENTO IESS</option>
+              <option value="NOMBRAMIENTO_REP_LEGAL">NOMBRAMIENTO REP. LEGAL</option>
+              <option value="CONTRATO_FIRMADO">CONTRATO FIRMADO</option>
+    
+            </select>
+           
+          
+          </div>
+            <div class="col-6">
+            <input type="checkbox"  id="todos-docu" name="todos-docu" style="margin-top:10px;">
+              <label for="todos-prove">Todos</label>
+
+          </div>
+              
+        </div>
+
+          <div class="row" id="fila_fechas" style="margin-left:10px;" >
+            
+            <div class="col-3"> 
+                <label style="margin-right: 10px;">DESDE:</label>
+                <input type="date" name="inicio" value="{{ inicio }}" required>
+              </div>
+              
+              <div class="col-3">
+                <label>HASTA:</label>
+                <input type="date" name="fin" value="{{ fin }}" required onChange="form.submit();">
+              </div>
+    
+              <!-- <div class="col">
+                <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button> -->
+            
+              
+          </div>
+          <!-- <a class="btn btn-warning my-2 my-sm-0"  href="">Limpiar</a>  -->
+
+          </div>
+
+             
+         </form>    
+      
+        
+      </div>
+
+      
+          
+      </div>
+    </div>
+
+
+
+      </div>
+
+      {% if var %}
+      <div class="container-fluid">
+        <div class="row" style="margin-left: 6px;">
+          <div class="col-4">
+            <h5 id="heading">Número de registros encontrados: {{ var }}&nbsp; </h5> 
+          </div>
+        <div class="col">
+          <div class="container" style="margin-left:-70px;">
+            <a  href="{% url 'proveedores:to_excelclass' %}" >[Exportar a Excel]</a> 
+          </div>
+        </div>
+          
+    </div>
+  </div>
+  {% endif %}
+    
+               {%if query %}
+                    <div class="container-fluid" style="margin-top: 10px;">
+                  <table class="table table-hover table-striped table-dark table-sm container-fluid" style="width:99%;">      
+                  <thead> 
+                   
+                    <tr>
+                    <td scope="col"><strong>No</strong></td>
+                    <td scope="col"><strong>Provedor</strong></td>
+                    <td scope="col"><strong>Categoría</strong></td>
+                    <td scope="col"><strong>Nombre Documento</strong></td>
+                    <td scope="col"><strong>Fecha Emisión/Vigencia</strong></td>
+                    <td scope="col"><strong>Opciones</strong></td>
+                    
+                  </tr>
+                    
+                  </thead>  
+                  <tbody>
+                    {% for prove in query  %} 
+                        <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ prove.proveedor }}</td>
+                        <td>{{ prove.proveedor.categoria | default:"--" }}</td>
+                        <td>{{ prove.nombre_corto | default:"--" }}</td></td>
+                       <td >{{ prove.fecha_documento| default:"--" }}</td>
+                       <td>
+                        <a class="btn btn-warning glyphicon glyphicon-eye-open" title="Ver Documento" href="{{ prove.archivos.url }}" target="_blank"></a>
+                      </td>
+                      </tr>
+                    {% endfor %}
+                     
+
+          {% elif squery %}
+          <div class="container-fluid" style="margin-top: 10px;">
+            <h5>{{ empre }}</h5>
+          
+            <table class="table table-hover table-striped table-dark table-sm container-fluid" style="width:99%;">      
+            <thead> 
+             
+              <tr>
+              <td scope="col"><strong>No</strong></td>
+              <td scope="col"><strong>Nombre Documento</strong></td>
+              <td scope="col"><strong>Fecha Emisión/Vigencia</strong></td>
+              <td scope="col"><strong>Opciones</strong></td>
+              
+            </tr>
+              
+            </thead>  
+            <tbody>
+              
+              {% for prove in squery  %} 
+                  <tr>
+                  <td>{{ forloop.counter }}</td>
+                  <td>{{ prove.nombre_corto | default:"--" }}</td></td>
+                 <td >{{ prove.fecha_documento| default:"--" }}</td>
+                 <td>
+                  <a class="btn btn-warning glyphicon glyphicon-eye-open" title="Ver Documento" href="{{ prove.archivos.url }}" target="_blank"></a>
+                </td>
+                </tr>
+              {% endfor %}
+                        
+            
+            {% else %}
+            <h1>No hay registros</h1>
+            
+            {% endif %}
+            </tbody>
+              
+              </table>
+            </div>
+
+            <div class="pagination container-fluid" style="width: 98%;">
+              <span class="step-links">
+                  {% if query.has_previous %}
+                      <a href="?page=1">&laquo; inicio</a>
+                      <a href="?page={{ query.previous_page_number }}">previo</a>
+                  {% endif %}
+            
+                  <span class="current">
+                      Page {{ query.number }} of {{ query.paginator.num_pages }}.
+                  </span>
+            
+                  {% if query.has_next %}
+                      <a href="?page={{ query.next_page_number }}">próximo</a>
+                      <a href="?page={{ query.paginator.num_pages }}">último &raquo;</a>
+                  {% endif %}
+              </span>
+            </div>
+            
+          
+              
+              {% endblock content %}
+              
+{% block extrajs %}
+<script>
+
+  $("#fila_documento").hide().val("");
+  $("#fila_fechas").hide().val("");
+  $("#prove").prop("checked", true)
+  
+
+ 
+    $("#prove").on("change", function(){
+        if($(this).is(':checked')){
+          $("#fila_documento").hide().val("");
+          $("#fila_fechas").hide().val("");
+          $("#fila_proveedor").show();
+        }else{
+          $("#fila_proveedor").hide().val("");
+          $("#fila_fechas").hide().val("");
+
+        }
+    })
+
+    $("#docu").on("change", function(){
+        if($(this).is(':checked')){
+          $("#fila_proveedor").hide().val("");
+          $("#fila_fechas").hide().val("");
+          $("#fila_documento").show();
+        }else{
+          $("#fila_proveedor").hide().val("");
+          $("#fila_fechas").hide().val("");
+        }
+    })
+
+    $("#fec").on("change", function(){
+        if($(this).is(':checked')){
+          $("#fila_proveedor").hide().val("");
+          $("#fila_documento").hide().val("");
+          $("#fila_fechas").show();
+        }else{
+          $("#fila_proveedor").hide().val("");
+          $("#fila_documento").hide().val("");
+        }
+    })
+
+    $("#todos-docu").on("change", function(){
+        if($(this).is(':checked')){
+          this.form.submit();
+        }
+
+    })
+
+    $(window).on("load", function() {
+        $(".loader").fadeOut("slow");
+    });
+
+    $(document).ready(function() {    
+        $('#enviar').on('click', function(){
+            //Añadimos la imagen de carga en el contenedor
+            $(".loader").show();
+            $(window).on("load", function(){
+                $(".loader").fadeOut("slow");
+            });
+        });              
+    }); 
+
+   
+              </script>
+              
+
+              {% endblock %}

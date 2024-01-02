@@ -1,0 +1,104 @@
+<html>
+  <head>
+    <style type="text/css">
+      a:link{
+        color:rgb(1, 58, 182);
+      }
+      .btn {
+        display: inline-block;
+        font-weight: 400;
+        text-decoration: none;
+        color:rgb(1, 58, 182);
+        text-align: center;
+        vertical-align: middle;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        background-color: transparent;
+        border: 1px solid transparent;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        border-radius: 0.25rem;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+      }
+      .btn-primary {
+        color:rgb(1, 58, 182);
+        background-color: #007bff;
+        border-color: #007bff;
+      }
+      .btn-primary:hover {
+        color: #fff;
+        background-color: #0069d9;
+        border-color: #0062cc;
+      }
+    </style>
+  </head> 
+  <body>
+    <div>
+      <p>
+        {% for c in aprob %}
+          La orden de pedido N° {{ c.numpedido.numpedido }} no ha sido activada como un activo<br>        
+          <h3>Valor {{ c.valor }}.</h3>
+          <h5>Verifique y continue con las acciones pertinentes</h5>
+        {% endfor %}
+      </p>
+    </div>
+      <table style="border: 1px;" cellspacing='0' cellpadding='10'>
+          <tbody>
+            {% for i in aprob2 %}
+            <tr>
+              <td scope="col" style='font-size: 11px;'>N° de Pedido:</td>
+              <td style='font-size: 11px;'>{{ i.numpedido.numpedido }}</td>
+            </tr>
+            <tr>
+              <td scope="col" style='font-size: 11px;'>Usuario Solicitante:</td>
+              <td style='font-size: 11px;'>{{ i.numpedido.usuario_solicita.username }}</td>
+            </tr>
+            <tr>
+              <td scope="col" style='font-size: 11px;'>Departamento Solicitante:</td>
+              <td style='font-size: 11px;'>{{ i.numpedido.departamento }}</td>
+            </tr>
+            <tr>
+              <td scope="col" style='font-size: 11px;'>Area Solicitante:</td>
+              <td style='font-size: 11px;'>{{ i.numpedido.area }}</td>
+            </tr>
+            <tr>
+              <td scope="col" style='font-size: 11px;'>Proyecto:</td>
+              <td style='font-size: 11px;'>{{ i.numpedido.numproyecto }}</td>
+            </tr>
+            <tr>
+              <td scope="col" style='font-size: 11px;'>Tipo Activo:</td>
+              <td style='font-size: 11px;'>{{ i.numpedido.tipoactivo }}</td>
+            </tr>
+            <tr>
+              <td scope="col" style='font-size: 11px;'>Tiempo de Vida:</td>
+              <td style='font-size: 11px;'>{{ i.numpedido.tiempo_vida }}</td>
+            </tr>
+            <tr>
+              <td scope="col" style='font-size: 11px;'>Motivo de Compra:</td>
+              <td style='font-size: 11px;'>{{ i.numpedido.motivo_compra }}</td>
+            </tr>
+            <tr>
+              <td scope="col" style='font-size: 11px;'>Descripciòn:</td>
+              <td style='font-size: 11px;'>{{ i.descripcion }}</td>
+            </tr>
+            <tr>
+            <tr>
+              <td scope="col" style='font-size: 11px;'>Valor:</td>
+              <td style='font-size: 11px;'>{{ i.numpedido.valor }}</td>
+            </tr>
+            <tr>
+              <td scope="col" style='font-size: 11px;'>Observación Activación:</td>
+              <td style='font-size: 11px;'>{{ i.numpedido.activado_observa }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+      </table>
+      <div>
+        <a class="btn btn-primary" href="http://192.168.27.118/ordenpedido/activaciones/">Acceso al sistema</a>
+      </div>
+  </body>
+</html>

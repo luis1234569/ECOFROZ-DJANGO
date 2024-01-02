@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+
+
+
+{% block content %}
+
+
+<div class="container-fluid">
+  <div class="row" style="margin-top: 25px;">
+    <div class="col-md 18 search">
+      <form class="form-inline my-2 my-lg-0" method="GET">
+          <input class="form-control mr-sm-2" type="text" size="55;" placeholder="Placa, Cédula, Apellidos, Nombres..." name="buscar">
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+        {% if contador == 1 %}
+        <a class="btn btn-secondary my-2 my-sm-0" style="margin-left:3px;" href="{% url 'personal:listar_vadministrativos' %}">Reset</a>
+        {% endif %}
+      </form>
+    </div>
+ 
+    </div>
+  
+
+<br>
+
+<table class="table table-hover table-dark table-sm table-striped container-fluid" style="table-layout:unset;">  
+  <thead>
+    <tr>
+        <td scope="col"><strong>No</strong></td>
+        <td scope="col"><strong>Placa</strong></td>
+        <td scope="col"><strong>Referencia</strong></td>
+        <td scope="col"><strong>Cédula</strong></td>
+        <td scope="col"><strong>Nombres</strong></td>
+        <td scope="col"><strong>Apellidos</strong></td>
+        <td scope="col"><strong>Ultimo ingreso</strong></td>
+        <td scope="col"><strong>Estado</strong></td>
+        <td scope="col"><strong>Opciones</strong></td>
+    </tr>
+  </thead>
+<tbody>
+  {% if form %}
+  {% for chofer in form  %} 
+  
+      <td>{{ forloop.counter0|add:form.start_index }}</td>
+      <td>{{ chofer.placa | default:"--" }}</td>
+      <td>{{ chofer.referencia | default:"--" }}</td>
+      <td>{{ chofer.persona.cedula }}</td>
+      <td>{{ chofer.persona.first_name }}</td>
+      <td>{{ chofer.persona.last_name }}</td>
+      {% if chofer.detalle_reg.last != None %}
+  
+      {% for j in chofer.detalle_reg.all|dictsort:"fch_ingreso" %}
+      {% if forloop.last %}
+      <td>{{ j.fch_ingreso }}</td>
+      {% endif %}
+      {% endfor %}
+
+      {% else %}
+      <td>--</td>
+      {% endif %}
+
+      <td>{{ chofer.estado | yesno:"Activo, No activo" }}</td>
+      
+         <!-- <td style="align-content: center;"><a class="btn btn-info bi bi-pencil-fill"  title="Editar estado vehiculo" data-toggle="modal" data-target="#exampleModal2" data-whatever="@getbootstrap"></a></td> -->
+       
+        <td style="align-content: center;"><a id="abrirmodal" onclick="actualizar('{{ chofer.placa }}')" class="btn btn-info bi bi-pencil-fill"  title="Editar Estado"></a></td>
+       
+       
+    </tr>
+    
+{% endfor %}
+
+{% else %}
+<h1>No hay registros</h1>
+
+{% endif %}
+</tbody>
+
+</table>
+
+
+<nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center col-sm-12">
+      {% if form.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1">&laquo;primero</a>
+            </li>
+          <li class="page-item">
+            <a class="page-link" href="?page={{ form.previous_page_number }}">previo</a>
+          </li>
+      {% endif %}
+
+      {% for i in form.paginator.page_range %}
+      {% if i <= form.number|add:5 and i >= form.number|add:-5 %}
+          {% if i == form.number %}
+              <li class="page-item active">
+                  <a class="page-link" href="#">{{ i }}</a>
+              </li>
+          {% else %}
+              <li class="page-item">
+                  <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+              </li>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+
+      {% if form.has_next %}
+          <li class="page-item">
+              <a class="page-link" href="?page={{ form.next_page_number }}">próximo</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="?page={{ form.paginator.num_pages }}">último&raquo;</a>
+          </li>
+      {% endif %}
+  </ul>
+</nav>
+</div>
+
+
+<div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Habilitación/Deshabilitación de Vehículos Administrativos</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <form action="{% url 'personal:actualiza_estado_vehiculo_administrativo' %}" method="POST">
+        {% csrf_token %}
+        <label for="">Propietario</label>
+        <input type="text" class="form-control" name="propietario" id="propietario" readonly>
+        
+        <label for="">Placa</label>
+        <input type="text" class="form-control" name="placa" id="placa" readonly>
+
+        <label for="">Referencia</label>
+        <input type="text" class="form-control" name="referencia" id="referencia">
+        <br>
+          <div>
+              <input type="radio" name="radio" id="sipo"  value="SI" >
+              <label for="sipo">Activo</label>
+          
+              <input type="radio" name="radio" id="nope"  value="NO">
+              <label for="nope">No activo</label>
+            </div>   
+        
+      
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+{% endblock content %}
+
+{% block extrajs %}
+<script>
+  jQuery(document).ready(function($){
+    $('*[data-href]').on('click', function(){
+      window.location = $(this).data("href");
+    });
+
+    $("#desactiva").on("click", function () {
+      alert('Se Inactivo el Vehículo Correctamente.')
+    })
+  });
+  // $("#container").on('click-row.bs.table', function(e, row, $element){
+  //   window.location = $(this).data('url');
+  // });
+
+  function actualizar(placa){
+    $.ajax({
+      url: '/personal/ajaxcallplaca/',
+      data:{
+        'placa': placa,
+      },
+      success: function(data) {
+        $.each(data, function(key, value){
+          $("#propietario").val(value.propietario);
+          $("#placa").val(value.placa);
+          $("#referencia").val(value.referencia);
+          if(value.estado == true){
+          $("#sipo").prop("checked", true);
+          $("#nope").prop("checked", false);
+          }
+          else{
+            $("#nope").prop("checked", true);
+            $("#sipo").prop("checked", false);
+          }
+        }); 
+        $("#exampleModal2").modal('show');
+      }
+    });
+  }
+
+
+
+
+
+</script>
+{% endblock %}

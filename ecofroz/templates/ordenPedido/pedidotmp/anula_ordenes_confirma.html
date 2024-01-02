@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}
+    <h2>Anulación de Ordenes de Pedidos</h2>
+{% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block content %}
+<div class="loader"></div>
+    <div class="container" style="margin: 25px auto;">
+        <table class="table table-bordered table-sm">
+                <tbody>
+                  {% for form in cot %}
+                  <tr>
+                    <th class="table-dark" scope="col" style="width: 25%;">N° de Orden:</th>
+                    <td style='font-size: 18px; font-weight: bold;'>{{ form.numpedido.numpedido }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Usuario Solicitante:</th>
+                    <td>{{ form.numpedido.usuario_solicita.first_name }} {{ form.numpedido.usuario_solicita.last_name }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Departamento Solicitante:</th>
+                    <td>{{ form.numpedido.departamento }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Area:</th>
+                    <td>{{ form.numpedido.area | default:'--' }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Tipo</th>
+                    <td>{{ form.numpedido.tipoactivo }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Proyecto:</th>
+                    <td>{{ form.numpedido.numproyecto | default:'--' }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Descripciòn:</th>
+                    <td>{{ form.descripcion | default:'--' }}</td>
+                  </tr>
+                 
+                  <tr>
+                    <th class="table-dark" scope="col">Justifiación Compra:</th>
+                    <td>{{ form.numpedido.justificacion_compra }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Observaciones Adquisiciones:</th>
+                    <td>{{ form.numpedido.cotiza_observa | default:'--' }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Observaciones Autorizador:</th>
+                    <td>{{ form.numpedido.observa_selec_cot | default:'--' }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Observación Administrativa:</th>
+                    <td>{{ form.numpedido.observa_compra | default:'--' }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Cotización Referencial:</th>
+                    <td><a class="card-link" href="/media/{{ form.cotiza_Ref }}" target="_blank">{{ form.cotiza_Ref }}</a></td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Otros Documentos:</th>
+                    <td><a class="card-link" href="/media/{{ form.otros_doc }}" target="_blank">{{ form.otros_doc }}</a></td>
+                  </tr>
+                  {% if form.img_1 %}
+                  <tr>
+                    <th class="table-dark" scope="col">Imagen 1:</th>
+                    <td>
+                      <a class="card-link" href="#" data-toggle="modal" data-target="#img_1" data-whatever="@getbootstrap">{{ form.img_1 }}</a>
+                      <div class="modal fade" id="img_1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div>
+                              <img src="/media/{{ form.img_1 }}" class="img-thumbnail rounded" alt="...">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endif %}
+                  {% if form.img_2 %}
+                  <tr>
+                    <th class="table-dark" scope="col">Imagen 2:</th>
+                    <td>
+                      <a class="card-link" href="#" data-toggle="modal" data-target="#img_2" data-whatever="@getbootstrap">{{ form.img_2 }}</a>
+                      <div class="modal fade" id="img_2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div>
+                              <img src="/media/{{ form.img_2 }}" class="img-thumbnail rounded" alt="...">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endif %}
+                  {% endfor %}
+                </tbody>
+        </table>
+     
+     
+        <form class="modal-body" method="GET">
+          <div style="margin-top: 10px;">
+            <h4 class="display-6">Observaciones/Notas de Anulación</h4> 
+            <div>
+              <textarea class="form-control" id="message-text" name="text" rows="5">{{ observa | default:'' }}</textarea>
+            </div>
+          </div>
+         
+          
+          <th><button type="submit" class="btn btn-warning" style="margin: 25px auto;" id="enviar" formaction="{% url 'ordenpedido:confirma_anulacion' id %}">Confirmar Anulación de la Orden</button></th>
+          
+        </form>
+      </div>
+    </div>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+  $(window).on("load", function() {
+        $(".loader").fadeOut("slow");
+    });
+
+    $(document).ready(function() {    
+        $('#enviar').on('click', function(){
+            //Añadimos la imagen de carga en el contenedor
+            $(".loader").show();
+            $(window).on("load", function(){
+                $(".loader").fadeOut("slow");
+            });
+        });              
+    });    
+</script>
+{% endblock %}

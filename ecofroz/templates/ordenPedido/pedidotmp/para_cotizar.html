@@ -1,0 +1,221 @@
+{% extends 'base.html' %}
+<!-- {% load tz %} -->
+
+{% block extrahead %}
+<style>
+    body {font-family: Arial;}
+    
+    /* Style the tab */
+    .tab {
+      overflow: hidden;
+      border: 1px solid #ccc;
+      background-color: #f1f1f1;
+    }
+    
+    /* Style the buttons inside the tab */
+    .tab button {
+      background-color: inherit;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.3s;
+      font-size: 17px;
+    }
+    
+    /* Change background color of buttons on hover */
+    .tab button:hover {
+      background-color: #ddd;
+    }
+    
+    /* Create an active/current tablink class */
+    .tab button.active {
+      background-color: #ccc;
+    }
+    
+    /* Style the tab content */
+    .tabcontent {
+      display: none;
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      border-top: none;
+    }
+    
+    /* Style the close button */
+    .topright {
+      float: right;
+      cursor: pointer;
+      font-size: 28px;
+    }
+    
+    .topright:hover {color: red;}
+  </style>
+{% endblock %}
+
+{% block content %}
+
+  <div class="container" style="margin-top: 25px;">
+    <div class="row">
+      <div class="col-md 12 search">
+        <form class="form-inline my-2 my-lg-0" method="GET">
+          <input class="form-control mr-sm-2" type="text" placeholder="N° Pedido, Descripción" name="buscar" {% if busqueda %} value="{{ busqueda }}" {% endif %}>
+          <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+          <a class="btn btn-secondary my-2 my-sm-0" style="margin-left: 10px;" href="{% url 'ordenpedido:cotiza_pedidos' %}"></button>Limpiar</a>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  {% if form %}
+  <div class="tab" style="margin-top: 25px;">
+    <button class="tablinks" onclick="openTab(event, 'PCotizar')" id="defaultOpen">Ordenes Para Cotizar</button>
+    <button class="tablinks" onclick="openTab(event, 'Cotizadas')">Ordenes Cotizadas</button>
+  </div>
+  {% else %}
+  <div class="tab" style="margin-top: 25px;">
+    <button class="tablinks" onclick="openTab(event, 'Cotizadas')" id="defaultOpen">Ordenes Cotizadas</button>
+    <button class="tablinks" onclick="openTab(event, 'PCotizar')" >Ordenes Para Cotizar</button>
+  </div>
+  {% endif %}
+
+  <div id="PCotizar" class="tabcontent">
+    <div>
+      <table class="table table-dark table-sm">
+        <!-- <h5>Ordenes Para Cotizar</h5> -->
+        {% if form %}
+          <thead>
+            <tr>
+              <th scope="col">Pedido</th>
+              <th scope="col">Usuario</th>
+              <th scope="col">Departamento</th>
+              <th scope="col">Fecha Aprobación</th>
+              <th scope="col">Tipo Activo</th>
+              <th scope="col">Descripción</th>
+              <th scope="col">Justificación/Observaciones</th>
+              <th scope="col">Opciones</th>
+        
+            </tr>
+          </thead>
+          <tbody>
+            {% for pedido in form %}
+            <tr class="table-active">
+              <td>{{ pedido.numpedido.numpedido }}</td>
+              <td>{{ pedido.numpedido.usuario_solicita.first_name }} {{ pedido.numpedido.usuario_solicita.last_name }}</td>
+              <td>{{ pedido.numpedido.departamento }}</td>
+             
+              <td>{{ pedido.numpedido.fchaprueba|date:'Y-m-d' }}</td>
+              <td>{{ pedido.numpedido.tipoactivo }}</td>
+              <td>{{ pedido.descripcion }}</td>
+              <td>{{ pedido.numpedido.justificacion_compra }}</td>
+
+              {% if perms.ordenPedido.add_cotizapedido %}
+                <td style="text-align:right">
+                  {% if pedido.numpedido.estado_responde_precotiza == True %}
+                  <a href="{% url 'ordenpedido:valida_cotizacion' pedido.numpedido.numpedido %}" class="btn btn-success glyphicon glyphicon-share" title="Pre Cotización con Respuesta"></a>
+                  {% else %}
+                  <a href="{% url 'ordenpedido:valida_cotizacion' pedido.numpedido.numpedido %}" class="btn btn-warning glyphicon glyphicon-share" title="Pre Cotizar"></a>
+                  {% endif %}
+                <a href="{% url 'ordenpedido:cotizar_orden' pedido.numpedido.numpedido %}" class="btn btn-primary glyphicon glyphicon-tags" title="Cargar Cotizaciones"></a>
+              </td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </tbody>
+          {% else %}
+            <div class="alert-danger" role="alert">
+              <h3 style="text-align: center;">No Hay Ordenes Para Aprobar</h3>
+            </div>
+          {% endif %}
+      </table>
+    </div>  
+  </div>
+
+  <div id="Cotizadas" class="tabcontent">
+    <div>
+      <table class="table table-warning table-striped table-sm">
+        <!-- <h5>Ordenes Cotizadas</h5> -->
+        <thead style="text-align: left;">
+          
+            <th>Pedido</th>
+            <th>Solicita</th>
+            <th>Departamento</th>
+            <th>Tipo Activo</th>
+            <th>Descripción</th>
+            <th>Fecha Cotiza</th>
+            <th>Analista</th>
+            <th>Selección Gerente Area</th>
+            <th>Est. Aprueba Administrativa</th>
+            <th>Ver</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for aprobado in form2 %}
+          <tr style="cursor:pointer" data-href="" style="cursor: pointer;" title="Fecha Solicita:&nbsp;{{ aprobado.numpedido.fchsolicita|date:'d-M-Y' }}&#10;Fecha Aprobación Gerente Area:&nbsp;{{ aprobado.numpedido.fchaprueba|date:'d-M-Y'}}&#10;Fecha Cotización:&nbsp;{{ aprobado.numpedido.fchcotiza|date:'d-M-Y'}}&#10;Fecha Selecciona Cotización Gerente Área:&nbsp;{{ aprobado.numpedido.fchselectcotiza|date:'d-M-Y'|default:'--'}}&#10;Fecha Aprobación Gerencia Administrativa:&nbsp;{{ aprobado.numpedido.fchgenerac|date:'d-M-Y'|default:'--'}}  " > 
+            <td>{{ aprobado.numpedido.numpedido }}</td>
+            <td>{{ aprobado.numpedido.usuario_solicita.first_name }} {{ aprobado.numpedido.usuario_solicita.last_name }}</td>
+            <td>{{ aprobado.numpedido.departamento }}</td>
+            <td>{{ aprobado.numpedido.tipoactivo }}</td>
+            <td>{{ aprobado.descripcion }}</td>
+            <td>{{ aprobado.numpedido.fchcotiza|date:'Y-m-d' }}</td>
+            <td>{{ aprobado.numpedido.usuario_cotiza }}</td>
+            {% if aprobado.numpedido.select_cotiza == True %}
+              <td>Cotización Seleccionada</td>
+            {% else %}
+              <td>Pendiente</td>
+            {% endif %}
+            {% if aprobado.numpedido.genera_compra == 1 %}
+              <td>Aprobado</td>
+            {% elif aprobado.numpedido.genera_compra == 0 %}
+              <td>Rechazado</td>
+            {% else %}
+              <td>Pendiente</td>
+            {% endif %}
+            <td><a class="btn btn-warning glyphicon glyphicon-eye-open" href="{% url 'ordenpedido:look_cotiza' aprobado.numpedido.numpedido %}"></a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      </div>
+  </div>
+
+  <div class="pagination">
+    <span class="step-links">
+        {% if form2.has_previous %}
+            <a href="?page=1">&laquo; inicio</a>
+            <a href="?page={{ form2.previous_page_number }}">previo</a>
+        {% endif %}
+  
+        <span class="current">
+            Page {{ form2.number }} of {{ form2.paginator.num_pages }}.
+        </span>
+  
+        {% if form2.has_next %}
+            <a href="?page={{ form2.next_page_number }}">próximo</a>
+            <a href="?page={{ form2.paginator.num_pages }}">último &raquo;</a>
+        {% endif %}
+    </span>
+  </div>
+
+
+
+
+  <script>
+  function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
+  }
+
+  // Get the element with id="defaultOpen" and click on it
+  document.getElementById("defaultOpen").click();
+  </script>
+{% endblock %}

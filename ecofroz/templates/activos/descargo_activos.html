@@ -1,0 +1,499 @@
+
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+
+<!-- {% load tz %} -->
+{% block extrahead %}
+
+<meta charset="utf-8">
+
+  <style>
+    body {font-family: Arial;}
+    
+    /* Style the tab */
+    .tab {
+      overflow: hidden;
+      border: 1px solid #ccc;
+      background-color: #f1f1f1;
+    }
+    
+    /* Style the buttons inside the tab */
+    .tab button {
+      background-color: inherit;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.3s;
+      font-size: 17px;
+    }
+    
+    /* Change background color of buttons on hover */
+    .tab button:hover {
+      background-color: #ddd;
+    }
+    
+    /* Create an active/current tablink class */
+    .tab button.active {
+      background-color: #ccc;
+    }
+    
+    /* Style the tab content */
+    .tabcontent {
+      display: none;
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      border-top: none;
+    }
+    
+    /* Style the close button */
+    .topright {
+      float: right;
+      cursor: pointer;
+      font-size: 28px;
+    }
+    
+    .topright:hover {color: red;}
+
+    #tabla-reporte{
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#tabla-reporte td, #tabla-reporte th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#tabla-reporte tr:hover {background-color: #ddd;}
+#tabla-reporte tr:hover {background-color: #ddd;}
+
+#tabla-reporte th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}
+
+.caja-input {
+ border-radius: 2px;
+ border:1px solid  rgb(195, 199, 201);
+ outline:none;
+
+}
+
+.select-cus {
+     background: transparent;
+     border: 1px solid rgb(195, 199, 201);
+     font-size: 14px;
+     height: 30px;
+     padding: 5px;
+     width: 250px;
+  }
+
+
+
+  </style>
+{% endblock %}
+
+{% block content %}
+<!-- <div class="container" style="margin: 25px auto;"> -->
+  <!-- <div class="row">
+    <div class="col-md 12 search">
+      <form class="form-inline my-2 my-lg-0" method="GET">
+        <input class="form-control mr-sm-2" type="text" placeholder="N° Pedido, Descripción" name="buscar">
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+      </form>
+    </div>
+  </div>
+  
+</div> -->
+
+<h5 style="margin-top: 25px;margin-left: 15px;">Descargo de Custodios y Entrega/ Recepción de Bienes</h5>
+
+
+<div class="tab" style="margin-top: 25px;">
+  <button class="tablinks" onclick="openTab(event, 'EnUso')" id="defaultOpen">Activos en Uso</button>
+ 
+  <button class="tablinks" onclick="openTab(event, 'Nuevos')">Activos Nuevos Entregados por Bodega</button>
+ 
+  
+</div>
+
+<div id="Nuevos" class="tabcontent">
+    <span onclick="this.parentElement.style.display='none'" class="topright">&times</span>
+    <div>
+<!-- <div class="container" style="margin: 5px auto;"> -->
+      <table class="table table-hover table-dark">
+        {% if entregado %}
+          <thead>
+            <tr>
+              <th scope="col">Pedido</th>
+              <th scope="col">Usuario</th>
+              <th scope="col">Departamento</th>
+              <th scope="col">Fecha Entrega Bodega</th>
+              <th scope="col">Tipo Activo</th>
+              <th scope="col">Código</th>
+              <th scope="col">Descripción</th>
+              <th scope="col">Opción</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for pedido in entregado %}
+            {% if pedido.numpedido.acta_entregada == True %}
+            <tr class="table-active" style="background-color: darkgray;">
+             {% else %} 
+             <tr class="table-active">
+            {% endif %}
+              
+             <td>{{ pedido.numpedido.numpedido }}</td>
+              <td>{{ pedido.numpedido.usuario_solicita.first_name }} {{ pedido.numpedido.usuario_solicita.last_name }}</td>
+              <td>{{ pedido.numpedido.departamento }}</td>
+              <td>{{ pedido.numpedido.fecha_entrega }}</td>
+              <td>{{ pedido.numpedido.tipoactivo }}</td>
+              <td>{{ pedido.numpedido.cod_activo }}</td>
+              <td>{{ pedido.descripcion }}</td>
+            
+              <td>
+                {% if pedido.numpedido.descargo_custodio == True %}
+                <a href="" class="btn btn-secondary glyphicon glyphicon-edit" title="Confirmar Custodio Final"></a>
+                {% else %}
+                <a href="{% url 'activos:descargo_custodio' pedido.numpedido.numpedido %}" class="btn btn-warning glyphicon glyphicon-edit" title="Confirmar Custodio Final"></a>
+                {% endif %}
+
+                {% if pedido.numpedido.descargo_custodio == True %}
+                <a href="{% url 'activos:acta_de_entrega_custodio' pedido.numpedido.numpedido %}" class="btn btn-success glyphicon glyphicon-file" title="Ver/Imprimir Acta de entrega de Activos" target="blank"></a>
+                {% else %} 
+                <a href="" class="btn btn-secondary glyphicon glyphicon-file" title="Ver/Imprimir Acta de entrega de Activos"></a>
+                {% endif %}
+
+                {% if pedido.numpedido.descargo_custodio == True %}
+                <a href="{% url 'activos:confirma_acta_recepcion_entregada' pedido.numpedido.numpedido %}" class="btn btn-primary glyphicon glyphicon-check" title="Acta Entregada"></a>
+                {% else %}
+                <a href="" class="btn btn-secondary glyphicon glyphicon-check" title="Acta Entregada"></a>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+          {% else %}
+            <div class="alert-danger" role="alert">
+              <h3 style="text-align: center;">No Hay Registros</h3>
+            </div>
+          {% endif %}
+      </table>
+    </div>  
+
+    <div class="pagination">
+      <span class="step-links">
+          {% if entregado.has_previous %}
+              <a href="?&page=1">&laquo; inicio</a>
+              <a href="?&page={{ entregado.previous_page_number }}">previo</a>
+          {% endif %}
+    
+          <span class="current">
+              Page {{ entregado.number }} of {{ entregado.paginator.num_pages }}.
+          </span>
+    
+          {% if entregado.has_next %}
+              <a href="?&page={{ entregado.next_page_number }}">próximo</a>
+              <a href="?&page={{ entregado.paginator.num_pages }}">último &raquo;</a>
+          {% endif %}
+      </span>
+    </div>
+
+
+
+  </div>
+
+
+  <div id="EnUso" class="tabcontent">
+    <span onclick="this.parentElement.style.display='none'" class="topright">&times</span>
+    <div>
+  <div class="container-fluid">
+    <div class="row" style="margin-top: 25px;">
+    <div class="col-8"> 
+      <form method="GET" id="form" >
+        
+        <ul class="opciones">
+          <input type="radio" id="xcodigo" name="seleccion" value="codigo" placeholder="Ingrese el código">
+        <label id="xcodigo">Por<u> Código de Activo</u>&nbsp;&nbsp;&nbsp;</label>{% render_field form2.activo_codigo class="caja-input" %}<button class="button btn-primary" type="submit" id="busca_activos" name="busca_activos">Buscar</button><br>
+       
+        <input type="radio" id="xcustodio" name="seleccion" value="custodio" placeholder="Ingrese el custodio">
+    <label for="xcustodio">Por <u>Custodio</u>&nbsp;</label>
+    <select name="nombre_custodio" id="nombre_custodio" class="select-cus" onchange="form.submit();">
+      <option value="0" selected>----</option>
+      {% for i in personal %}
+              <option value="{{ i.last_name }}">{{ i.last_name }}&nbsp;{{ i.first_name }}</option>
+      {% endfor %}
+    </select>
+    </div>
+                      
+    </form>
+  
+  
+
+
+    <div class="col">
+    {% if nombre %}
+          <a class="btn btn-outline-primary" style="margin-left: 163px;" href="{% url 'activos:entrega_activos_rep' nombre %}" target="_blank" ><b>Imprimir Guía Consolidada</b></a>
+    {% endif %}    
+    </div>
+        
+        <!-- <div class="row">
+          <a class="btn btn-primary" style="margin-left: 125px;" href="{% url 'activos:busqueda_activos_mantenimiento' %}">Activos en Mantenimiento</a>
+        </div> -->
+      
+
+  
+  </div>
+
+  
+  
+  <br>
+  <div class="container-fluid">
+    
+  <table id="tabla-reporte">  
+    <thead>
+      <tr>
+          <th scope="col"><strong>No</strong></th>
+          <th scope="col"><strong>Codigo</strong></th>
+          
+          <th scope="col"><strong>Ubicación</strong></th>
+          <th scope="col"><strong>Departamento</strong></th>
+          <th scope="col"><strong>Sector</strong></th>
+          <th scope="col"><strong>Descripción</strong></th>
+          <th scope="col"><strong>Tipo</strong></th>
+          <th scope="col"><strong>Marca</strong></th>
+          <!-- <th scope="col"><strong>Modelo</strong></th> -->
+          
+          <th scope="col"><strong>Custodio</strong></th>
+          <th scope="col" ><strong>Grabado</strong></th>
+          <th scope="col"><strong>Opciones</strong></th>
+      </tr>
+    </thead>
+  <tbody>
+    {% for activo in form  %} 
+    
+      <tr>
+        <!-- {% if perms.activos.change_desc_activo %}data-href="{% url 'activos:editar_activos'  activo.desc_activo_codigo.id %}" style="cursor: pointer;"{% endif %}>   -->
+        <td>{{ forloop.counter}}</td>
+        <td>{{ activo.desc_activo_codigo.activo_codigo }}</td>
+        <!-- <td>{{ activo.desc_activo_codigo.cod_activo_padre | default:"--" }}</td> -->
+        <td>{{ activo.desc_activo_codigo.activo_ubica}}</td>
+        <td>{{ activo.desc_activo_codigo.activo_depar | default:"--" }}</td>
+        <td>{{ activo.desc_activo_codigo.activo_area | default:"--" }}</td>
+        <td>{{ activo.desc_activo_codigo.activo_descripcion| default:"--" }}</td>
+        <td>{{ activo.desc_activo_codigo.activo_tipo | default:"--" }}</td>
+        <td>{{ activo.desc_activo_marca | default:"--" }}</td>
+        <!-- <td>{{ activo.desc_activo_grabado | default:"--" }}</td> -->
+        <td>{{ activo.desc_activo_custodio | default:"--" }}</td>
+        <td>{{ activo.desc_activo_codigo.grabado }}</td>
+        <td style="align-content: center;">
+           <a class="btn btn-warning glyphicon glyphicon-circle-arrow-right" title="Cambio de Custodio" href="{% url 'activos:descargo_custodiold' activo.desc_activo_codigo.id %}"></a>
+          
+          
+          <!-- <a href="{% url 'activos:registrosalidaind' activo.desc_activo_codigo.activo_codigo %}" class="btn btn-success">Solicitar </a> -->
+        </td>
+      </tr>
+    </div>
+  
+      <div class="modal fade" id="exampleModalAprob" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel" style="color: black;">Destino Final del Activo</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form class="modal-body" action="{% url 'activos:dar_baja' activo.desc_activo_codigo.id activo.desc_activo_codigo.activo_estado %}" method="GET">
+              <div class="form-group" style="margin-left: 25px;"> 
+              <div>
+                  <input type="radio" id="baja" name="destino" value="baja"
+                         checked>
+                  <label for="baja">Dar de Baja</label>
+                </div>
+                
+                <div>
+                  <input type="radio" id="donado" name="destino" value="donado">
+                  <label for="donado">Donación</label>
+                </div>
+                
+                <div>
+                  <input type="radio" id="venta" name="destino" value="venta">
+                  <label for="venta">Venta</label>
+                </div>
+              </div>
+              
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" name="guardar-destino" class="btn btn-primary" id="enviar" name="enviar">Guardar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+  
+  
+      
+  {% endfor %}
+  
+  </tbody>
+  
+  </table>
+  
+  
+  <div class="pagination">
+    <span class="step-links">
+        {% if form.has_previous %}
+            <a href="?buscar={{ query }}&activo_tipo={{ tipo }}&activo_ubica={{ ubicacion }}&activo_grupo={{ grupo }}&activo_depar={{ departamento }}&activo_area={{ area }}&page=1">&laquo; inicio</a>
+            <a href="?buscar={{ query }}&activo_tipo={{ tipo }}&activo_ubica={{ ubicacion }}&activo_grupo={{ grupo }}&activo_depar={{ departamento }}&activo_area={{ area }}&page={{ form.previous_page_number }}">previo</a>
+        {% endif %}
+  
+        <span class="current">
+            Page {{ form.number }} of {{ form.paginator.num_pages }}.
+        </span>
+  
+        {% if form.has_next %}
+            <a href="?buscar={{ query }}&activo_tipo={{ tipo }}&activo_ubica={{ ubicacion }}&activo_grupo={{ grupo }}&activo_depar={{ departamento }}&activo_area={{ area }}&page={{ form.next_page_number }}">próximo</a>
+            <a href="?buscar={{ query }}&activo_tipo={{ tipo }}&activo_ubica={{ ubicacion }}&activo_grupo={{ grupo }}&activo_depar={{ departamento }}&activo_area={{ area }}&page={{ form.paginator.num_pages }}">último &raquo;</a>
+        {% endif %}
+        
+    </span>
+  </div>
+  </div>
+  
+  
+  
+  {% endblock content %}
+  
+  {% block extrajs %}
+  
+  <script>
+  
+  $("#id_activo_codigo").hide();
+  $("#busca_activos").hide();
+  $("#nombre_custodio").hide();
+  
+  $("#xcodigo").on('click', xCodigo)
+  $("#xcustodio").on('click', xCustodio)
+  
+  
+  function xCodigo() {
+  $("#id_activo_codigo").show(); 
+  document.getElementById("id_activo_codigo").focus();
+  $("#busca_activos").show();
+  $("#id_activo_tipo").hide().val("");
+  $("#nombre_custodio").hide().val(""); 
+  }
+  
+  function xCustodio() {
+  $("#id_activo_codigo").hide().val("");
+  $("#busca_activos").hide();
+  $("#nombre_custodio").show();
+
+  }
+  
+  function xTipo() {
+  $("#id_desc_activo_marca").hide();
+  $("#busca_marca").hide();
+  $("#id_activo_tipo").show();
+  $("#id_activo_grupo").hide().val("");
+  $("#id_activo_ubica").hide().val("");
+  $("#id_activo_depar").hide().val("");
+  $("#id_pestanias_seguros").hide().val("");
+  $("#id_activo_codigo").hide().val("");
+  $("#busca_activos").hide().val("");
+  $("#id_activo_area").hide().val("");
+  $("#id_poliza_seguros").hide().val("");
+  
+  }
+  
+  function xDep() {
+  $("#id_activo_depar").show();
+  $("#id_activo_tipo").hide().val("");
+  $("#id_activo_grupo").hide().val("");
+  $("#id_activo_ubica").hide().val(""); 
+  $("#id_activo_codigo").hide().val("");
+  $("#busca_activos").hide().val("");
+  $("#id_activo_area").hide().val("");
+  $("#id_poliza_seguros").hide().val("");
+  $("#id_pestanias_seguros").hide().val("");
+  
+  }
+  
+  function xSec() {
+  $("#id_activo_area").show();
+  $("#id_activo_tipo").hide().val("");
+  $("#id_activo_grupo").hide().val("");
+  $("#id_activo_ubica").hide().val(""); 
+  $("#id_activo_codigo").hide().val("");
+  $("#busca_activos").hide().val("");
+  $("#id_activo_depar").hide().val("");
+  $("#id_poliza_seguros").hide().val("");
+  $("#id_pestanias_seguros").hide().val("");
+  $("#id_desc_activo_marca").hide();
+  $("#busca_marca").hide();
+  
+  
+  }
+  
+  function xSeg() {
+  $("#id_activo_tipo").hide().val("");
+  $("#id_activo_grupo").hide().val("");
+  $("#id_activo_ubica").hide().val(""); 
+  $("#id_activo_codigo").hide().val("");
+  $("#busca_activos").hide().val("");
+  $("#id_activo_depar").hide().val("");
+  $("#id_activo_area").hide().val("");
+  $("#id_pestanias_seguros").show();
+  $("#id_poliza_seguros").hide().val("");
+  
+  }
+  
+  </script>
+  
+  
+  
+  <script>
+    jQuery(document).ready(function($){
+      $('*[data-href]').on('click', function(){
+        window.location = $(this).data("href");
+      });
+    });
+    // $("#container").on('click-row.bs.table', function(e, row, $element){
+    //   window.location = $(this).data('url');
+    // });
+  </script>
+  
+  
+<script>
+  $(document).on('click', '#rech', function(){
+    var filaactual = $(this).closest("tr"); // obtiene la fila actual
+    var id = filaactual.find("td:eq(0)").text(); //obtener el valor del primer td de la fila actual
+    $('#pedido').val(id);
+  });
+
+  function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
+  }
+
+  // Get the element with id="defaultOpen" and click on it
+  document.getElementById("defaultOpen").click();
+</script>
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+      <div class="col-md 12 search">
+        <form class="form-inline my-2 my-lg-0" method="GET">
+            {% csrf_token %}
+                <label for="{{ form2.activo_codigo.label }}">{{ form2.activo_codigo.label }}</label>  
+               {{ form2.activo_codigo }}
+               <label for="{{ form2.activo_tipo.label }}">{{ form2.activo_tipo.label }}</label>
+               {{ form2.activo_tipo }} 
+               <label for="{{ form2.activo_ubica.label }}">{{ form2.activo_ubica.label }}</label> 
+               {{ form2.activo_ubica }}
+               <br>
+               <br>
+               <label for="{{ form2.activo_depar.label }}">{{ form2.activo_depar.label }}</label>
+               {{ form2.activo_depar }}
+               <label for="{{ form2.activo_area.label }}">{{ form2.activo_area.label }}</label> 
+               {{ form2.activo_area }}
+
+          <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <br>
+  <br>
+
+  <style>
+      #heading { color: #1192B2; }
+    </style>
+  
+  {% if var %}
+  <h3 id="heading">Número de registros encontrados: {{ var }} </h3>
+  
+  {% else %}
+  <h3>No hay registros</h3>
+  
+  {% endif %}
+<br>
+
+
+<!-- <form method="GET">
+{% csrf_token %} -->
+<!-- {{ form2.as_p }}  
+{{ form.as_p }} -->
+
+      <table class="table table-hover">
+                <thead>
+                  <tr>
+                      <td scope="col"><strong>No</strong></td>
+                      <td scope="col"><strong>Codigo</strong></td>
+                      <td scope="col"><strong>Parte de</strong></td>
+                      <td scope="col"><strong>Grupo</strong></td>
+                      <td scope="col"><strong>Tipo Activo</strong></td>
+                      <td scope="col"><strong>Ubicación</strong></td>
+                      <td scope="col"><strong>Departamento</strong></td>
+                      <td scope="col"><strong>Area</strong></td>
+                      <td scope="col"><strong>Descripción</strong></td>
+                      <td scope="col"><strong>Asegurado</strong></td>
+                      
+                  </tr>
+                </thead>
+              <tbody>
+                {% if form %}
+                {% for activo in form  %} 
+                  <tr class="table-active"> 
+                    <td>{{ activo.desc_activo_codigo.id }}</td>
+                    <td>{{ activo.desc_activo_codigo.activo_codigo }}</td>
+                    <td>{{ activo.desc_activo_codigo.cod_activo_padre }}</td>
+                    <td>{{ activo.desc_activo_codigo.activo_grupo }}</td>
+                    <td>{{ activo.desc_activo_codigo.activo_tipo }}</td>
+                    <td>{{ activo.desc_activo_codigo.activo_ubica}}</td>
+                    <td>{{ activo.desc_activo_codigo.activo_depar }}</td>
+                    <td>{{ activo.desc_activo_codigo.activo_area }}</td>
+                    <td>{{ activo.desc_activo_codigo.activo_descripcion }}</td>
+                    <td>{{ activo.desc_activo_asegurado }}</td>
+                  </tr>
+              
+               
+              {% endfor %}
+              
+              {% else %}
+              <h1>No hay registros</h1>
+              
+              {% endif %}
+              </tbody>
+              
+              </table>
+              
+              <div class="pagination">
+                <span class="step-links">
+                    {% if form.has_previous %}
+                        <a href="?page=1">&laquo; inicio</a>
+                        <a href="?page={{ form.previous_page_number }}">previo</a>
+                    {% endif %}
+              
+                    <span class="current">
+                        Page {{ form.number }} of {{ form.paginator.num_pages }}.
+                    </span>
+              
+                    {% if form.has_next %}
+                        <a href="?page={{ form.next_page_number }}">próximo</a>
+                        <a href="?page={{ form.paginator.num_pages }}">último &raquo;</a>
+                    {% endif %}
+                </span>
+              </div>
+            </div>
+          
+              {% endblock content %}

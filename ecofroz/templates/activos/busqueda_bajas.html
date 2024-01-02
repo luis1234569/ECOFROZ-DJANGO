@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+
+{% block extrahead %}
+
+<style>
+
+table {
+  border-collapse: collapse;
+  width: 100%;  
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+
+th {
+  background-color: #4CAF50;
+  color: white;
+}
+
+
+#tabla-reporte{
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#tabla-reporte td, #tabla-reporte th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#tabla-reporte tr:hover {background-color: #ddd;}
+#tabla-reporte tr:hover {background-color: #ddd;}
+
+#tabla-reporte th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color:#808080;
+  color: white;
+}
+
+</style>
+
+
+{% endblock %}
+
+
+
+
+{% block content %}
+
+
+<div class="container-fluid">
+  <div class="row" style="margin-top: 25px;">
+    <div class="col-md 18 search">
+      <form class="form-inline my-2 my-lg-0" method="GET">
+          <input class="form-control mr-sm-2" type="text" size="50;" placeholder="Código, Descripción, Custodio, Serie, Cod MBA..." name="buscar">
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+      </form>
+    </div>
+  
+    </div>
+  </div>
+</div>
+<br>
+<div class="container-fluid">
+<table id="tabla-reporte">
+      <tr>
+        <th scope="col"><strong>No</strong></th>
+        <th scope="col"><strong>Codigo</strong></th>
+        <th scope="col"><strong>Parte de</strong></th>
+        <th scope="col"><strong>Ubicación</strong></th>
+        <th scope="col"><strong>Sector</strong></th>
+        <!-- <th scope="col"><strong>Sub Sector</strong></th> -->
+        <th scope="col"><strong>Descripción</strong></th>
+        <th scope="col"><strong>Tipo</strong></th>
+        <th scope="col"><strong>Marca</strong></th>
+        <th scope="col"><strong>Modelo</strong></th>
+        <th scope="col"><strong>Valor Reposi</strong></th>
+        <th scope="col"><strong>Estado</strong></th>
+        <th scope="col"><strong>Fecha Baja,Venta,Dona</strong></th>
+        <th scope="col"><strong>Opción<strong></th>
+    </tr>
+  </thead>
+<tbody>
+  {% if form %}
+  {% for activo in form  %} 
+  
+    <tr>
+      <!-- {% if perms.activos.change_desc_activo %}data-href="{% url 'activos:editar_activos'  activo.desc_activo_codigo.id %}" style="cursor: pointer;"{% endif %}>   -->
+      <td>{{ forloop.counter0|add:form.start_index }}</td>
+      <td>{{ activo.desc_activo_codigo.activo_codigo }}</td>
+      <td>{{ activo.desc_activo_codigo.cod_activo_padre | default:"--" }}</td>
+      <td>{{ activo.desc_activo_codigo.activo_ubica}}</td>
+      <td>{{ activo.desc_activo_codigo.activo_area | default:"--" }}</td>
+      <!-- <td>{{ activo.desc_activo_codigo.activo_subsec | default:"--" }}</td> -->
+      <td>{{ activo.desc_activo_codigo.activo_descripcion| default:"--" }}</td>
+      <td>{{ activo.desc_activo_codigo.activo_tipo | default:"--" }}</td>
+      <td>{{ activo.desc_activo_marca | default:"--" }}</td>
+      <td>{{ activo.desc_activo_modelo | default:"--" }}</td>
+      <td>{{ activo.desc_activo_codigo.activo_valor| default:"" }}</td>
+      <td>{{ activo.desc_activo_codigo.activo_estado }}</td>
+      <td>{{ activo.fecha_baja_dona_vende | default:"--" }}</td>
+      
+      <!-- <td><a class=" btn btn-warning glyphicon glyphicon-map-marker" title="Cambia Ubicación Activo" href="{% url 'activos:mover_activos' activo.desc_activo_codigo.id  %}"></a> -->
+    
+        <td><a class="btn btn-primary glyphicon glyphicon-eye-open" href="{% url 'activos:ver_detalle_bajas' activo.desc_activo_codigo.activo_codigo %}"  title="Ver detalles baja, donación,venta"></a>
+      </td>
+      </tr>
+
+  </div>
+
+    <div class="modal fade" id="exampleModalAprob" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel" style="color: black;">Detino Final del Activo</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form class="modal-body" action="{% url 'activos:dar_baja' activo.desc_activo_codigo.id activo.desc_activo_codigo.activo_estado  %}" method="GET">
+            <div class="form-group" style="margin-left: 25px;"> 
+            <div>
+                <input type="radio" id="baja" name="destino" value="baja"
+                       checked>
+                <label for="baja">Dar de Baja</label>
+              </div>
+              
+              <div>
+                <input type="radio" id="donado" name="destino" value="donado">
+                <label for="donado">Donación</label>
+              </div>
+              
+              <div>
+                <input type="radio" id="venta" name="destino" value="venta">
+                <label for="venta">Venta</label>
+              </div>
+            </div>
+            
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" name="guardar-detino" class="btn btn-primary" id="enviar" name="enviar">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+    
+{% endfor %}
+
+{% else %}
+<h1>No hay registros</h1>
+
+{% endif %}
+</tbody>
+
+</table>
+
+
+<div class="pagination">
+  <span class="step-links">
+      {% if form.has_previous %}
+          <a href="?activo_tipo={{ tipo }}&activo_ubica={{ ubicacion }}&activo_grupo={{ grupo }}&activo_depar={{ departamento }}&activo_area={{ area }}&page=1">&laquo; inicio</a>
+          <a href="?activo_tipo={{ tipo }}&activo_ubica={{ ubicacion }}&activo_grupo={{ grupo }}&activo_depar={{ departamento }}&activo_area={{ area }}&page={{ form.previous_page_number }}">previo</a>
+      {% endif %}
+
+      <span class="current">
+          Page {{ form.number }} of {{ form.paginator.num_pages }}.
+      </span>
+
+      {% if form.has_next %}
+          <a href="?activo_tipo={{ tipo }}&activo_ubica={{ ubicacion }}&activo_grupo={{ grupo }}&activo_depar={{ departamento }}&activo_area={{ area }}&page={{ form.next_page_number }}">próximo</a>
+          <a href="?activo_tipo={{ tipo }}&activo_ubica={{ ubicacion }}&activo_grupo={{ grupo }}&activo_depar={{ departamento }}&activo_area={{ area }}&page={{ form.paginator.num_pages }}">último &raquo;</a>
+      {% endif %}
+  </span>
+</div>
+</div>
+
+
+
+
+
+
+{% endblock content %}
+
+{% block extrajs %}
+<script>
+  jQuery(document).ready(function($){
+    $('*[data-href]').on('click', function(){
+      window.location = $(this).data("href");
+    });
+  });
+  // $("#container").on('click-row.bs.table', function(e, row, $element){
+  //   window.location = $(this).data('url');
+  // });
+</script>
+{% endblock %}

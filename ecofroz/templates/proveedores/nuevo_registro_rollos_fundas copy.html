@@ -1,0 +1,1946 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="jumbotron container" style="width: 85%; margin-top: 25px;">
+  <h2 class="display-5">Registro Proveedores</h2>
+  <br>
+  <h3 class="display-5">2. Ingrese la información</h2>
+  <br>
+
+<form action="{% url 'proveedores:nuevo_registro' %}"method="POST" enctype="multipart/form-data">
+{% csrf_token %}
+  <div class="form-row">  
+      
+      <div class="form-group col-md-6" >
+        <label for="{{ form.respondio_encuesta.label }}">{{ form.respondio_encuesta.label }}</label> 
+        {{ form.respondio_encuesta }}
+        </div> 
+  
+
+
+      <div class="form-group col-md-12" >
+               <label for="{{ form.nombre_empresa.label }}">{{ form.nombre_empresa.label }}</label>  
+               {{ form.nombre_empresa }} 
+      </div>
+      <div class="form-group col-md-6" >
+               <label for="{{ form.direccion_matriz.label }}">{{ form.direccion_matriz.label }}</label> 
+                {{ form.direccion_matriz }}
+      </div> 
+      <div class="form-group col-md-6" >
+              <label for="{{ form.horario_trabajo.label }}">{{ form.horario_trabajo.label }}</label> 
+                {{ form.horario_trabajo }}
+      </div>      
+      <div class="form-group col-md-3" >
+              <label for="{{ form.representante_legal.label }}">{{ form.representante_legal.label }}</label> 
+                {{ form.representante_legal }}
+              
+      </div>       
+      <div class="form-group col-md-3" >
+        <label for="{{ form.ruc.label }}">{{ form.ruc.label }}</label> 
+        {{ form.ruc }}
+      </div> 
+
+      <div class="form-group col-md-3" >
+        <label for="{{ form.telefono.label }}">{{ form.telefono.label }}</label> 
+        {{ form.telefono }}
+      
+      </div> 
+
+      <div class="form-group col-md-3" >
+        <label for="{{ form.celular.label }}">{{ form.celular.label }}</label> 
+        {{ form.celular }}
+        
+      </div> 
+
+      <div class="form-group col-md-6" >
+        <label for="{{ form.nombre_contacto_ecofroz.label }}">{{ form.nombre_contacto_ecofroz.label }}</label> 
+        {{ form.nombre_contacto_ecofroz }}
+        
+    </div> 
+  
+    <div class="form-group col-md-3" >
+          <label for="{{ form.calificacion.label }}">{{ form.calificacion.label }}</label> 
+          {{ form.calificacion }}
+          <br>
+    </div> 
+
+    <div class="form-group col-md-3" >
+      <label for="{{ form.estado.label }}">{{ form.estado.label }}</label> 
+      {{ form.estado }}
+      <br>
+</div> 
+
+
+    <div class="form-row"> 
+    <div class="form-group col-md-12" >
+        <label for="{{ form2.carta_presentacion.label }}">{{ form2.carta_presentacion.label }}</label> 
+        {{ form2.carta_presentacion }}
+    </div> 
+
+    <div class="form-group col-md-4" >
+      <label for="{{ form2.categoria_proveedor.label }}">{{ form2.categoria_proveedor.label }}</label> 
+      {{ form2.categoria_proveedor }}
+  </div>
+
+    <div class="form-group col-md-8" >
+      <label for="{{ form2.giro_negocio.label }}">{{ form2.giro_negocio.label }}</label> 
+      {{ form2.giro_negocio }}
+  </div> 
+
+    <div class="form-group col-md-3" >
+      <label for="{{ form2.monto_ventas_2018.label }}">{{ form2.monto_ventas_2018.label }}</label> 
+      {{ form2.monto_ventas_2018 }}
+  </div> 
+
+  <div class="form-group col-md-2" >
+    <label for="{{ form2.antiguedad.label }}">{{ form2.antiguedad.label }}</label> 
+    {{ form2.antiguedad }}
+</div> 
+
+<div class="form-group col-md-3" >
+  <label for="{{ form2.num_trabajadores_fijos.label }}">{{ form2.num_trabajadores_fijos.label }}</label> 
+  {{ form2.num_trabajadores_fijos }}
+</div> 
+
+<div class="form-group col-md-2" >
+  <label for="{{ form2.num_clientes.label }}">{{ form2.num_clientes.label }}</label> 
+  {{ form2.num_clientes }}
+</div> 
+
+<div class="form-group col-md-2" >
+  <label for="{{ form2.num_proveedores.label }}">{{ form2.num_proveedores.label }}</label> 
+  {{ form2.num_proveedores }}
+</div> 
+
+<div class="form-group col-md-8" >
+  <label for="{{ form2.valores_empresa.label }}">{{ form2.valores_empresa.label }}</label> 
+  {{ form2.valores_empresa }}
+</div> 
+
+<div class="form-group col-md-4" >
+  <label for="{{ form2.fake.label }}"></label> 
+ 
+</div> 
+
+<div class="form-group col-md-3" >
+  <label for="{{ form2.tieneweb.label }}">{{ form2.tieneweb.label }}</label> 
+  {{ form2.tieneweb }}
+</div> 
+
+<div class="form-group col-md-6" >
+  <label for="{{ form2.web.label }}">{{ form2.web.label }}</label> 
+  {{ form2.web }}
+</div> 
+
+<div class="form-group col-md-3" >
+  <label for="{{ form2.actividad.label }}">{{ form2.actividad.label }}</label> 
+  {{ form2.actividad }}
+</div> 
+
+<div class="form-group col-md-3" >
+  <label for="{{ form2.empresa_tipo.label }}">{{ form2.empresa_tipo.label }}</label> 
+  {{ form2.empresa_tipo }}
+</div>
+
+<div class="form-group col-md-3" >
+  <label for="{{ form2.anios_como_proveedor.label }}">{{ form2.anios_como_proveedor.label }}</label> 
+  {{ form2.anios_como_proveedor }}
+</div> 
+
+<div class="form-group col-md-3" >
+  <label for="{{ form2.ventas_ecofroz_2018.label }}">{{ form2.ventas_ecofroz_2018.label }}</label> 
+  {{ form2.ventas_ecofroz_2018 }}
+</div> 
+
+
+<div class="form-group col-md-8" >
+  <label for="{{ form2.otra_actividad.label }}">{{ form2.otra_actividad.label }}</label> 
+  {{ form2.otra_actividad }}
+</div> 
+
+ 
+
+
+<div class="form-group col-md-8" >
+  <label for="{{ form2.ruc_adjunto.label }}">{{ form2.ruc_adjunto.label }}</label> 
+  {{ form2.ruc_adjunto }}
+</div> 
+
+<div class="form-group col-md-8" >
+  <label for="{{ form2.referencia_bancaria.label }}">{{ form2.referencia_bancaria.label }}</label> 
+  {{ form2.referencia_bancaria }}
+</div> 
+
+<div class="form-group col-md-8" >
+  <label for="{{ form2.certificado_iess.label }}">{{ form2.certificado_iess.label }}</label> 
+  {{ form2.certificado_iess }}
+</div> 
+
+<div class="form-group col-md-8" >
+  <label for="{{ form2.servicio_basico.label }}">{{ form2.servicio_basico.label }}</label> 
+  {{ form2.servicio_basico }}
+</div> 
+
+
+<div class="form-group col-md-8" >
+  <label for="{{ form2.ref_comercial_prove1.label }}">{{ form2.ref_comercial_prove1.label }}</label> 
+  {{ form2.ref_comercial_prove1 }}
+</div> 
+
+<div class="form-group col-md-8" >
+  <label for="{{ form2.ref_comercial_prove2.label }}">{{ form2.ref_comercial_prove2.label }}</label> 
+  {{ form2.ref_comercial_prove2 }}
+</div> 
+
+<div class="form-group col-md-8" >
+  <label for="{{ form2.ref_comercial_prove3.label }}">{{ form2.ref_comercial_prove3.label }}</label> 
+  {{ form2.ref_comercial_prove3 }}
+</div> 
+
+<div class="form-group col-md-8" >
+  <label for="{{ form2.ref_comercial_cliente1.label }}">{{ form2.ref_comercial_cliente1.label }}</label> 
+  {{ form2.ref_comercial_cliente1 }}
+</div> 
+
+<div class="form-group col-md-8" >
+  <label for="{{ form2.ref_comercial_cliente2.label }}">{{ form2.ref_comercial_cliente2.label }}</label> 
+  {{ form2.ref_comercial_cliente2 }}
+</div> 
+
+<div class="form-group col-md-8" >
+  <label for="{{ form2.ref_comercial_cliente3.label }}">{{ form2.ref_comercial_cliente3.label }}</label> 
+  {{ form2.ref_comercial_cliente3 }}
+</div> 
+
+<div class="form-group col-md-8" >
+  <label for="{{ form2.rep_legal.label }}">{{ form2.rep_legal.label }}</label> 
+  {{ form2.rep_legal }}
+</div> 
+
+<div class="form-group col-md-12" >
+  <label for="{{ form2.accionistas.label }}">{{ form2.accionistas.label }}</label> 
+  {{ form2.accionistas }}
+</div> 
+
+<div class="form-group col-md-2" >
+  <label for="{{ form2.subcontrata.label }}">{{ form2.subcontrata.label }}</label> 
+  {{ form2.subcontrata }}
+</div> 
+
+<div class="form-group col-md-8" >
+  <label for="{{ form2.fake.label }}"></label> 
+</div> 
+
+<div class="form-group col-md-8" >
+  <label for="{{ form2.actividades_subcontrtadas.label }}">{{ form2.actividades_subcontratadas.label }}</label> 
+  {{ form2.actividades_subcontratadas }}
+</div> 
+
+<div class="form-group col-md-12" >
+  <label for="{{ form2.confirmacion_canal_comunicacion.label }}">{{ form2.confirmacion_canal_comunicacion.label }}</label> 
+  {{ form2.confirmacion_canal_comunicacion }}
+<br>
+</div> 
+
+
+
+{% if form4.id == 1 %} 
+  <div class="form-group col-md-8" >
+    <h3>Catering</h3>
+    <br>
+  </div>
+  
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.tiene_permiso_funcionamiento.label }}">{{ form2.tiene_permiso_funcionamiento.label }}</label> 
+    {{ form2.tiene_permiso_funcionamiento }}
+  </div> 
+  
+  <div class="form-group col-md-6" >
+    <label for="{{ form2.permiso_funcionamiento.label }}">{{ form2.permiso_funcionamiento.label }}</label> 
+    {{ form2.permiso_funcionamiento }}
+  <br>
+  </div> 
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.tiene_certificado_buenas_practicas_manufactura.label }}">{{ form2.tiene_certificado_buenas_practicas_manufactura.label }}</label> 
+    {{ form2.tiene_certificado_buenas_practicas_manufactura }}
+  </div> 
+  
+  <div class="form-group col-md-12" >
+    <label for="{{ form2.certificado_buenas_practicas_manufactura.label }}">{{ form2.certificado_buenas_practicas_manufactura.label }}</label> 
+    {{ form2.certificado_buenas_practicas_manufactura }}
+  <br>
+  </div>
+  
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.tiene_seguimiento_medico_trabajadores.label }}">{{ form2.tiene_seguimiento_medico_trabajadores.label }}</label> 
+    {{ form2.tiene_seguimiento_medico_trabajadores }}
+  </div> 
+  
+  <div class="form-group col-md-12" >
+    <label for="{{ form2.seguimiento_medico_trabajadores.label }}">{{ form2.seguimiento_medico_trabajadores.label }}</label> 
+    {{ form2.seguimiento_medico_trabajadores }}
+  <br>
+  </div> 
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.tiene_reporte_inspeccion_permiso_funcionamiento.label }}">{{ form2.tiene_reporte_inspeccion_permiso_funcionamiento.label }}</label> 
+    {{ form2.tiene_reporte_inspeccion_permiso_funcionamiento }}
+  </div> 
+  
+  <div class="form-group col-md-12" >
+    <label for="{{ form2.reporte_inspeccion_permiso_funcionamiento.label }}">{{ form2.tiene_reporte_inspeccion_permiso_funcionamiento.label }}</label> 
+    {{ form2.reporte_inspeccion_permiso_funcionamiento }}
+  <br>
+  </div> 
+
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.contrato_vigente_ecofroz.label }}">{{ form2.contrato_vigente_ecofroz.label }}</label> 
+    {{ form2.contrato_vigente_ecofroz }}
+    <br>
+  </div> 
+  
+  <div class="form-group col-md-12" >
+    <label for="{{ form2.tiene_afiliacion_empleados_iess.label }}">{{ form2.tiene_afiliacion_empleados_iess.label }}</label> 
+    {{ form2.tiene_afiliacion_empleados_iess }}
+  <br>
+  </div> 
+
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.afiliacion_empleados_iess.label }}">{{ form2.afiliacion_empleados_iess.label }}</label> 
+    {{ form2.afiliacion_empleados_iess }}
+    <br>
+  </div> 
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_formato_informacion_contacto_emergencia.label }}">{{ form2.tiene_formato_informacion_contacto_emergencia.label }}</label> 
+    {{ form2.tiene_formato_informacion_contacto_emergencia }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.formato_informacion_contacto_emergencia.label }}">{{ form2.formato_informacion_contacto_emergencia.label }}</label> 
+    {{ form2.formato_informacion_contacto_emergencia }}
+    <br>
+  </div>
+
+
+  
+  
+
+
+
+{% endif %}
+
+
+{% if form4.id == 4 %} 
+<div class="form-group col-md-8" >
+  <h3>Fundas / Rollos</h3>
+  <br>
+</div>
+
+<div class="form-group col-md-8" >
+  <label for="{{ form2.tiene_certificado_migracion_fundas.label }}">{{ form2.tiene_certificado_migracion_fundas.label }}</label> 
+  {{ form2.tiene_certificado_migracion_fundas }}
+</div>
+
+<div class="form-group col-md-8" >
+  <label for="{{ form2.certificado_migracion_fundas.label }}">{{ form2.certificado_migracion_fundas.label }}</label> 
+  {{ form2.certificado_migracion_fundas }}
+  <br>
+</div>
+
+<div class="form-group col-md-10" >
+  <label for="{{ form2.tiene_documento_aceptacion_especificaciones_ecofroz.label }}">{{ form2.tiene_documento_aceptacion_especificaciones_ecofroz.label }}</label> 
+  {{ form2.tiene_documento_aceptacion_especificaciones_ecofroz }}
+</div>
+
+<div class="form-group col-md-8" >
+  <label for="{{ form2.documento_aceptacion_especificaciones_ecofroz.label }}">{{ form2.documento_aceptacion_especificaciones_ecofroz.label }}</label> 
+  {{ form2.documento_aceptacion_especificaciones_ecofroz }}
+  <br>
+</div>
+
+<div class="form-group col-md-10" >
+  <label for="{{ form2.tiene_especificacion_material_empaque.label }}">{{ form2.tiene_especificacion_material_empaque.label }}</label> 
+  {{ form2.tiene_documento_aceptacion_especificaciones_ecofroz }}
+</div>
+
+<div class="form-group col-md-8" >
+  <label for="{{ form2.especificacion_material_empaque.label }}">{{ form2.especificacion_material_empaque.label }}</label> 
+  {{ form2.especificacion_material_empaque }}
+  <br>
+</div>
+
+<div class="form-group col-md-10" >
+  <label for="{{ form2.tiene_aprobaciones_contacto_alimentos.label }}">{{ form2.tiene_aprobaciones_contacto_alimentos.label }}</label> 
+  {{ form2.tiene_aprobaciones_contacto_alimentos }}
+</div>
+
+<div class="form-group col-md-8" >
+  <label for="{{ form2.aprobaciones_contacto_alimentos.label }}">{{ form2.aprobaciones_contacto_alimentos.label }}</label> 
+  {{ form2.aprobaciones_contacto_alimentos }}
+  <br>
+</div>
+
+<div class="form-group col-md-6" >
+  <label for="{{ form2.tiene_certificacion_basc.label }}">{{ form2.tiene_certificacion_basc.label }}</label> 
+  {{ form2.tiene_certificacion_basc }}
+</div>
+
+<div class="form-group col-md-8" >
+  <label for="{{ form2.certificado_basc.label }}">{{ form2.certificado_basc.label }}</label> 
+  {{ form2.certificado_basc }}
+  <br>
+</div>
+
+<div class="form-group col-md-10" >
+  <label for="{{ form2.tiene_homologacion_auditoria_basc_ecofroz.label }}">{{ form2.tiene_homologacion_auditoria_basc_ecofroz.label }}</label> 
+  {{ form2.tiene_homologacion_auditoria_basc_ecofroz }}
+</div>
+
+<div class="form-group col-md-8" >
+  <label for="{{ form2.certificado_homologacion_ecofroz.label }}">{{ form2.certificado_homologacion_ecofroz.label }}</label> 
+  {{ form2.certificado_homologacion_ecofroz }}
+  <br>
+</div>
+
+<div class="form-group col-md-6" >
+  <label for="{{ form2.tiene_homologacion_gfsi.label }}">{{ form2.tiene_homologacion_gfsi.label }}</label> 
+  {{ form2.tiene_homologacion_gfsi }}
+</div>
+
+<div class="form-group col-md-8" >
+  <label for="{{ form2.certificado_hologacion_gfsi.label }}">{{ form2.certificado_hologacion_gfsi.label }}</label> 
+  {{ form2.certificado_hologacion_gfsi }}
+  <br>
+</div>
+
+<div class="form-group col-md-6" >
+  <label for="{{ form2.tiene_certificado_auditoria_ecofroz_por_no_gfsi.label }}">{{ form2.tiene_certificado_auditoria_ecofroz_por_no_gfsi.label }}</label> 
+  {{ form2.tiene_certificado_auditoria_ecofroz_por_no_gfsi }}
+</div>
+
+<div class="form-group col-md-8" >
+  <label for="{{ form2.certificado_auditoria_ecofroz_por_no_gfsi.label }}">{{ form2.certificado_auditoria_ecofroz_por_no_gfsi.label }}</label> 
+  {{ form2.certificado_auditoria_ecofroz_por_no_gfsi }}
+  <br>
+</div>
+
+<div class="form-group col-md-8" >
+  <label for="{{ form2.tiene_certificado_calidad_por_lote.label }}">{{ form2.tiene_certificado_calidad_por_lote.label }}</label> 
+  {{ form2.tiene_certificado_calidad_por_lote }}
+  <br>
+  <br>
+</div>
+
+<div class="form-group col-md-8" >
+  <label for="{{ form2.tiene_certificado_transporte_exclusivo.label }}">{{ form2.tiene_certificado_transporte_exclusivo.label }}</label> 
+  {{ form2.tiene_certificado_transporte_exclusivo }}
+  <br>
+</div>
+
+<div class="form-group col-md-8" >
+  <label for="{{ form2.certificado_transporte_exclusivo.label }}">{{ form2.certificado_transporte_exclusivo.label }}</label> 
+  {{ form2.certificado_transporte_exclusivo }}
+  <br>
+</div>
+
+<div class="form-group col-md-10" >
+  <label for="{{ form2.tiene_certificado_transporte_sellado.label }}">{{ form2.tiene_certificado_transporte_sellado.label }}</label> 
+  {{ form2.tiene_certificado_transporte_sellado }}
+  <br>
+</div>
+
+<div class="form-group col-md-8" >
+  <label for="{{ form2.certificado_transporte_sellado.label }}">{{ form2.certificado_transporte_sellado.label }}</label> 
+  {{ form2.certificado_transporte_sellado }}
+  <br>
+</div>
+
+<div class="form-group col-md-10" >
+  <label for="{{ form2.tiene_formato_informacion_contacto_emergencia.label }}">{{ form2.tiene_formato_informacion_contacto_emergencia.label }}</label> 
+  {{ form2.tiene_formato_informacion_contacto_emergencia }}
+  <br>
+</div>
+
+<div class="form-group col-md-8" >
+  <label for="{{ form2.formato_informacion_contacto_emergencia.label }}">{{ form2.formato_informacion_contacto_emergencia.label }}</label> 
+  {{ form2.formato_informacion_contacto_emergencia }}
+  <br>
+</div>
+
+<div class="form-group col-md-8" >
+  <label for="{{ form2.contrato_vigente_ecofroz.label }}">{{ form2.contrato_vigente_ecofroz.label }}</label> 
+  {{ form2.contrato_vigente_ecofroz }}
+  <br>
+  <br>
+
+  {% endif %}
+  
+  {% if form4.id == 2 %} 
+  <div class="form-group col-md-8" >
+    <h3>Centros de Acopio</h3>
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_permiso_funcionamiento.label }}">{{ form2.tiene_permiso_funcionamiento.label }}</label> 
+    {{ form2.tiene_permiso_funcionamiento }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.permiso_funcionamiento.label }}">{{ form2.permiso_funcionamiento.label }}</label> 
+    {{ form2.permiso_funcionamiento }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_certificacion_gfsi_o_bpm.label }}">{{ form2.tiene_certificacion_gfsi_o_bpm.label }}</label> 
+    {{ form2.tiene_certificacion_gfsi_o_bpm }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.certificacion_gfsi_o_bpm.label }}">{{ form2.certificacion_gfsi_o_bpm.label }}</label> 
+    {{ form2.certificacion_gfsi_o_bpm }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_certificado_auditoria_ecofroz_por_no_gfsi.label }}">{{ form2.tiene_certificado_auditoria_ecofroz_por_no_gfsi.label }}</label> 
+    {{ form2.tiene_certificado_auditoria_ecofroz_por_no_gfsi }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.certificado_auditoria_ecofroz_por_no_gfsi.label }}">{{ form2.certificado_auditoria_ecofroz_por_no_gfsi.label }}</label> 
+    {{ form2.certificado_auditoria_ecofroz_por_no_gfsi }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.contrato_vigente_ecofroz.label }}">{{ form2.contrato_vigente_ecofroz.label }}</label> 
+    {{ form2.contrato_vigente_ecofroz }}
+    <br>
+    <br>
+  </div>
+
+   <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_certificado_transporte_sellado.label }}">{{ form2.tiene_certificado_transporte_sellado.label }}</label> 
+    {{ form2.tiene_certificdo_transporte_sellado }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_certificado_transporte_exclusivo.label }}">{{ form2.tiene_certificado_transporte_exclusivo.label }}</label> 
+    {{ form2.tiene_certificado_transporte_exclusivo }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.certificado_transporte_exclusivo.label }}">{{ form2.certificado_transporte_exclusivo.label }}</label> 
+    {{ form2.certificado_transporte_exclusivo }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_formato_informacion_contacto_emergencia.label }}">{{ form2.tiene_formato_informacion_contacto_emergencia.label }}</label> 
+    {{ form2.tiene_formato_informacion_contacto_emergencia }}
+    <br>
+  </div>
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.formato_informacion_contacto_emergencia.label }}">{{ form2.formato_informacion_contacto_emergencia.label }}</label> 
+    {{ form2.formato_informacion_contacto_emergencia }}
+    <br>
+  </div>
+
+
+
+  {% endif %}
+
+
+
+  {% if form4.id == 3 %} 
+  <div class="form-group col-md-8" >
+    <h3>Control de plagas</h3>
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_certificado_npma.label }}">{{ form2.tiene_certificado_npma.label }}</label> 
+    {{ form2.tiene_certificado_npma }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.certificado_npma.label }}">{{ form2.certificado_npma.label }}</label> 
+    {{ form2.certificado_npma }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+      <label for="{{ form2.tiene_certificado_aecpu.label }}">{{ form2.tiene_certificado_aecpu.label }}</label> 
+      {{ form2.tiene_certificado_aecpu }}
+      <br>
+    </div>
+    
+  <div class="form-group col-md-10" >
+      <label for="{{ form2.certificado_aecpu.label }}">{{ form2.certificado_aecpu.label }}</label> 
+      {{ form2.certificado_aecpu }}
+      <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_certificado_mip_personal.label }}">{{ form2.tiene_certificado_mip_personal.label }}</label> 
+    {{ form2.tiene_certificado_mip_personal }}
+    <br>
+  </div>
+  
+<div class="form-group col-md-10" >
+    <label for="{{ form2.certificado_mip_personal.label }}">{{ form2.certificado_mip_personal.label }}</label> 
+    {{ form2.certificado_mip_personal }}
+    <br>
+</div>
+
+<div class="form-group col-md-10" >
+  <label for="{{ form2.tiene_fichas_tecnicas_y_registros_sanitarios.label }}">{{ form2.tiene_fichas_tecnicas_y_registros_sanitarios.label }}</label> 
+  {{ form2.tiene_fichas_tecnicas_y_registros_sanitarios }}
+  <br>
+</div>
+
+<div class="form-group col-md-10" >
+  <label for="{{ form2.fichas_tecnicas_y_registros_sanitarios.label }}">{{ form2.fichas_tecnicas_y_registros_sanitarios.label }}</label> 
+  {{ form2.fichas_tecnicas_y_registros_sanitarios }}
+  <br>
+</div>
+
+<div class="form-group col-md-10" >
+  <label for="{{ form2.tiene_poliza_responsabilidad_civil.label }}">{{ form2.tiene_poliza_responsabilidad_civil.label }}</label> 
+  {{ form2.tiene_poliza_responsabilidad_civil }}
+  <br>
+</div>
+
+<div class="form-group col-md-10" >
+  <label for="{{ form2.poliza_responsabilidad_civil.label }}">{{ form2.poliza_responsabilidad_civil.label }}</label> 
+  {{ form2.poliza_responsabilidad_civil }}
+  <br>
+</div>
+
+<div class="form-group col-md-10" >
+  <label for="{{ form2.contrato_vigente_ecofroz.label }}">{{ form2.contrato_vigente_ecofroz.label }}</label> 
+  {{ form2.contrato_vigente_ecofroz }}
+  <br>
+</div>
+
+<div class="form-group col-md-10" >
+  <label for="{{ form2.tiene_formato_informacion_contacto_emergencia.label }}">{{ form2.tiene_formato_informacion_contacto_emergencia.label }}</label> 
+  {{ form2.tiene_formato_informacion_contacto_emergencia }}
+  <br>
+</div>
+
+<div class="form-group col-md-10" >
+  <label for="{{ form2.formato_informacion_contacto_emergencia.label }}">{{ form2.formato_informacion_contacto_emergencia.label }}</label> 
+  {{ form2.formato_informacion_contacto_emergencia }}
+  <br>
+</div>
+
+<div class="form-group col-md-10" >
+  <label for="{{ form2.tiene_certificado_arcsa.label }}">{{ form2.tiene_certificado_arcsa.label }}</label> 
+  {{ form2.tiene_certificado_arcsa }}
+  <br>
+</div>
+
+<div class="form-group col-md-10" >
+  <label for="{{ form2.certificado_arcsa.label }}">{{ form2.certificado_arcsa.label }}</label> 
+  {{ form2.certificado_arcsa }}
+  <br>
+</div>
+
+  {% endif %}
+
+  {% if form4.id == 5 %} 
+  <div class="form-group col-md-8" >
+    <h3>Gestores ambientales de desechos</h3>
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_certificado_ambiental.label }}">{{ form2.tiene_certificado_ambiental.label }}</label> 
+    {{ form2.tiene_certificado_ambiental }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.certificado_ambiental.label }}">{{ form2.certificado_ambiental.label }}</label> 
+    {{ form2.certificado_ambiental }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_licencia_unica_funcionamiento_luae.label }}">{{ form2.tiene_licencia_unica_funcionamiento_luae.label }}</label> 
+    {{ form2.tiene_licencia_unica_funcionamiento_luae }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.licencia_unica_funcionamiento_luae.label }}">{{ form2.licencia_unica_funcionamiento_luae.label }}</label> 
+    {{ form2.licencia_unica_funcionamiento_luae }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_certificado_destruccion_material_x_carga.label }}">{{ form2.tiene_certificado_destruccion_material_x_carga.label }}</label> 
+    {{ form2.tiene_certificado_destruccion_material_x_carga }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.certificado_destruccion_material_x_carga.label }}">{{ form2.certificado_destruccion_material_x_carga.label }}</label> 
+    {{ form2.certificado_destruccion_material_x_carga }}
+    <br>
+  </div>
+
+  {% endif %}
+
+  {% if form4.id == 6 %} 
+  <div class="form-group col-md-8" >
+    <h3>Grasas de grado alimenticio</h3>
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_certificado_fabricacion_libre_alergenicos.label }}">{{ form2.tiene_certificado_fabricacion_libre_alergenicos.label }}</label> 
+    {{ form2.tiene_certificado_fabricacion_libre_alergenicos }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.certificado_fabricacion_libre_alergenicos.label }}">{{ form2.certificado_fabricacion_libre_alergenicos.label }}</label> 
+    {{ form2.certificado_fabricacion_libre_alergenicos }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_certificado_nfs_h1_h2.label }}">{{ form2.tiene_certificado_nfs_h1_h2.label }}</label> 
+    {{ form2.tiene_certificado_nfs_h1_h2 }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.certificado_nfs_h1_h2.label }}">{{ form2.certificado_nfs_h1_h2.label }}</label> 
+    {{ form2.certificado_nfs_h1_h2 }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_ficha_tecnica_hoja_seguridad_registro_sanitario.label }}">{{ form2.tiene_ficha_tecnica_hoja_seguridad_registro_sanitario.label }}</label> 
+    {{ form2.tiene_ficha_tecnica_hoja_seguridad_registro_sanitario }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.ficha_tecnica_hoja_seguridad_registro_sanitario.label }}">{{ form2.ficha_tecnica_hoja_seguridad_registro_sanitario.label }}</label> 
+    {{ form2.ficha_tecnica_hoja_seguridad_registro_sanitario }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_certificado_iso_21469.label }}">{{ form2.tiene_certificado_iso_21469.label }}</label> 
+    {{ form2.tiene_certificado_iso_21469 }}
+    <br>
+  </div>
+
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.certificado_iso_21469.label }}">{{ form2.certificado_iso_21469.label }}</label> 
+    {{ form2.certificado_iso_21469 }}
+    <br>
+  </div>
+  
+
+  {% endif %}
+
+  {% if form4.id == 7 %} 
+  <div class="form-group col-md-8" >
+    <h3>Korex - Sleep Shipt (láminas deslizantes) </h3>
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_especificaciones_fichas_tecnicas.label }}">{{ form2.tiene_especificaciones_fichas_tecnicas.label }}</label> 
+    {{ form2.tiene_especificaciones_fichas_tecnicas }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.especificaciones_fichas_tecnicas.label }}">{{ form2.especificaciones_fichas_tecnicas.label }}</label> 
+    {{ form2.especificaciones_fichas_tecnicas }}
+    <br>
+  </div>
+
+
+  {% endif %}
+
+
+  {% if form4.id == 8 %} 
+  <div class="form-group col-md-8" >
+    <h3>Laboratorios de calibración</h3>
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_certificado_iso_17025.label }}">{{ form2.tiene_certificado_iso_17025.label }}</label> 
+    {{ form2.tiene_certificado_iso_17025 }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.certificado_iso_17025.label }}">{{ form2.certificado_iso_17025.label }}</label> 
+    {{ form2.certificado_iso_17025 }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_certificado_patrones_trazables_baja_incertidumbre.label }}">{{ form2.tiene_certificado_patrones_trazables_baja_incertidumbre.label }}</label> 
+    {{ form2.tiene_certificado_patrones_trazables_baja_incertidumbre }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.certificado_patrones_trazables_baja_incertidumbre.label }}">{{ form2.certificado_patrones_trazables_baja_incertidumbre.label }}</label> 
+    {{ form2.certificado_patrones_trazables_baja_incertidumbre }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_certificado_tiempo_analisis.label }}">{{ form2.tiene_certificado_tiempo_analisis.label }}</label> 
+    {{ form2.tiene_certificado_tiempo_analisis }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.certificado_tiempo_analisis.label }}">{{ form2.certificado_tiempo_analisis.label }}</label> 
+    {{ form2.certificado_tiempo_analisis }}
+    <br>
+  </div>
+
+
+  {% endif %}
+
+  {% if form4.id == 10 %} 
+  <div class="form-group col-md-8" >
+    <h3>Materia Prima</h3>
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_certificacion_gfsi_o_bpm.label }}">{{ form2.tiene_certificacion_gfsi_o_bpm.label }}</label> 
+    {{ form2.tiene_certificacion_gfsi_o_bpm }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.certificacion_gfsi_o_bpm.label }}">{{ form2.certificacion_gfsi_o_bpm.label }}</label> 
+    {{ form2.certificacion_gfsi_o_bpm }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_certificado_auditoria_ecofroz_por_no_gfsi.label }}">{{ form2.tiene_certificado_auditoria_ecofroz_por_no_gfsi.label }}</label> 
+    {{ form2.tiene_certificado_auditoria_ecofroz_por_no_gfsi }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.certificado_auditoria_ecofroz_por_no_gfsi.label }}">{{ form2.certificado_auditoria_ecofroz_por_no_gfsi.label }}</label> 
+    {{ form2.certificado_auditoria_ecofroz_por_no_gfsi }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_formato_seleccion_materia_prima.label }}">{{ form2.tiene_formato_seleccion_materia_prima.label }}</label> 
+    {{ form2.tiene_formato_seleccion_materia_prima }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.formato_seleccion_materia_prima.label }}">{{ form2.formato_seleccion_materia_prima.label }}</label> 
+    {{ form2.formato_seleccion_materia_prima }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.certificado_de_manejo_otros_productos.label }}">{{ form2.certificado_de_manejo_otros_productos.label }}</label> 
+    {{ form2.certificado_de_manejo_otros_productos }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.tiene_certificado_transporte_exclusivo.label }}">{{ form2.tiene_certificado_transporte_exclusivo.label }}</label> 
+    {{ form2.tiene_certificado_transporte_exclusivo }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.certificado_transporte_exclusivo.label }}">{{ form2.certificado_transporte_exclusivo.label }}</label> 
+    {{ form2.certificado_transporte_exclusivo }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.contrato_vigente_ecofroz.label }}">{{ form2.contrato_vigente_ecofroz.label }}</label> 
+    {{ form2.contrato_vigente_ecofroz }}
+    <br>
+  </div>
+
+
+
+  {% endif %}
+
+
+
+  {% if form4.id == 11 %} 
+  <div class="form-group col-md-8" >
+    <h3>Materiales de Laboratorio (insumos)</h3>
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_especificaciones_fichas_tecnicas.label }}">{{ form2.tiene_especificaciones_fichas_tecnicas.label }}</label> 
+    {{ form2.tiene_especificaciones_fichas_tecnicas }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.especificaciones_fichas_tecnicas.label }}">{{ form2.especificaciones_fichas_tecnicas.label }}</label> 
+    {{ form2.especificaciones_fichas_tecnicas }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.copia_hoja_seguridad_datos_msds.label }}">{{ form2.copia_hoja_seguridad_datos_msds.label }}</label> 
+    {{ form2.copia_hoja_seguridad_datos_msds }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_certificado_logistica_producto.label }}">{{ form2.tiene_certificado_logistica_producto.label }}</label> 
+    {{ form2.tiene_certificado_logistica_producto }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.certificado_logistica_producto.label }}">{{ form2.certificado_logistica_producto.label }}</label> 
+    {{ form2.certificado_logistica_producto }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_certificado_calidad_producto.label }}">{{ form2.tiene_certificado_calidad_producto.label }}</label> 
+    {{ form2.tiene_certificado_calidad_producto }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.certificado_calidad_producto.label }}">{{ form2.certificado_calidad_producto.label }}</label> 
+    {{ form2.certificado_calidad_producto }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_certificado_insumos_aoac.label }}">{{ form2.tiene_certificado_insumos_aoac.label }}</label> 
+    {{ form2.tiene_certificado_insumos_aoac }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.certificado_insumos_aoac.label }}">{{ form2.certificado_insumos_aoac.label }}</label> 
+    {{ form2.certificado_insumos_aoac }}
+    <br>
+  </div>
+
+ 
+
+
+  {% endif %}
+
+
+  {% if form4.id == 12 %} 
+  <div class="form-group col-md-8" >
+    <h3>Químicos  de Limpieza (desinfectantes)</h3>
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_fichas_tecnicas_y_registros_sanitarios.label }}">{{ form2.tiene_fichas_tecnicas_y_registros_sanitarios.label }}</label> 
+    {{ form2.tiene_fichas_tecnicas_y_registros_sanitarios }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.fichas_tecnicas_y_registros_sanitarios.label }}">{{ form2.fichas_tecnicas_y_registros_sanitarios.label }}</label> 
+    {{ form2.fichas_tecnicas_y_registros_sanitarios }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_copia_hoja_seguridad_datos_msds.label }}">{{ form2.tiene_copia_hoja_seguridad_datos_msds.label }}</label> 
+    {{ form2.tiene_copia_hoja_seguridad_datos_msds }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.copia_hoja_seguridad_datos_msds.label }}">{{ form2.copia_hoja_seguridad_datos_msds.label }}</label> 
+    {{ form2.copia_hoja_seguridad_datos_msds }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_ingredientes_activos_aprobados.label }}">{{ form2.tiene_ingredientes_activos_aprobados.label }}</label> 
+    {{ form2.tiene_ingredientes_activos_aprobados }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.ingredientes_activos_aprobados.label }}">{{ form2.ingredientes_activos_aprobados.label }}</label> 
+    {{ form2.ingredientes_activos_aprobados }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_certificado_validaciones_reduccion_logaritmica.label }}">{{ form2.tiene_certificado_validaciones_reduccion_logaritmica.label }}</label> 
+    {{ form2.tiene_certificado_validaciones_reduccion_logaritmica }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.certificado_validaciones_reduccion_logaritmica.label }}">{{ form2.certificado_validaciones_reduccion_logaritmica.label }}</label> 
+    {{ form2.certificado_validaciones_reduccion_logaritmica }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_analisis_composicion_concentraciones.label }}">{{ form2.tiene_analisis_composicion_concentraciones.label }}</label> 
+    {{ form2.tiene_analisis_composicion_concentraciones }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.analisis_composicion_concentraciones.label }}">{{ form2.analisis_composicion_concentraciones.label }}</label> 
+    {{ form2.analisis_composicion_concentraciones }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_certificado_calidad_por_lote.label }}">{{ form2.tiene_certificado_calidad_por_lote.label }}</label> 
+    {{ form2.tiene_certificado_calidad_por_lote }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_formato_informacion_contacto_emergencia.label }}">{{ form2.tiene_formato_informacion_contacto_emergencia.label }}</label> 
+    {{ form2.tiene_formato_informacion_contacto_emergencia }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.formato_informacion_contacto_emergencia.label }}">{{ form2.formato_informacion_contacto_emergencia.label }}</label> 
+    {{ form2.formato_informacion_contacto_emergencia }}
+    <br>
+  </div>
+
+
+
+  {% endif %}
+
+  {% if form4.id == 13 %} 
+  <div class="form-group col-md-8" >
+    <h3>Químicos  de Limpieza (Detergentes)</h3>
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_fichas_tecnicas_y_registros_sanitarios.label }}">{{ form2.tiene_fichas_tecnicas_y_registros_sanitarios.label }}</label> 
+    {{ form2.tiene_fichas_tecnicas_y_registros_sanitarios }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.fichas_tecnicas_y_registros_sanitarios.label }}">{{ form2.fichas_tecnicas_y_registros_sanitarios.label }}</label> 
+    {{ form2.fichas_tecnicas_y_registros_sanitarios }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_copia_hoja_seguridad_datos_msds.label }}">{{ form2.tiene_copia_hoja_seguridad_datos_msds.label }}</label> 
+    {{ form2.tiene_copia_hoja_seguridad_datos_msds }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.copia_hoja_seguridad_datos_msds.label }}">{{ form2.copia_hoja_seguridad_datos_msds.label }}</label> 
+    {{ form2.copia_hoja_seguridad_datos_msds }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_ingredientes_activos_aprobados.label }}">{{ form2.tiene_ingredientes_activos_aprobados.label }}</label> 
+    {{ form2.tiene_ingredientes_activos_aprobados }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.ingredientes_activos_aprobados.label }}">{{ form2.ingredientes_activos_aprobados.label }}</label> 
+    {{ form2.ingredientes_activos_aprobados }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_certificado_determinar_concentracion_quimico.label }}">{{ form2.tiene_certificado_determinar_concentracion_quimico.label }}</label> 
+    {{ form2.tiene_certificado_determinar_concentracion_quimico }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.certificado_determinar_concentracion_quimico.label }}">{{ form2.certificado_determinar_concentracion_quimico.label }}</label> 
+    {{ form2.certificado_determinar_concentracion_quimico }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_certificado_calidad_por_lote.label }}">{{ form2.tiene_certificado_calidad_por_lote.label }}</label> 
+    {{ form2.tiene_certificado_calidad_por_lote }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_certificado_biodegradabilidad.label }}">{{ form2.tiene_certificado_biodegradabilidad.label }}</label> 
+    {{ form2.tiene_certificado_biodegradabilidad }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.certificado_biodegradabilidad.label }}">{{ form2.certificado_biodegradabilidad.label }}</label> 
+    {{ form2.certificado_biodegradabilidad }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_formato_informacion_contacto_emergencia.label }}">{{ form2.tiene_formato_informacion_contacto_emergencia.label }}</label> 
+    {{ form2.tiene_formato_informacion_contacto_emergencia }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.formato_informacion_contacto_emergencia.label }}">{{ form2.formato_informacion_contacto_emergencia.label }}</label> 
+    {{ form2.formato_informacion_contacto_emergencia }}
+    <br>
+  </div>
+
+  {% endif %}
+
+  {% if form4.id == 14 %} 
+  <div class="form-group col-md-8" >
+    <h3>Químicos para el Caldero</h3>
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_especificaciones_fichas_tecnicas.label }}">{{ form2.tiene_especificaciones_fichas_tecnicas.label }}</label> 
+    {{ form2.tiene_especificaciones_fichas_tecnicas }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.especificaciones_fichas_tecnicas.label }}">{{ form2.especificaciones_fichas_tecnicas.label }}</label> 
+    {{ form2.especificaciones_fichas_tecnicas }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_copia_hoja_seguridad_datos_msds.label }}">{{ form2.tiene_copia_hoja_seguridad_datos_msds.label }}</label> 
+    {{ form2.tiene_copia_hoja_seguridad_datos_msds }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.copia_hoja_seguridad_datos_msds.label }}">{{ form2.copia_hoja_seguridad_datos_msds.label }}</label> 
+    {{ form2.copia_hoja_seguridad_datos_msds }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_analisis_cumplimiento_fda_173310.label }}">{{ form2.tiene_analisis_cumplimiento_fda_173310.label }}</label> 
+    {{ form2.tiene_analisis_cumplimiento_fda_173310 }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.analisis_cumplimiento_fda_173310.label }}">{{ form2.analisis_cumplimiento_fda_173310.label }}</label> 
+    {{ form2.analisis_cumplimiento_fda_173310 }}
+    <br>
+  </div>
+
+  {% endif %}
+
+  {% if form4.id == 15 %} 
+  <div class="form-group col-md-8" >
+    <h3>Transporte de Contenedores</h3>
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_certificacion_basc.label }}">{{ form2.tiene_certificacion_basc.label }}</label> 
+    {{ form2.tiene_certificacion_basc }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.certificado_basc.label }}">{{ form2.certificado_basc.label }}</label> 
+    {{ form2.certificado_basc }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_homologacion_auditoria_basc_ecofroz.label }}">{{ form2.tiene_homologacion_auditoria_basc_ecofroz.label }}</label> 
+    {{ form2.tiene_homologacion_auditoria_basc_ecofroz }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.certificado_homologacion_ecofroz.label }}">{{ form2.certificado_homologacion_ecofroz.label }}</label> 
+    {{ form2.certificado_homologacion_ecofroz }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_lista_choferes_autorizados.label }}">{{ form2.tiene_lista_choferes_autorizados.label }}</label> 
+    {{ form2.tiene_lista_choferes_autorizados }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.lista_choferes_autorizados.label }}">{{ form2.lista_choferes_autorizados.label }}</label> 
+    {{ form2.lista_choferes_autorizados }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.contrato_vigente_ecofroz.label }}">{{ form2.contrato_vigente_ecofroz.label }}</label> 
+    {{ form2.contrato_vigente_ecofroz }}
+    <br>
+  </div>
+
+
+{% endif %}
+
+  
+{% if form4.id == 16 %} 
+  <div class="form-group col-md-8" >
+    <h3>Transporte marítimo (navieras)</h3>
+    <br>
+  </div>
+
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_certificacion_basc.label }}">{{ form2.tiene_certificacion_basc.label }}</label> 
+    {{ form2.tiene_certificacion_basc }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.certificado_basc.label }}">{{ form2.certificado_basc.label }}</label> 
+    {{ form2.certificado_basc }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_homologacion_auditoria_basc_ecofroz.label }}">{{ form2.tiene_homologacion_auditoria_basc_ecofroz.label }}</label> 
+    {{ form2.tiene_homologacion_auditoria_basc_ecofroz }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.certificado_homologacion_ecofroz.label }}">{{ form2.certificado_homologacion_ecofroz.label }}</label> 
+    {{ form2.certificado_homologacion_ecofroz }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.contrato_vigente_ecofroz.label }}">{{ form2.contrato_vigente_ecofroz.label }}</label> 
+    {{ form2.contrato_vigente_ecofroz }}
+    <br>
+  </div> 
+  
+
+
+
+
+
+{% endif %}
+
+{% if form4.id == 17 %} 
+  <div class="form-group col-md-8" >
+    <h3>Transporte</h3>
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.nombre_cooperativa_y_o_compania_pertenecen_vehiculos.label }}">{{ form2.nombre_cooperativa_y_o_compania_pertenecen_vehiculos.label }}</label> 
+    {{ form2.nombre_cooperativa_y_o_compania_pertenecen_vehiculos }}
+    <br>
+  </div> 
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.tiene_permiso_operacion_transporte.label }}">{{ form2.tiene_permiso_operacion_transporte.label }}</label> 
+    {{ form2.tiene_permiso_operacion_transporte }}
+    <br>
+  </div> 
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.permiso_operacion_transporte.label }}">{{ form2.permiso_operacion_transporte.label }}</label> 
+    {{ form2.permiso_operacion_transporte }}
+    <br>
+  </div> 
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.tiene_matricula_vehiculo_actualizada.label }}">{{ form2.tiene_matricula_vehiculo_actualizada.label }}</label> 
+    {{ form2.tiene_matricula_vehiculo_actualizada }}
+    <br>
+  </div> 
+  
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.matricula_vehiculo_actualizada.label }}">{{ form2.matricula_vehiculo_actualizada.label }}</label> 
+    {{ form2.matricula_vehiculo_actualizada }}
+    <br>
+  </div> 
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.vehiculos_estan_asegurados.label }}">{{ form2.vehiculos_estan_asegurados.label }}</label> 
+    {{ form2.vehiculos_estan_asegurados }}
+    <br>
+  </div> 
+  
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.poliza_seguro_vehiculos.label }}">{{ form2.poliza_seguro_vehiculos.label }}</label> 
+    {{ form2.poliza_seguro_vehiculos }}
+    <br>
+  </div> 
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.tiene_seguro_ocupantes_vehiculo.label }}">{{ form2.tiene_seguro_ocupantes_vehiculo.label }}</label> 
+    {{ form2.tiene_seguro_ocupantes_vehiculo }}
+    <br>
+  </div> 
+  
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.poliza_seguro_ocupantes_vehiculo.label }}">{{ form2.poliza_seguro_ocupantes_vehiculo.label }}</label> 
+    {{ form2.poliza_seguro_ocupantes_vehiculo }}
+    <br>
+  </div> 
+
+
+  {% endif %}
+
+
+  {% if form4.id == 18 %} 
+  <div class="form-group col-md-8" >
+    <h3>Cajas</h3>
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_documento_aceptacion_especificaciones_ecofroz.label }}">{{ form2.tiene_documento_aceptacion_especificaciones_ecofroz.label }}</label> 
+    {{ form2.tiene_documento_aceptacion_especificaciones_ecofroz }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.documento_aceptacion_especificaciones_ecofroz.label }}">{{ form2.documento_aceptacion_especificaciones_ecofroz.label }}</label> 
+    {{ form2.documento_aceptacion_especificaciones_ecofroz }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_especificaciones_fichas_tecnicas.label }}">{{ form2.tiene_especificaciones_fichas_tecnicas.label }}</label> 
+    {{ form2.tiene_especificaciones_fichas_tecnicas }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.especificaciones_fichas_tecnicas.label }}">{{ form2.especificaciones_fichas_tecnicas.label }}</label> 
+    {{ form2.especificaciones_fichas_tecnicas }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_homologacion_gfsi.label }}">{{ form2.tiene_homologacion_gfsi.label }}</label> 
+    {{ form2.tiene_homologacion_gfsi }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.certificado_hologacion_gfsi.label }}">{{ form2.certificado_hologacion_gfsi.label }}</label> 
+    {{ form2.certificado_hologacion_gfsi }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_certificado_auditoria_ecofroz_por_no_gfsi.label }}">{{ form2.tiene_certificado_auditoria_ecofroz_por_no_gfsi.label }}</label> 
+    {{ form2.tiene_certificado_auditoria_ecofroz_por_no_gfsi }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.certificado_auditoria_ecofroz_por_no_gfsi.label }}">{{ form2.certificado_auditoria_ecofroz_por_no_gfsi.label }}</label> 
+    {{ form2.certificado_auditoria_ecofroz_por_no_gfsi }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_certificacion_basc.label }}">{{ form2.tiene_certificacion_basc.label }}</label> 
+    {{ form2.tiene_certificacion_basc }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.certificado_basc.label }}">{{ form2.certificado_basc.label }}</label> 
+    {{ form2.certificado_basc }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_homologacion_auditoria_basc_ecofroz.label }}">{{ form2.tiene_homologacion_auditoria_basc_ecofroz.label }}</label> 
+    {{ form2.tiene_homologacion_auditoria_basc_ecofroz }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.certificado_homologacion_ecofroz.label }}">{{ form2.certificado_homologacion_ecofroz.label }}</label> 
+    {{ form2.certificado_homologacion_ecofroz }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_certificado_calidad_por_lote.label }}">{{ form2.tiene_certificado_calidad_por_lote.label }}</label> 
+    {{ form2.tiene_certificado_calidad_por_lote }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_certificado_transporte_sellado.label }}">{{ form2.tiene_certificado_transporte_sellado.label }}</label> 
+    {{ form2.tiene_certificado_transporte_sellado }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.certificado_transporte_sellado.label }}">{{ form2.certificado_transporte_sellado.label }}</label> 
+    {{ form2.certificado_transporte_sellado }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.tiene_certificado_transporte_exclusivo.label }}">{{ form2.tiene_certificado_transporte_exclusivo.label }}</label> 
+    {{ form2.tiene_certificado_transporte_exclusivo }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.certificado_transporte_exclusivo.label }}">{{ form2.certificado_transporte_exclusivo.label }}</label> 
+    {{ form2.certificado_transporte_exclusivo }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_formato_informacion_contacto_emergencia.label }}">{{ form2.tiene_formato_informacion_contacto_emergencia.label }}</label> 
+    {{ form2.tiene_formato_informacion_contacto_emergencia }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.formato_informacion_contacto_emergencia.label }}">{{ form2.formato_informacion_contacto_emergencia.label }}</label> 
+    {{ form2.formato_informacion_contacto_emergencia }}
+    <br>
+  </div>
+
+
+{% endif %}
+
+{% if form4.id == 21 %} 
+  <div class="form-group col-md-8" >
+    <h3>Laboratorios de Análisis</h3>
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_certificado_iso_17025.label }}">{{ form2.tiene_certificado_iso_17025.label }}</label> 
+    {{ form2.tiene_certificado_iso_17025 }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.certificado_iso_17025.label }}">{{ form2.certificado_iso_17025.label }}</label> 
+    {{ form2.certificado_iso_17025 }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_carta_garantia.label }}">{{ form2.tiene_carta_garantia.label }}</label> 
+    {{ form2.tiene_carta_garantia }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.carta_garantia.label }}">{{ form2.carta_garantia.label }}</label> 
+    {{ form2.carta_garantia }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-10" >
+    <label for="{{ form2.tiene_certificado_tiempo_analisis.label }}">{{ form2.tiene_certificado_tiempo_analisis.label }}</label> 
+    {{ form2.tiene_certificado_tiempo_analisis }}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.certificado_tiempo_analisis.label }}">{{ form2.certificado_tiempo_analisis.label }}</label> 
+    {{ form2.certificado_tiempo_analisis }}
+    <br>
+  </div>
+
+
+{% endif %}
+
+{% if form4 %} 
+  <div class="form-group col-md-8" >
+    <h3>Buenas Prácticas de Calidad</h3>
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.tiene_sistema_calidad_iso9001.label }}">{{ form2.tiene_sistema_calidad_iso9001.label }}</label> 
+    {{ form2.tiene_sistema_calidad_iso9001 }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.otro_sistema_calidad.label }}">{{ form2.otro_sistema_calidad.label }}</label> 
+    {{ form2.otro_sistema_calidad }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.tiene_procedimientos_ventas_no_conformes.label }}">{{ form2.tiene_procedimientos_ventas_no_conformes.label }}</label> 
+    {{ form2.tiene_procedimientos_ventas_no_conformes }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.tiene_procesos_mejora_continua.label }}">{{ form2.tiene_procesos_mejora_continua.label }}</label> 
+    {{ form2.tiene_procesos_mejora_continua }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.tiene_plan_respuesta_riesgos.label }}">{{ form2.tiene_plan_respuesta_riesgos.label }}</label> 
+    {{ form2.tiene_plan_respuesta_riesgos }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.tiene_programa_auditoria_interna.label }}">{{ form2.tiene_programa_auditoria_interna.label }}</label> 
+    {{ form2.tiene_programa_auditoria_interna }}
+    <br>
+  </div>
+
+
+  {% endif %}
+
+  {% if form4 %} 
+  <div class="form-group col-md-8" >
+    <h3>Buenas Prácticas de Seguridad</h3>
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.tiene_sistema_seguridad_logistica_transporte.label }}">{{ form2.tiene_sistema_seguridad_logistica_transporte.label }}</label> 
+    {{ form2.tiene_sistema_seguridad_logistica_transporte }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.utiliza_transporte_propio.label }}">{{ form2.utiliza_transporte_propio.label }}</label> 
+    {{ form2.utiliza_transporte_propio }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.tiene_documentos_habilitantes_vehiculos.label }}">{{ form2.tiene_documentos_habilitantes_vehiculos.label }}</label> 
+    {{ form2.tiene_documentos_habilitantes_vehiculos }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.tiene_cobertura_seguro_vehiculos.label }}">{{ form2.tiene_cobertura_seguro_vehiculos.label }}</label> 
+    {{ form2.tiene_cobertura_seguro_vehiculos }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.tiene_cobertura_seguro_ocupantes_vehiculos.label }}">{{ form2.tiene_cobertura_seguro_ocupantes_vehiculos.label }}</label> 
+    {{ form2.tiene_cobertura_seguro_ocupantes_vehiculos }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.tiene_sistema_comunicacion_transmision_datos.label }}">{{ form2.tiene_sistema_comunicacion_transmision_datos.label }}</label> 
+    {{ form2.tiene_sistema_comunicacion_transmision_datos }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.hace_respaldos_periodicos_informacion_empresa.label }}">{{ form2.hace_respaldos_periodicos_informacion_empresa.label }}</label> 
+    {{ form2.hace_respaldos_periodicos_informacion_empresa }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.tiene_activos_asegurados.label }}">{{ form2.tiene_activos_asegurados.label }}</label> 
+    {{ form2.tiene_activos_asegurados }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.hace_mantenimiento_preventivo.label }}">{{ form2.hace_mantenimiento_preventivo.label }}</label> 
+    {{ form2.hace_mantenimiento_preventivo }}
+    <br>
+  </div>
+
+
+  {% endif %}
+
+  {% if form2 %} 
+  <div class="form-group col-md-8" >
+    <br>
+    <h3>Buenas Prácticas Ambientales</h3>
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.requiere_certificado_ambiental.label }}">{{ form2.requiere_certificado_ambiental.label }}</label> 
+    {{ form2.requiere_certificado_ambiental }}
+    <br>
+  </div> 
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.certificado_ambiental.label }}">{{ form2.certificado_ambiental.label }}</label> 
+    {{ form2.certificado_ambiental }}
+    <br>
+  </div> 
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.tiene_certificado_ambiental.label }}">{{ form2.tiene_certificado_ambiental.label }}</label> 
+    {% render_field form2.tiene_certificado_ambiental style="width: 42%"  %}
+    <br>
+  </div> 
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.tiene_politica_proteccion_ambiente.label }}">{{ form2.tiene_politica_proteccion_ambiente.label }}</label> 
+    {% render_field form2.tiene_politica_proteccion_ambiente   %}
+    <br>
+  </div> 
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.describa_politica_ambiente.label }}">{{ form2.describa_politica_ambiente.label }}</label> 
+    {% render_field form2.describa_politica_ambiente style="width: 75%"   %}
+    <br>
+  </div> 
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.optimiza_uso_recursos.label }}">{{ form2.optimiza_uso_recursos.label }}</label> 
+    {% render_field form2.optimiza_uso_recursos   %}
+    <br>
+  </div>
+  
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.tiene_programa_manejo_desechos.label }}">{{ form2.tiene_programa_manejo_desechos.label }}</label> 
+    {% render_field form2.tiene_programa_manejo_desechos   %}
+    <br>
+  </div> 
+
+
+  {% endif %}
+
+
+  {% if form2 %} 
+  <div class="form-group col-md-8" >
+    <br>
+    <h3>Buenas Prácticas de Responsabilidad Social</h3>
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.tiene_politica_responsabilidad_social.label }}">{{ form2.tiene_politica_responsabilidad_social.label }}</label> 
+    {{ form2.tiene_politica_responsabilidad_social }}
+    <br>
+  </div> 
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.descripcion_politica_responsabilidad_social.label }}">{{ form2.descripcion_politica_responsabilidad_social.label }}</label> 
+    {% render_field form2.descripcion_politica_responsabilidad_social style="width: 75%"    %}
+    <br>
+  </div> 
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.tiene_politica_prevencion_actos_corrupcion.label }}">{{ form2.tiene_politica_prevencion_actos_corrupcion.label }}</label> 
+    {{ form2.tiene_politica_prevencion_actos_corrupcion }}
+    <br>
+  </div> 
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.tiene_politica_prevencion_actos_acoso.label }}">{{ form2.tiene_politica_prevencion_actos_acoso.label }}</label> 
+    {{ form2.tiene_politica_prevencion_actos_acoso }}
+    <br>
+  </div> 
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.tiene_mecanismo_discrimen.label }}">{{ form2.tiene_mecanismo_discrimen.label }}</label> 
+    {{ form2.tiene_mecanismo_discrimen }}
+    <br>
+  </div> 
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.tiene_codigo_conducta.label }}">{{ form2.tiene_codigo_conducta.label }}</label> 
+    {{ form2.tiene_codigo_conducta }}
+    <br>
+  </div> 
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.tiene_plan_continuidad_negocio.label }}">{{ form2.tiene_plan_continuidad_negocio.label }}</label> 
+    {{ form2.tiene_plan_continuidad_negocio }}
+    <br>
+  </div> 
+
+  {% endif %}
+
+  {% if form2 %} 
+  <div class="form-group col-md-8" >
+    <br>
+    <h3>Buenas Prácticas Laborales</h3>
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.tiene_reglamento_interno_trabajo.label }}">{{ form2.tiene_reglamento_interno_trabajo.label }}</label> 
+    {{ form2.tiene_reglamento_interno_trabajo }}
+    <br>
+  </div> 
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.tiene_reglamento_interno_seguridad_salud_laboral.label }}">{{ form2.tiene_reglamento_interno_seguridad_salud_laboral.label }}</label> 
+    {{ form2.tiene_reglamento_interno_seguridad_salud_laboral }}
+    <br>
+  </div> 
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.tiene_politica_inclusion_social.label }}">{{ form2.tiene_politica_inclusion_social.label }}</label> 
+    {{ form2.tiene_politica_inclusion_social }}
+    <br>
+  </div> 
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.tiene_practicas_no_discriminacion_laboral.label }}">{{ form2.tiene_practicas_no_discriminacion_laboral.label }}</label> 
+    {{ form2.tiene_practicas_no_discriminacion_laboral }}
+    <br>
+  </div> 
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.capacita_usuarios_prevencion_accidentes.label }}">{{ form2.capacita_usuarios_prevencion_accidentes.label }}</label> 
+    {{ form2.capacita_usuarios_prevencion_accidentes }}
+    <br>
+  </div> 
+  
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.prioriza_contratacion_personal_zona.label }}">{{ form2.prioriza_contratacion_personal_zona.label }}</label> 
+    {{ form2.prioriza_contratacion_personal_zona }}
+    <br>
+  </div> 
+  
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.realiza_simulacro_emergencia.label }}">{{ form2.realiza_simulacro_emergencia.label }}</label> 
+    {{ form2.realiza_simulacro_emergencia }}
+    <br>
+  </div> 
+  
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.trabajadores_menores_16anios.label }}">{{ form2.trabajadores_menores_16anios.label }}</label> 
+    {{ form2.trabajadores_menores_16anios }}
+    <br>
+  </div> 
+
+
+  {% endif %}
+
+  {% if form2 %} 
+  <div class="form-group col-md-8" >
+    <br>
+    <h3>Buenas Prácticas con Proveedores y Clientes</h3>
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.tiene_sistema_evaluacion_seleccion_proveedores.label }}">{{ form2.tiene_sistema_evaluacion_seleccion_proveedores.label }}</label> 
+    {{ form2.tiene_sistema_evaluacion_seleccion_proveedores }}
+    <br>
+  </div> 
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.tiene_mecanismo_satisfaccion_cliente.label }}">{{ form2.tiene_mecanismo_satisfaccion_cliente.label }}</label> 
+    {{ form2.tiene_mecanismo_satisfaccion_cliente }}
+    <br>
+  </div> 
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.mecanismo_satisfaccion_cliente.label }}">{{ form2.mecanismo_satisfaccion_cliente.label }}</label> 
+    {% render_field form2.mecanismo_satisfaccion_cliente style="width: 75%"   %}
+    <br>
+  </div> 
+
+  {% endif %}
+
+  {% if form2 %} 
+  <div class="form-group col-md-8" >
+    <br>
+    <h3>Retroalimentación Ecofroz S.A</h3>
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.ecofroz_explico_proceso_compra.label }}">{{ form2.ecofroz_explico_proceso_compra.label }}</label> 
+    {{ form2.ecofroz_explico_proceso_compra }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.especificaciones_oportunas_claras.label }}">{{ form2.especificaciones_oportunas_claras.label }}</label> 
+    {{ form2.especificaciones_oportunas_claras }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.proceso_compra_agil.label }}">{{ form2.proceso_compra_agil.label }}</label> 
+    {{ form2.proceso_compra_agil }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.sugerencia_proceso_compra.label }}">{{ form2.sugerencia_proceso_compra.label }}</label> 
+    {% render_field form2.sugerencia_proceso_compra style="width: 75%"   %}
+    <br>
+  </div> 
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.conoce_proceso_pago.label }}">{{ form2.conoce_proceso_pago.label }}</label> 
+    {% render_field form2.conoce_proceso_pago    %}
+    <br>
+  </div> 
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.cumplimiento_proceso_pago.label }}">{{ form2.cumplimiento_proceso_pago.label }}</label> 
+    {% render_field form2.cumplimiento_proceso_pago    %}
+    <br>
+  </div> 
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.sugerencia_proceso_pago.label }}">{{ form2.sugerencia_proceso_pago.label }}</label> 
+    {% render_field form2.sugerencia_proceso_pago style="width: 75%"   %}
+    <br>
+  </div> 
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.conoce_proceso_recepcion.label }}">{{ form2.conoce_proceso_recepcion.label }}</label> 
+    {% render_field form2.conoce_proceso_recepcion    %}
+    <br>
+  </div> 
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.sugerencia_proceso_recepcion.label }}">{{ form2.sugerencia_proceso_recepcion.label }}</label> 
+    {% render_field form2.sugerencia_proceso_recepcion style="width: 75%"   %}
+    <br>
+  </div> 
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.es_atendido_bien.label }}">{{ form2.es_atendido_bien.label }}</label> 
+    {% render_field form2.es_atendido_bien    %}
+    <br>
+  </div> 
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.sugerencia_relacion_comercial.label }}">{{ form2.sugerencia_relacion_comercial.label }}</label> 
+    {% render_field form2.sugerencia_relacion_comercial style="width: 75%"   %}
+    <br>
+  </div> 
+
+  {% endif %}
+
+  {% if form2 %} 
+  <div class="form-group col-md-8" >
+    <br>
+    <h3>Para uso interno de Ecofroz S.A</h3>
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.cumple_procedimiento_facturacion.label }}">{{ form2.cumple_procedimiento_facturacion.label }}</label> 
+    {{ form2.cumple_procedimiento_facturacion }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.cumple_procedimiento_entrega.label }}">{{ form2.cumple_procedimiento_entrega.label }}</label> 
+    {{ form2.cumple_procedimiento_entrega }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.cumple_procedimiento_compra.label }}">{{ form2.cumple_procedimiento_compra.label }}</label> 
+    {{ form2.cumple_procedimiento_compra }}
+    <br>
+  </div>
+
+  <div class="form-group col-md-8" >
+    <label for="{{ form2.antecedentes_verificados_rep_legal.label }}">{{ form2.antecedentes_verificados_rep_legal.label }}</label> 
+    {{ form2.antecedentes_verificados_rep_legal }}
+    <br>
+    <br>
+  </div>
+
+
+
+  {% endif %}
+
+
+
+</div>
+
+
+
+<div class="row" style="width:40%">
+    <button type="submit" style="margin-top:5px; margin-left:25px;" class="btn btn-primary btn-lg">Guardar</button>
+<br>
+<br>
+</div>
+<br>
+<br>
+
+</form>
+</div>
+
+
+{% endblock content %}

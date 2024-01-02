@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+{% load filters %}
+
+{% block extrahead %}
+
+
+{% endblock %}
+
+{% block content %}
+<!-- <div class="loader"></div> -->
+<div class="jumbotron" style="width: 75%; margin:auto; padding-top: 25px; margin-top: 25px; margin-bottom: 25px;">
+        <h2 class="display-5">Confirmación de Custodio y Ubicación de Activos.</h2>
+        <h4 class="display-5">Información del activo</h4>
+        <p>
+                <p>
+        
+        
+        <div class="form-row">
+                <div class="form-group col-md-10" >
+                        
+                        <label><b><u>Código Activo:</u></b></label>
+                        {{queryset.cod_activo}}
+                        
+               
+                        <br>
+                        <label><b><u>Identificación:</u></b></label>
+                        {{queryset_activo.grabado}}
+                
+                        <br>
+                        <label><b><u>Marca: </u></b></label>
+                        {% for query in queryset_activo.detalle.all %}
+                        {{query.desc_activo_marca | default:"--"}}
+                      
+                        <br>
+                
+                        <label><b><u>Modelo: </u></b></label>
+                        {{query.desc_activo_modelo | default:"--"}}
+                        <br>
+                        <label><b><u>Serie: </u></b></label>
+                        {{query.desc_activo_num_serie | default:"--"}}
+                        {% endfor %}
+                        <br>
+                        
+                        <label><b><u>Descripción: </u></b></label>
+                        {{queryset_activo.activo_descripcion}}
+                        <br>
+
+                        <label><b><u>Ubicacion: </u></b></label>
+                        {{queryset_activo.activo_ubica}}
+                        <br>
+
+                        <label><b><u>Departamento escogido en Pedido: </u></b></label>
+                        {{queryset_activo.activo_depar}}
+                        <br>
+
+                        <label><b><u>Sector escogido en Pedido: </u></b></label>
+                        {{queryset_activo.activo_area}}
+                        <br>
+                        
+
+                </div>
+        </div>
+        <div class="form-row"> 
+                <p>
+                </div>
+        
+
+        <div class="form-row">
+                <p>
+        </div>
+
+        <form method="POST"> 
+        {% csrf_token %}
+        <div class="form-row">
+        <h4 class="display-5">Actualice la ubicación definitiva del activo (Si se requiere)</h4>
+        <p>
+        </div>
+        <div class="form-row">
+
+        <div class="form-group col-md-3" >
+                <label>Departamento</label> 
+                <!-- {% render_field form.activo_depar class="form-control"   %}  -->
+                 <select name="activo_depar" id="activo_depar" class="form-control in" required>
+                        <option value="{{queryset_activo.activo_depar.id}}" selected>{{queryset_activo.activo_depar}}</option>
+                        {% for i in depar %}
+                        <option value="{{ i.id }}">{{ i.dep_nombre }}</option>
+                        {% endfor %}
+                </select> 
+       
+       
+        </div>
+
+        <div class="form-group col-md-3" >
+                <label>Area</label> 
+                <!-- {% render_field form.activo_area class="form-control"   %}  -->
+                <select name="activo_area" id="activo_area" class="form-control in" required>
+                        <option value="{{queryset_activo.activo_area.id}}" selected>{{queryset_activo.activo_area}}</option>
+                        {% for i in area %}
+                        <option value="{{ i.area_codigo }}" data-chained="{{ i.area_departamento_id }}">{{ i.area_nombre }}</option>
+                        {% endfor %}
+                </select> 
+       
+       
+        </div>
+        
+        <div class="form-group col-md-6" >
+              
+        </div>
+        
+        <div class="form-group col-md-3">
+                <label>Custodio del Activo</label> 
+                <input type="text" class="form-control" style="width:470px;" name="custodio" placeholder="Dos nombres, Dos apellidos" required>
+
+        </div>
+        </div>
+        
+        <br>
+        <!-- <div class="form-row">
+                <h4>Registra</h4>
+        </div>
+
+        <div class="form-row">
+        <div class="form-group col-md-11" >
+                <textarea class="form-control" name="observaciones" rows="6" cols="8"></textarea> 
+        </div>
+        </div>  -->
+        
+        
+        {% render_field form.usuario_modifica value=user.username class="form-control" readonly="True"   %} 
+
+        
+        
+        
+                 
+        
+               
+        
+        
+        
+
+                <button id="guardar" type="submit" class="btn btn-primary btn-lg">Guardar</button>
+        </form>
+</div>
+
+{% endblock content %}
+
+{% block extrajs %}
+<script>
+
+$("#activo_area").chained("#activo_depar"); 
+
+  
+</script>
+
+{% endblock %}

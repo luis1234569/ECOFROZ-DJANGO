@@ -1,0 +1,244 @@
+
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+
+{% block extrahead %}
+
+<meta charset="utf-8">
+
+<style>
+  th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+.caja {
+  margin-top: 10px;
+}
+
+.span-mod {
+   position: relative;
+   top: 0em;
+   left: 0em;
+   /* background-color: lime; */
+}
+
+.subtitulos {
+  font-weight: bold;
+}
+
+
+
+.carpetas {
+  color:khaki;
+  left: 1em;
+}
+
+.enlace {
+  position: relative;
+  left: 2.5em;
+}
+
+.centrado {
+  text-align:center;
+}
+
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+
+<div class="loader"></div>
+    <div class="container" style="margin: 10px auto;">
+      <h4>Pre cotización para orden de pedido Insumos/Trabajos</h4>
+      <input type="text" value="{{ruta}}" hidden>
+        <table class="table table-bordered table-sm">
+                <tbody>
+                  {% for form in query %}
+                  <tr>
+                    <th class="table-dark" scope="col" style="width: 25%;">N° de Orden:</th>
+                    <td style='font-size: 18px; font-weight: bold;'>{{ form.numtrabajo.numtrabajo }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Usuario Solicitante:</th>
+                    <td>{{ form.numtrabajo.usuario_solicita.first_name }} {{ form.numtrabajo.usuario_solicita.last_name }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Departamento Solicitante:</th>
+                    <td>{{ form.numtrabajo.departamento }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Sector:</th>
+                    <td>{{ form.numtrabajo.area | default:'--' }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Tipo</th>
+                    <td>{{ form.numtrabajo.tipo_pedi }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Proyecto:</th>
+                    <td>{{ form.numtrabajo.numproyecto | default:'--' }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Descripción:</th>
+                    <td>{{ form.descripcion | default:'--' }}</td>
+                  </tr>
+
+{% endfor %}
+<br>
+  
+{% for i in query %}
+{% if i.numtrabajo.estado_responde_precotiza == True %}
+ 
+{% else %}
+
+<div class="container-fluid bg-dark text-white">  
+  <div class="well text-muted text-center" style="padding-top: 1rem; padding-bottom: 1rem;">
+    <span class="glyphicon glyphicon-arrow-down" style="font-size: 2rem;"></span>
+    <h3>Arrastre archivos aquí (Nombres sin tildes ñs o caracteres especiales) </h3>
+  </div>
+</div>
+    
+    <div class="modal fade" id="modal-progress" data-backdrop="static" data-keyboard="false">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Uploading...</h4>
+          </div>
+          <div class="modal-body">
+            <div class="progress">
+              <div class="progress-bar" role="progressbar" style="width: 0%;">0%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+    {# 2. FILE INPUT TO BE USED BY THE PLUG-IN #}
+    <br>
+    
+    <input id="fileupload" type="file" name="archivos" multiple
+           style="display: none;"
+           data-url="{% url 'trabajos:valida_cotizacion' pk %}"
+           data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'>
+   
+    {% endif %}
+    {% endfor %}       
+    
+
+    <div class="container-fluid">
+      <table id="gallery" class="table table-bordered">
+        <thead>
+          <tr>
+            <th scope="col" style="width: 10px;">N°</th>
+            <th scope="col">Nombre Cotización</th>
+            {%for i in query %}
+            {% if i.numtrabajo.estado_responde_precotiza == True %}
+            <th scope="col">Selección</th>
+            {% endif %}
+            {% if i.numtrabajo.estado_precotiza == True and i.numtrabajo.estado_responde_precotiza != True %}
+            <th scope = "col">Opción</th>
+            {% endif %}
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+        
+          {% for documento in archivos_list %}
+         
+            <tr>
+              <td style="width: 5%;"><strong>{{ forloop.counter }}</strong></td>
+              <!-- <td><a href="{{ documento.archivos.url }}">{{ documento.archivos.name }}</a></td> -->
+              {% if documento.nombre_corto %} 
+              <td><a href="{{ documento.archivos.url }}">{{ documento.nombre_corto }}</a></td>
+              {% else %}
+              <td><a href="{{ documento.archivos.url }}">{{ documento.archivos.name }}</a></td> 
+              {% endif %}
+           
+            {% if documento.numtrabajo.estado_responde_precotiza == True %}
+            <td>
+              <input type="checkbox" disabled 
+               {% if documento.seleccion == True %}
+               checked title="Opción seleccionada"
+               {%endif%}  >
+            </td>
+            {% endif %}
+            {% if documento.numtrabajo.estado_precotiza == True and documento.numtrabajo.estado_responde_precotiza != True %}
+            <td>
+            <a class="btn btn-danger btn-sm glyphicon glyphicon-remove" title="Eliminar" href="{% url 'trabajos:eliminar_documentos' documento.id documento.numtrabajo.numtrabajo %}"></a>
+            </td>
+            {% endif %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <p>
+        {% for i in query %}
+        {% if i.numtrabajo.estado_responde_precotiza == True  %}
+        <h4>Notas/Observaciones Respuesta</h4>
+        <textarea class="form-control" name="observaciones" cols="50" rows="4" readonly>{{ i.observa_responde_precotiza }}</textarea>
+        
+        <a href="{% url 'trabajos:cotiza_trabajos' %}" class="btn btn-primary" style="margin-top:5px;">Volver</a>
+         
+
+        {% else %}
+        <form enctype="multipart/form-data" method="POST" action="{% url 'trabajos:save_record_precotiza' pk %}">
+          {% csrf_token %}
+          <h4>Notas/Observaciones</h4>
+          
+          <textarea class="form-control" name="observaciones" cols="50" rows="4">{{ i.observa_envia_precotiza | default:""}}</textarea>
+          
+          <input type="text" name="preruta" value="{{ruta}}" hidden>
+          <button type="submit" id="enviar" class="btn btn-primary" style="margin-top:5px;" title="Enviar Pre cotización">Enviar</button>
+         
+
+
+        </td> 
+       </form>
+      {% endif %}
+    {% endfor %}
+
+       <br>
+        
+
+{% endblock content %}
+
+
+{% block extrajs %}
+<script>
+  $(window).on("load", function() {
+        $(".loader").fadeOut("slow");
+    });
+
+    $(document).ready(function() {    
+        $('#enviar').on('click', function(){
+            //Añadimos la imagen de carga en el contenedor
+            $(".loader").show();
+            $(window).on("load", function(){
+                $(".loader").fadeOut("slow");
+            });
+        });              
+    });    
+
+    
+</script>
+
+{% load static %}
+
+<script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+<script src="{% static 'js/jquery-file-upload/js/vendor/jquery.ui.widget.js' %}"></script>
+<script src="{% static 'js/jquery-file-upload/js/jquery.iframe-transport.js' %}"></script>
+<script src="{% static 'js/jquery-file-upload/js/jquery.fileupload.js' %}"></script>
+
+<script src="{% static 'js/basic-upload.js' %}"></script>
+
+
+
+
+{% endblock %}

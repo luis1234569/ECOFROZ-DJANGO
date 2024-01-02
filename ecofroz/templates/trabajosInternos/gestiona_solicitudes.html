@@ -1,0 +1,228 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}
+    <h2>Gestión de Solicitudes de Ordenes Internas de Trabajo</h2>
+{% endblock %}
+
+{% block extrahead %}
+
+<style>
+  ul {
+    list-style-type: none;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="loader"></div>
+    <div class="container" style="margin: 25px auto;">
+      <div class="btn-group" style="float: right;margin-bottom: 15px;">
+        <a type="button" class="btn btn-success" href="{% url 'trabajosinternos:listar2n' %}">Volver a listar</a>
+        <a type="button" style="margin-left: 3px;" class="btn btn-danger" data-toggle="modal" data-target="#devolver" data-whatever="@getbootstrap" href="">Devolver</a>
+        <a type="button" style="margin-left: 3px;" class="btn btn-outline-secondary" data-toggle="modal" data-target="#asignadoa" data-whatever="@getbootstrap" href="">Confirmar/Asignar</a>
+        <a type="button" style="margin-left: 3px;" href="{% url 'trabajosinternos:convierte_sia' numt %}" class="btn btn-outline-secondary" title="Ver/Cargar Fichas">Convertir a SIA</a>
+      
+      </div>
+      
+
+        <table class="table table-bordered table-sm" style="margin-top:15px;">
+                <tbody>
+                  {% for form in cot %}
+                  <tr>
+                    <th class="table-dark" scope="col" style="width: 25%;">N° Solicitud:</th>
+                    <td style='font-size: 18px; font-weight: bold;'>{{ form.numtrabajo.numtrabajo }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Usuario Solicitante:</th>
+                    <td>{{ form.numtrabajo.usuario_solicita.first_name }} {{ form.numtrabajo.usuario_solicita.last_name }}</td>
+                  </tr>
+
+                  <tr>
+                    <th class="table-dark" scope="col">Ubicación:</th>
+                    <td>{{ form.numtrabajo.ubica }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Departamento Solicitante:</th>
+                    <td>{{ form.numtrabajo.departamento }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Sector:</th>
+                    <td>{{ form.numtrabajo.area | default:'--' }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Tipo:</th>
+                    <td>{{ form.numtrabajo.get_tipo_display }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Autoriza:</th>
+                    <td>{{ form.numtrabajo.usuario_aprueba1n }}</td>
+                  </tr>
+                  
+                 
+
+
+                  
+                  {% if form.img_1 %}
+                  <tr>
+                    <th class="table-dark" scope="col">Imagen 1:</th>
+                    <td>
+                      <a class="card-link" href="#" data-toggle="modal" data-target="#img_1" data-whatever="@getbootstrap">{{ form.img_1 }} </a>
+                      <div class="modal fade" id="img_1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-xl" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div>
+                              <img src="/media/{{ form.img_1 }}"  class="img-thumbnail rounded" alt="...">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endif %}
+                  {% if form.img_2 %}
+                  <tr>
+                    <th class="table-dark" scope="col">Imagen 2:</th>
+                    <td>
+                      <a class="card-link" href="#" data-toggle="modal" data-target="#img_2" data-whatever="@getbootstrap">{{ form.img_2 }}</a>
+                      <div class="modal fade" id="img_2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-xl" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div>
+                              <img src="/media/{{ form.img_2 }}" class="img-thumbnail rounded" alt="...">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endif %}
+                  
+                </tbody>
+        </table>
+
+
+     
+          <div>
+            <label for="text">Descripción del Trabajo</label>
+            <div>
+              <textarea class="form-control" id="message-text" name="text" rows="8" readonly>{{ form.numtrabajo.descripcion }}</textarea>
+            </div>
+            <pre></pre>
+
+            <div>
+              
+              <label for="justifica">Justificación:</label>
+              <textarea name="justifica" id="justifica" cols="30" rows="4" readonly class="form-control">{{ form.numtrabajo.justificacion | default:'--' }}</textarea>
+            
+          </div>
+            
+          </div>
+          <pre></pre>
+         
+        
+      </div>
+    
+    {% endfor %}
+
+    <div class="modal fade" id="devolver" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel" style="color: black;">Devolución de Ordenes de Trabajo</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form class="modal-body" action="{% url 'trabajosinternos:devuelve2n' numt %}" method="GET">
+            
+
+              <div>
+                <label for="notas">Notas de devolución para el solicitante:</label>
+              </div>  
+              <div> 
+                <textarea class="form-control" id="notas" name="notas" rows="5" cols="59"></textarea>
+              </div>
+
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary" id="enviar" name="enviar">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="asignadoa" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel" style="color: black;">Asignar Responsable(s):</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form class="modal-body" action="{% url 'trabajosinternos:asignacion_mantenimiento' numt %}" method="GET">
+            <div class="form-group">
+          
+
+            {{ asignado.as_p  }}
+
+            <!-- {% for i in asignado %}
+             <p>{{i.id}}</p>
+             {% endfor %} -->
+            
+              <div>
+                <label for="notas">Observaciones Adicionales para el(los) Asignado(s):</label>
+              </div>  
+              <div> 
+                <textarea class="form-control"  id="notas" name="notas" rows="4" cols="59"></textarea>
+              </div>
+
+
+            </div>
+            
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary" id="enviar" name="enviar">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+{% endblock %}
+
+{% block extrajs %}
+<script>
+  $(window).on("load", function() {
+        $(".loader").fadeOut("slow");
+    });
+
+    $(document).ready(function() {    
+        $('#enviar').on('click', function(){
+            //Añadimos la imagen de carga en el contenedor
+            $(".loader").show();
+            $(window).on("load", function(){
+                $(".loader").fadeOut("slow");
+            });
+        });              
+    });    
+</script>
+{% endblock %}

@@ -1,0 +1,207 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+
+{% block extrahead %}
+<!DOCTYPE html>
+<style>
+
+
+table, th, td {
+border: 1px solid Black;}
+
+/* make the table a 100% wide by default */
+table {
+width: 100%;}
+
+/* if the browser window is at least 800px-s wide: */
+@media screen and (min-width: 800px) {
+  table {
+  width: 90%;}
+}
+
+/* if the browser window is at least 1000px-s wide: */
+@media screen and (min-width: 1000px) {
+  table {
+  width: 80%;}
+}
+
+.select-box {
+     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    -webkit-appearance: button;
+    -moz-appearance: button;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -webkit-padding-end: 20px;
+    -moz-padding-end: 20px;
+    -webkit-padding-start: 2px;
+    -moz-padding-start: 2px;
+    background-color: #faf9f7; /* Fallback color if gradients are not supported */
+    background-image: url(../images/select-arrow.png), -webkit-linear-gradient(top, #E5E5E5, #F4F4F4); /* For Chrome and Safari */
+    background-image: url(../images/select-arrow.png), -moz-linear-gradient(top, #E5E5E5, #F4F4F4); /* For old Firefox (3.6 to 15) */
+    background-image: url(../images/select-arrow.png), -ms-linear-gradient(top, #E5E5E5, #F4F4F4); /* For pre-releases of Internet Explorer  10*/
+    background-image: url(../images/select-arrow.png), -o-linear-gradient(top, #E5E5E5, #F4F4F4); /* For old Opera (11.1 to 12.0) */
+    background-image: url(../images/select-arrow.png), linear-gradient(to bottom, #E5E5E5, #F4F4F4); /* Standard syntax; must be last */
+    background-position: center right;
+    background-repeat: no-repeat;
+    border: 1px solid #AAA;
+    outline: 0px;
+    border-radius: 2px;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+    color:#262625;
+    font-size: inherit;
+    margin: 0;
+    overflow: hidden;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.row{
+  padding-bottom: 0px;
+}
+
+#filas{
+  padding:8px;
+}
+
+#categoria-label{
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  margin-left:25px;
+  
+}
+
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row" style="margin-top: 25px;">
+    <div class="col-md 18 search">
+      <p><h5 id="categoria-label"><strong>Usted está viendo las respuestas a la encuesta de proveedores de:&nbsp;{{nombre}}&nbsp;({{suma_total}}&nbsp;{{califica}})&nbsp;-&nbsp;{{categoria}}</strong></h5></p>
+      <form action="{% url 'proveedores:resp_encuesta' id_prove %}"  method="GET">
+      <div class="row" style="margin-left: 3px;">
+      <label for="proveedor" id="categoria-label">Escoja otro proveedor&nbsp;</label>
+        {% render_field form.nombre_empresa id="provedor"  class="select-box"  onChange="form.submit();" %}
+      </div>
+      <p></p>
+      <div class="row" style="margin-left: 3px;">
+        <label for="segmento" id="categoria-label">Filtre por Segmento&nbsp;</label>
+          {% render_field form4.nombre_segmento id="segmento"  class="select-box" placeholder="{{segmento_escogido}}"  onChange="form.submit();" %}
+        </div>
+        <p></p>
+
+
+     
+      </form>
+    </div>
+    </div>
+   
+  </div>
+<br>
+<table class="table table-dark table-sm container-fluid" style="width: 98%;">
+  <thead> 
+                   
+    <tr>
+    <td scope="col"><strong>No</strong></td>
+    <td scope="col"><strong>IDP</strong></td>
+    <td scope="col"><strong>IDDoc</strong></td>
+    <td scope="col"><strong>Pregunta</strong></td>
+    {% if segmento_escogido == '14' or segmento_escogido == '3' %}
+    <!-- Este IF sirve para desactivar los botones de edución de documentos encontrados -->
+    <td scope="col" style="text-align: center;"><strong>Documento encontrado o resp de Calidad</strong></td>
+    {% else %}
+    <td scope="col" style="text-align: center;"><strong>Respuesta</strong></td>
+    {% endif %}
+
+    <td scope="col" style="text-align: center;"><strong>Calificacion Esperada</strong></td>
+    {% if grade and segmento_escogido == '12' %}
+    <td scope="col" style="text-align: center;"><strong>Calificación Obtenida:&nbsp;{{grade}}</strong>  </td>
+    {% else %}
+    <td scope="col" style="text-align: center;"><strong>Calificación Obtenida:&nbsp;{{suma_prove1}}</strong>  </td>
+    {% endif %}
+    <td scope="col"><strong>Editar Resp.</strong></td>
+    
+    
+  
+  </thead> 
+<tbody>
+  {% if form2 %}
+  {% for proveedor in form2  %} 
+      <td>{{ forloop.counter }}</td>
+      <td>{{ proveedor.pregunta.id }}</td>
+      <td>{{ proveedor.documento_id|default:"--"  }}</td>
+      {%if segmento_escogido == '14' %}
+      {% if proveedor.documento %}
+      <td>{{ proveedor.pregunta }}</td>
+      {% else %}
+      <td style="background-color: rgb(223, 164, 14);">{{ proveedor.pregunta }}</td>
+      {% endif %}
+      {% else %}
+      <td>{{ proveedor.pregunta }}</td>
+      {% endif %}
+      <td style="text-align: center;">{{ proveedor.respuesta|default:"--" }}</td>
+      {% if proveedor.proveedor_id.categoria.id == 21 %}
+      <td style="text-align: center;">{{ proveedor.pregunta.puntaje_pregunta_especifica_constructores|default:"--" }}</td>
+      {% else %}
+      <td style="text-align: center;">{{ proveedor.pregunta.puntaje_pregunta_especifica|default:"--" }}</td>
+      {% endif %}
+      <td style="text-align: center;">{{ proveedor.calificacion|default:"--" }}</td>
+      <td>
+        {%if segmento_escogido == '14' or segmento_escogido == '3' %}
+        <a href="" class="btn btn-secondary glyphicon glyphicon-edit" title="Editar"></a>
+        {% else %}
+        <a href="{% url 'proveedores:edita_respuestas' proveedor.pregunta.id proveedor.id proveedor.proveedor_id.id %}" class="btn btn-warning glyphicon glyphicon-edit" title="Editar"></a>
+        {% endif %}
+      </td>
+    </tr>
+
+ 
+{% endfor %}
+
+{% else %}
+<div class="row">
+<h4 style="margin-left:25px;">Seleccione un segmento</h4>
+</div>
+
+
+{% endif %}
+</tbody>
+
+</table>
+
+<div class="pagination container-fluid" style="width: 98%;">
+  <span class="step-links">
+      {% if form.has_previous %}
+          <a href="?page=1">&laquo; inicio</a>
+          <a href="?page={{ form.previous_page_number }}">previo</a>
+      {% endif %}
+
+      <span class="current">
+          Page {{ form.number }} of {{ form.paginator.num_pages }}.
+      </span>
+
+      {% if form.has_next %}
+          <a href="?page={{ form.next_page_number }}">próximo</a>
+          <a href="?page={{ form.paginator.num_pages }}">último &raquo;</a>
+      {% endif %}
+  </span>
+</div>
+
+{% endblock content %}
+
+{% block extrajs %}
+<script>
+  jQuery(document).ready(function($){
+    $('*[data-href]').on('click', function(){
+      window.location = $(this).data("href");
+    });
+  });
+
+  
+</script>
+{% endblock %}

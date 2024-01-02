@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}
+    <h2>Cotizar Ordenes de Pedidos</h2>
+{% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block content %}
+    <div class="container" style="margin: 25px auto;">
+        <table class="table table-bordered table-sm">
+                <tbody>
+                  {% for form in cot %}
+                  <tr>
+                    <th class="table-dark" scope="col" style="width: 25%;">N° de Orden:</th>
+                    <td style='font-size: 11px;'>{{ form.numtrabajo.numtrabajo }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Usuario Solicitante:</th>
+                    <td>{{ form.numtrabajo.usuario_solicita }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Departamento Solicitante:</th>
+                    <td>{{ form.numtrabajo.departamento }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Area Solicitante:</th>
+                    <td>{{ form.numtrabajo.area }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Proyecto:</th>
+                    <td>{{ form.numtrabajo.numproyecto }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Descripciòn:</th>
+                    <td>{{ form.descripcion }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Justifiación Compra:</th>
+                    <td>{{ form.numtrabajo.justificacion_compra }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Observaciones Adquisiciones:</th>
+                    <td>{{ form.numtrabajo.cotiza_observa | default:'Ninguna' }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Observaciones Autorizador:</th>
+                    <td>{{ form.numtrabajo.observa_selec_cot | default:'Ninguna' }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Observaciones Entrega Parcial:</th>
+                    <td>{{ form.numtrabajo.entrega_observa | default:'Ninguna' }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Observaciones Entrega Total:</th>
+                    <td>{{ form.numtrabajo.total_observa | default:'Ninguna' }}</td>
+                  </tr>
+                  {% if form.cotiza_Ref %}
+                  <tr>
+                    <th class="table-dark" scope="col">Cotización Referencial:</th>
+                    <td><a class="card-link" href="/media/{{ form.cotiza_Ref }}" target="_blank">{{ form.cotiza_Ref }}</a></td>
+                  </tr>
+                  {% endif %}
+                  {% if form.img_1 %}
+                  <tr>
+                    <th class="table-dark" scope="col">Imagen 1:</th>
+                    <td>
+                      <a class="card-link" href="#" data-toggle="modal" data-target="#img_1" data-whatever="@getbootstrap">{{ form.img_1 }}</a>
+                      <div class="modal fade" id="img_1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div>
+                              <img src="/media/{{ form.img_1 }}" class="img-thumbnail rounded" alt="...">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endif %}
+                  {% if form.img_2 %}
+                  <tr>
+                    <th class="table-dark" scope="col">Imagen 2:</th>
+                    <td>
+                      <a class="card-link" href="#" data-toggle="modal" data-target="#img_2" data-whatever="@getbootstrap">{{ form.img_2 }}</a>
+                      <div class="modal fade" id="img_2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div>
+                              <img src="/media/{{ form.img_2 }}" class="img-thumbnail rounded" alt="...">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endif %}
+                  {% endfor %}
+                </tbody>
+        </table>
+    </div>
+{% endblock %}

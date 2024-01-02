@@ -1,0 +1,88 @@
+<html>
+  <head>
+    <style type="text/css">
+      a:link{
+        color: rgb(1, 58, 182);
+
+      }
+      .btn {
+        display: inline-block;
+        font-weight: 400;
+        text-decoration: none;
+        color: rgb(1, 58, 182);
+        text-align: center;
+        vertical-align: middle;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        background-color: transparent;
+        border: 1px solid transparent;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        border-radius: 0.25rem;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+      }
+      .btn-primary {
+        color: rgb(1, 58, 182);
+        background-color: #007bff;
+        border-color: #007bff;
+      }
+      .btn-primary:hover {
+        color: rgb(92, 92, 92);
+        background-color: #0069d9;
+        border-color: #0062cc;
+      }
+    </style>
+  </head> 
+  <body>
+    <div>
+      <p>
+        El pedido de pago de factura ha sido aprobado.
+      </p>
+    </div>
+      <table style="border: 1px;" cellspacing='0' cellpadding='10'>
+          <tbody>
+            {% for i in aprob %}
+            <tr>
+              <td scope="col" style='font-size: 11px;'>N° de Pedido:</td>
+              <td style='font-size: 11px;'>{{ i.numtrabajo.numtrabajo }}</td>
+            </tr>
+            <tr>
+              <td scope="col" style='font-size: 11px;'>Usuario Solicitante:</td>
+              <td style='font-size: 11px;'>{{ i.numtrabajo.usuario_solicita.username }}</td>
+            </tr>
+            <tr>
+              <td scope="col" style='font-size: 11px;'>Departamento Solicitante:</td>
+              <td style='font-size: 11px;'>{{ i.numtrabajo.departamento }}</td>
+            </tr>
+            <tr>
+              <td scope="col" style='font-size: 11px;'>Area Solicitante:</td>
+              <td style='font-size: 11px;'>{{ i.numtrabajo.area }}</td>
+            </tr>
+            <tr>
+              <td scope="col" style='font-size: 11px;'>Proyecto:</td>
+              <td style='font-size: 11px;'>{{ i.numtrabajo.numproyecto }}</td>
+            </tr>
+            <tr>
+              <td scope="col" style='font-size: 11px;'>Tipo Activo:</td>
+              <td style='font-size: 11px;'>{{ i.numtrabajo.tipo_pedi }}</td>
+            </tr>
+            <tr>
+              <td scope="col" style='font-size: 11px;'>Descripciòn:</td>
+              <td style='font-size: 11px;'>{{ i.descripcion }}</td>
+            </tr>
+            <tr>
+              <td scope="col" style='font-size: 11px;'>Cantidad:</td>
+              <td style='font-size: 11px;'>{{ i.cantidad }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+      </table>
+      <div>
+        <a class="btn btn-primary" href="http://192.168.27.118/ordenpedido/ordenescotizar/">Acceso al sistema</a>
+      </div>
+  </body>
+</html>

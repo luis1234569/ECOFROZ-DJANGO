@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-md 12 search">
+      <form class="form-inline my-2 my-lg-0" method="GET">
+        <input class="form-control mr-sm-2" type="text" placeholder="Buscar..." name="buscar">
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+        <td scope="col"><strong>No</strong></td>
+        <td scope="col"><strong>Codigo</strong></td>
+        <td scope="col"><strong>Parte de</strong></td>
+        <td scope="col"><strong>Grupo</strong></td>
+        <td scope="col"><strong>Tipo Activo</strong></td>
+        <td scope="col"><strong>Ubicación</strong></td>
+        <td scope="col"><strong>Departamento</strong></td>
+        <td scope="col"><strong>Area</strong></td>
+        <td scope="col"><strong>Descripción</strong></td>
+        <td scope="col"><strong>Acciones</strong></td>
+    </tr>
+  </thead>
+<tbody>
+  {% if form %}
+  {% for activo in form  %} 
+    <tr class="table-active"> 
+      <td>{{ activo.id }}</td>
+      <td>{{ activo.activo_codigo }}</td>
+      <td>{{ activo.cod_activo_padre }}</td>
+      <td>{{ activo.activo_grupo }}</td>
+      <td>{{ activo.activo_tipo }}</td>
+      <td>{{ activo.activo_ubica}}</td>
+      <td>{{ activo.activo_depar }}</td>
+      <td>{{ activo.activo_area }}</td>
+      <td>{{ activo.activo_descripcion }}</td>
+      <td>
+        <a class="btn btn-primary" href="{% url 'editar_activos'  activo.id %}">Editar</a>
+        <a class="btn btn-danger" href="{% url 'eliminar_activos' activo.id %}">Eliminar</a>
+      </td>
+    </tr>
+
+ 
+{% endfor %}
+
+
+
+
+{% else %}
+<h1>No hay registros</h1>
+
+{% endif %}
+</tbody>
+
+</table>
+
+
+{% endblock content %}

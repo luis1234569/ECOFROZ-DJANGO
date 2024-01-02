@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+
+.box {
+  display: inline-block;
+  width: 200px;
+  height: 100px;
+  margin: 1em;
+  padding-bottom: 15px;
+  border: 3px solid #555;
+}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+      <div class="col-md 8 search">
+        <form class="form-inline my-2 my-lg-0" method="GET">
+            {% csrf_token %}
+                <div class="box">
+                <!-- <label for="{{ form2.activo_codigo.label }}">{{ form2.activo_codigo.label }}</label>   -->
+                {{ form2.activo_codigo |  bootstrap_horizontal:'col-lg-3' }}
+                <!-- {{ form2.activo_codigo }} -->
+                <!-- <label for="{{ form2.activo_tipo.label }}">{{ form2.activo_tipo.label }}</label>  -->
+                <!-- {{ form2.activo_tipo }} -->
+                {{ form2.activo_tipo |  bootstrap_horizontal:'col-lg-3' }}
+                </div>
+                <br>
+                <div class="box">
+                <!-- <label for="{{ form2.activo_ubica.label }}">{{ form2.activo_ubica.label }}</label>  -->
+               <!-- {{ form2.activo_ubica }} -->
+               {{ form2.activo_ubica |  bootstrap_horizontal:'col-lg-3' }}
+               <label for="{{ form2.activo_depar.label }}">{{ form2.activo_depar.label }}</label>
+               {{ form2.activo_depar }}
+               <!-- <label for="{{ form2.activo_area.label }}">{{ form2.activo_area.label }}</label>  -->
+               <!-- {{ form2.activo_area }} -->
+               {{ form2.activo_area |  bootstrap_horizontal:'col-lg-3' }}
+               </div>
+              <br>
+              <br>
+              <button class="btn btn-warning my-2 my-sm-0" type="reset" onclick="location.href='{% url 'filtrar_activos' %}'">Limpiar</button> 
+              <button class="btn btn-success my-2 my-sm-0" type="button" onclick="location.href='{% url 'to_excelclass' %}'">To Excel</button>
+              <button class="btn btn-primary my-2 my-sm-0" type="submit">Buscar</button>      
+        </form>
+        
+      </div>
+    </div>
+  </div>
+  <br>
+  <br>
+
+  <style>
+      #heading { color: #1192B2; }
+    </style>
+  
+  {% if var %}
+  <h3 id="heading">Número de registros encontrados: {{ var }} </h3>
+  
+  {% else %}
+  <!-- <h3>No hay registros...</h3> -->
+  
+  {% endif %}
+<br>
+
+
+<!-- <form method="GET">
+{% csrf_token %} -->
+<!-- {{ form2.as_p }}  
+{{ form.as_p }} -->
+
+      <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <td scope="col"><strong>No</strong></td>
+                    <td scope="col"><strong>Codigo</strong></td>
+                    <td scope="col"><strong>Parte de</strong></td>
+                    <td scope="col"><strong>Ubicación</strong></td>
+                    <td scope="col"><strong>Area</strong></td>
+                    <td scope="col"><strong>Descripción</strong></td>
+                    <td scope="col"><strong>Marca</strong></td>
+                    <td scope="col"><strong>Modelo</strong></td>
+                    <td scope="col"><strong>Serie</strong></td>
+                    <td scope="col"><strong>Motor</strong></td>
+                    <td scope="col"><strong>Valor</strong></td>
+                  </tr>
+                </thead>
+              <tbody>
+                {% if form %}
+                {% for activo in form  %} 
+                  <tr class="table-active"> 
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ activo.desc_activo_codigo.activo_codigo }}</td>
+                    <td>{{ activo.desc_activo_codigo.cod_activo_padre }}</td>
+                    <td>{{ activo.desc_activo_codigo.activo_ubica}}</td>
+                    <td>{{ activo.desc_activo_codigo.activo_area }}</td>
+                    <td>{{ activo.desc_activo_codigo.activo_descripcion }}</td>
+                    <td>{{ activo.desc_activo_marca }}</td>
+                    <td>{{ activo.desc_activo_modelo }}</td>
+                    <td>{{ activo.desc_activo_num_serie }}</td>
+                    <td>{{ activo.desc_activo_num_motor }}</td>
+                    <td>{{ activo.desc_activo_codigo.activo_valor }}</td>
+      <td>
+                  </tr>
+              
+               
+              {% endfor %}
+              
+              {% else %}
+              <h1>No hay registros</h1>
+              
+              {% endif %}
+              </tbody>
+              
+              </table>
+              
+              <div class="pagination">
+                <span class="step-links">
+                    {% if form.has_previous %}
+                        <a href="?page=1">&laquo; inicio</a>
+                        <a href="?activo_tipo={{ tipo }}&page={{ form.previous_page_number }}">previo</a>
+                    {% endif %}
+              
+                    <span class="current">
+                        Page {{ form.number }} of {{ form.paginator.num_pages }}.
+                    </span>
+              
+                    {% if form.has_next %}
+                        <a href="?activo_tipo={{ tipo }}&activo_ubicacion={{ ubicacion }}&page={{ form.next_page_number }}">próximo</a>
+                        <a href="?page={{ form.paginator.num_pages }}">último &raquo;</a>
+                    {% endif %}
+                </span>
+              </div>
+            </div>
+          
+              {% endblock content %}

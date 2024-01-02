@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+<!-- {% load tz %} -->
+
+{% block content %}
+<div class="container" style="margin: 25px auto;">
+  <div class="row">
+    <div class="col-md-6 search">
+      <form class="form-inline my-2 my-lg-0" method="GET">
+        <input class="form-control mr-sm-2" type="text" placeholder="N° Pedido, Descripción" name="buscar" {% if busqueda %} value="{{ busqueda }}" {% endif %}>
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+        <a class="btn btn-secondary my-2 my-sm-0" style="margin-left: 10px;" href="{% url 'soporte:listar_soporte_int' %}"></button>Limpiar</a>
+      </form>
+    </div>
+    <div class="col-md-6">
+      <a class="btn btn-success rounded-circle" style="float: right;" href="{% url 'soporte:generar_ticket_int' %}">+</a>
+      <a class="btn btn-success" style="float: right; margin-right: 10px;" href="{% url 'soporte:reporte_int' %}">Excel</a>
+    </div>
+  </div>
+</div>
+<table class="table table-hover table-dark" style="margin: 25px auto">
+    <thead>
+      <tr>
+        <th scope="col">Pedido N°</th>
+        <th scope="col">Solicitante</th>
+        <th scope="col">Departamento</th>
+        <th scope="col">Fecha Solicitud</th>
+        <th scope="col">Tipo Soporte</th>
+        <th scope="col">Descripción</th>
+        <th scope="col">Estado</th>
+        <th scope="col">Registra</th>
+        <th scope="col">Reasignado</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for pedido in form %}
+      <tr>
+        <td>{{ pedido.numticket }}</td>
+        <td>{{ pedido.solicita_nombre }} {{ pedido.solicita_apellido }}</td>
+        <td>{{ pedido.departamento }}</td>
+        <td>{{ pedido.fch_solicita|date:'Y-m-d' }}</td>
+        <td>{{ pedido.tipo_problema }}</td>
+        <td>{{ pedido.descripcion_problema }}</td>
+        <td>{{ pedido.estado_solicitud }}</td>
+        <td>{{ pedido.usuario_responsabe }}</td>
+        <td>{{ pedido.reasignado_a | default:"--" }}</td>
+        <td>
+          <a href="{% url 'soporte:edita_ticket_int' pedido.numticket %}" class="btn btn-primary">Editar</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+</table>
+
+<div class="pagination">
+  <span class="step-links">
+      {% if form.has_previous %}
+          <a href="?page=1">&laquo; inicio</a>
+          <a href="?page={{ form.previous_page_number }}">previo</a>
+      {% endif %}
+
+      <span class="current">
+          Page {{ form.number }} of {{ form.paginator.num_pages }}.
+      </span>
+
+      {% if form.has_next %}
+          <a href="?page={{ form.next_page_number }}">próximo</a>
+          <a href="?page={{ form.paginator.num_pages }}">último &raquo;</a>
+      {% endif %}
+  </span>
+</div>
+{% endblock %}

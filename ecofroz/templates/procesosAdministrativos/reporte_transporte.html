@@ -1,0 +1,213 @@
+{% extends 'base.html' %}
+<!-- {% load tz %} -->
+
+{% block extrahead %}
+<style type="text/css"> 
+  thead th  { 
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background-color: #ffffff;
+      border: blue 2px solid;
+      
+  }
+
+  tr td  { 
+      
+      border: rgb(209, 209, 226) 1px solid;
+      
+  }
+
+  .table { 
+      height:200px;
+      overflow:scroll;
+      font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+  }
+
+  
+
+  th, td {
+    word-wrap: break-word;
+    text-align: left;
+   padding: 8px;
+}
+
+
+
+</style>
+
+{% endblock %}
+
+{% block content %}
+<div class="container" style="margin: 25px auto;">
+  <div class="row">
+    
+      <form class="form-inline my-2 my-lg-0" method="GET" action="{% url 'procesosadministrativos:reporte_transporte' %}" id="buscar" name="buscar">
+        
+        <div class="form-group col-auto">
+            <label style="margin-right: 10px;">DESDE:</label>
+            <input type="date" name="inicio" value="{{ inicio }}" required>
+          </div>
+
+          <div class="form-group col-auto">
+            <label style="margin-right: 10px;">HASTA:</label>
+            <input type="date" name="fin" value="{{ fin }}" required>
+          </div>
+
+          
+        <div class="form-group col-auto">
+          <div class="col-auto">
+            <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+            <a class="btn btn-warning my-2 my-sm-0"  href="{% url 'procesosadministrativos:reporte_transporte' %}">Limpiar</a>
+          </div>
+        </form>
+     
+        {% if consulta == 'SI' %}
+        <div class="col">
+          <a class="btn btn-success" style="margin-top: 5px;" href="{% url 'procesosadministrativos:export_excel_transporte' inicio fin %}">Exportar a Excel</a> 
+        </div>
+        {% else %}
+        <div class="col">
+          <button class="btn btn-outline-success" style="margin-top: 5px;" href="" disabled>Exportar a Excel</button> 
+        </div>
+        {% endif %}
+
+      </div>
+    </div>
+  
+
+  </div>
+
+  
+
+  <table class="table table-sm table-striped" style="margin: 25px auto; width: 100%;">
+    <thead class="thead-dark">
+      <tr>
+                <th>N° Solic.</th>
+                <th>Dept.</th>
+                <th>Fecha Solicitud</th>
+                <th>Fecha Aprobado</th>
+                <th>Registra</th>
+                <th>Tipo</th>
+                <th>Ruta</th>
+                <th>Retor</th>
+                <th>Aprueba</th>
+                <th>Pasajero(s)</th>
+                <th>Fecha Evento</th>
+                <th>Trans.</th>
+                <!-- <th>Justificación</th> -->
+                <th>Tarifa Ref.</th>
+                <th>Valor Real</th>
+                <th>Factura</th>
+            </tr>
+        </thead>
+        <tbody style="text-align: center;">
+            {% for i in reg %}
+            <tr>
+              {% if i.usuario_solicita != 106 %}
+                <td>{{ i.numpedido }}</td>
+              {% else %}
+              <td>--</td>
+              {% endif %}
+                <td>{{ i.departamento.dep_nombre | slice:":10"}}</td>
+                <!-- <td>{{ i.ubica | default:"--"}}</td> -->
+                <td>{{ i.fchsolicita | date:"F d, Y H:i" }}</td>
+                <td>{{ i.fchaprueba1n | date:"F d, Y H:i" }}</td>
+                <td>{{ i.usuario_solicita.username | slice:"10"  }}</td>
+                <td>{{ i.get_tipo_display  }}</td>
+                {% if i.ruta.id == 42 %}
+                <td>OR:{{i.otra_ruta}}</td>
+                {% else %}
+                <td>{{ i.ruta}}</td>
+                {% endif %}
+                <td>{{ i.retorno |yesno:"SI,NO"}}</td>
+                <td>{{ i.usuario_aprueba1n.username }}</td>
+                
+                {% if i.pasajero == '' %}
+                <td>{{ i.otros_pasajeros | default:"--" }}</td>
+                {% else %}
+                {% if i.pasajero and i.otros_pasajeros %}
+                <td>{{ i.pasajero }},{{ i.otros_pasajeros }}</td>
+                {% else %}
+                <td>{{ i.pasajero | default:"--" }}</td>
+                {% endif %}
+                {% endif %}
+                <td>{{ i.fchevento | date:"F d, Y" }}</td>
+                <!-- <td>{{ i.evento.id }} - {{ i.evento.name }}</td> -->
+                <td>{{ i.transportista | default:"--" | slice:":10" }}</td>
+                <!-- <td>{{ i.justificacion | slice:":50" }}</td> -->
+                {% if i.ruta.id == 42 %}
+                <td>--</td>
+                {% else %}
+                <td>{{ i.ruta.tarifa | default:"--"}}</td>
+                {% endif %}
+                <td>{{ i.tarifa_real| default:"--"}}</td>
+                <td>{{ i.num_factura | default:"--" }}</td>
+                
+                
+
+              </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="pagination">
+  <span class="step-links">
+      {% if reg.has_previous %}
+          <a href="?inicio={{ inicio }}&fin={{ fin }}&page=1">&laquo; inicio</a>
+          <a href="?inicio={{ inicio }}&fin={{ fin }}&page={{ reg.previous_page_number }}">previo</a>
+      {% endif %}
+
+      <span class="current">
+          Page {{ reg.number }} of {{ reg.paginator.num_pages }}.
+      </span>
+
+      {% if reg.has_next %}
+          <a href="?inicio={{ inicio }}&fin={{ fin }}&page={{ reg.next_page_number }}">próximo</a>
+          <a href="?inicio={{ inicio }}&fin={{ fin }}&page={{ reg.paginator.num_pages }}">último &raquo;</a>
+      {% endif %}
+  </span>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+var comprueba = '{{msj2}}'
+if (comprueba == 'Error') {
+  $(document).ready(function(){
+    alert('{{ msj }}');
+  })
+};
+
+// $("input[type=date]").datepicker({
+//   dateFormat: 'yyyy-mm-dd',
+//   onSelect: function(dateText, inst) {
+//     $(inst).val(dateText); // Write the value in the input
+//   }
+// });
+
+// Code below to avoid the classic date-picker
+// $("input[type=date]").on('click', function() {
+//   return false;
+// });
+
+// $("#buscar").submit(function(){
+//     let ini = $("#inicio").html();
+//     // let ini = new Date($('#inicio').val());
+//     let fin = $("#fin").val();
+//     alert(ini)
+//     alert(fin)
+//     if (ini == null){
+//       alert("No selecciono la fecha de inicio");
+//       return false;
+//     } else if (fin == null) {
+//       alert("No selecciono la fecha de fin");
+//       return false;
+//     } else {
+//       return true;
+//     };
+// });
+</script>
+{% endblock %}

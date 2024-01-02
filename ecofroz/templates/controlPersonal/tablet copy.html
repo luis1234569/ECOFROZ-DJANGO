@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block extrahead %}
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Static Example</title>
+
+    <!-- Bootstrap 4 -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+    <!-- Font Awesome -->
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+    <!-- Moment.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js" integrity="sha256-VBLiveTKyUZMEzJd6z2mhfxIqz3ZATCuVMawPZGzIfA=" crossorigin="anonymous"></script>
+
+    <!-- Tempus Dominus Bootstrap 4 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.min.css" integrity="sha256-XPTBwC3SBoWHSmKasAk01c08M6sIA5gF5+sRxqak2Qs=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.min.js" integrity="sha256-z0oKYg6xiLq3yJGsp/LsY9XykbweQlHl42jHv2XTBz4=" crossorigin="anonymous"></script>
+
+  </head>
+
+
+{% endblock %}
+
+{% block title %}
+    <h2>Ordenes de Pedidos</h2>
+{% endblock %}
+
+{% block content %}
+<body>
+
+<div class="jumbotron row" style="width: 98%; margin:auto; padding-top: 25px; margin-top: 20px; margin-bottom: 25px;">
+    <form method=GET action=".">
+        <div class="container">
+            <div class="row justify-content-md-left">
+              <div class="col-md-auto">
+                    <label>Nombre, Apellido o Cédula</label>
+                    <span class="fa fa-search form-control-feedback"></span>
+                      <input class="form-control" type="text" name="buscar" size="40px;" placeholder="Buscar.." value={{busqueda}}>
+              </div>
+             
+              <div class="col-md-auto">
+                <label>Fecha Desde:</label>
+                <div class="input-group date" id="datetimepicker1" data-target-input="nearest" >
+                    <input  method="GET">
+                    <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                      <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    </div>
+              </div>
+            </div>
+              <div class="col-md-auto">
+                <label>Fecha Hasta:</label>
+                <div class="input-group date" id="datetimepicker2" data-target-input="nearest" >
+                    <input  method="GET">
+                    <div class="input-group-append" data-target="#datetimepicker2" data-toggle="datetimepicker">
+                      <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    </div>
+              </div>
+              </div>
+            </div>
+            
+                <button class="btn btn-secondary" type="submit" style="margin-left: 890px;margin-top: -65px;" >Buscar</button>          
+                </form> 
+                
+       
+        </div>
+        
+        
+      
+</div>
+</div>
+
+<div class="container-fluid">
+    <table class="table table-boderless">
+        <thead class="thead-dark table-striped"  style="text-align: center;">
+            <tr>
+                <th>N°</th>
+                <th>Cédula</th>
+                <th>Nombre</th>
+                <th>Fecha Ingreso</th>
+                <th>Hora de Ingreso</th>
+                <th>Fecha Salida</th>
+                <th>Hora Salida</th>
+            </tr>
+        </thead>
+        <tbody style="text-align: center;">
+            {% for i in reg %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ i.persona.cedula }}</td>
+                <td>{{ i.persona.first_name }} {{ i.persona.last_name }}</td>
+                <td>{{ i.fch_ingreso }}</td>
+                <td>{{ i.hr_ingreso_txt }}</td>
+                <td>{{ i.fch_salida | default:"--" }}</td>
+                <td>{{ i.hr_salida_txt | default:"--" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="pagination">
+    <span class="step-links">
+        {% if reg.has_previous %}
+            <a href="?page=1">&laquo; inicio</a>
+            <a href="?page={{ reg.previous_page_number }}">previo</a>
+        {% endif %}
+  
+        <span class="current">
+            Page {{ reg.number }} of {{ reg.paginator.num_pages }}.
+        </span>
+  
+        {% if reg.has_next %}
+            <a href="?page={{ reg.next_page_number }}">próximo</a>
+            <a href="?page={{ reg.paginator.num_pages }}">último &raquo;</a>
+        {% endif %}
+    </span>
+  </div>
+</body>
+{% endblock %}
+
+{% block extrajs %}
+
+<script>
+    $(function () {
+      $("#datetimepicker1").datetimepicker({
+        format: 'DD/MM/YYYY HH:mm',
+      });
+    });
+
+    $(function () {
+      $("#datetimepicker2").datetimepicker({
+        format: 'DD/MM/YYYY HH:mm',
+      });
+    });
+
+  </script>
+
+{% endblock %}

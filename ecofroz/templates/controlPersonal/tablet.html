@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block extrahead %}
+
+
+{% endblock %}
+
+{% block title %}
+    <h2>Ordenes de Pedidos</h2>
+{% endblock %}
+
+{% block content %}
+<body>
+
+<div class="jumbotron row" style="width: 98%; margin:auto; padding-top: 25px; margin-top: 20px; margin-bottom: 25px;">
+    <div class="container-fluid">
+        <div class="row" style="margin-top: 25px;">
+          <div class="col-md 18 search">
+            <form class="form-inline my-2 my-lg-0" method="GET">
+                      <input class="form-control mr-sm-2" type="text" placeholder="Nombres, Apellidos o cédula" name="buscar" size="40px;" value={{busqueda}}>
+                      <button class="btn btn-secondary my-2 my-sm-0"  type="submit">Buscar</button>
+                    </form>
+                  </div>
+                
+
+              <div class="col-md-auto">
+                <div style="float: right; margin-left: 280px;">
+                  <script type="text/javascript">
+                               
+                      var  today = new Date();
+                      var d = today.getDate() < 10 ? '0' + today.getDate() : today.getDate();
+                      var m = today.getMonth() + 1;
+                      if( m == 1) {m='Enero';} 
+                      if( m == 2) {m='Febrero';} 
+                      if( m == 3) {m='Marzo';} 
+                      if( m == 4) {m='Abril';} 
+                      if( m == 5) {m='Mayo';} 
+                      if( m == 6) {m='Junio';} 
+                      if( m == 7) {m='Julio';} 
+                      if( m == 8) {m='Agosto';} 
+                      if( m == 9) {m='Septimbre';} 
+                      if( m == 10) {m='Octubre';} 
+                      if( m == 11) {m='Noviembre';} 
+                      if( m == 12) {m='Diciembre';} 
+                      var y = today.getFullYear();
+                      var h = today.getHours();
+                      var mi = today.getMinutes();
+                      var se = today.getSeconds();
+                      var mes = (m < 10) ? '0' + m : m;
+                          document.write('Fecha Actual: ' + d + ' de ' +m+ ' de ' + y)
+                  </script>
+              </div>
+          </div>
+             
+              <!-- <div class="col-md-auto">
+                <label>Fecha Desde:</label>
+                <div class="input-group date" id="datetimepicker1" data-target-input="nearest" >
+                    <input type="text" class="form-control datetimepicker-input" name="datetimepicker1"  data-target="#datetimepicker1"/>
+                    <div class="input-group-append" data-target="datetimepicker1" data-toggle="datetimepicker">
+                      <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    </div>
+              </div>
+            </div>
+              <div class="col-md-auto">
+                <label>Fecha Hasta:</label>
+                <div class="input-group date" id="datetimepicker2" data-target-input="nearest" >
+                    <input type="text" class="form-control datetimepicker-input" name="datetimepicker2"  data-target="#datetimepicker2"/>
+                    <div class="input-group-append" data-target="datetimepicker2" data-toggle="datetimepicker">
+                      <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    </div>
+              </div>
+              </div> -->
+            </div>       
+      
+</div>
+
+
+<div class="container-fluid">
+    <table class="table table-boderless table-striped" style="margin-top:30px;">
+        <thead class="thead-dark"  style="text-align: center;">
+            <tr>
+                <th>N°</th>
+                <th>Cédula</th>
+                <th>Nombre</th>
+                <th>Fecha Ingreso</th>
+                <th>Hora de Ingreso</th>
+                <th>Fecha Salida</th>
+                <th>Hora Salida</th>
+            </tr>
+        </thead>
+        <tbody style="text-align: center;">
+            {% for i in reg %}
+            <tr>
+                <td>{{ forloop.counter0 |add:reg.start_index }}</td>
+                <td>{{ i.persona.cedula }}</td>
+                <td>{{ i.persona.first_name }} {{ i.persona.last_name }}</td>
+                <td>{{ i.fch_ingreso }}</td>
+                <td>{{ i.hr_ingreso_txt }}</td>
+                <td>{{ i.fch_salida | default:"--" }}</td>
+                <td>{{ i.hr_salida_txt | default:"--" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="pagination">
+    <span class="step-links">
+        {% if reg.has_previous %}
+            <a href="?buscar={{busqueda}}&page=1">&laquo; inicio</a>
+            <a href="?buscar={{busqueda}}&page={{ reg.previous_page_number }}">previo</a>
+        {% endif %}
+  
+        <span class="current">
+            Page {{ reg.number }} of {{ reg.paginator.num_pages }}.
+        </span>
+  
+        {% if reg.has_next %}
+            <a href="?buscar={{busqueda}}&page={{ reg.next_page_number }}">próximo</a>
+            <a href="?buscar={{busqueda}}&page={{ reg.paginator.num_pages }}">último &raquo;</a>
+        {% endif %}
+    </span>
+  </div>
+</body>
+{% endblock %}
+
+{% block extrajs %}
+
+<script>
+    // $(function () {
+    //   $("datetimepicker1").datetimepicker({
+    //     format: 'DD/MM/YYYY HH:mm',
+    //   });
+    // });
+
+    // $(function () {
+    //   $("datetimepicker2").datetimepicker({
+    //     format: 'DD/MM/YYYY HH:mm',
+    //   });
+    // });
+
+  </script>
+
+{% endblock %}

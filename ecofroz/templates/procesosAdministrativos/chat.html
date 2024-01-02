@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+<!-- {% load tz %}   -->
+
+{% block extrahead %}
+
+<style type="text/css"> 
+  thead th  { 
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background-color: #ffffff;
+      border: blue 2px solid;
+      
+  }
+
+  tr td  { 
+      
+      border: rgb(209, 209, 226) 1px solid;
+      
+  }
+
+  .table { 
+      height:200px;
+      overflow:scroll;
+      font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+  }
+
+  
+
+  th, td {
+    word-wrap: break-word;
+    text-align: left;
+   padding: 8px;
+}
+
+</style>
+
+
+
+{% endblock %}
+
+
+
+{% block content %}
+<div class="loader"></div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+<h4>ChatGPT&nbsp;<mark>experimental</mark></h4>
+
+	<form method="POST">
+		{% csrf_token %}
+    <label for="message">Haz una pregunta </label><br>
+		<label for="">Ejemplo 1: Redacta un modelo de contrato de compra venta de vehículo.</label><br>
+    <label for="">Ejemplo 2: Nombra 10 frases motivadoras para el personal de una empresa</label>
+    <textarea class="form-control" cols="30" rows="3" name="message"></textarea>
+		<button class="btn btn-primary" id="enviar" name="enviar" type="submit" style="float:right;margin-top:5px;margin-bottom:5px;">Enviar</button>
+	</form>
+	<div>
+  </div>
+
+		{% if bot_response %}
+    <textarea class="form-control" name="respuesta" id="" cols="30" rows="10" readonly>{{ bot_response }}</textarea>
+			<!-- <p><strong>Bot: </strong>{{ bot_response }}</p> -->
+		{% endif %}
+	</div>
+</div>
+</div>
+
+     
+{% endblock %}
+
+{% block extrajs %}
+
+<script>
+
+$(window).on("load", function() {
+  $(".loader").fadeOut("slow");
+});
+
+$(document).ready(function() {    
+  $('#enviar').on('click', function(){
+      
+          //Añadimos la imagen de carga en el contenedor
+          $(".loader").show();
+          $(window).on("load", function(){
+              $(".loader").fadeOut("slow");
+          });
+      });
+    });          
+
+
+</script>
+
+{% endblock %}

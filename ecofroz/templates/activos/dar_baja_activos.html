@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form method="post">
+    {%csrf_token %}
+    <div class="container" style="margin-left:-5px;margin-top:5px;">
+    <h3>Confirma que desea dar de baja el activo {{object.activo_codigo}} ?</h3>
+    <button class="btn btn-warning" type="submit">Sí, Dar de Baja</button>
+    <a class= "btn btn-default" href="{% url 'activos:listar_activos'%}">Cancelar</a>
+</form>
+</div>
+{% endblock %}
+

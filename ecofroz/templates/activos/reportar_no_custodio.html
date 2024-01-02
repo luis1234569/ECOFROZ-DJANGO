@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+{% load filters %}
+
+{% block extrahead %}
+
+<style>
+#preloder {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 999999;
+        background: #000;
+      }
+      
+      .loader {
+        width: 40px;
+        height: 40px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-top: -13px;
+        margin-left: -13px;
+        border-radius: 60px;
+        animation: loader 0.8s linear infinite;
+        -webkit-animation: loader 0.8s linear infinite;
+      }
+
+</style>
+
+{% endblock %}
+
+{% block content %}
+<div class="loader"></div>
+
+<div class="jumbotron" style="width: 75%; margin:auto; padding-top: 25px; margin-top: 25px; margin-bottom: 25px;">
+        <h4 class="display-5">Reportar Activos que no están bajo mi Custodio.</h4>
+        <h4 class="display-5">Información del activo</h4>
+        <p>
+                <p>
+        
+        {% for queryset_activo in queryset_activo %}
+        <div class="form-row">
+                <div class="form-group col-md-10" >
+                        
+                        <label><b><u>Código Activo:</u></b></label>
+                        {{queryset_activo.activo_codigo}}
+                        
+               
+                        <br>
+                        <label><b><u>Identificación:</u></b></label>
+                        {{queryset_activo.grabado}}
+                
+                        <br>
+                        <label><b><u>Marca: </u></b></label>
+                        {% for query in queryset_activo.detalle.all %}
+                        {{query.desc_activo_marca | default:"--"}}
+                      
+                        <br>
+                
+                        <label><b><u>Modelo: </u></b></label>
+                        {{query.desc_activo_modelo | default:"--"}}
+                        <br>
+                        <label><b><u>Serie: </u></b></label>
+                        {{query.desc_activo_num_serie | default:"--"}}
+                        {% endfor %}
+                        <br>
+                        
+                        <label><b><u>Descripción: </u></b></label>
+                        {{queryset_activo.activo_descripcion}}
+                        <br>
+
+                        <label><b><u>Ubicacion: </u></b></label>
+                        {{queryset_activo.activo_ubica}}
+                        <br>
+
+                        <label><b><u>Departamento: </u></b></label>
+                        {{queryset_activo.activo_depar}}
+                        <br>
+
+                        <label><b><u>Sector: </u></b></label>
+                        {{queryset_activo.activo_area}}
+                        <br>
+                        
+
+                </div>
+        </div>
+        {% endfor %}
+
+        <div class="form-row"> 
+                <p>
+                </div>
+        
+
+        
+
+        <form method="POST" id="form"> 
+        {% csrf_token %}
+        
+
+        
+        
+        <div class="form-row">
+                <h4>Observaciones</h4>
+        </div>
+
+        <div class="form-row">
+        <div class="form-group col-md-11" >
+                <textarea class="form-control" name="observaciones" rows="6" cols="8"></textarea> 
+        </div>
+
+        <div class="form-group col-md-3">
+                <label>Usuario Registra</label> 
+                <input type="text" class="form-control" style="width:230px;" name="usuario_registra" value={{user.username}} readonly="true">
+
+        </div>
+        </div>
+        
+        
+        
+                 
+        {% render_field form.usuario_modifica value=user.username class="form-control" readonly="True"   %} 
+               
+        <div class="form-group col-md-3">
+                
+        </div>
+        
+               <button id="guardar" type="submit" class="btn btn-primary btn">Enviar y Regresar a Mis Activos</button>
+       
+        </form>
+</div>
+
+{% endblock content %}
+
+{% block extrajs %}
+<script>
+
+$('document').ready(function() {
+  /*------------------
+      Preloder
+  --------------------*/
+  $(".loader").fadeOut();
+  $("#preloder").delay(400).fadeOut("slow");
+  
+});
+  
+$(document).ready(function() {    
+        $('#guardar').on('click', function(){
+            //Añadimos la imagen de carga en el contenedor
+            $(".loader").show();
+            $(window).on("load", function(){
+                $(".loader").fadeOut("slow");
+            });
+        });              
+    }); 
+</script>
+
+{% endblock %}

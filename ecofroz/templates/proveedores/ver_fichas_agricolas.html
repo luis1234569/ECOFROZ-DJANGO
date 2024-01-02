@@ -1,0 +1,436 @@
+
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+
+{% block extrahead %}
+
+<style>
+  body {
+        background-color:cadetblue
+      }
+
+  th, td {
+  text-align: left;
+  padding: 8px;
+}
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+
+
+{% for nombre in proveedor %}  
+<div class="container-fluid" style="width: 95%; margin-top: 25px;">
+<div class="row">
+  <div class=".col-12">
+    <div class="row">
+    <h5 style="margin-left: 100px;">{{ nombre.codigo_id.nombre_empresa }}</h5>
+    </div>
+    {% endfor %}
+
+    {% for i in fichadocumento %}
+    {% if i.subcategoria == '1' %}
+    <div class="row">
+      <div class=".col-12">
+        <div class="row">
+        <h6 style="margin-left: 115px;">Fichas Técnicas  - Pesticidas</h6>
+        </div>
+    </div>
+  </div>
+
+  {% elif i.subcategoria == '2'  %}
+    <div class="row">
+      <div class=".col-12">
+        <div class="row">
+        <h6 style="margin-left: 115px;">Fichas Técnicas  - Foliares</h6>
+        </div>
+    </div>
+  </div>
+
+  {% elif i.subcategoria == '3'  %}
+  <div class="row">
+    <div class=".col-12">
+      <div class="row">
+      <h6 style="margin-left: 115px;">Fichas Técnicas  - Fertilizantes</h6>
+      </div>
+  </div>
+</div>
+
+{% elif i.subcategoria == '4'  %}
+<div class="row">
+  <div class=".col-12">
+    <div class="row">
+    <h6 style="margin-left: 115px;">Fichas Técnicas  - Matería Orgánica</h6>
+    </div>
+</div>
+</div>
+
+   
+  {% elif i.subcategoria == '5'  %}
+    <div class="row">
+      <div class=".col-12">
+        <div class="row">
+        <h6 style="margin-left: 115px;">Registros de Agrocalidad/MAGAP - Pesticidas</h6>
+        </div>
+    </div>
+  </div>
+
+  {% elif i.subcategoria == '6'  %}
+  <div class="row">
+    <div class=".col-12">
+      <div class="row">
+      <h6 style="margin-left: 115px;">Registros de Agrocalidad/MAGAP - Foliares</h6>
+      </div>
+  </div>
+</div>
+
+{% elif i.subcategoria == '7'  %}
+<div class="row">
+  <div class=".col-12">
+    <div class="row">
+    <h6 style="margin-left: 115px;">Registros de Agrocalidad/MAGAP - Fertilizantes</h6>
+    </div>
+</div>
+</div>
+
+{% elif i.subcategoria == '8'  %}
+<div class="row">
+  <div class=".col-12">
+    <div class="row">
+    <h6 style="margin-left: 115px;">Registros de Agrocalidad/MAGAP - Materia Orgánica</h6>
+    </div>
+</div>
+</div>
+
+  {% elif i.subcategoria == '9'  %}
+    <div class="row">
+      <div class=".col-12">
+        <div class="row">
+        <h6 style="margin-left: 115px;">MSDS - Pesticidas</h6>
+        </div>
+    </div>
+  </div>
+
+  {% elif i.subcategoria == '10'  %}
+  <div class="row">
+    <div class=".col-12">
+      <div class="row">
+      <h6 style="margin-left: 115px;">MSDS - Foliares</h6>
+      </div>
+  </div>
+</div>
+
+{% elif i.subcategoria == '11'  %}
+<div class="row">
+  <div class=".col-12">
+    <div class="row">
+    <h6 style="margin-left: 115px;">MSDS - Fertilizantes</h6>
+    </div>
+</div>
+</div>
+
+{% elif i.subcategoria == '12'  %}
+<div class="row">
+  <div class=".col-12">
+    <div class="row">
+    <h6 style="margin-left: 115px;">MSDS - Matería Orgánica</h6>
+    </div>
+</div>
+</div>
+
+{% elif i.subcategoria == '13'  %}
+<div class="row">
+  <div class=".col-12">
+    <div class="row">
+    <h6 style="margin-left: 115px;">Fichas Técnicas - Semillas</h6>
+    </div>
+</div>
+</div>
+
+{% elif i.subcategoria == '14'  %}
+<div class="row">
+  <div class=".col-12">
+    <div class="row">
+    <h6 style="margin-left: 115px;">Registros de Agrocalidad/MAGAP - Semillas</h6>
+    </div>
+</div>
+</div>
+
+{% elif i.subcategoria == '15'  %}
+<div class="row">
+  <div class=".col-12">
+    <div class="row">
+    <h6 style="margin-left: 115px;">MSDS - Semillas</h6>
+    </div>
+</div>
+</div>
+
+{% elif i.subcategoria == '16'  %}
+<div class="row">
+  <div class=".col-12">
+    <div class="row">
+    <h6 style="margin-left: 115px;">Etiquetas de Productos - Foliares</h6>
+    </div>
+</div>
+</div>
+
+{% elif i.subcategoria == '17'  %}
+<div class="row">
+  <div class=".col-12">
+    <div class="row">
+    <h6 style="margin-left: 115px;">Etiquetas de Productos - Pesticidas</h6>
+    </div>
+</div>
+</div>
+
+{% elif i.subcategoria == '18'  %}
+<div class="row">
+  <div class=".col-12">
+    <div class="row">
+    <h6 style="margin-left: 115px;">Etiquetas de Productos - Fertilizantes</h6>
+    </div>
+</div>
+</div>
+
+{% elif i.subcategoria == '19'  %}
+<div class="row">
+  <div class=".col-12">
+    <div class="row">
+    <h6 style="margin-left: 115px;">Etiquetas de Productos - Materia Orgánica</h6>
+    </div>
+</div>
+</div>
+
+{% elif i.subcategoria == '20'  %}
+<div class="row">
+  <div class=".col-12">
+    <div class="row">
+    <h6 style="margin-left: 115px;">Etiquetas de Productos - Semillas</h6>
+    </div>
+</div>
+</div>
+
+{% elif i.subcategoria == '21'  %}
+<div class="row">
+  <div class=".col-12">
+    <div class="row">
+    <h6 style="margin-left: 115px;">Análisis - Pesticidas</h6>
+    </div>
+</div>
+</div>
+
+{% elif i.subcategoria == '22'  %}
+<div class="row">
+  <div class=".col-12">
+    <div class="row">
+    <h6 style="margin-left: 115px;">Análisis - Foliares</h6>
+    </div>
+</div>
+</div>
+
+{% elif i.subcategoria == '23'  %}
+<div class="row">
+  <div class=".col-12">
+    <div class="row">
+    <h6 style="margin-left: 115px;">Análisis - Fertilizantes</h6>
+    </div>
+</div>
+</div>
+
+{% elif i.subcategoria == '24'  %}
+<div class="row">
+  <div class=".col-12">
+    <div class="row">
+    <h6 style="margin-left: 115px;">Análisis - Materia Orgánica</h6>
+    </div>
+</div>
+</div>
+
+{% elif i.subcategoria == '25'  %}
+<div class="row">
+  <div class=".col-12">
+    <div class="row">
+    <h6 style="margin-left: 115px;">Análisis - Semillas</h6>
+    </div>
+</div>
+</div>
+
+{% elif i.subcategoria == '26'  %}
+<div class="row">
+  <div class=".col-12">
+    <div class="row">
+    <h6 style="margin-left: 115px;">Certificados - Pesticidas</h6>
+    </div>
+</div>
+</div>
+
+{% elif i.subcategoria == '27'  %}
+<div class="row">
+  <div class=".col-12">
+    <div class="row">
+    <h6 style="margin-left: 115px;">Certificados - Foliares</h6>
+    </div>
+</div>
+</div>
+
+{% elif i.subcategoria == '28'  %}
+<div class="row">
+  <div class=".col-12">
+    <div class="row">
+    <h6 style="margin-left: 115px;">Certificados - Fertilizantes</h6>
+    </div>
+</div>
+</div>
+
+{% elif i.subcategoria == '29'  %}
+<div class="row">
+  <div class=".col-12">
+    <div class="row">
+    <h6 style="margin-left: 115px;">Certificados - Materia Orgánica</h6>
+    </div>
+</div>
+</div>
+
+{% elif i.subcategoria == '30'  %}
+<div class="row">
+  <div class=".col-12">
+    <div class="row">
+    <h6 style="margin-left: 115px;">Certificados - Semillas</h6>
+    </div>
+</div>
+</div>
+
+    {% endif %}
+    
+
+
+
+    {% endfor %}
+  
+
+    {% for nombre in proveedor %} 
+    <div class="row"><p></div>
+    <div class="row">
+    <a style="margin-left: 100px;" class="btn btn-outline-success" title="Volver a Documentos del Proveedor" href="{% url 'proveedores:ver_documentos' nombre.codigo_id.id %}"><b>Volver a Documentos del Proveedor</b></a>
+    </div>  
+  </div>
+</div>
+    
+    
+  {% endfor %}
+  
+ 
+
+<div class="container p-3 my-3 bg-dark text-white" style="width: 89%; margin-top: 25px;">
+  
+  <br>
+    
+  <div class="well text-muted text-center" style="padding-top: 2rem; padding-bottom: 2rem;">
+    <span class="glyphicon glyphicon-arrow-down" style="font-size: 2rem;"></span>
+    <h3>Arrastre las Fichas/Certificados aquí</h3>
+  </div>
+</div>
+    
+    <div class="modal fade" id="modal-progress" data-backdrop="static" data-keyboard="false">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Uploading...</h4>
+          </div>
+          <div class="modal-body">
+            <div class="progress">
+              <div class="progress-bar" role="progressbar" style="width: 0%;">0%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- <button type="button" class="btn btn-primary js-upload-photos">
+      <span class="glyphicon glyphicon-cloud-upload"></span> Upload documentos
+    </button>
+    </div> -->
+    
+    {# 2. FILE INPUT TO BE USED BY THE PLUG-IN #}
+    {% for i in fichadocumento %}
+    <input id="fileupload" type="file" name="archivos" multiple
+           style="display: none;"
+           data-url="{% url 'proveedores:ver_fichas_agricolas' i.empresa i.subcategoria %}"
+           data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'>
+    {% endfor %}
+
+    {# 3. TABLE TO DISPLAY THE UPLOADED DOCS #}
+    <div class="container"  style="width: 95%; margin-top: 25px;">
+    <table id="gallery" class="table table-bordered">
+      <thead>
+        <tr>
+          <th style="width: 5%;">No</th>
+          <th>Fichas Enviadas</th>
+          <th>Opciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for documento in documentos_list %}
+          <tr>
+            <td style="width: 5%;"><strong>{{ forloop.counter }}</strong></td>
+            <!-- <td><a href="{{ documento.archivos.url }}">{{ documento.archivos.name }}</a></td> -->
+            {% if documento.nombre_corto %} 
+            <td><a href="{{ documento.archivos.url }}">{{ documento.nombre_corto }}</a></td>
+            {% else %}
+            <td><a href="{{ documento.archivos.url }}">{{ documento.archivos.name }}</a></td> 
+            {% endif %}
+            <td><a class="btn btn-danger glyphicon glyphicon-trash" title="Eliminar" href="{% url 'proveedores:eliminar_documentos' documento.id documento.proveedor.id %}"></a></td> 
+          
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <p>
+      
+
+  {# 4. TABLA PARA MOSTRAR FICHAS PENDIENTES DE ENTREGA (SI LAS HAY) #}
+  <p><strong>Fichas Pendientes de Entrega</strong></p>
+  <table id="gallery" class="table table-bordered">
+    <thead>
+      {% for ficha in fichas_pendientes %}
+        <tr>
+          <td style="width: 5%;"><strong>{{ forloop.counter }}</strong></td>
+            <td>{{ ficha.nombre_ficha }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  
+
+
+
+
+  
+  </div>
+    
+    
+
+
+{% endblock content %}
+
+
+{% block extrajs %}
+{% load static %}
+
+<script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+<script src="{% static 'js/jquery-file-upload/js/vendor/jquery.ui.widget.js' %}"></script>
+<script src="{% static 'js/jquery-file-upload/js/jquery.iframe-transport.js' %}"></script>
+<script src="{% static 'js/jquery-file-upload/js/jquery.fileupload.js' %}"></script>
+
+<script src="{% static 'js/basic-upload.js' %}"></script>
+
+
+
+{% endblock %}

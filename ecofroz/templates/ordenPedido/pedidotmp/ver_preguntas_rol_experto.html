@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load tz %}
+
+
+{% block extrahead %}
+
+
+{% endblock %}
+
+{% block content %}
+<div class="loader"></div>
+<div class="container-fluid" style="width: 75%; margin:auto; margin-top: 25px; margin-bottom: 25px;">
+        <h4 class="display-5">Pregunta para Rol Experto.</h4>
+        <p>
+                <p>
+        
+        
+        <div class="form-row">
+                <div class="form-group col-md-10" >
+
+                        <label><b><u>Información de la Requisición de Activos: </u></b></label>
+                        <table class=" table table-sm table-warning table-striped table-responsive{-sm|-md|-lg|-xl|-xxl}" style="margin: 25px auto">
+                                <thead>
+                                  
+                                </thead>
+                                <tbody>
+                                
+                                  <tr>
+                                    <td><b>Requisición N°</b></td>
+                                    <td>{{ solic.numpedido.numpedido }}</td>
+                                  </tr>
+
+                                  <tr>
+                                    <td>Fecha Solicitud</td>
+                                    <td>{{ solic.numpedido.fchsolicita }}</td>
+                                  </tr>
+
+                                  <tr>
+                                        <td>Persona Solicita</td>
+                                        <td>{{ solic.numpedido.usuario_solicita }}</td>
+                                  </tr>
+                                  
+                                  <tr>
+                                        <td>Tipo Activo</td>
+                                        <td>{{ solic.numpedido.tipoactivo }}</td>
+                                  </tr>
+
+                                  <tr>
+                                    <td>Descripción:</td>
+                                    <td>{{ solic.descripcion }}</td>
+                                  </tr>
+                                  <tr>
+                                    <td>Justificación de Compra:</td>
+                                    <td>{{ solic.numpedido.justificacion_compra }}</td>
+                                  </tr>
+
+                          {% if solic.img_1 %}
+                      <tr>
+                        <td>Imagen 1:</td>
+                        <td>
+                          <a class="card-link" href="#" data-toggle="modal" data-target="#img_1" data-whatever="@getbootstrap">{{ solic.img_1 }} </a>
+                      <div class="modal fade" id="img_1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-xl" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div>
+                                  <img src="/media/{{ solic.img_1 }}" class="img-thumbnail rounded" alt="...">
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      {% endif %}
+                      {% if solic.img_2 %}
+                      <tr>
+                        <td>Imagen 2:</td>
+                        <td>
+                          <a class="card-link" href="#" data-toggle="modal" data-target="#img_2" data-whatever="@getbootstrap">{{ solic.img_2 }} </a>
+                      <div class="modal fade" id="img_2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-xl" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div>
+                                  <img src="/media/{{ solic.img_2 }}" class="img-thumbnail rounded" alt="...">
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      {% endif %}
+
+
+
+
+
+                                </tbody>
+                            </table>
+                        
+                          </div>
+                        </div>      
+
+                      
+        
+        <div class="form-row">
+
+          <label><b><u>Pregunta de Gerencia Administrativa: </u></b></label>
+          <textarea class="form-control" name="descripcion" id="descripcion" cols="30" rows="4" readonly>{{pregunta}}</textarea>
+
+        </div>
+      <pre></pre>
+
+      <form method="POST">
+        {% csrf_token %}
+        <div class="form-row">
+
+          <label><b><u>Respuesta Rol Experto: </u></b></label>
+          <textarea class="form-control" name="respuesta" id="justificacion" cols="30" rows="5"></textarea>
+
+        </div>
+        
+        
+        <div class="form-group col-md-3">
+                
+        </div>
+        
+        
+               <button type="submit" style="margin-left:-5px;" class="btn btn-lg btn-primary"  id="enviar" name="enviar"  >Enviar</button>
+               <!-- <a type="button" style="margin-left: 3px;" class="btn btn-danger" data-toggle="modal" data-target="#negarModal" data-whatever="@getbootstrap" href="">Rechazar</a> -->
+             
+</div>
+</form>
+
+<div class="modal fade" id="negarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel" style="color: black;">Observaciones Rechazo de Ordenes de Trabajo Internas</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form class="modal-body"  method="POST">
+        {% csrf_token %}
+        
+          <div>
+            <label for="notas">Observaciones:</label>
+          </div>  
+          <div> 
+            <textarea class="form-control" id="notas_rechazo" name="notas_rechazo" rows="5" cols="59" required></textarea>
+          </div>
+
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit"  class="btn btn-primary" id="enviar" name="enviar">Rechazar con Observaciones</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+{% endblock content %}
+
+{% block extrajs %}
+<script>
+  $(window).on("load", function() {
+        $(".loader").fadeOut("slow");
+    });
+
+    $(document).ready(function() {    
+        $('#enviar').on('click', function(){
+            //Añadimos la imagen de carga en el contenedor
+            $(".loader").show();
+            $(window).on("load", function(){
+                $(".loader").fadeOut("slow");
+            });
+        });              
+    });    
+</script>
+
+{% endblock %}

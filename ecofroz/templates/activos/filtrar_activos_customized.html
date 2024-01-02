@@ -1,0 +1,514 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+
+{% block extrahead %}
+<!DOCTYPE html>
+<style>
+
+
+
+table {
+  border-collapse: collapse;
+  width: 100%;  
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+
+th {
+  background-color: #4CAF50;
+  color: white;
+}
+
+ul.opciones {
+  list-style-type:none;
+}
+
+input[type=text] {
+  border: none;
+  border-bottom: 1px solid #34bdeb ;
+  background-color: none;
+  outline: none;
+  box-shadow: none !important;
+  /* border: none; */
+  border-bottom-color: 1px solid #34bdeb  ;
+}
+
+.button {
+background-color: #4CAF50;
+border: none;
+color: white;
+padding: 4px 20px; */
+text-align: center;
+text-decoration: none;
+display: inline-block;
+font-size: 16px;
+margin: 4px 2px;
+cursor: pointer;
+border-radius: 4px;
+}
+
+.select-box {
+    -webkit-appearance: button;
+    -moz-appearance: button;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -webkit-padding-end: 20px;
+    -moz-padding-end: 20px;
+    -webkit-padding-start: 2px;
+    -moz-padding-start: 2px;
+    background-color: #faf9f7; /* Fallback color if gradients are not supported */
+    background-image: url(../images/select-arrow.png), -webkit-linear-gradient(top, #E5E5E5, #F4F4F4); /* For Chrome and Safari */
+    background-image: url(../images/select-arrow.png), -moz-linear-gradient(top, #E5E5E5, #F4F4F4); /* For old Firefox (3.6 to 15) */
+    background-image: url(../images/select-arrow.png), -ms-linear-gradient(top, #E5E5E5, #F4F4F4); /* For pre-releases of Internet Explorer  10*/
+    background-image: url(../images/select-arrow.png), -o-linear-gradient(top, #E5E5E5, #F4F4F4); /* For old Opera (11.1 to 12.0) */
+    background-image: url(../images/select-arrow.png), linear-gradient(to bottom, #E5E5E5, #F4F4F4); /* Standard syntax; must be last */
+    background-position: center right;
+    background-repeat: no-repeat;
+    border: 1px solid #AAA;
+    border-radius: 2px;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+    color:#262625;
+    font-size: inherit;
+    margin: 0;
+    overflow: hidden;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#tabla-reporte{
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#tabla-reporte td, #tabla-reporte th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#tabla-reporte tr:hover {background-color: #ddd;}
+#tabla-reporte tr:hover {background-color: #ddd;}
+
+#tabla-reporte th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}
+
+
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+<div class="loader"></div>
+  <div class=row>
+    <div class=col>
+ 
+    </div>
+  </div>
+  <form method="GET" id="form" >
+    {% csrf_token %}
+    <div class="row" style="margin-top: 15px;">
+    <div class="container-fluid" style="text-align:center">
+    <button type="button" class="btn btn-secondary glyphicon glyphicon-chevron-down"" data-toggle="collapse" data-target="#demo" title="Vea las opciones de reportes disponibles"></button>
+  </div>
+</div>
+ <div class="row" style="margin-top: 5px;"></div>
+  <div class="row"></div>
+  <!-- <div class="jumbotron container-fluid" id="demo" style="width: 97%;"> -->
+  <div class="container collapse" id="demo">
+    <div class="row">
+      <div class="col-8">
+        <h5>Reportes en <u>línea</u></h5>
+        <div class="col-34">
+          <ul class="opciones">
+          <li><input type="radio" id="xcodigo" name="seleccion" value="codigo" placeholder="Ingrese el código">
+          <label for="xcodigo">Por <u>Código</u>&nbsp;</label>{{ form2.activo_codigo }}<button class="button" type="submit" id="busca_activos" name="busca_activos">Buscar</button></li>
+          <li><input type="radio" id="xserie" name="seleccion" value="serie" placeholder="Ingrese la serie">
+            <label for="xserie">Por <u>Serie</u>&nbsp;</label>{{ form3.desc_activo_num_serie }}<button class="button" type="submit" id="busca_serie" name="busca_serie">Buscar</button></li>
+          <li><input type="radio" id="xubicacion" name="seleccion" value="ubicacion">
+          <label for="xubicacion">Por <u>Ubicacion</u>&nbsp;</label>
+          
+      
+          {% render_field form2.activo_ubica class="select-box" onChange="form.submit();" %}</li>
+          
+         
+            <li><input type="radio" id="xcustodio" name="seleccion" value="custodio">
+              <label for="custodio">Por <u>Custodio</u></label>
+              <select name="custodio" id="custodio" class="select-box" onchange="form.submit();">
+                <option value="0" selected>----</option>
+                {% for i in personal %}
+                        <option value="{{ i.last_name }}">{{ i.last_name }}&nbsp;{{ i.first_name }}</option>
+                {% endfor %}
+              </select>
+            </li> 
+       
+            <li><input type="radio" id="xpclave" name="seleccion" value="xpclave" placeholder="Ingrese palabra clave">
+              <label for="pclave">Palabra <u>Clave</u>&nbsp;</label><input type="text" name="pclave" id="pclave"><button class="button" type="submit" id="busca_activos2" name="busca_activos2">Buscar</button></li>
+       
+       
+          </ul>
+        
+        </div>
+
+      </div>
+
+        
+      <div class="col">
+        <h5>Reportes descarga <u>Excel</u></h5>
+        <a><u>Todos</u> los activos&nbsp;</a><a class="glyphicon glyphicon-circle-arrow-down" title="Descargar" href="{% url 'activos:custom_all' %}"></a><br><br>
+        <a><u>Dados de Baja</u>, Donados o Vendidos &nbsp;</a><a class="glyphicon glyphicon-circle-arrow-down" title="Descargar" href="{% url 'activos:custom_bajas' %}"></a><br><br>
+        
+      </div>
+    </div>
+  </div>
+
+        </form>
+
+  {% if var %}
+  
+    
+    <div class="container-fluid">
+      <div class="row" style="margin-left: 6px;">
+      <h5 id="heading">Número de registros encontrados: {{ var }}&nbsp; </h5>
+    <a  href="{% url 'activos:custom_to_excelclass' %}">[Exportar a Excel]</a>      
+  </div>
+</div>
+  <br>
+  {% endif %}
+  <div class="container-fluid">
+    <!-- <table class="table table-hover table-dark table-sm container-fluid" style="width:fit-content;"> -->
+      <table id="tabla-reporte">      
+      <thead>
+                    <tr>
+                        <th scope="col"><strong>No</strong></th>
+                        <th scope="col"><strong>Codigo</strong></th>
+                        <th scope="col"><strong>Parte de</strong></th>
+                        <th scope="col"><strong>Ubicación</strong></th>
+                        <th scope="col"><strong>Sector</strong></th>
+                        <th scope="col"><strong>Sub Sector</strong></th>
+                        <th scope="col"><strong>Descripción</strong></th>
+                        <th scope="col"><strong>Tipo</strong></th>
+                        <th scope="col"><strong>Marca</strong></th>
+                        <th scope="col"><strong>Modelo</strong></th>
+                        <th scope="col"><strong>Serie</strong></th>
+                        <th scope="col"><strong>Estado</strong></th>
+                        <th scope="col"><strong>Opciones</strong></th>
+                    </tr>
+                </thead>
+              <tbody>
+                {% if form %}
+                {% for activo in form  %} 
+                <!-- <tr data-href="{% url 'activos:editar_activos'  activo.desc_activo_codigo.id %}" style="cursor: pointer;"> -->
+                      <td>{{ forloop.counter0|add:form.start_index }}</td>
+                      <td>{{ activo.desc_activo_codigo.activo_codigo }}</td>
+                      <td>{{ activo.desc_activo_codigo.cod_activo_padre | default:"--" }}</td>
+                      <td>{{ activo.desc_activo_codigo.activo_ubica}}</td>
+                      <td>{{ activo.desc_activo_codigo.activo_area }}</td>
+                      <td>{{ activo.desc_activo_codigo.activo_subsec | default:"--" }}</td>
+                      <td>{{ activo.desc_activo_codigo.activo_descripcion }}</td>
+                      <td>{{ activo.desc_activo_codigo.activo_tipo }}</td>
+                      <td>{{ activo.desc_activo_marca | default:"--" }}</td>
+                      <td>{{ activo.desc_activo_modelo | default:"--" }}</td>
+                      <td>{{ activo.desc_activo_num_serie | default:"--" }}</td>
+                     
+                      <!-- <td>{{ activo.desc_activo_codigo.activo_fecha_modifica }}</td> -->
+                      <td>{{ activo.desc_activo_codigo.activo_estado }}</td>
+                      <td style="align-content: left;">
+                        
+                        <!-- <a class="btn btn-warning glyphicon glyphicon-thumbs-down" title="Dar de Baja" data-toggle="modal" data-target="#exampleModalAprob" data-whatever="@getbootstrap" ></a> -->
+                        <!-- {% if perms.activos.genera_código %} -->
+                        <!-- <a class="btn btn-primary glyphicon glyphicon-print" href="{% url 'ordenpedido:crea_pdf' activo.desc_activo_codigo.activo_codigo %}" target="_blank" title="Imprimir Código"></a> -->
+                        <!-- activo.desc_activo_codigo.id -->
+                        <a class="btn bi bi-question-circle" style="font-size: 25px;" title="Reportar Observaciones" href="{% url 'activos:registro_no_encontrados' activo.desc_activo_codigo.id %}" target="_blank"></a>
+                        <a class="btn btn-warning glyphicon glyphicon-camera" style="margin-left:50px; margin-top:-80px;" title="Ver Galería" href="{% url 'activos:gallery_view_custom' activo.desc_activo_codigo.id %}"></a>
+                        <!-- {% endif %} -->
+                      </td> 
+                  </tr>
+              
+               
+              {% endfor %}
+              
+              {% else %}
+              <h5>No hay registros</h5>
+              
+              {% endif %}
+              </tbody>
+              
+              </table>
+              
+              <div class="pagination">
+                <span class="step-links">
+                    {% if form.has_previous %}
+                        <a href="?activo_tipo={{ tipo }}&activo_ubica={{ ubicacion }}&activo_grupo={{ grupo }}&activo_depar={{ departamento }}&activo_area={{ area }}&pestanias_seguros={{ seguros }}&poliza_seguros={{ poliza }}&page=1">&laquo; inicio</a>
+                        <a href="?activo_tipo={{ tipo }}&activo_ubica={{ ubicacion }}&activo_grupo={{ grupo }}&activo_depar={{ departamento }}&activo_area={{ area }}&pestanias_seguros={{ seguros }}&poliza_seguros={{ poliza }}&page={{ form.previous_page_number }}">previo</a>
+                    {% endif %}
+              
+                    <span class="current">
+                        Page {{ form.number }} of {{ form.paginator.num_pages }}.
+                    </span>
+              
+                    {% if form.has_next %}
+                        <a href="?activo_tipo={{ tipo }}&activo_ubica={{ ubicacion }}&activo_grupo={{ grupo }}&activo_depar={{ departamento }}&activo_area={{ area }}&pestanias_seguros={{ seguros }}&poliza_seguros={{ poliza }}&page={{ form.next_page_number }}">próximo</a>
+                        <a href="?activo_tipo={{ tipo }}&activo_ubica={{ ubicacion }}&activo_grupo={{ grupo }}&activo_depar={{ departamento }}&activo_area={{ area }}&pestanias_seguros={{ seguros }}&poliza_seguros={{ poliza }}&page={{ form.paginator.num_pages }}">último &raquo;</a>
+                    {% endif %}
+                </span>
+              </div>
+            </div>
+{% endblock content %}
+
+
+
+
+{% block extrajs %}
+<script>
+
+  $("#id_activo_codigo").hide().val("");
+  $("#id_desc_activo_num_serie").hide().val("");
+  $("#busca_activos").hide().val("");
+  $("#busca_serie").hide().val("");
+  $("#id_activo_ubica").hide().val("");
+  $("#id_activo_grupo").hide().val("");
+  $("#id_activo_tipo").hide().val("");
+  $("#id_activo_area").hide().val("");
+  $("#id_activo_depar").hide().val("");
+  $("#id_pestanias_seguros").hide().val("");
+  $("#id_poliza_seguros").hide().val("");
+  $("#custodio").hide().val("");
+  $("#busca_activos2").hide().val("");
+  $("#pclave").hide().val("");
+    
+    
+  $("#xcodigo").on('click', xCodigo)
+  $("#xserie").on('click', xSerie)
+  $("#xubicacion").on('click', xUbicacion)
+  $("#xgrupo").on('click', xGrupo)
+  $("#xtipo").on('click', xTipo)
+  $("#xdepartamento").on('click', xDep)
+  $("#xsector").on('click', xSec)
+  $("#xseguros").on('click', xSeg)
+  $("#xseguros_poliza").on('click', xSegPol)
+  $("#xcustodio").on('click', xCustodio)
+  $("#xpclave").on('click', xPClave)
+  
+//Funciones que ocultan listas de seleccion y campos
+  function xCodigo() {
+  $("#id_activo_codigo").show();
+  $("#busca_activos").show();
+  $("#id_desc_activo_num_serie").hide().val("");
+  $("#busca_serie").hide().val("");
+  $("#id_activo_tipo").hide().val("");
+  $("#id_activo_grupo").hide().val("");
+  $("#id_activo_ubica").hide().val(""); 
+  $("#id_activo_depar").hide().val("");
+  $("#id_pestanias_seguros").hide().val("");
+  $("#id_activo_area").hide().val("");
+  $("#id_poliza_seguros").hide().val("");
+  $("#custodio").hide().val("");
+  $("#pclave").hide().val("");
+  $("#busca_activos2").hide();
+ 
+}
+function xSerie() {
+  $("#id_desc_activo_num_serie").show();
+  $("#busca_serie").show();
+  $("#id_activo_codigo").hide().val("");
+  $("#busca_activos").hide().val("");
+  $("#id_activo_tipo").hide().val("");
+  $("#id_activo_grupo").hide().val("");
+  $("#id_activo_ubica").hide().val(""); 
+  $("#id_activo_depar").hide().val("");
+  $("#id_pestanias_seguros").hide().val("");
+  $("#id_activo_area").hide().val("");
+  $("#id_poliza_seguros").hide().val("");
+  $("#custodio").hide().val("");
+  $("#pclave").hide().val("");
+  $("#busca_activos2").hide();
+ 
+}
+
+function xUbicacion() {
+  $("#id_activo_ubica").show(); 
+  $("#id_desc_activo_num_serie").hide().val("");
+  $("#busca_serie").hide().val("");
+  $("#id_activo_tipo").hide().val("");
+  $("#id_activo_grupo").hide().val(""); 
+  $("#id_activo_depar").hide().val("");
+  $("#id_pestanias_seguros").hide().val("");
+  $("#id_activo_codigo").hide().val("");
+  $("#busca_activos").hide().val("");
+  $("#id_activo_area").hide().val("");
+  $("#id_poliza_seguros").hide().val("");
+  $("#custodio").hide().val("");
+  $("#pclave").hide().val("");
+  $("#busca_activos2").hide();
+  
+}
+
+function xGrupo() {
+  $("#id_activo_grupo").show();
+  $("#id_desc_activo_num_serie").hide().val("");
+  $("#busca_serie").hide().val("");
+  $("#id_activo_ubica").hide().val("");
+  $("#id_activo_tipo").hide().val(""); 
+  $("#id_activo_depar").hide().val("");
+  $("#id_pestanias_seguros").hide().val("");
+  $("#id_activo_codigo").hide().val("");
+  $("#busca_activos").hide().val("");
+  $("#id_activo_area").hide().val("");
+  $("#id_poliza_seguros").hide().val("");
+  $("#custodio").hide().val("");
+  $("#pclave").hide().val("");
+  $("#busca_activos2").hide();
+}
+  
+function xTipo() {
+  $("#id_activo_tipo").show();
+  $("#id_desc_activo_num_serie").hide().val("");
+  $("#busca_serie").hide().val("");
+  $("#id_activo_grupo").hide().val("");
+  $("#id_activo_ubica").hide().val("");
+  $("#id_activo_depar").hide().val("");
+  $("#id_pestanias_seguros").hide().val("");
+  $("#id_activo_codigo").hide().val("");
+  $("#busca_activos").hide().val("");
+  $("#id_activo_area").hide().val("");
+  $("#id_poliza_seguros").hide().val("");
+  $("#custodio").hide().val("");
+  $("#pclave").hide().val("");
+  $("#busca_activos2").hide();
+  
+}
+
+function xDep() {
+  $("#id_activo_depar").show();
+  $("#id_activo_tipo").hide().val("");
+  $("#id_activo_grupo").hide().val("");
+  $("#id_activo_ubica").hide().val(""); 
+  $("#id_activo_codigo").hide().val("");
+  $("#busca_activos").hide().val("");
+  $("#id_activo_area").hide().val("");
+  $("#id_poliza_seguros").hide().val("");
+  $("#id_pestanias_seguros").hide().val("");
+  $("#custodio").hide().val("");
+  $("#pclave").hide().val("");
+  $("#busca_activos2").hide();
+}
+
+function xSec() {
+  $("#id_activo_area").show();
+  $("#id_activo_tipo").hide().val("");
+  $("#id_activo_grupo").hide().val("");
+  $("#id_activo_ubica").hide().val(""); 
+  $("#id_activo_codigo").hide().val("");
+  $("#busca_activos").hide().val("");
+  $("#id_activo_depar").hide().val("");
+  $("#id_poliza_seguros").hide().val("");
+  $("#id_pestanias_seguros").hide().val("");
+  $("#custodio").hide().val("");
+  $("#pclave").hide().val("");
+  $("#busca_activos2").hide();
+
+}
+
+function xSeg() {
+  $("#id_activo_tipo").hide().val("");
+  $("#id_activo_grupo").hide().val("");
+  $("#id_activo_ubica").hide().val(""); 
+  $("#id_activo_codigo").hide().val("");
+  $("#busca_activos").hide().val("");
+  $("#id_activo_depar").hide().val("");
+  $("#id_activo_area").hide().val("");
+  $("#id_pestanias_seguros").show();
+  $("#id_poliza_seguros").hide().val("");
+  $("#custodio").hide().val("");
+  $("#pclave").hide().val("");
+  $("#busca_activos2").hide();
+
+}
+
+function xSegPol() {
+  $("#id_poliza_seguros").show();
+  $("#id_activo_tipo").hide().val("");
+  $("#id_activo_grupo").hide().val("");
+  $("#id_activo_ubica").hide().val(""); 
+  $("#id_activo_codigo").hide().val("");
+  $("#busca_activos").hide().val("");
+  $("#id_activo_depar").hide().val("");
+  $("#id_activo_area").hide().val("");
+  $("#id_pestanias_seguros").hide().val("");
+  $("#custodio").hide().val("");
+  $("#pclave").hide().val("");
+  $("#busca_activos2").hide();
+
+}
+
+function xCustodio() {
+  $("#custodio").show();
+  $("#id_desc_activo_num_serie").hide().val("");
+  $("#busca_serie").hide().val("");
+  $("#id_activo_codigo").hide().val("");
+  $("#busca_activos").hide();
+  $("#id_activo_tipo").hide().val("");
+  $("#id_activo_grupo").hide().val("");
+  $("#id_activo_ubica").hide().val(""); 
+  $("#id_activo_depar").hide().val("");
+  $("#id_pestanias_seguros").hide().val("");
+  $("#id_activo_area").hide().val("");
+  $("#id_poliza_seguros").hide().val("");
+  $("#pclave").hide().val("");
+  $("#busca_activos2").hide();
+ 
+}
+
+function xPClave() {
+  $("#pclave").show();
+  $("#busca_activos2").show();
+  $("#custodio").hide().val("");
+  $("#custodio").hide().val("");
+  $("#id_desc_activo_num_serie").hide().val("");
+  $("#busca_serie").hide().val("");
+  $("#id_activo_codigo").hide().val("");
+  $("#busca_activos").hide();
+  $("#id_activo_tipo").hide().val("");
+  $("#id_activo_grupo").hide().val("");
+  $("#id_activo_ubica").hide().val(""); 
+  $("#id_activo_depar").hide().val("");
+  $("#id_pestanias_seguros").hide().val("");
+  $("#id_activo_area").hide().val("");
+  $("#id_poliza_seguros").hide().val("");
+ 
+}
+
+
+
+  $(window).on("load", function() {
+        $(".loader").fadeOut("slow");
+    });
+
+    $(document).ready(function() {    
+        $('#enviar').on('click', function(){
+            //Añadimos la imagen de carga en el contenedor
+            $(".loader").show();
+            $(window).on("load",function(){
+                $(".loader").fadeOut("slow");
+            });
+        });              
+    }); 
+
+   
+</script>
+{% endblock %}

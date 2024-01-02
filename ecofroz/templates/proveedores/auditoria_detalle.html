@@ -1,0 +1,223 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+
+<head>
+<style  type="text/css">
+
+table, th, td {
+border: 1px solid Black;}
+
+/* make the table a 100% wide by default */
+table {
+width: 100%;}
+
+/* if the browser window is at least 800px-s wide: */
+@media screen and (min-width: 800px) {
+  table {
+  width: 90%;}
+}
+
+/* if the browser window is at least 1000px-s wide: */
+@media screen and (min-width: 1000px) {
+  table {
+  width: 80%;}
+}
+
+
+</style>
+
+</head>
+
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row" style="margin-top: 25px;">
+    <div class="col-md 18 search">
+      
+    </div>
+     
+    </div>
+  </div>
+<br>
+<table class="table table-hover table-striped table-dark table-sm container-fluid" style="width: 98%;">
+  <thead>
+    <tr>
+      <td scope="col"><strong>No</strong></td>
+      <td scope="col"><strong>Fecha Modificacion</strong></td>
+      <td scope="col"><strong>Nombre Empresa</strong></td>
+      <td scope="col"><strong>Calificacion Encuesta</strong></td>
+      <td scope="col"><strong>Calificacion Interna Ecofoz</strong></td>
+    
+      <!-- <td scope="col"><strong>Nombre Comercial</strong></td>
+      <td scope="col"><strong>Direccion</strong></td>
+      <td scope="col"><strong>Horario</strong></td>
+      <td scope="col"><strong>Rep. Legal</strong></td>
+      <td scope="col"><strong>Ruc</strong></td>
+      <td scope="col"><strong>Contacto en Ecofroz</strong></td>
+      <td scope="col"><strong>Telf</strong></td>
+      <td scope="col"><strong>Celular</strong></td> -->
+       
+    </tr>
+  </thead>
+<tbody>
+  
+  {% for proveedor in query %}
+
+      <tr>
+
+        <td>{{ forloop.counter }}</td>
+        <td>{{ proveedor.history_date }}</td>
+        <td>{{ proveedor.nombre_empresa }}</td>
+        <td>{{ proveedor.calificacion }}</td>
+        <td>{{ proveedor.grade }}</td>
+        
+
+        <!-- <td>{{ proveedor.nombre_comercial }}</td>
+        <td>{{ proveedor.direccion_matriz }}</td>
+        <td>{{ proveedor.horario_trabajo }}</td>  
+        <td>{{ proveedor.representante_legal }}</td>  
+        <td>{{ proveedor.ruc }}</td>  
+        <td>{{ proveedor.nombre_contacto_ecofroz }}</td>
+        <td>{{ proveedor.telefono }}</td>  
+        <td>{{ proveedor.celular }}</td>  -->
+    </tr>
+      <!-- <td>{{ proveedor.codigo_id.nombre_empresa }}</td>
+      <td>{{ proveedor.codigo_id.nombre_comercial | default:"--" }}</td>
+      <td>{{ proveedor.codigo_id.categoria | default:"--" }}</td>
+      <td>{{ proveedor.giro_negocio | default:"--" }}</td>
+      <td>{{ proveedor.codigo_id.celular | default:"--" }}</td>
+      <td>{{ proveedor.codigo_id.nombre_contacto_ecofroz | default:"--" }}</td>
+      -->
+  {% endfor %}
+    
+
+ 
+
+
+</tbody>
+
+</table>
+
+<!-- 
+<table class="table table-hover table-striped table-dark table-sm container-fluid" style="width: 98%;">
+  <thead>
+    <tr>
+      <td scope="col"><strong>No</strong></td>
+      <td scope="col"><strong>Fecha Modificacion</strong></td>
+      <td scope="col"><strong>Giro Negocio</strong></td>
+      <td scope="col"><strong>Ventas 2018</strong></td>
+      <td scope="col"><strong>Ventas 2019</strong></td>
+      <td scope="col"><strong>Años Antiguedad</strong></td>
+      <td scope="col"><strong>Num Trabajadores</strong></td>
+      <td scope="col"><strong>Num Clientes</strong></td>
+      <td scope="col"><strong>Num Proveedores</strong></td>
+      <td scope="col"><strong>Web</strong></td>
+      <td scope="col"><strong>Tipo</strong></td>
+       
+    </tr>
+  </thead>
+<tbody>
+  
+  {% for proveedor in query2 %}
+
+      <tr>
+
+        <td>{{ forloop.counter }}</td>
+        <td>{{ proveedor.history_date }}</td>
+        <td>{{ proveedor.giro_negocio }}</td>
+        <td>{{ proveedor.monto_ventas_2018 }}</td>
+        <td>{{ proveedor.monto_ventas_2019 }}</td>
+        <td>{{ proveedor.antiguedad }}</td>  
+        <td>{{ proveedor.num_trabajadores_fijos }}</td>  
+        <td>{{ proveedor.num_clientes }}</td>  
+        <td>{{ proveedor.num_proveedores }}</td>
+        <td>{{ proveedor.web }}</td>  
+        <td>{{ proveedor.empresa_tipo }}</td> 
+    </tr> -->
+      <!-- <td>{{ proveedor.codigo_id.nombre_empresa }}</td>
+      <td>{{ proveedor.codigo_id.nombre_comercial | default:"--" }}</td>
+      <td>{{ proveedor.codigo_id.categoria | default:"--" }}</td>
+      <td>{{ proveedor.giro_negocio | default:"--" }}</td>
+      <td>{{ proveedor.codigo_id.celular | default:"--" }}</td>
+      <td>{{ proveedor.codigo_id.nombre_contacto_ecofroz | default:"--" }}</td>
+      -->
+  <!-- {% endfor %} -->
+    
+
+ 
+
+
+<!-- </tbody>
+
+</table> -->
+
+
+<table class="table table-hover table-striped table-dark table-sm container-fluid" style="width: 98%;">
+  <thead>
+    <tr>
+      <td scope="col"><strong>No</strong></td>
+      <td scope="col"><strong>Fecha Modificacion</strong></td>
+      <td scope="col"><strong>Pregunta ID</strong></td>
+      <td scope="col"><strong>Respuesta</strong></td>
+      <td scope="col"><strong>Calificación (Automática con base a respuesta)</strong></td>
+      <td scope="col"><strong>Usuario Modifica</strong></td>
+    </tr>
+  </thead>
+<tbody>
+  
+  {% for proveedor in query3 %}
+
+      <tr>
+
+        <td>{{ forloop.counter }}</td>
+        <td>{{ proveedor.history_date }}</td>
+        <td>{{ proveedor.pregunta }}</td>
+        <td>{{ proveedor.respuesta }}</td>
+        <td>{{ proveedor.calificacion }}</td>
+        <td>{{ proveedor.history_user }}</td>
+         
+    </tr>
+ 
+  {% endfor %}
+    
+
+
+</tbody>
+
+</table>
+
+
+
+
+
+
+
+<div class="pagination container-fluid" style="width: 98%;">
+  <span class="step-links">
+      {% if form.has_previous %}
+          <a href="?page=1">&laquo; inicio</a>
+          <a href="?page={{ form.previous_page_number }}">previo</a>
+      {% endif %}
+
+      <span class="current">
+          Page {{ form.number }} of {{ form.paginator.num_pages }}.
+      </span>
+
+      {% if form.has_next %}
+          <a href="?page={{ form.next_page_number }}">próximo</a>
+          <a href="?page={{ form.paginator.num_pages }}">último &raquo;</a>
+      {% endif %}
+  </span>
+</div>
+
+{% endblock content %}
+
+{% block extrajs %}
+<script>
+  jQuery(document).ready(function($){
+    $('*[data-href]').on('click', function(){
+      window.location = $(this).data("href");
+    });
+  });
+</script>
+{% endblock %}

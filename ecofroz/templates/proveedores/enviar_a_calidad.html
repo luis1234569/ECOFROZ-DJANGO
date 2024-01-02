@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form method="post">
+    {%csrf_token %}
+    <div class="container-fluid" style="margin-top: 10px;">
+    <h4 style="margin-top: 15px;">Notificar a Calidad para calificación de Proveedores</h4>
+    {% if mensaje == True %}
+    
+    <h6>Aviso: Este proveedor ya ha sido enviado anteriormente al departamento de Calidad para calificación. Confirma que desea reenviar la solicitud?<br> Puede incluir comentarios sobre las acciones correctivas realizadas sobre observaciones previas de Calidad en el cuadro de texto a continuación</h6>
+    
+    <textarea name="comentarios-admin" class="form-control" style="width: 80%;" rows="6" cols="8"></textarea><br>
+    
+    <button class="btn btn-warning" type="submit">Sí, Notificar</button>
+    
+    
+    
+    {% elif mensaje == None %}
+    <h5 style="margin-top: 15px;">Confirma que desea notificar al departamento de Calidad para que proceda con la verificación de los documentos de {{prove_nombre}} ?</h5>
+    <button class="btn btn-warning" type="submit">Sí, Notificar</button>
+    <a class= "btn btn-default" href="{% url 'proveedores:listar_proveedores' %}">Cancelar</a>
+    {% endif %}
+</form>
+</div>
+{% endblock %}
+

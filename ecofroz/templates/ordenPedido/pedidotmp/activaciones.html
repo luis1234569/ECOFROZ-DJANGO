@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <h2>Cotizar Ordenes de Pedidos</h2>
+{% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block content %}
+<div class="loader"></div>
+    <div class="container" style="margin: 25px auto;">
+    <h4 class="display-6">Acción para Activaciones</h4>
+      {% if act %}
+      <table class="table table-bordered table-sm">
+          <tbody>
+            {% for form in act %}
+            <tr>
+              <th class="table-dark" scope="col" style="width: 25%;">Pedido N°</th>
+              <td style="font-weight: bold; font-size: 15pt;">{{ form.numpedido.numpedido }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Usuario Solicitante:</th>
+              <td>{{ form.numpedido.usuario_solicita.first_name }} {{ form.numpedido.usuario_solicita.last_name }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Departamento Solicitante:</th>
+              <td>{{ form.numpedido.departamento }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Sector:</th>
+              <td>{{ form.numpedido.area }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Proyecto:</th>
+              <td>{{ form.numpedido.numproyecto | default:"--" }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Tipo Activo:</th>
+              <td>{{ form.numpedido.tipoactivo }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Tiempo de Vida:</th>
+              <td>{{ form.numpedido.tiempo_vida }} - {{ form.numpedido.get_tiempo_tipo_display }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Motivo de Compra:</th>
+              <td>{{ form.numpedido.get_motivo_compra_display }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Descripciòn:</th>
+              <td>{{ form.descripcion }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Observación Administrativa:</th>
+              <td>{{ form.numpedido.observa_compra }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Observación Autorización:</th>
+              <td>{{ form.numpedido.observa_selec_cot }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Observación Cotizaiones:</th>
+              <td>{{ form.numpedido.cotiza_observa }}</td>
+            </tr>
+            {% if form.cotiza_Ref %}
+            <tr>
+              <th class="table-dark" scope="col">Cotización Referencial:</th>
+              <td><a class="card-link" href="/media/{{ form.cotiza_Ref }}" target="_blank">{{ form.cotiza_Ref }}</a></td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+            {% for form in cot %}
+            <tr>
+              <th class="table-dark" scope="col" style="width: 25%;">Empresa Vende:</th>
+              <td style="font-weight: bold; font-size: 15pt;">{{ form.empresa_cotiza }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Valor</th>
+              <td style="font-weight: bold; font-size: 15pt;">{{ form.valor }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+      </table>
+      {% else %}
+      <div class="alert alert-danger">
+        NO EXISTEN DATOS
+      </div>
+      {% endif %}
+      <!-- <div style="margin-top: 10px;">
+        <h4 class="display-6">Observaciones/Recomendaciones</h4> 
+        <div>
+          <textarea class="form-control" name="observa_activa" id="observa_activa" rows="5"></textarea>
+        </div>
+      </div> -->
+      <!-- <div class="dropdown-divider" style="margin: 25px auto;"></div> -->
+      <div class="row" style="margin: 25px auto">
+        {% for act in act %}
+        <div class="form-row">
+          <form action="{% url 'ordenpedido:activa_si' act.numpedido.numpedido %}" method="GET" >
+            <button type="submit" name="aprobar" class="btn btn-primary">SI ACTIVAR</button>
+          </form>
+        </div>
+        <div class="form-row" style="margin-left: 10px;">
+          <form action="{% url 'ordenpedido:activa_no'  act.numpedido.numpedido %}" method="GET">
+            <button type="submit" name="aprobar" class="btn btn-secondary">NO ACTIVAR</button>
+          </form>
+        </div>
+      {% endfor %}
+    </div>
+  <!-- </div>
+  {% block second_content %}
+  Segundo contenido
+  {% endblock second_content %} -->
+{% endblock %}
+
+{% block extrajs %}
+<script>
+  $(window).on("load", function() {
+      $(".loader").fadeOut("slow");
+  });
+
+  $(document).ready(function() {    
+      $('#enviar').on('click', function(){
+          //Añadimos la imagen de carga en el contenedor
+          $(".loader").show();
+          $(window).on("load", function(){
+              $(".loader").fadeOut("slow");
+          });
+      });              
+  });
+</script>
+
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+
+% block extrahead %}
+<!DOCTYPE html>
+<style>
+
+#salto-linea-ancho{
+    margin-top: 80px;
+    width: 250px;
+  }
+
+  .spacer {
+  padding-top: 80px;
+  padding-bottom: 40px
+}
+
+</style>
+
+{% block content %}  
+<div class="jumbotron container" style="width: 85%; margin-top: 25px;">
+    <h5 class="display-5">Edición de Respuestas de {{nombre_empresa}}</h5>
+    <p>
+
+    <div class="row spacer" id="salto-linea-ancho">
+      </p>
+      
+    </div>
+    
+
+    <div class="row" style="margin-left: 10px;">
+  
+    <h6>{{texto_pregunta}}</h6></div>
+    <p>
+    <form class="form-inline" action="{% url 'proveedores:edita_respuestas' pregunta respuesta prove %}" method="POST">
+      {% csrf_token %}
+      {% for respuesta in form %}
+      <div class="row" style="margin-left: 10px;">
+        
+    <input type="text" size="40px;" class="form-control" name="nueva-respuesta" value="{{respuesta.respuesta}}"> 
+     {% endfor %}
+     <input type="hidden" name="segmento_escogido" value="{{segmento_escogido}}">
+    
+    <button type="submit" style="margin-left:3px;" class="btn btn-primary mb-2">Guardar</button>
+  </form>
+  </div>    
+</div>
+
+    
+</div>
+
+{% endblock content %} 

@@ -1,0 +1,230 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+
+{% block extrahead %}
+<!DOCTYPE html>
+<style>
+
+table {
+  border-collapse: collapse;
+  width: 100%;  
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+ul.opciones {
+  list-style-type:none;
+}
+
+input[type=text] {
+  border: none;
+  border-bottom: 1px solid #34bdeb ;
+  background-color: none;
+  outline: none;
+  box-shadow: none !important;
+  /* border: none; */
+  border-bottom-color: 1px solid #34bdeb  ;
+}
+
+input[type=number] {
+  border: none;
+  border-bottom: 1px solid #34bdeb ;
+  background-color: none;
+  outline: none;
+  box-shadow: none !important;
+  /* border: none; */
+  border-bottom-color: 1px solid #34bdeb  ;
+  width: 80px;
+}
+
+.button {
+background-color: #4CAF50;
+border: none;
+color: white;
+padding: 4px 20px; */
+text-align: center;
+text-decoration: none;
+display: inline-block;
+font-size: 16px;
+margin: 4px 2px;
+cursor: pointer;
+border-radius: 4px;
+}
+
+
+
+.select-box {
+    -webkit-appearance: button;
+    -moz-appearance: button;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -webkit-padding-end: 20px;
+    -moz-padding-end: 20px;
+    -webkit-padding-start: 2px;
+    -moz-padding-start: 2px;
+    background-color: #faf9f7; /* Fallback color if gradients are not supported */
+    
+    background-position: center right;
+    background-repeat: no-repeat;
+    border: 1px solid #AAA;
+    outline: 0px;
+    border-radius: 2px;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+    color:#262625;
+    font-size: inherit;
+    margin: 0;
+    overflow: hidden;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#tabla-reporte{
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#tabla-reporte td, #tabla-reporte th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#tabla-reporte tr:hover {background-color: #ddd;}
+#tabla-reporte tr:hover {background-color: #ddd;}
+
+#tabla-reporte th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}
+
+#salto-linea-ancho{
+  margin-top: 20px;
+  width: 150px;
+}
+
+
+</style>
+
+{% endblock %}
+
+{% block content %}
+<div class=" jumbotron container-fluid" style="width: 90%; margin-top: 25px;">
+  <h3 class="display-5">Calificación del proveedores Ecofroz. Uso Interno</h3>
+  <p></p>
+  
+
+  <form enctype="multipart/form-data" method="POST">
+{% csrf_token %}
+  <div class="form-row">  
+
+    <div class="form-group col-xs-12 col-md-8 form-inline" >
+      <label for="{{ form.nombre_empresa.label }}">Usted está calificando a:&nbsp;</label> 
+      {% render_field form.nombre_empresa readonly="True" size="70px;" %} 
+    </div>
+
+    <div class="form-group col-md-8 form-inline" >
+      <label for="{{ form.categoria.label }}">Ubicado en la categoría:&nbsp;</label> 
+      {% render_field form.categoria readonly="True" %} 
+     
+        {% render_field form.nombre_comercial hidden="True"  %} 
+        {% render_field form2.empresa_tipo hidden="True"  %} 
+        {% render_field form2.giro_negocio hidden="True"  %} 
+        {% render_field form2.actividad hidden="False" %} 
+        {% render_field form2.otra_actividad hidden="True" %} 
+        {% render_field form2.direccion_matriz hidden="True" %} 
+        {% render_field form.horario_trabajo hidden="True" %}
+        {% render_field form.representante_legal hidden="True" %}
+        {% render_field form.ruc hidden="True"   %}
+        {% render_field form.telefono hidden="True" %} 
+        {% render_field form.celular hidden="True" %}
+        {% render_field form.nombre_contacto_ecofroz hidden="True" %} 
+        {% render_field form.calificacion hidden="True" %}
+        {% render_field form2.monto_ventas_2018 hidden="True" %}
+        {% render_field form2.monto_ventas_2019 hidden="True" %}
+        {% render_field form2.antiguedad hidden="True" %} 
+        {% render_field form2.num_trabajadores_fijos hidden="True" %} 
+        {% render_field form2.num_clientes hidden="True" %}
+        {% render_field form2.num_proveedores hidden="True" %} 
+        {% render_field form2.valores_empresa hidden="True" %}
+        {% render_field form2.tiene_web hidden="True" %}  
+        {% render_field form2.web hidden="True" %} 
+      
+    </div>
+
+    <div class="form-group col-md-8 " >
+      <label for="{{ form.fake }}"></label> 
+      <br>
+    </div>
+          
+  {% if form2 %} 
+  
+
+  <div class="form-group col-md-12" >
+    <label for="{{ form2.cumple_procedimiento_facturacion.label }}">{{ form2.cumple_procedimiento_facturacion.label }}</label> 
+    {% render_field form2.cumple_procedimiento_facturacion class="select-box" %}
+    <br>
+  </div>
+
+  <div class="form-group col-md-12" >
+    <label for="{{ form2.cumple_procedimiento_entrega.label }}">{{ form2.cumple_procedimiento_entrega.label }}</label> 
+    {% render_field form2.cumple_procedimiento_entrega class="select-box" %}
+    <br>
+  </div>
+
+  <div class="form-group col-md-12" >
+    <label for="{{ form2.cumple_procedimiento_compra.label }}">{{ form2.cumple_procedimiento_compra.label }}</label> 
+    {% render_field form2.cumple_procedimiento_compra class="select-box" %}
+    <br>
+  </div>
+
+  <div class="form-group col-md-12" >
+    <label for="{{ form2.antecedentes_verificados_rep_legal.label }}">{{ form2.antecedentes_verificados_rep_legal.label }}</label> 
+    {% render_field form2.antecedentes_verificados_rep_legal class="select-box" %}
+    <p>
+    
+  </div>
+
+  {% if antecedentes %}
+  <div class="form-group col-md-12" >
+  {% for documento in antecedentes %}
+  <!-- <a href="{% url 'proveedores:ver_fichas' documento.proveedor.id %}">{{ documento.archivos.name }}</a>
+              -->
+  {% if documento.nombre_corto %} 
+  <a href="{{ documento.archivos.url }}" target="_blank">VER&nbsp;{{ documento.nombre_corto }}</a>
+  {% else %}
+  <a href="{{ documento.archivos.url }}" target="_blank">VER&nbsp;{{ documento.archivos.name }}</a>
+  {% endif %}
+    <p>
+    
+  </div>
+
+  {% endfor %}
+
+  {% endif %}
+
+</div>
+
+{% endif %}
+
+<div class="row" style="width:40%"></div>
+    <button type="submit" style="margin-top:5px;" class="btn btn-primary btn-lg">Guardar</button>
+<br>
+<br>
+</div>
+<br>
+<br>
+
+</form>
+</div>
+
+
+{% endblock content %}

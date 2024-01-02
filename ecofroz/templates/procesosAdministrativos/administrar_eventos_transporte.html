@@ -1,0 +1,968 @@
+{% extends 'base_calendar.html' %}
+<!-- {% load tz %}   -->
+
+{% block extrahead %}
+
+<style type="text/css"> 
+  thead th  { 
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background-color: #ffffff;
+      border: blue 2px solid;
+      
+  }
+
+  tr td  { 
+      
+      border: rgb(209, 209, 226) 1px solid;
+      
+  }
+
+  .table { 
+      height:200px;
+      overflow:scroll;
+      font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+  }
+
+  
+
+  th, td {
+    word-wrap: break-word;
+    text-align: left;
+   padding: 8px;
+}
+
+ul.ui-autocomplete {
+    z-index: 1100;
+}
+
+.currencyinput {
+    border: 1px inset #ccc;
+}
+.currencyinput input {
+    border: 0;
+}
+
+
+</style>
+
+
+
+{% endblock %}
+
+
+
+{% block content %}
+<div class="container" style="margin: 25px auto;">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="btn-group">
+      <button class="btn btn-secondary" data-toggle="modal" data-target="#Add-Event" title="Nuevo Evento">+</button>
+      {% if nuevas_solicitudes %}
+      <a style="margin-left:2px;" href="{% url 'procesosadministrativos:listar_gestiona_2n' %}" class="btn btn-info" target="_blank" title="Tiene Nuevas Solicitudes"><i class="glyphicon glyphicon-certificate" style="font-size: 1rem; color:gold"></i> Ver Solicitudes</a>
+      {% else %}
+      <a style="margin-left:2px;" href="{% url 'procesosadministrativos:listar_gestiona_2n' %}" class="btn btn-secondary" target="_blank" title="Gestionar Solicitudes">Gestionar Solicitudes</a>
+      {% endif %}
+      
+      <a style="margin-left:2px;" href="{% url 'procesosadministrativos:reporte_transporte' %}" class="btn btn-secondary" target="_blank" title="Ver Reporte">Ver Reporte</a>
+    </div>
+  </div>
+    <!-- <div class="col-md-2">
+    
+    </div> -->
+
+    <div class="col-md-6" style="text-align:right">
+      <div class="btn-group">
+        <button class="btn btn-outline" disabled><i class="glyphicon glyphicon-certificate" style="font-size: 1rem; color:#74DF00"></i>F. Quillupangui</button>
+        <button class="btn btn-outline" disabled><i class="glyphicon glyphicon-certificate" style="font-size: 1rem; color:#0080FF"></i>L. Tapia</button>
+        <button class="btn btn-outline" disabled><i class="glyphicon glyphicon-certificate" style="font-size: 1rem; color:#FF0040"></i>J. Tipantiza</button>
+        <button class="btn btn-outline" disabled><i class="glyphicon glyphicon-certificate" style="font-size: 1rem; color:#FE9A2E"></i>P. Bunse</button>
+      </div>
+      </div>
+
+  
+  <div class="col-md-12">
+    <br>
+      <div id = 'calendar'></div>
+  </div>
+</div>
+
+<div class="modal fade" id="Show-Booking2" tabindex="-1"  aria-labelledby="exampleModalLabel" aria-hidden="True">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="Booking2L">Pasajeros</h5>
+        <button type="button" class="close" data-dismiss="modal" id="cierra-arribalt" name="cierra-arribabk" aria-label="Close">
+          <span aria-hideen="True">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-boddy">
+        <div class="container">
+          <div class="form-group">
+            <div class="row">
+              <div class="col-md-12">
+                <textarea class="form-control" name="pasajerosta" id="pasajerosta"  rows="8"></textarea>
+                 <input type="text" id="idlt" name="idlt" hidden>      
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cierralt">Close</button>  
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="Add-Event" tabindex="-1"  aria-labelledby="exampleModalLabel" aria-hidden="True">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Agregar Información del Evento</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hideen="True">&times;</span>
+        </button>
+      </div>
+      <form method="post" action="" enctype="multipart/form-data" id="formula" name="formula">
+        {% csrf_token %}
+        <div class="modal-boddy">
+          <div class="container">
+            <div class="form-group">
+              <div class="row">
+                <div class="col-md-6">
+                  <input type="checkbox" id="camioneta1" name="camioneta1" value="camioneta1" onclick="oculta()">
+                  <label for="camioneta1">Camioneta Administración</label>
+                </div>
+                <div class="col-md-6" id="alldayg">
+                  <input type="checkbox" id="allday" name="allday" value="camioneta1" onclick="cambia()">
+                  <label for="allday">Todo el día</label>
+                </div>
+              </div>
+            </div>
+            <div class="form-group" id="nombre_evento">
+              <label for="">Nombre del Evento</label>
+              <input type="text" class="form-control" name="title" id="title" placeholder="Ingrese nombre del evento">
+            </div>
+            <!-- <div class="form-group">
+              <label for="">Escoja un color</label>
+              <input type="color" class="form-control" name="color" value="#006ab4"> 
+            </div>  -->
+            <div class="form-group">
+              <div class="row">
+                <div class="col-md-4">
+                  <label for="start" id="labelstart">Inicio</label>
+                  <input type="datetime-local" class="form-control" name="start" id="start" placeholder="Ingrese Fecha de Inicio">
+                  <label for="startsf" id="labelstartsf">Fecha</label>
+                  <input type="date" class="form-control" name="startsf" id="startsf" placeholder="Ingrese la Fecha">
+                </div>
+
+                <div class="col-md-4" id="endg">
+                  <label for="">Fin</label>
+                  <input type="datetime-local" class="form-control" name="end" id="end" placeholder="Ingrese Fecha de Fin">
+                </div>
+                <div class="col-md-4" id="transpog">
+                  <label for="transportista">Transportista</label>
+                  <input class="form-control" name="transportista" id="transportista">
+                  <!-- <input class="form-control" name="transportista_id" id="transportista_id"> -->
+                  
+                  </div>
+
+
+                <pre></pre>
+                <div class="col-md-8" id="rutag">
+                  <label for="ruta">Ruta</label>
+                  <input class="form-control" name="ruta" id="ruta" hidden>
+                  <input class="form-control" name="rutatexto" id="rutatexto" required>
+                  
+                </div>
+
+                <div class="col-md-4" id="tarifa-div">
+                  <label for="ruta">Tarifa</label>
+                  <input class="form-control" name="tarifa" id="tarifa" data-mask="999.99" placeholder="$">
+                
+                </div>
+                
+            
+              </div>
+            
+            </div>
+
+            <div class="form-group" id="evento_desc">
+              <label for="">Notas</label>
+              <textarea class="form-control" name="desc_evento" id="desc_evento" rows="3"></textarea>
+            </div>
+
+            <div class="form-group" id="filediv">
+              <label for="">Documentos</label><br>
+              <input
+                    type="file"
+                    name = "docs"
+                    id = "id_docs"
+                    accept=".pdf,.doc,.jpg,.jpeg,.png,.xlsx,application/msword,application/msexcel" />
+              
+            </div>
+
+
+          </div>
+        </div>  
+
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+  <div class="modal fade" id="Show-Event" tabindex="-1"  aria-labelledby="exampleModalLabel" aria-hidden="True">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Información del Evento</h5>
+          <button type="button" class="close" data-dismiss="modal" id="cierra-arriba" name="cierra-arriba" aria-label="Close">
+            <span aria-hideen="True">&times;</span>
+          </button>
+        </div>
+        <form action="" id="form-show-event">
+          {% csrf_token %}
+        <div class="modal-boddy">
+          <div class="container">
+            <!-- <div class="form-group">
+            <input type="checkbox" id="camioneta1sw" name="camioneta1sw">
+            <label for="camioneta1">Camioneta Administración</label>
+          </div> -->
+          <div class="form-group" id="nombre_evento">
+            <label for="">Nombre del Evento</label>
+            <input type="text" class="form-control" name="titlesw" id="titlesw">
+          </div>
+          <!-- <div class="form-group">
+            <label for="">Escoja un color</label>
+            <input type="color" class="form-control" name="color" value="#006ab4"> 
+          </div>  -->
+          <div class="form-group">
+            <div class="row">
+              <div class="col-md-6">
+            <label for="">Fecha de Inicio</label>
+            <input type="datetime-local" class="form-control" name="startsw" id="startsw">
+          </div>
+        
+          <div class="col-md-6">
+            <label for="">Fecha de Fin</label>
+            <input type="datetime-local" class="form-control" name="endsw" id="endsw">
+          </div>
+      
+        <div class="col-md-12" id="rutadivsw">
+          <label for="">Ruta</label>
+          
+          <input class="form-control" name="rutanumsw" id="rutanumsw" hidden>
+          <input type="text" class="form-control" name="rutasw" id="rutasw" required>
+        </div>
+
+        <div class="col-md-4">
+          <label for="">Transportista</label>
+          <input type="text" class="form-control" name="transposw" id="transposw">
+        </div>
+
+        <div class="col-md-4" id="asientosd">
+          <label for="transportista">Asientos</label>
+          <input class="form-control" name="asientosdisp" id="asientosdisp">
+          <!-- <input class="form-control" name="transportista_id" id="transportista_id"> -->
+        </div>
+
+        <div class="col-md-4">
+
+        <button style="margin-top:32px;" type="button" class="btn btn-primary btn-lg glyphicon glyphicon-edit" id="registrasw" name="regisdtrasw" onclick="booking()" title="Registrar Pasajero"></button>
+        <button style="margin-top:32px;" type="button" class="btn btn-success btn-lg glyphicon glyphicon-user" id="verlistasw" onclick="booking2()" name="verlistasw" title="Ver Lista de Pasajeros"></button>
+      </div>
+
+      </div>
+    </div>
+      
+  <div class="row">
+    <div class="col-md-6" >
+  </div> 
+
+    </div>
+
+    <input type="text" class="form-control" name="idsw" id="idsw" hidden>
+  
+          <div class="form-group" id="evento_desc">
+            <label for="">Notas</label>
+            <textarea class="form-control" name="descsw" id="descsw" rows="3"></textarea>
+          </div>
+
+          <div class="form-group" id="filedivsw">
+            <label for="">Documentos</label><br>
+            <input
+                  type="file"
+                  name = "docssw"
+                  id = "id_docssw"
+                  accept=".pdf,.doc,.jpg,.jpeg,.png,.xlsx,application/msword,application/msexcel" />
+          </div>
+
+          <div id="muestra_archivo">
+         </div>
+
+        </div>
+          </div>
+  
+        <div class="modal-footer">
+            <!-- <button type="button" class="btn btn-warning btn-lg glyphicon glyphicon-floppy-save" id="actualizasw" name="actualizasw" title="Guardar/Actualizar"></button> -->
+          
+            <button type="submit" class="btn btn-warning btn-lg glyphicon glyphicon-floppy-save" title="Guardar/Actualizar"></button>
+          
+            <button type="button" class="btn btn-danger btn-lg glyphicon glyphicon-trash" id="eliminasw" name="eliminasw" title="Eliminar"></button>
+          <button type="button" class="btn btn-outline-secondary btn-lg glyphicon glyphicon-log-out" id="cierrasw" name="cierrasw" data-dismiss="modal" title="Salir"></button>
+          
+          
+          </div>
+        </form>
+        </div>
+      </div>
+    </div>
+  
+
+
+
+
+
+    <div class="modal fade" id="Show-Booking" tabindex="-1"  aria-labelledby="exampleModalLabel" aria-hidden="True">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Booking</h5>
+            <button type="button" class="close" data-dismiss="modal" id="cierra-arribabk" name="cierra-arribabk" aria-label="Close">
+              <span aria-hideen="True">&times;</span>
+            </button>
+          </div>
+          <form action="">
+            {% csrf_token %}
+          <div class="modal-boddy">
+            <div class="container">
+              <!-- <div class="form-group">
+              <input type="checkbox" id="camioneta1sw" name="camioneta1sw">
+              <label for="camioneta1">Camioneta Administración</label>
+            </div> -->
+            <div class="form-group" id="departamentofg">
+              <label for="">Departamento</label>
+              <input type="text" class="form-control" name="departamento" id="departamento" placeholder="Digite y seleccione el departamento">
+            </div>
+            
+            <div class="form-group">
+              <div class="row">
+                <div class="col-md-12">
+              <label for="">Nombre del Pasajero</label>
+              <input type="text" class="form-control" name="pasajero" id="pasajero" placeholder="Digite el nombre o apellido del pasajero">
+            </div>
+          
+          </div>
+        </div>
+
+        <div class="form-group" id="evento_desc">
+          <label for="">Justificación Viaje</label>
+          <textarea class="form-control" name="justificacion" id="justificacion" rows="3"></textarea>
+        </div>
+     
+        <input type="text" class="form-control" name="idbk" id="idbk" hidden>
+        
+    
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="cierrabk" name="cierrabk" data-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-primary" id="grababk" name="grababk" onclick="save_booking()">Guardar</button>
+            </div>
+          </form>
+          </div>
+        </div>
+      </div>
+
+
+
+    
+
+     
+{% endblock %}
+
+{% block extrajs %}
+
+
+<script>
+
+$(document).ready(function(){
+    
+    $("#rutatexto").autocomplete({source: "{% url 'procesosadministrativos:ajaxcallnombreruta' %}",
+    success: function(data) {
+        response($.map(data, function(item) {
+          return {
+            tarifa:item[3],
+            label: item[2],
+            value: item[0]
+          };
+        }));  
+    },
+    select: function(event, ui) {
+    
+    $("#rutatexto").val(ui.item.label);
+    $("#ruta").val(ui.item.id);
+    $("#tarifa").val(ui.item.tarifa);
+    
+    return false;
+  } ,
+    focus: function(event, ui) {
+    $("#ruta").val(ui.item.id);
+    return false;
+  },
+    change: function (event, ui) {
+        if (ui.item == null){ 
+         //here is null if entered value is not match in suggestion list
+            $(this).val((ui.item ? ui.item.id : ""));
+        }
+    }
+}),
+  
+  
+    $("#rutasw").autocomplete({source: "{% url 'procesosadministrativos:ajaxcallnombreruta' %}",
+  
+    success: function(data) {
+        response($.map(data, function(item) {
+          return {
+            label: item[2],
+            value: item[0]
+          };
+        }));  
+    },
+    select: function(event, ui) {
+    
+    $("#rutanumsw").val(ui.item.id);
+    $("#rutasw").val(ui.item.label);
+    return false;
+  } ,
+    focus: function(event, ui) {
+    $("#rutasw").val(ui.item.id);
+    return false;
+  },
+    change: function (event, ui) {
+        if (ui.item == null){ 
+         //here is null if entered value is not match in suggestion list
+            $(this).val((ui.item ? ui.item.id : ""));
+        }
+    }
+}),
+
+
+    $("#transportista").autocomplete({source: "{% url 'procesosadministrativos:ajaxcallnombretransportista' %}"
+    
+  });
+
+  $("#transposw").autocomplete({source: "{% url 'procesosadministrativos:ajaxcallnombretransportista' %}"
+    
+  });
+
+  $("#departamento").autocomplete({source: "{% url 'procesosadministrativos:ajaxcalldepar' %}"
+  
+  })
+
+    $("#pasajero").autocomplete({source: "{% url 'procesosadministrativos:ajaxcallpasajero' %}"
+  
+  });
+
+    $("#alldayg").hide();
+    $("#startsf").hide();
+    $("#labelstartsf").hide();
+
+});
+
+
+function booking2(){
+  var id =  document.getElementById('idsw').value;
+  
+  $("#Show-Event").modal('hide');
+  $("#Show-Booking2").modal('show');
+ 
+  idlt.value = id;
+
+  $.ajax({
+        type:"GET",
+        url:'ajax_query_passengers/',
+        data: {'id': id},
+        dataType: "json",
+        success: function (data) {
+          var inputpa = document.getElementById("pasajerosta");
+          $.each(data, function(key,value) {
+            $("#pasajerosta").append(JSON.stringify(value.fecha_book));
+            $("#pasajerosta").append(' - ');
+            $("#pasajerosta").append(JSON.stringify(value.nombre));
+            $("#pasajerosta").append(' - ');
+            $("#pasajerosta").append(JSON.stringify(value.departamento));
+            $("#pasajerosta").append('\n');
+          
+
+            });
+
+        
+        },
+        error: function (data) {
+          alert("No se pudo guardar. Comuníquese con IT")
+        }
+      })
+
+
+
+  document.getElementById('cierralt').onclick = function() {
+          $('#Show-Booking2').modal('hide'); 
+        }
+
+  document.getElementById('cierra-arribalt').onclick = function() {
+    $('#Show-Booking2').modal('hide'); 
+  }
+
+}
+
+
+
+function booking(){
+  var id =  document.getElementById('idsw').value;
+  
+  $("#Show-Event").modal('hide');
+  $("#Show-Booking").modal('show');
+  idbk.value = id;
+  document.getElementById('cierrabk').onclick = function() {
+          $('#Show-Booking').modal('hide'); 
+        }
+
+  document.getElementById('cierra-arribabk').onclick = function() {
+    $('#Show-Booking').modal('hide'); 
+  }
+
+}
+
+function save_booking(){
+    var depar =  document.getElementById('departamento').value;
+    var pasajero =  document.getElementById('pasajero').value;
+    var evento_id =  document.getElementById('idbk').value;
+    var justifica = document.getElementById('justificacion').value;
+    var tipo = 1;
+  
+    $("#form-show-event").submit();
+
+
+        $.ajax({
+        type:"GET", 
+        url:'ajax_save_booking/',
+        data: {'depar': depar, 'pasajero': pasajero, 'evento_id': evento_id,'justifica':justifica,'tipo':tipo},
+        dataType: "json",
+        success: function (data) {
+          
+          $("#Show-Event").modal('hide');
+          $("#Show-Event").modal('show');
+          calendar.fullCalendar('refetchEvents');
+          $("#Show-Event").modal('hide');
+
+          
+        
+        },
+        error: function (data) {
+          alert("No se pudo guardar. Comuníquese con IT")
+        }
+      })
+      }
+
+
+
+function cambia(){
+  const ad = document.querySelector('#allday');
+  if (ad.checked == true){
+    $("#startsf").show();
+    $("#labelstartsf").show();
+    $("#start").hide();
+    $("#labelstart").hide();
+    $("#endg").hide();
+    $("#rutatexto").prop('required',false);
+    $("#transportista").prop('required',false);
+  // $("#ruta").val(42);
+    $("#title").val("Camioneta Administración");
+    $("#rutatexto").val("OTRA RUTA");
+    $("#ruta").val(42);
+    $("#tarifa").val(0.00);
+    
+   }
+   else{
+    $("#startsf").hide();
+    $("#labelstartsf").hide();
+    $("#start").show();
+    $("#endg").show();
+    $("#labelstart").show();
+    
+   }
+  }
+
+function oculta(){
+  const cb = document.querySelector('#camioneta1');
+  if (cb.checked == true){
+  $("#rutatexto").prop('required',false);
+  $("#transportista").prop('required',false);
+  // $("#ruta").val(42);
+  $("#title").val("Camioneta Administración");
+  $("#rutatexto").val("OTRA RUTA");
+  $("#ruta").val(42);
+  $("#tarifa").val(0.00);
+
+
+  $("#nombre_evento").hide();
+  $("#rutag").hide();
+  $("#labelstartsf").hide();
+  $("#asientosd").hide();
+  $("#tarifa-div").hide();
+  $("#alldayg").show();
+  }
+  else{
+    $("#rutatexto").prop('required',true);
+    $("#nombre_evento").show();
+    $("#evento_desc").show();
+    $("#rutag").show();
+    $("#transpog").show();
+    $("#asientosd").show();
+
+  }
+}
+
+function borra_evento(event){
+   if (confirm("Está seguro que desea eliminar?")){
+          var id = event.id;
+          $.ajax({
+          type:"GET",
+          url:"remove_event/",
+          data: {'id': id},
+          dataType: "json",
+          success: function (data) {
+              calendar.fullCalendar('refetchEvents');
+              alert("Actualizado satisfactoriamente");
+            },
+            error: function (data) {
+              alert("Hay un problema. Comuníquese con IT");
+            }
+          
+
+        });
+  }
+}
+
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+  }
+
+  $(document).on('submit', '#formula', function (e) {
+
+    var form = $(this);
+    var transpo = $("#transportista")
+    console.log(transpo);
+    var formData = new FormData(form[0]);
+    formData.append('color', '#ffff6e')
+
+    var estado_camioneta = document.querySelector('#camioneta1');
+    var estado_allday = document.querySelector('#allday');
+   
+
+    if (estado_camioneta.checked == true){
+      if(estado_allday.checked == true){
+        $.ajax({
+        type:"post",
+        url:'add_event/',
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: "json",
+        success: function (data) {
+          alert("Actualizado Satisfactoriamente.")
+          calendar.fullCalendar('refetchEvents');
+        
+        },
+        error: function (data) {
+          alert("No se pudo guardar. Comuníquese con IT")
+        }
+      })}
+      else{
+      
+      $.ajax({
+        type:"post",
+        url:'add_event/',
+        // data: {'title': 'Camioneta Administrativa', 'start': inicio, 'end': fin,'desc_evento':'Disponible', 'color':'#6ec0ff'},
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: "json",
+        success: function (data) {
+          console.log(data);
+          alert("Actualizado Satisfactoriamente.")
+          calendar.fullCalendar('refetchEvents');
+        
+        },
+        error: function (data) {
+          alert("No se pudo guardar. Comuníquese con IT")
+        }
+      });
+    
+    }}
+  
+    else{
+      $.ajax({
+      type: 'post',
+      url: 'add_event/',
+      data: formData,
+      processData: false,
+      contentType: false,
+      dataType: 'json',
+      success: function(data){
+        console.log(data);
+        alert("Actualizado Satisfactoriamente.")
+        location.reload();
+        // calendar.fullCalendar('refetchEvents');
+      },
+      error: function (data) {
+        console.log(data)
+      }
+    })
+    }
+  })
+
+
+$(document).ready(function() {
+    var calendar = $('#calendar').fullCalendar({
+      timezone: 'local',
+      locale: 'es',
+      header: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'month,agendaWeek,agendaDay'
+      },
+      events: 'all_events/',
+      selectable: true,
+      selectHelper: true,
+      editable: true,
+      eventLimit: true,
+      
+      eventDrop: function (event){
+        var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ssZ");
+        var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ssZ");
+        var title = event.title;
+        var id = event.id;
+        var color = event.color;
+        var allday = event.extendedProps.allday;
+        
+        if (allday == true){
+        
+          $.ajax({
+          type:"GET",
+          url:"update_event/",
+          data: {'title': title, 'start':start, 'end':end, 'id':id,'allday':allday},
+          dataType: "json",
+          success: function (data) {
+              calendar.fullCalendar('refetchEvents');
+              alert("Actualizado satisfactoriamente");
+            },
+            error: function (data) {
+              alert("Hay un problema. Comuníquese con IT");
+            }
+          
+
+        });
+      }
+      else{
+        $.ajax({
+          type:"GET",
+          url:"update_event/",
+          data: {'title': title, 'start':start, 'end':end, 'id':id},
+          dataType: "json",
+          success: function (data) {
+              calendar.fullCalendar('refetchEvents');
+              alert("Actualizado satisfactoriamente");
+            },
+            error: function (data) {
+              alert("Hay un problema. Comuníquese con IT");
+            }
+          
+
+        });
+      }
+        
+    },
+      eventResize: function (event){
+        var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ssZ");
+        var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ssZ");
+        var title = event.title;
+        var id = event.id;
+
+        $.ajax({
+          type:"GET",
+          url:"update_event/",
+          data: {'title': title, 'start':start, 'end':end, 'id':id},
+          dataType: "json",
+          success: function (data) {
+              calendar.fullCalendar('refetchEvents');
+              alert("Actualizado satisfactoriamente");
+            },
+            error: function (data) {
+              alert("Hay un problema. Comuníquese con IT");
+            }
+        });
+      },
+
+      eventClick: function (event){
+    
+        var id = event.id;
+        var title = event.title;
+        var start =  $.fullCalendar.formatDate(event.start, "YYYY-MM-DD HH:mm:ss");
+        var end = $.fullCalendar.formatDate(event.end, "YYYY-MM-DD HH:mm:ss");
+        var ruta = event.extendedProps.ruta;
+        console.log(ruta)
+        var ruta_id = event.extendedProps.ruta_id;
+        var transportista = event.extendedProps.transportista;
+        var asientos = event.extendedProps.asientos;
+        var descri = event.extendedProps.descripcion;
+        var de = event.desc;
+        calendar.fullCalendar('refetchEvents');
+        var archivo = "/media/"+event.extendedProps.archivo_nombre;
+       
+        
+        var inputT = document.getElementById("titlesw");
+        var inputI = document.getElementById("startsw");
+        var inputF = document.getElementById("endsw");
+        var inputdesc = document.getElementById("descsw");
+        var inputruta = document.getElementById("rutasw");
+        var inputrutanum = document.getElementById("rutanumsw");
+        var inputranspo = document.getElementById("transposw");
+        var inputasientos = document.getElementById("asientosdisp");
+        var inputID = document.getElementById("idsw");
+        
+        
+        
+        if(title == 'Camioneta Administración'){
+          // document.getElementById("camioneta1sw").checked = true;
+          document.getElementById("rutadivsw").style.display = 'none';   
+
+        }
+
+        
+        calendar.fullCalendar('refetchEvents');
+        $('#Show-Event').modal('show'); 
+        
+        inputT.value = title;
+        inputI.value = start; 
+        inputF.value = end;
+        inputruta.value = ruta;
+        inputrutanum.value = ruta_id;
+        inputranspo.value = transportista;
+        inputdesc.textContent = descri; 
+        inputasientos.value = asientos;
+        inputID.value = id;
+        console.log(archivo)
+
+        if (archivo!="/media/"){
+          $("#muestra_archivo").html(
+          `<a href="${archivo}" class="btb btn-lg btn-info glyphicon glyphicon-eye-open" target="_blank" title="Ver Archivo"></a>`
+        )
+        } else{
+
+        if (archivo!="/media/"){
+        $("#muestra_archivo").html("")
+        }
+      }
+        
+        document.getElementById('cierrasw').onclick = function() {
+          $('#Show-Event').modal('hide'); 
+          // location.reload();
+          $("#muestra_archivo").html("")
+          calendar.fullCalendar('refetchEvents');
+
+        }
+
+        document.getElementById('cierra-arriba').onclick = function() {
+          $('#Show-Event').modal('hide'); 
+          // location.reload();
+          $("#muestra_archivo").html("")
+          calendar.fullCalendar('refetchEvents');
+        }
+
+        document.getElementById('eliminasw').onclick = function() {
+          if (confirm("Está seguro que desea eliminar?")){
+          var id = event.id;
+          $.ajax({
+          type:"GET",
+          url:"remove_event/",
+          data: {'id': id},
+          dataType: "json",
+          success: function (data) {
+              calendar.fullCalendar('refetchEvents');
+              $('#Show-Event').modal('hide'); 
+              
+            },
+            error: function (data) {
+              alert("Hay un problema. Comuníquese con IT");
+            }
+          
+
+          });
+          }
+        }
+
+     
+
+          $(document).on('submit', '#form-show-event', function (e) {
+
+          var title = document.getElementById('titlesw').value;
+          var inicio = document.getElementById('startsw').value;
+          var desc =  document.getElementById('descsw').value;
+          var fin =  document.getElementById('endsw').value;
+          var ruta =  document.getElementById('rutanumsw').value;
+          var transportista =  document.getElementById('transposw').value;
+          var asientos =  document.getElementById('asientosdisp').value;
+          var id =  document.getElementById('idsw').value;
+
+          $.ajax({
+                  type:"GET",
+                  url:'update_event_tarjeta/',
+                  data: {'id':id,'title': title, 'start': inicio, 'end': fin, 'desc_evento': desc,'ruta':ruta,'transportista':transportista,'asientos':asientos},
+                  dataType: "json",
+                  success: function (data) {
+
+                    calendar.fullCalendar('refetchEvents');
+                    alert("Actualizado Satisfactoriamente");
+                    $('#Show-Event').modal('hide');
+                    
+                  
+                  },
+                  error: function (data) {
+                    alert("No se pudo actualizar. Comuníquese con IT")
+                  }
+                });
+              }
+
+
+    )}
+    
+    });
+
+  })
+
+</script>
+{% endblock %}

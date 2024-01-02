@@ -1,0 +1,216 @@
+{% extends 'base.html' %}
+<!-- {% load tz %} -->
+
+{% block extrahead %}
+<style>
+    body {font-family: Arial;}
+    
+    /* Style the tab */
+    .tab {
+      overflow: hidden;
+      border: 1px solid #ccc;
+      background-color: #f1f1f1;
+    }
+    
+    /* Style the buttons inside the tab */
+    .tab button {
+      background-color: inherit;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.3s;
+      font-size: 17px;
+    }
+    
+    /* Change background color of buttons on hover */
+    .tab button:hover {
+      background-color: #ddd;
+    }
+    
+    /* Create an active/current tablink class */
+    .tab button.active {
+      background-color: #ccc;
+    }
+    
+    /* Style the tab content */
+    .tabcontent {
+      display: none;
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      border-top: none;
+    }
+    
+    /* Style the close button */
+    .topright {
+      float: right;
+      cursor: pointer;
+      font-size: 28px;
+    }
+    
+    .topright:hover {color: red;}
+  </style>
+{% endblock %}
+
+{% block content %}
+
+ 
+      <h4>Ordenes Aprobadas para Comprar</h4>
+      
+      <div class="col-md 12 search">
+        <form class="form-inline my-2 my-lg-0" method="GET">
+          <input class="form-control mr-sm-2" size="75;" type="text" placeholder="Filtre por: N° Pedido, Descripción, Departamento, Solicitante, Proveedor ó Analista" name="buscar" {% if busqueda %} value="{{ busqueda }}" {% endif %}>
+          <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+          <a class="btn btn-secondary my-2 my-sm-0" style="margin-left: 3px;" href="{% url 'trabajos:ver_compras' %}"></button>Limpiar</a>
+        </form>
+      </div>
+
+      <!-- <div class="container-fluid">
+      <div class="col-md 18 search">
+        <form class="form-inline my-2 my-lg-0" method="GET">
+        <input type="text" style="margin-left:-28px;" class="form-control mr-sm-2" size="60;" id="search" placeholder="N° Pedido, Descripción, Departamento, Solicitante, Proveedor, Analista" name="buscar" {% if busqueda %} value="{{ busqueda }}" {% endif %}>
+        <button type="submit" class="btn btn-dark"><i class="glyphicon glyphicon-search"></i></button>
+      </form>
+      </div>
+    </div> -->
+  
+
+<pre></pre>
+  
+  <table class="table table-borderless table-striped table-sm" id="aprobadas">
+    
+    <thead class="thead-dark" style="text-align: center;">
+      <tr id="chk-th" >
+        <th>N° Pedido</th>
+        <th>Usuario</th>
+        <th>Departamento</th>
+        <!-- <th>Area</th> -->
+        <!-- <th>Regimen Especial</th> -->
+        <!-- <th>Proyecto</th> -->
+        <th>Fecha Solicitud</th>
+        <th>Tipo</th>
+        <th>Descripción</th>
+        <th>Proveedor</th>
+        <th>Analista</th>
+        <th>Autorización de Compra</th>
+        <th>Recepción Bodega</th>
+        <th>Entregado Solicitante</th>
+        <!-- <th>Ver</th> -->
+      </tr>
+    </thead>
+    <tbody>
+      {% for aprobado in form2 %}
+      <tr class="table-active" data-href="{% url 'trabajos:observa_refer' aprobado.numtrabajo.numtrabajo %}" style="cursor: pointer;">
+        <td>{{ aprobado.numtrabajo.numtrabajo }}</td>
+        <td>{{ aprobado.numtrabajo.usuario_solicita.first_name | slice:":1"}}.{{ aprobado.numtrabajo.usuario_solicita.last_name | slice:":7" }}</td>
+        <td>{{ aprobado.numtrabajo.departamento |slice:':14' }}</td>
+        <!-- <td>{{ aprobado.numtrabajo.area }}</td> -->
+        <!-- <td>{{ aprobado.regimenespecial }}</td> -->
+        <!-- <td>{{ aprobado.numtrabajo.numproyecto }}</td> -->
+        <td>{{ aprobado.numtrabajo.fchsolicita|date:'M-d' }}</td>
+        <td>{{ aprobado.numtrabajo.tipo_pedi|slice:':10' }}</td>
+        <td>{{ aprobado.descripcion }}</td>
+        <td>{{ aprobado.numtrabajo.proveedor | default:'--' }}</td>
+        <td>{{ aprobado.numtrabajo.usuario_cotiza | default:'--' }}</td>
+
+        {% if aprobado.numtrabajo.genera_compra == 1 %}
+          <td>Aprobado</td>
+        {% elif aprobado.numtrabajo.genera_compra == 0 %}
+          <td>Rechazado</td>
+        {% elif aprobado.numtrabajo.genera_compra == 2 %}
+          <td>Devuelto</td>
+        {% else %}
+          <td>Pendiente</td>
+        {% endif %}
+        {% if aprobado.numtrabajo.recibido_bodega == True %}
+          <td>Recibido</td>
+        {% else %}
+          <td>Pendiente</td>
+        {% endif %}
+        {% if aprobado.numtrabajo.entrega_solicita %}
+          <td>Entregado</td>
+        {% else %}
+          <td>Pendiente</td>
+        {% endif %}
+        <!-- <td>
+          <a href="{% url 'trabajos:observa_refer' aprobado.numtrabajo.numtrabajo %}" class="btn btn-primary glyphicon glyphicon-eye-open" title="Ver"></a>
+        </td> -->
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <span class="text-danger" id="no-data"></span>
+
+  <div class="pagination">
+    <span class="step-links">
+        {% if form2.has_previous %}
+            <a href="?buscar={{busqueda}}&page=1">&laquo; inicio</a>
+            <a href="?buscar={{busqueda}}&page={{ form2.previous_page_number }}">previo</a>
+        {% endif %}
+  
+        <span class="current">
+            Page {{ form2.number }} of {{ form2.paginator.num_pages }}.
+        </span>
+  
+        {% if form2.has_next %}
+            <a href="?buscar={{busqueda}}&page={{ form2.next_page_number }}">próximo</a>
+            <a href="?buscar={{busqueda}}&page={{ form2.paginator.num_pages }}">último &raquo;</a>
+        {% endif %}
+    </span>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+  $(document).ready(function(){
+    $('*[data-href]').on('click', function(){
+      window.location = $(this).data("href");
+    });
+  });
+
+  function searchFunction(){
+    let input, filter, table, tr, td, j;
+    input = document.getElementById("search");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("aprobadas");
+    tr = table.getElementsByTagName("tr");
+    
+
+    for (j=0; j < tr.length ; j++ ){
+
+        td = tr[j].getElementsByTagName("td");
+        msg = document.getElementById("no-data");
+
+        if (td.length > 0){
+            if (td[0].innerHTML.toLocaleUpperCase().indexOf(filter) > -1 ||
+            td[1].innerHTML.toLocaleUpperCase().indexOf(filter) > -1 ||
+            td[2].innerHTML.toLocaleUpperCase().indexOf(filter) > -1 ||
+            td[3].innerHTML.toLocaleUpperCase().indexOf(filter) > -1 ||
+            td[4].innerHTML.toLocaleUpperCase().indexOf(filter) > -1 ||
+            td[5].innerHTML.toLocaleUpperCase().indexOf(filter) > -1 ||
+            td[6].innerHTML.toLocaleUpperCase().indexOf(filter) > -1 ||
+            td[7].innerHTML.toLocaleUpperCase().indexOf(filter) > -1 ){
+            tr[j].style.display = "";
+              msg.innerHTML = "";
+            }
+            else {
+              tr[j].style.display = "none";
+            } 
+        }
+        if (td.length == 0){
+          msg.innerHTML = "No existe"
+        }
+
+    }
+
+  }
+
+
+
+
+</script>
+{% endblock %}

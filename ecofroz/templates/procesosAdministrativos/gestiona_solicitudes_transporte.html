@@ -1,0 +1,461 @@
+
+{% extends 'base_calendar.html' %}
+{% load widget_tweaks %}
+
+{% block title %}
+    <h2>Gestión de Solicitudes de Transporte</h2>
+{% endblock %}
+
+{% block extrahead %}
+
+<style>
+  ul {
+    list-style-type: none;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="loader"></div>
+    <div class="container" style="margin: 25px auto;">
+      <div class="btn-group" style="float: right;margin-bottom: 15px;">
+        <a type="button" class="btn btn-info" href="{% url 'procesosadministrativos:listar_gestiona_2n' %}">Volver a listar</a>
+        <a type="button" style="margin-left: 3px;" class="btn btn-info" data-toggle="modal" data-target="#devolver" data-whatever="@getbootstrap" href="">Devolver</a>
+        <!-- <button type="button" style="margin-left: 3px;" class="btn btn-info" name="proceso" id="proceso" onclick="procesa()">Poner en proceso</button> -->
+        <button type="button" style="margin-left: 3px;" class="btn btn-info" name="confirmab" id="confirmab" onclick="confirmar()">Confirmar Transporte</button>
+        <!-- <button type="button" style="margin-left: 3px;margin-top:-2px;" class="btn btn-info glyphicon glyphicon glyphicon-floppy-save" name="save" id="save" onclick="save()" title="Guardar"></button> -->
+      
+      </div>
+      
+
+        <table class="table table-bordered table-sm" style="margin-top:15px;">
+                <tbody>
+                  {% for form in cot %}
+                  <tr>
+                    <th class="table-dark" scope="col" style="width: 25%;">N° Solicitud:</th>
+                    <td style='font-size: 18px; font-weight: bold;'>{{ form.numpedido.numpedido }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Fecha Solicitud:</th>
+                    <td>{{ form.numpedido.fchsolicita | default:'--' }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Usuario Solicitante:</th>
+                    <td>{{ form.numpedido.usuario_solicita.first_name }} {{ form.numpedido.usuario_solicita.last_name }}</td>
+                  </tr>
+
+                  <tr>
+                    <th class="table-dark" scope="col">Ubicación:</th>
+                    <td>{{ form.numpedido.ubica }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Departamento Solicitante:</th>
+                    <td>{{ form.numpedido.departamento }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Tipo:</th>
+                    <td><b>{{ form.numpedido.get_tipo_display | default:'--' }}</b></td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Ruta:</th>
+                    <td>{{ form.numpedido.ruta.origen }} -> {{ form.numpedido.ruta.destino }}</td>
+                  </tr>
+                  
+                  {% if form.numpedido.otra_ruta %}
+                  <tr>
+                    <th class="table-dark" scope="col">Otra Ruta:</th>
+                    <td>{{ form.numpedido.otra_ruta }}</td>
+                  </tr>
+                  
+                    {% endif %}
+
+                    
+                    <tr>
+                      <th class="table-dark" scope="col">Requiero Transporte de Retorno: </th>
+                      {% if form.numpedido.retorno == True %}
+                      <td>Sí</td>
+                      {% elif form.numpedido.retorno == False %}
+                      <td>No</td>
+                      {% else %}
+                      <td>--</td>
+                    </tr>
+                      {% endif %}
+
+
+                  <tr>
+                    <th class="table-dark" scope="col">Pasajero:</th>
+                    <td>{{ form.numpedido.pasajero }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Otros Pasajeros:</th>
+                    <td>{{ form.numpedido.otros_pasajeros | default:'--' }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Fecha Evento:</th>
+                    <td>{{ form.numpedido.fchevento | default:'--' }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Justificación:</th>
+                    <td>{{ form.numpedido.justificacion| default:'--' }}</td>
+                  </tr>
+                  {% if form.numpedido.fecha_en_proceso %}
+                  <tr>
+                    <th class="table-dark" scope="col">Fecha inicia gestión:</th>
+                    <td>{{ form.numpedido.fecha_en_proceso| default:'--' }}</td>
+                  </tr>
+                  {% endif %}
+                 
+                  {% if form.numpedido.fecha_confirma %}
+                  <tr>
+                    <th class="table-dark" scope="col">Fecha confirma transporte:</th>
+                    <td>{{ form.numpedido.fecha_confirma| default:'--' }}</td>
+                  </tr>
+                  {% endif %}
+
+
+                  
+                  {% if form.img_1 %}
+                  <tr>
+                    <th class="table-dark" scope="col">Imagen 1:</th>
+                    <td>
+                      <a class="card-link" href="#" data-toggle="modal" data-target="#img_1" data-whatever="@getbootstrap">{{ form.img_1 }} </a>
+                      <div class="modal fade" id="img_1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-xl" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div>
+                              <img src="/media/{{ form.img_1 }}"  class="img-thumbnail rounded" alt="...">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endif %}
+                  {% if form.img_2 %}
+                  <tr>
+                    <th class="table-dark" scope="col">Imagen 2:</th>
+                    <td>
+                      <a class="card-link" href="#" data-toggle="modal" data-target="#img_2" data-whatever="@getbootstrap">{{ form.img_2 }}</a>
+                      <div class="modal fade" id="img_2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-xl" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div>
+                              <img src="/media/{{ form.img_2 }}" class="img-thumbnail rounded" alt="...">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endif %}
+                  
+                </tbody>
+        </table>
+
+
+     
+          <div>
+            <label for="" style="font-size:75%"><b>Notas del Gestor</b></label>
+              <textarea class="form-control" id="notasges" name="notasges" rows="4" placeholder="Notas del Gestor">{{notas | default:""}}</textarea>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-md-3">
+                <label for="" style="font-size:75%"><b>Tuvo Transporte de retorno?</b></label>
+                <select  name="retorno" id="retorno">
+                  {% if retorno == True %}
+                  <option value="SI" selected>SI</option>
+                  <option value="NO">NO</option>
+                  <option value="--">--</option>
+                  {% elif retorno == False %}
+                  <option value="NO" selected>NO</option>
+                  <option value="SI">SI</option>
+                  <option value="--">--</option>
+                  {% else %}
+                  <option value="--">--</option>
+                  <option value="SI">SI</option>
+                  <option value="NO">NO</option>
+                  {% endif %}
+                </select>
+                </div>
+                <div class="col-md-6">
+                  
+                  </div>
+
+              </div>
+            <br>
+            <div class="row">
+            <div class="col-md-6">
+              <label for="" style="font-size:75%"><b>Transportista</b></label>
+              <div class="input-group mb-3">
+                <input type="text" class="form-control" name="transportista" id="transportista" placeholder="Transportista" value="{{transportista|default:"--"}}">
+                <!-- <div class="input-group-append">
+                <button type="button" style="margin-top:-2px;" class="btn btn-info glyphicon glyphicon-floppy-save" name="save" id="save" onclick="save()" title="Guardar"></button>
+              </div> -->
+              </div>
+            </div>
+            
+              <div class="col-md-6">
+                <label for="" style="font-size:75%"><b>N° Factura</b></label>
+                <div class="input-group mb-3">
+                  <input type="text" class="form-control" name="no_factura" id="no_factura" placeholder="N° Factura" data-mask="9999999999999"  value="{{factura|default:"--"}}">
+                  <!-- <div class="input-group-append">
+                    <button type="button" style="margin-top:-2px;" class="btn btn-info glyphicon glyphicon-floppy-save" name="save" id="save" onclick="save()" title="Guardar"></button>
+                  </div> -->
+                </div>
+              </div>
+                
+            </div>
+  
+            <div class="row">
+              <div class="col-md-6">
+                <label for="" style="font-size:75%"><b>Valor Final</b></label>
+                <div class="input-group mb-3">
+                  <input type="text" class="form-control" name="valor_final" id="valor_final" placeholder="Valor Final" data-mask="999.99"  value="{{valor_real|default:0.0}}">
+                  <!-- <div class="input-group-append">
+                    <button type="button" style="margin-top:-2px;" class="btn btn-info glyphicon glyphicon-floppy-save" name="save" id="save" onclick="save()" title="Guardar"></button>
+                  </div> -->
+                </div>
+              </div>
+
+                
+                  <div class="col-md-6">
+                    <label for="" style="font-size:75%"><b>Fecha Factura</b></label>
+                    <div class="input-group mb-3">
+                      <input type="date" class="form-control" name="fecha_factura" id="fecha_factura" placeholder="Fecha Factura" value="{{fecha_factura|date:'Y-m-d'}}">
+                      <!-- <div class="input-group-append">
+                        <button type="button" style="margin-top:-2px;" class="btn btn-info glyphicon glyphicon-floppy-save" name="save" id="save" onclick="save()" title="Guardar"></button>
+                      </div> -->
+                    </div>
+              </div>
+                
+
+                <div>
+                  <input type="text" name="idbk" id="idbk" value="{{numt}}" hidden>
+                </div>
+                 
+                <br>
+
+             
+
+            
+
+                
+                  <button class="btn btn-primary" name="save" id="save" onclick="save()">Guardar</button>
+            
+            
+          </div>
+         
+          <pre></pre>
+         
+         
+        
+      </div>
+    
+    {% endfor %}
+
+    <div class="modal fade" id="devolver" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel" style="color: black;">Devolución de Solicitud de Transporte</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form class="modal-body" action="{% url 'procesosadministrativos:devuelve2nx' numt %}" method="GET">
+            
+
+              <div>
+                <label for="notas">Notas de devolución para el solicitante:</label>
+              </div>  
+              <div> 
+                <textarea class="form-control" id="notas" name="notas" rows="5" cols="59"></textarea>
+              </div>
+
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary" id="guardarm" name="guardarm">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="confirmado" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel" style="color: black;">Confirmación de Transporte:</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form class="modal-body" action="" method="GET">
+            <div class="form-group">
+          
+
+            {{ asignado.as_p  }}
+
+            <!-- {% for i in asignado %}
+             <p>{{i.id}}</p>
+             {% endfor %} -->
+            
+              <div>
+                <label for="notas">Observaciones Adicionales para el(los) Pasajero(s):</label>
+              </div>  
+              <div> 
+                <textarea class="form-control"  id="notasa" name="notasa" rows="4" cols="59"></textarea>
+              </div>
+
+
+            </div>
+            
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary" id="enviar" name="enviar">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+{% endblock %}
+
+{% block extrajs %}
+<script>
+  $(window).on("load", function() {
+        $(".loader").fadeOut("slow");
+    });
+
+    $(document).ready(function() {    
+        $('#enviar').on('click', function(){
+            //Añadimos la imagen de carga en el contenedor
+            $(".loader").show();
+            $(window).on("load", function(){
+                $(".loader").fadeOut("slow");
+            });
+        
+          });
+          
+          $("#transportista").autocomplete({source: "{% url 'procesosadministrativos:ajaxcallnombretransportista' %}"
+    
+  });
+
+
+
+
+    });    
+
+    function procesa(){
+      // document.getElementById('proceso').onclick = function() {
+        var sol_id =  document.getElementById('idbk').value;
+        var notasg =  document.getElementById('notasges').value;
+        
+    
+        $.ajax({
+        type:"GET",
+        url:'ajax_cambia_enproceso/',
+        data: {'sol_id': sol_id,'notasg':notasg},
+        dataType: "json",
+        success: function (data) {
+              alert("Actualizado satisfactoriamente");
+              
+        },
+        error: function (data) {
+          alert("No se pudo guardar. Comuníquese con IT");
+         
+        },
+        
+      })
+      }
+
+      function save(){
+      // document.getElementById('proceso').onclick = function() {
+        var sol_id =  document.getElementById('idbk').value;
+        var notasg =  document.getElementById('notasges').value;
+        var transportista = document.getElementById('transportista').value;
+        var valor = document.getElementById('valor_final').value;
+        var factura = document.getElementById('no_factura').value;
+        var fec_factura = document.getElementById('fecha_factura').value;
+        var val_retorno = document.getElementById('retorno').value;
+        
+      if(fec_factura==""){
+        $.ajax({
+        type:"GET",
+        url:'ajax_save/',
+        data: {'sol_id': sol_id,'notasg':notasg,'transportista':transportista,'valor':valor,'factura':factura,'val_retorno':val_retorno},
+        dataType: "json",
+        success: function (data) {
+              alert("Actualizado satisfactoriamente");   
+        },
+        error: function (data) {
+          alert("No se pudo guardar. Comuníquese con IT");
+         
+        },
+        
+      })
+      }
+      else{
+        $.ajax({
+        type:"GET",
+        url:'ajax_save/',
+        data: {'sol_id': sol_id,'notasg':notasg,'transportista':transportista,'valor':valor,'factura':factura,'fec_factura':fec_factura},
+        dataType: "json",
+        success: function (data) {
+              alert("Actualizado satisfactoriamente");   
+        },
+        error: function (data) {
+          alert("No se pudo guardar. Comuníquese con IT");
+         
+        },
+        
+      })
+      }
+
+      }
+    
+    
+      function confirmar(){
+      // document.getElementById('proceso').onclick = function() {
+        var sol_id =  document.getElementById('idbk').value;
+        var notasg =  document.getElementById('notasges').value;
+        
+    
+        $.ajax({
+        type:"GET",
+        url:'ajax_cambia_confirma/',
+        data: {'sol_id': sol_id,'notasg':notasg},
+        dataType: "json",
+        success: function (data) {
+              alert("Actualizado satisfactoriamente");
+              
+        },
+        error: function (data) {
+          alert("No se pudo guardar. Comuníquese con IT");
+         
+        },
+        
+      })
+      }
+    
+
+
+</script>
+{% endblock %}

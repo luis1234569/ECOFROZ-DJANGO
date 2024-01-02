@@ -1,0 +1,1011 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="jumbotron container-fluid" style="margin-top: 25px;">
+  <h2 class="display-5" style="margin-top: -25px;">Consulta de respuestas Encuesta</h2>
+    <br>
+        <form method="GET" id="form" >
+            {% csrf_token %}
+            <div class="form-row"> 
+            <div class="form-group col-md-3">
+                <label>{{ form3.categoria_proveedor.label }}</label>
+                {{ form3.categoria_proveedor }}
+                {% if categoria %}
+                <br> 
+                <input class="form-control mr-sm-2" type="text" size="35;" placeholder="Pregunta u ocurrencia..." name="buscar">
+                {% endif %}
+              </div>
+            
+            <div class="form-group col-md-4">
+                <label>{{ form3.codigo_id.label }}</label>
+                {{ form3.codigo_id }}
+              </div>
+            </div>
+           
+            <div class="row">
+              <div class="col-md-12" style="margin-top: 10px;">
+                <button class="btn btn-warning my-2 my-sm-0" type="reset" onclick="location.href='{% url 'proveedores:ver_preguntas' %}'">Limpiar</button> 
+                <button class="btn btn-primary my-2 my-sm-0" type="submit">Buscar</button>        
+              </div>
+          </div>
+        </form>
+</div>
+
+{% if categoria == null %}
+ 
+  <div class="container-fluid">
+     <button class="btn btn-success" style="margin-top: 5px;" type="button" onclick="location.href='{% url 'proveedores:to_excelclass' %}'">Exportar a Excel</button>      
+    
+  </div>
+  <br>
+
+{% endif %}
+                
+               
+               <!-- CATERING -->
+               {% if categoria == '1' %}
+               <div class="container-fluid">
+                <h5>El número de proveedores que ha respondido la encuesta en esta categoria es: {{count}}</h5>
+                <table class="table table-dark table-sm container-fluid" style="table-layout:fixed;">  
+                            <thead>
+                                <tr>
+                                  <td scope="col"><strong>No</strong></td>
+                                  <td scope="col"><strong>Pregunta</strong></td>
+                                  {% for columnas in proveedorcount  %}
+                                  <td><strong>Proveedor {{forloop.counter}} </strong></td>
+                                  {% endfor %}
+                                </tr>
+                                
+                                  <tr>
+                                  <td></td>
+                                  <td></td>
+                                  {% for respuesta in proveedorcount  %} 
+                                  <td><strong></strong>{{ respuesta.nombre_empresa }}</strong></td>
+                                  {% endfor %}
+  
+                  
+                                    <tr>
+                                      <td></td>
+                                      <td></td>
+                                      {% for respuesta in empresa  %} 
+                                      <td></td>
+                                      {% endfor %}
+                                    </tr>
+                             
+                  {% for pregunta in preguntas  %} 
+                  <tr> 
+                 
+                  </tr>
+                
+                {% endfor %}
+              </thead>
+              </tbody>
+            </div>
+
+            <!-- CENTROS DE ACOPIO -->
+            {% elif categoria == '2' %}
+            <div class="container-fluid">
+             <h5>El número de proveedores que ha respondido la encuesta en esta categoria es: {{count}}</h5>
+             <table class="table table-dark table-sm container-fluid" style="table-layout:fixed;">  
+                         <thead>
+                             <tr>
+                               <td scope="col"><strong>No</strong></td>
+                               <td scope="col"><strong>Pregunta</strong></td>
+                               {% for columnas in proveedorcount  %}
+                               <td><strong>Proveedor {{forloop.counter}} </strong></td>
+                               {% endfor %}
+                             </tr>
+                             
+                               <tr>
+                               <td></td>
+                               <td></td>
+                               {% for respuesta in proveedorcount  %} 
+                               <td><strong></strong>{{ respuesta.nombre_empresa }}</strong></td>
+                               {% endfor %}
+
+               
+                                 <tr>
+                                   <td></td>
+                                   <td></td>
+                                   {% for respuesta in empresa  %} 
+                                   <td></td>
+                                   {% endfor %}
+                                 </tr>
+                          
+               {% for pregunta in preguntas  %} 
+               <tr> 
+              
+               </tr>
+             
+             {% endfor %}
+           </thead>
+           </tbody>
+         </div>
+          
+                <!-- CONTROL DE PLAGAS -->
+                {% elif categoria == '3' %}
+                <div class="container-fluid">
+                  <h5>El número de proveedores que ha respondido la encuesta en esta categoria es: {{count}}</h5>
+                  <table class="table table-dark table-sm container-fluid" style="width:fit-content">
+                              <thead>
+                                  <tr>
+                                    <td scope="col"><strong>No</strong></td>
+                                    <td scope="col"><strong>Pregunta</strong></td>
+                                    {% for columnas in proveedorcount  %}
+                                    <td><strong>Proveedor {{forloop.counter}} </strong></td>
+                                    {% endfor %}
+                                  </tr>
+                                  
+                                    {% for respuesta in proveedorcount  %}
+                                    <tr>
+                                    <td></td>
+                                    <td></td> 
+                                    <td><strong></strong>{{ respuesta.codigo_id.nombre_empresa }}</strong></td>
+                                    </tr>
+                                    
+                                    {% endfor %}
+                                    
+                                     {% for pregunta in preguntas  %} 
+                                     <tr> 
+                                     <td>{{ forloop.counter }}</td>
+                                     <td>{{ pregunta.pregunta }}</td>
+                                     <td>{{ pregunta.consulta9 }}</td>
+                                     </tr>
+               
+                                    {% endfor %}
+             </thead>
+             <tbody>
+             </div>
+
+              <!-- FUNDAS / ROLLOS -->
+              {% elif categoria == '4' %}
+              <div class="container-fluid">
+                <h5>El número de proveedores que ha respondido la encuesta en esta categoria es: {{count}}</h5>
+                <table class="table table-dark table-sm container-fluid" style="width:fit-content">
+                            <thead>
+                                <tr>
+                                  <td scope="col"><strong>No</strong></td>
+                                  <td scope="col"><strong>Pregunta</strong></td>
+                                  {% for columnas in proveedorcount  %}
+                                  <td><strong>Proveedor {{forloop.counter}} </strong></td>
+                                  {% endfor %}
+                                </tr>
+                                <tr>
+                                  <td></td>
+                                  <td></td> 
+                                  {% for respuesta in proveedorcount  %}
+                                  <td><strong></strong>{{ respuesta.codigo_id.nombre_empresa }}</strong></td>
+                                  {% endfor %}
+                                  </tr>
+                                
+
+                                   {% for pregunta in preguntas  %} 
+                                   <tr> 
+                                   <td>{{ forloop.counter }}</td>
+                                   <td>{{ pregunta.pregunta }}</td>
+                                   <td>{{ pregunta.consulta3 }}</td>
+                                   <td>{{ pregunta.consulta2 }}</td>
+                                   </tr>
+             
+                                  {% endfor %}
+           </thead>
+           <tbody>
+           </div>
+            
+
+               <!-- GESTORES AMBIENTALES DE DESECHOS -->
+               {% elif categoria == '5' %}
+               <div class="container-fluid">
+                 <h5>El número de proveedores que ha respondido la encuesta en esta categoria es: {{count}}</h5>
+                 <table class="table table-dark table-sm container-fluid" style="width:fit-content">
+                             <thead>
+                                 <tr>
+                                   <td scope="col"><strong>No</strong></td>
+                                   <td scope="col"><strong>Pregunta</strong></td>
+                                   {% for columnas in proveedorcount  %}
+                                   <td><strong>Proveedor {{forloop.counter}} </strong></td>
+                                   {% endfor %}
+                                 </tr>
+                                 <tr>
+                                   <td></td>
+                                   <td></td> 
+                                   {% for respuesta in proveedorcount  %}
+                                   <td><strong></strong>{{ respuesta.codigo_id.nombre_empresa }}</strong></td>
+                                   {% endfor %}
+                                   </tr>
+                                 
+ 
+                                    {% for pregunta in preguntas  %} 
+                                    <tr> 
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ pregunta.pregunta }}</td>
+                                    <td>{{ pregunta.consulta35 }}</td>
+                                    
+                                    </tr>
+              
+                                   {% endfor %}
+            </thead>
+            <tbody>
+            </div>
+              
+
+              <!-- GRASAS DE GRADO ALIMENTICIO -->
+              {% elif categoria == '6' %}
+              <div class="container-fluid">
+                <h5>El número de proveedores que ha respondido la encuesta en esta categoria es: {{count}}</h5>
+                <table class="table table-dark table-sm container-fluid" style="width:fit-content">
+                            <thead>
+                                <tr>
+                                  <td scope="col"><strong>No</strong></td>
+                                  <td scope="col"><strong>Pregunta</strong></td>
+                                  {% for columnas in proveedorcount  %}
+                                  <td><strong>Proveedor {{forloop.counter}} </strong></td>
+                                  {% endfor %}
+                                </tr>
+                                <tr>
+                                  <td></td>
+                                  <td></td> 
+                                  {% for respuesta in proveedorcount  %}
+                                  <td><strong></strong>{{ respuesta.codigo_id.nombre_empresa }}</strong></td>
+                                  {% endfor %}
+                                  </tr>
+                                
+
+                                   {% for pregunta in preguntas  %} 
+                                   <tr> 
+                                   <!-- <td>{{ forloop.counter }}</td>
+                                   <td>{{ pregunta.pregunta }}</td> -->
+                                   <!-- <td>{{ pregunta.consulta3 }}</td> -->
+                                   
+                                   </tr>
+             
+                                  {% endfor %}
+           </thead>
+           <tbody>
+           </div>
+
+              <!-- KOREX / SLEEP SHIPT -->
+              {% elif categoria == '7' %}
+              <div class="container-fluid">
+                <h5>El número de proveedores que ha respondido la encuesta en esta categoria es: {{count}}</h5>
+                <table class="table table-dark table-sm container-fluid" style="width:fit-content">
+                            <thead>
+                                <tr>
+                                  <td scope="col"><strong>No</strong></td>
+                                  <td scope="col"><strong>Pregunta</strong></td>
+                                  {% for columnas in proveedorcount  %}
+                                  <td><strong>Proveedor {{forloop.counter}} </strong></td>
+                                  {% endfor %}
+                                </tr>
+                                <tr>
+                                  <td></td>
+                                  <td></td> 
+                                  {% for respuesta in proveedorcount  %}
+                                  <td><strong></strong>{{ respuesta.codigo_id.nombre_empresa }}</strong></td>
+                                  {% endfor %}
+                                  </tr>
+                                
+
+                                   {% for pregunta in preguntas  %} 
+                                   <tr> 
+                                   <td>{{ forloop.counter }}</td>
+                                   <td>{{ pregunta.pregunta }}</td>
+                                   <td>{{ pregunta.consulta18 }}</td>
+                                   
+                                   </tr>
+             
+                                  {% endfor %}
+           </thead>
+           <tbody>
+           </div>
+
+
+            <!-- LABORATORIOS DE CALIBRACION -->
+            {% elif categoria == '8' %}
+            <div class="container-fluid">
+              <h5>El número de proveedores que ha respondido la encuesta en esta categoria es: {{count}}</h5>
+              <table class="table table-dark table-sm container-fluid" style="width:fit-content">
+                          <thead>
+                              <tr>
+                                <td scope="col"><strong>No</strong></td>
+                                <td scope="col"><strong>Pregunta</strong></td>
+                                {% for columnas in proveedorcount  %}
+                                <td><strong>Proveedor {{forloop.counter}} </strong></td>
+                                {% endfor %}
+                              </tr>
+                              <tr>
+                                <td></td>
+                                <td></td> 
+                                {% for respuesta in proveedorcount  %}
+                                <td><strong></strong>{{ respuesta.codigo_id.nombre_empresa }}</strong></td>
+                                {% endfor %}
+                                </tr>
+                              
+
+                                 {% for pregunta in preguntas  %} 
+                                 <tr> 
+                                 <!-- <td>{{ forloop.counter }}</td> -->
+                                 <!-- <td>{{ pregunta.pregunta }}</td> -->
+                                 <!-- <td>{{ pregunta.consulta3 }}</td> -->
+                                 
+                                 </tr>
+           
+                                {% endfor %}
+         </thead>
+         <tbody>
+         </div>
+
+         <!-- LABORATORIOS DE ENSAYO -->
+         {% elif categoria == '9' %}
+              <div class="container-fluid">
+                <h5>El número de proveedores que ha respondido la encuesta en esta categoria es: {{count}}</h5>
+                <table class="table table-dark table-sm container-fluid" style="width:fit-content">
+                            <thead>
+                                <tr>
+                                  <td scope="col"><strong>No</strong></td>
+                                  <td scope="col"><strong>Pregunta</strong></td>
+                                  {% for columnas in proveedorcount  %}
+                                  <td><strong>Proveedor {{forloop.counter}} </strong></td>
+                                  {% endfor %}
+                                </tr>
+                                <tr>
+                                  <td></td>
+                                  <td></td> 
+                                  {% for respuesta in proveedorcount  %}
+                                  <td><strong></strong>{{ respuesta.codigo_id.nombre_empresa }}</strong></td>
+                                  {% endfor %}
+                                  </tr>
+                                
+
+                                   {% for pregunta in preguntas  %} 
+                                   <tr> 
+                                   <td>{{ forloop.counter }}</td>
+                                   <td>{{ pregunta.pregunta }}</td>
+                                   <td>{{ pregunta.consulta33 }}</td>
+                                   
+                                   </tr>
+             
+                                  {% endfor %}
+           </thead>
+           <tbody>
+           </div>
+
+              <!-- MATERIA PRIMA -->
+              {% elif categoria == '10' %}
+              <div class="container-fluid">
+                <h5>El número de proveedores que ha respondido la encuesta en esta categoria es: {{count}}</h5>
+                <table class="table table-dark table-sm container-fluid" style="width:fit-content">
+                            <thead>
+                                <tr>
+                                  <td scope="col"><strong>No</strong></td>
+                                  <td scope="col"><strong>Pregunta</strong></td>
+                                  {% for columnas in proveedorcount  %}
+                                  <td><strong>Proveedor {{forloop.counter}} </strong></td>
+                                  {% endfor %}
+                                </tr>
+                                <tr>
+                                  <td></td>
+                                  <td></td> 
+                                  {% for respuesta in proveedorcount  %}
+                                  <td><strong></strong>{{ respuesta.codigo_id.nombre_empresa }}</strong></td>
+                                  {% endfor %}
+                                  </tr>
+                                
+
+                                   {% for pregunta in preguntas  %} 
+                                   <tr> 
+                                   <td>{{ forloop.counter }}</td>
+                                   <td>{{ pregunta.pregunta }}</td>
+                                   <td>{{ pregunta.consulta14 }}</td>
+                                   
+                                   </tr>
+             
+                                  {% endfor %}
+           </thead>
+           <tbody>
+           </div>
+
+           <!-- MATERIALES DE LABORATORIO (INSUMOS) -->
+           {% elif categoria == '11' %}
+              <div class="container-fluid">
+                <h5>El número de proveedores que ha respondido la encuesta en esta categoria es: {{count}}</h5>
+                <table class="table table-dark table-sm container-fluid" style="width:fit-content">
+                            <thead>
+                                <tr>
+                                  <td scope="col"><strong>No</strong></td>
+                                  <td scope="col"><strong>Pregunta</strong></td>
+                                  {% for columnas in proveedorcount  %}
+                                  <td><strong>Proveedor {{forloop.counter}} </strong></td>
+                                  {% endfor %}
+                                </tr>
+                                <tr>
+                                  <td></td>
+                                  <td></td> 
+                                  {% for respuesta in proveedorcount  %}
+                                  <td><strong></strong>{{ respuesta.codigo_id.nombre_empresa }}</strong></td>
+                                  {% endfor %}
+                                  </tr>
+                                
+
+                                   {% for pregunta in preguntas  %} 
+                                   <tr> 
+                                   <!-- <td>{{ forloop.counter }}</td> -->
+                                   <!-- <td>{{ pregunta.pregunta }}</td> -->
+                                   <!-- <td>{{ pregunta.consulta3 }}</td>
+                                   <td>{{ pregunta.consulta2 }}</td> -->
+                                   </tr>
+             
+                                  {% endfor %}
+           </thead>
+           <tbody>
+           </div>
+
+           <!-- QUIMICOS DE LIMPIEZA DESINFECTAMENTES -->
+           {% elif categoria == '12' %}
+              <div class="container-fluid">
+                <h5>El número de proveedores que ha respondido la encuesta en esta categoria es: {{count}}</h5>
+                <table class="table table-dark table-sm container-fluid" style="width:fit-content">
+                            <thead>
+                                <tr>
+                                  <td scope="col"><strong>No</strong></td>
+                                  <td scope="col"><strong>Pregunta</strong></td>
+                                  {% for columnas in proveedorcount  %}
+                                  <td><strong>Proveedor {{forloop.counter}} </strong></td>
+                                  {% endfor %}
+                                </tr>
+                                <tr>
+                                  <td></td>
+                                  <td></td> 
+                                  {% for respuesta in proveedorcount  %}
+                                  <td><strong></strong>{{ respuesta.codigo_id.nombre_empresa }}</strong></td>
+                                  {% endfor %}
+                                  </tr>
+                                
+
+                                   {% for pregunta in preguntas  %} 
+                                   <tr> 
+                                   <!-- <td>{{ forloop.counter }}</td> -->
+                                   <!-- <td>{{ pregunta.pregunta }}</td> -->
+                                   <!-- <td>{{ pregunta.consulta3 }}</td>
+                                   <td>{{ pregunta.consulta2 }}</td> -->
+                                   </tr>
+             
+                                  {% endfor %}
+           </thead>
+           <tbody>
+           </div>
+
+            <!-- QUIMICOS DE LIMPIEZA (DETERGENTES) -->
+            {% elif categoria == '13' %}
+            <div class="container-fluid">
+              <h5>El número de proveedores que ha respondido la encuesta en esta categoria es: {{count}}</h5>
+              <table class="table table-dark table-sm container-fluid" style="width:fit-content">
+                          <thead>
+                              <tr>
+                                <td scope="col"><strong>No</strong></td>
+                                <td scope="col"><strong>Pregunta</strong></td>
+                                {% for columnas in proveedorcount  %}
+                                <td><strong>Proveedor {{forloop.counter}} </strong></td>
+                                {% endfor %}
+                              </tr>
+                              <tr>
+                                <td></td>
+                                <td></td> 
+                                {% for respuesta in proveedorcount  %}
+                                <td><strong></strong>{{ respuesta.codigo_id.nombre_empresa }}</strong></td>
+                                {% endfor %}
+                                </tr>
+                              
+
+                                 {% for pregunta in preguntas  %} 
+                                 <tr> 
+                                 <td>{{ forloop.counter }}</td>
+                                 <td>{{ pregunta.pregunta }}</td>
+                                  <td>{{ pregunta.consulta28 }}</td>
+                                
+                                 </tr>
+           
+                                {% endfor %}
+         </thead>
+         <tbody>
+         </div>
+
+
+         <!-- QUIMICOS PARA EL CALDERO -->
+         {% elif categoria == '14' %}
+              <div class="container-fluid">
+                <h5>El número de proveedores que ha respondido la encuesta en esta categoria es: {{count}}</h5>
+                <table class="table table-dark table-sm container-fluid" style="width:fit-content">
+                            <thead>
+                                <tr>
+                                  <td scope="col"><strong>No</strong></td>
+                                  <td scope="col"><strong>Pregunta</strong></td>
+                                  {% for columnas in proveedorcount  %}
+                                  <td><strong>Proveedor {{forloop.counter}} </strong></td>
+                                  {% endfor %}
+                                </tr>
+                                <tr>
+                                  <td></td>
+                                  <td></td> 
+                                  {% for respuesta in proveedorcount  %}
+                                  <td><strong></strong>{{ respuesta.codigo_id.nombre_empresa }}</strong></td>
+                                  {% endfor %}
+                                  </tr>
+                                
+
+                                   {% for pregunta in preguntas  %} 
+                                   <tr> 
+                                   <!-- <td>{{ forloop.counter }}</td> -->
+                                   <!-- <td>{{ pregunta.pregunta }}</td> -->
+                                   <!-- <td>{{ pregunta.consulta3 }}</td> -->
+                                   <!-- <td>{{ pregunta.consulta2 }}</td> -->
+                                   </tr>
+             
+                                  {% endfor %}
+           </thead>
+           <tbody>
+           </div>
+              <!-- TRANSPORTE DE CONTENEDORES -->
+              {% elif categoria == '15' %}
+              <div class="container-fluid">
+                <h5>El número de proveedores que ha respondido la encuesta en esta categoria es: {{count}}</h5>
+                <table class="table table-dark table-sm container-fluid" style="width:fit-content">
+                            <thead>
+                                <tr>
+                                  <td scope="col"><strong>No</strong></td>
+                                  <td scope="col"><strong>Pregunta</strong></td>
+                                  {% for columnas in proveedorcount  %}
+                                  <td><strong>Proveedor {{forloop.counter}} </strong></td>
+                                  {% endfor %}
+                                </tr>
+                                <tr>
+                                  <td></td>
+                                  <td></td> 
+                                  {% for respuesta in proveedorcount  %}
+                                  <td><strong></strong>{{ respuesta.codigo_id.nombre_empresa }}</strong></td>
+                                  {% endfor %}
+                                  </tr>
+                                
+
+                                   {% for pregunta in preguntas  %} 
+                                   <tr> 
+                                   <td>{{ forloop.counter }}</td>
+                                   <td>{{ pregunta.pregunta }}</td>
+                                   <td>{{ pregunta.consulta8 }}</td>
+                                  
+                                   </tr>
+             
+                                  {% endfor %}
+           </thead>
+           <tbody>
+           </div>
+
+           <!-- TRANSPORTE MARITIMO (NAVIERAS) -->
+           {% elif categoria == '16' %}
+           <div class="container-fluid">
+             <h5>El número de proveedores que ha respondido la encuesta en esta categoria es: {{count}}</h5>
+             <table class="table table-dark table-sm container-fluid" style="width:fit-content">
+                         <thead>
+                             <tr>
+                               <td scope="col"><strong>No</strong></td>
+                               <td scope="col"><strong>Pregunta</strong></td>
+                               {% for columnas in proveedorcount  %}
+                               <td><strong>Proveedor {{forloop.counter}} </strong></td>
+                               {% endfor %}
+                             </tr>
+                             <tr>
+                               <td></td>
+                               <td></td> 
+                               {% for respuesta in proveedorcount  %}
+                               <td><strong></strong>{{ respuesta.codigo_id.nombre_empresa }}</strong></td>
+                               {% endfor %}
+                               </tr>
+                             
+
+                                {% for pregunta in preguntas  %} 
+                                <tr> 
+                                <!-- <td>{{ forloop.counter }}</td> -->
+                                <!-- <td>{{ pregunta.pregunta }}</td> -->
+                                 <!-- <td>{{ pregunta.consulta3 }}</td> -->
+                                <!-- <td>{{ pregunta.consulta2 }}</td>  -->
+                                </tr>
+          
+                               {% endfor %}
+        </thead>
+        <tbody>
+        </div>
+
+            <!-- TRANSPORTE (OTROS) -->
+            {% elif categoria == '17' %}
+            <div class="container-fluid">
+              <h5>El número de proveedores que ha respondido la encuesta en esta categoria es: {{count}}</h5>
+              <table class="table table-dark table-sm container-fluid" style="width:fit-content">
+                          <thead>
+                              <tr>
+                                <td scope="col"><strong>No</strong></td>
+                                <td scope="col"><strong>Pregunta</strong></td>
+                                {% for columnas in proveedorcount  %}
+                                <td><strong>Proveedor {{forloop.counter}} </strong></td>
+                                {% endfor %}
+                              </tr>
+                              <tr>
+                                <td></td>
+                                <td></td> 
+                                {% for respuesta in proveedorcount  %}
+                                <td><strong></strong>{{ respuesta.codigo_id.nombre_empresa }}</strong></td>
+                                {% endfor %}
+                                </tr>
+                              
+
+                                 {% for pregunta in preguntas  %} 
+                                 <tr> 
+                                 <td>{{ forloop.counter }}</td>
+                                 <td>{{ pregunta.pregunta }}</td>
+                                 <td>{{ pregunta.consulta5 }}</td>
+                                
+                                 </tr>
+           
+                                {% endfor %}
+         </thead>
+         <tbody>
+         </div>
+
+            <!-- CAJAS -->
+            {% elif categoria == '18' %}
+            <div class="container-fluid">
+              <h5>El número de proveedores que ha respondido la encuesta en esta categoria es: {{count}}</h5>
+              <table class="table table-dark table-sm container-fluid" style="width:fit-content">
+                          <thead>
+                              <tr>
+                                <td scope="col"><strong>No</strong></td>
+                                <td scope="col"><strong>Pregunta</strong></td>
+                                {% for columnas in proveedorcount  %}
+                                <td><strong>Proveedor {{forloop.counter}} </strong></td>
+                                {% endfor %}
+                              </tr>
+                              <tr>
+                                <td></td>
+                                <td></td> 
+                                {% for respuesta in proveedorcount  %}
+                                <td><strong></strong>{{ respuesta.codigo_id.nombre_empresa }}</strong></td>
+                                {% endfor %}
+                                </tr>
+                              
+
+                                 {% for pregunta in preguntas  %} 
+                                 <tr> 
+                                 <td>{{ forloop.counter }}</td>
+                                 <td>{{ pregunta.pregunta }}</td>
+                                 <td>{{ pregunta.consulta23 }}</td>
+                                 <td>{{ pregunta.consulta26 }}</td>
+                                 </tr>
+           
+                                {% endfor %}
+         </thead>
+         <tbody>
+         </div>
+
+            
+                <!-- PRODUCTOS Y SERVICIOS VARIOS -->
+                {% elif categoria == '19' %}
+                <div class="container-fluid">
+                  <h5>El número de proveedores que ha respondido la encuesta en esta categoria es: {{count}}</h5>
+                  <table class="table table-dark table-sm container-fluid" style="width:fit-content">
+                              <thead>
+                                  <tr>
+                                    <td scope="col"><strong>No</strong></td>
+                                    <td scope="col"><strong>Pregunta</strong></td>
+                                    {% for columnas in proveedorcount  %}
+                                    <td><strong>Proveedor {{forloop.counter}} </strong></td>
+                                    {% endfor %}
+                                  </tr>
+                                  <tr>
+                                    <td></td>
+                                    <td></td> 
+                                    {% for respuesta in proveedorcount  %}
+                                    <td><strong></strong>{{ respuesta.codigo_id.nombre_empresa }}</strong></td>
+                                    {% endfor %}
+                                    </tr>
+                                  
+  
+                                     {% for pregunta in preguntas  %} 
+                                     <tr> 
+                                     <td>{{ forloop.counter }}</td>
+                                     <td>{{ pregunta.pregunta }}</td>
+                                     <td>{{ pregunta.consulta6 }}</td>
+                                    <td>{{ pregunta.consulta4 }}</td>
+                                    <td>{{ pregunta.consulta27 }}</td>
+                                    <td>{{ pregunta.consulta13 }}</td>
+                                    <td>{{ pregunta.consulta10 }}</td>
+                                    <td>{{ pregunta.consulta21 }}</td>
+                                    <td>{{ pregunta.consulta15 }}</td>
+                                    <td>{{ pregunta.consulta17 }}</td>
+                                    <td>{{ pregunta.consulta7 }}</td>
+                                    <td>{{ pregunta.consulta29 }}</td>
+                                    <td>{{ pregunta.consulta }}</td>
+                                    <td>{{ pregunta.consulta22 }}</td>
+                                    <td>{{ pregunta.consulta20 }}</td>
+                                    <td>{{ pregunta.consulta19 }}</td>
+                                    <td>{{ pregunta.consulta12 }}</td>
+                                    <td>{{ pregunta.consulta34 }}</td>
+                                    <td>{{ pregunta.consulta30 }}</td>
+                                    <td>{{ pregunta.consulta31 }}</td>
+                                    <td>{{ pregunta.consulta36 }}</td>
+                                    <td>{{ pregunta.consulta37 }}</td>
+                                    <td>{{ pregunta.consulta25 }}</td>
+                                     
+                                  
+                                  </tr>
+               
+                                    {% endfor %}
+             </thead>
+             <tbody>
+             </div>
+                 
+             <!-- PRODUCTOS Y SERVICIOS DE USO AGRICOLA -->
+             {% elif categoria == '20' %}
+             <div class="container-fluid">
+               <h5>El número de proveedores que ha respondido la encuesta en esta categoria es: {{count}}</h5>
+               <table class="table table-dark table-sm container-fluid" style="width:fit-content">
+                           <thead>
+                               <tr>
+                                 <td scope="col"><strong>No</strong></td>
+                                 <td scope="col"><strong>Pregunta</strong></td>
+                                 {% for columnas in proveedorcount  %}
+                                 <td><strong>Proveedor {{forloop.counter}} </strong></td>
+                                 {% endfor %}
+                               </tr>
+                               <tr>
+                                 <td></td>
+                                 <td></td> 
+                                 {% for respuesta in proveedorcount  %}
+                                 <td><strong></strong>{{ respuesta.codigo_id.nombre_empresa }}</strong></td>
+                                 {% endfor %}
+                                 </tr>
+                               
+ 
+                                  {% for pregunta in preguntas  %} 
+                                  <tr> 
+                                  <td>{{ forloop.counter }}</td>
+                                  <td>{{ pregunta.pregunta }}</td>
+                                  <td>{{ pregunta.consulta32 }}</td>
+                                
+                                  </tr>
+            
+                                 {% endfor %}
+          </thead>
+          <tbody>
+          </div>
+
+              <!-- LABOTARIO DE ANALISIS -->
+              {% elif categoria == '21' %}
+              <div class="container-fluid">
+                <h5>El número de proveedores que ha respondido la encuesta en esta categoria es: {{count}}</h5>
+                <table class="table table-dark table-sm container-fluid" style="width:fit-content">
+                            <thead>
+                                <tr>
+                                  <td scope="col"><strong>No</strong></td>
+                                  <td scope="col"><strong>Pregunta</strong></td>
+                                  {% for columnas in proveedorcount  %}
+                                  <td><strong>Proveedor {{forloop.counter}} </strong></td>
+                                  {% endfor %}
+                                </tr>
+                                <tr>
+                                  <td></td>
+                                  <td></td> 
+                                  {% for respuesta in proveedorcount  %}
+                                  <td><strong></strong>{{ respuesta.codigo_id.nombre_empresa }}</strong></td>
+                                  {% endfor %}
+                                  </tr>
+                                
+  
+                                   {% for pregunta in preguntas  %} 
+                                   <tr> 
+                                   <!-- <td>{{ forloop.counter }}</td> -->
+                                   <!-- <td>{{ pregunta.pregunta }}</td> -->
+                                   <!-- <td>{{ pregunta.consulta32 }}</td> -->
+                                 
+                                   </tr>
+             
+                                  {% endfor %}
+           </thead>
+           <tbody>
+           </div>
+
+            <!-- GESTOR AMBIENTAL DE RECICLAJE  -->
+            {% elif categoria == '30' %}
+            <div class="container-fluid">
+              <h5>El número de proveedores que ha respondido la encuesta en esta categoria es: {{count}}</h5>
+              <table class="table table-dark table-sm container-fluid" style="width:fit-content">
+                          <thead>
+                              <tr>
+                                <td scope="col"><strong>No</strong></td>
+                                <td scope="col"><strong>Pregunta</strong></td>
+                                {% for columnas in proveedorcount  %}
+                                <td><strong>Proveedor {{forloop.counter}} </strong></td>
+                                {% endfor %}
+                              </tr>
+                              <tr>
+                                <td></td>
+                                <td></td> 
+                                {% for respuesta in proveedorcount  %}
+                                <td><strong></strong>{{ respuesta.codigo_id.nombre_empresa }}</strong></td>
+                                {% endfor %}
+                                </tr>
+                              
+
+                                 {% for pregunta in preguntas  %} 
+                                 <tr> 
+                                 <td>{{ forloop.counter }}</td>
+                                 <td>{{ pregunta.pregunta }}</td>
+                                 <td>{{ pregunta.consulta16 }}</td>
+                               
+                                 </tr>
+           
+                                {% endfor %}
+         </thead>
+         <tbody>
+         </div>
+
+            {% elif categoria == null %}
+            <div class="container-fluid">
+              <table class="table table-hover table-dark table-sm container-fluid" style="width:fit-content">
+                          <thead>
+                              <tr>
+                                <td scope="col"><strong>No</strong></td>
+                                <td scope="col" style="width: 500px;"><strong>Pregunta</strong></td>
+                                {% for columnas in proveedorcount  %}
+                                <td scope="col"><strong>Proveedor {{forloop.counter}} </strong></td>
+                                {% endfor %}
+                              </tr>
+                              
+                                <tr>
+                                <td></td>
+                                <td></td>
+                                {% for respuesta in proveedorcount  %} 
+                                <td scope="col"><strong></strong>{{ respuesta.nombre_empresa }}</strong></td>
+                                {% endfor %}
+
+                               
+                              
+                                <tr>             
+                              {% for pregunta in preguntas  %} 
+                              <td>{{ forloop.counter }}</td>
+                              <td>{{ pregunta.pregunta }}</td>
+                              <td>{{ pregunta.consulta }}</td>
+                              <td>{{ pregunta.consulta12 }}</td>
+                              <td>{{ pregunta.consulta13 }}</td>
+                              <td>{{ pregunta.consulta3 }}</td>
+                              <td>{{ pregunta.consulta4 }}</td>
+                              <td>{{ pregunta.consulta5 }}</td>
+                              <td>{{ pregunta.consulta6 }}</td>
+                              <td>{{ pregunta.consulta7 }}</td>
+                              <td>{{ pregunta.consulta8 }}</td>
+                              <td>{{ pregunta.consulta9 }}</td>
+                              <td>{{ pregunta.consulta10 }}</td>
+                              <td>{{ pregunta.consulta14 }}</td>
+                              <td>{{ pregunta.consulta15 }}</td> 
+                              <td>{{ pregunta.consulta16 }}</td>
+                              <td>{{ pregunta.consulta17 }}</td>
+                              <td>{{ pregunta.consulta18 }}</td>
+                              <td>{{ pregunta.consulta20 }}</td>
+                              <td>{{ pregunta.consulta21 }}</td>
+                              <td>{{ pregunta.consulta22 }}</td>
+                              <td>{{ pregunta.consulta23 }}</td>
+                              <td>{{ pregunta.consulta25 }}</td>
+                              <td>{{ pregunta.consulta2 }}</td>
+                              <td>{{ pregunta.consulta26 }}</td>
+                              <td>{{ pregunta.consulta28 }}</td>
+                              <td>{{ pregunta.consulta19 }}</td>
+                              <td>{{ pregunta.consulta27 }}</td>
+                              <td>{{ pregunta.consulta29 }}</td>
+                              <td>{{ pregunta.consulta30 }}</td>
+                              <td>{{ pregunta.consulta31 }}</td>
+                              <td>{{ pregunta.consulta32 }}</td>
+                              <td>{{ pregunta.consulta33 }}</td>
+                              <td>{{ pregunta.consulta34 }}</td>
+                              <td>{{ pregunta.consulta35 }}</td>
+                              <td>{{ pregunta.consulta36 }}</td>
+                              <td>{{ pregunta.consulta37 }}</td>
+                              
+                               
+          </tr>
+        </thead>
+      <tbody> 
+        </div>
+          
+          {% endfor %}
+
+
+              {% else %}
+
+              {% if preguntas %}
+              <div class="container-fluid">
+                <table class="table table-hover table-dark table-sm container-fluid" style="width:fit-content">
+                            <thead>
+                                <tr>
+                                  <td scope="col"><strong>No</strong></td>
+                                  <td scope="col" style="width: 500px;"><strong>Pregunta</strong></td>
+                                  {% for columnas in proveedorcount  %}
+                                  <td scope="col"><strong>Proveedor {{forloop.counter}} </strong></td>
+                                  {% endfor %}
+                                </tr>
+                                
+                                  <tr>
+                                  <td></td>
+                                  <td></td>
+                                  {% for respuesta in proveedorcount  %} 
+                                  <td scope="col"><strong>{{ respuesta.codigo_id }}</strong></td>
+                                  </tr>
+                                  {% endfor %}
+                                    
+                                 
+                                  {% for pregunta in preguntas  %} 
+                                  
+                                  <tr> 
+                                  <td>{{ forloop.counter }}</td>
+                                  <td>{{ pregunta.pregunta }}</td>
+                                  <td>{{ pregunta.consulta27 }}</td>
+                                  
+
+                                  
+                                  </tr>
+            
+                                 {% endfor %}
+                                
+                                  
+                                  
+          
+          
+          
+          
+                                </thead>
+          <tbody>
+          </div>
+            
+            
+
+
+              {% endif %}
+
+              {% endif %}
+
+
+              
+              </tbody>
+              
+              </table>
+
+
+              
+              {% endblock content %}
+              
+              {% block extrajs %}
+              <script>
+                jQuery(document).ready(function($){
+                  $('*[data-href]').on('click', function(){
+                    window.location = $(this).data("href");
+                  });
+                });
+              </script>
+              
+              <script>
+                function ordenarSelect(id_componente)
+                  {
+                    var selectToSort = jQuery('#' + id_componente);
+                    var optionActual = selectToSort.val();
+                    selectToSort.html(selectToSort.children('option').sort(function (a, b) {
+                      return a.text === b.text ? 0 : a.text < b.text ? -1 : 1;
+                    })).val(optionActual);
+                  }
+                  $(document).ready(function () {
+                    ordenarSelect('id_categoria_proveedor');
+                    ordenarSelect('id_codigo_id');
+                    
+                  });
+              </script>
+              
+
+              {% endblock %}

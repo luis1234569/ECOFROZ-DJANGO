@@ -1,0 +1,56 @@
+
+{% extends 'parametrosGlobales/contabilidad/listar_proyectos.html' %}
+
+
+{% load static %}
+
+<div class="modal fade" id="exampleModal2" role="dialog"></div>
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edita Proyecto</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+        <form action="{% url 'parametrosglobales:actualiza_estado_proyectos' proyecto.id %}" method="GET">
+          <h6>Nombre del Proyecto</h6>
+          <textarea class="form-control" name="registro_proyecto" id="registro_proyecto"  rows="3">{{proyecto.nombre_proyecto}}</textarea>
+         <pre></pre>
+          <h6>Estado</h6>
+          <div class="form-group"> 
+            {{proyecto.nombre_proyecto }}
+            {% if proyecto.activo == True %}
+            <div>
+                <input type="radio" id="sipo" name="valores" value="SI"
+                       checked>
+                <label for="sipo">Activo</label>
+            
+                <input type="radio" id="nope" name="valores" value="NO">
+                <label for="nope">No activo</label>
+              </div>   
+            {% else %}
+
+              <div>
+                <input type="radio" id="sipo" name="valores" value="SI">
+                <label for="sipo">Activo</label>
+            
+                <input type="radio" id="nope" name="valores" value="NO"
+                checked>
+                <label for="nope">No activo</label>
+              </div> 
+
+            </div>
+          {% endif %}
+        
+        
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>

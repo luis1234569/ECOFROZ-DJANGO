@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="jumbotron" style="width: 75%; margin:auto; padding-top: 25px; margin-top: 50px; margin-bottom: 25px;">
+        <h2 class="display-5">Registro de Choferes</h2>
+
+        
+        <form action="{% url 'personal:registro_chofer' %}"method="POST" id="form">
+                {% csrf_token %}
+                
+                {% render_field form.estado style="visibility:hidden;" value=form2 %}
+                
+                <div class="form-row">  
+                        <div class="form-group col-md-3" >
+                        
+                        <label for="{{ form.cedula.label }}">{{ form.cedula.label }}</label> 
+                        {% render_field form.cedula placeholder="Sin espacios o guión" value=cedula  %}
+                        </div>
+                        
+                        <div class="form-group col-md-6" >   
+                        <label for="{{ form.nombres.label }}">{{ form.nombres.label }}</label> 
+                        {% render_field form.nombres placeholder="Nombre y Apellido" value=nombre %} 
+                        </div>
+                </div>
+                <div class="form-row">  
+                        <div class="form-group col-md-3" >
+                        <label for="{{ form.telefono.label }}">{{ form.telefono.label }}</label> 
+                                {% render_field form.telefono value=celular %}
+                        </div>
+
+                        <div class="form-group col-md-3" >
+                        <label for="{{ form.transportista.label }}">{{ form.transportista.label }}</label> 
+                        {% render_field form.transportista selected=transportista %}
+                        </div>
+                        
+                        <div class="form-group col-md-3" id="placa_chofer" >
+                        <label for="{{ form.placa.label }}">{{ form.placa.label }}</label> 
+                        {% render_field form.placa  %}
+                        </div>
+                        <div class="form-group col-md-3">
+                          <a class="btn btn-success rounded-circle" style="float: left; margin-top:30px;color:white" id="nuevaplaca" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap" title="Nueva Placa">+</a>
+                        </div>
+                </div>
+                <label for="{{ form.observaciones.label }}">{{ form.observaciones.label }}</label> 
+                {% render_field form.observaciones style="width: 100%" %}
+               
+                <div>
+                        <button style="margin-top: 40px;" type="submit" class="btn btn-primary btn-lg">Guardar</button>
+               
+                        <button style="margin-top: 40px;" type="button" class="btn btn-success btn-lg" onclick="location.href='{% url 'personal:registro_chofer' %}'">Limpiar</button>
+                        
+                </div>
+        </form>
+
+        <div class="form-group col-md-3">
+          <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel" style="color: black;">Ingrese la nueva placa (Sin espacios y/o guiones)</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <form class="modal-body" action="{% url 'personal:ingreso_placa'  %}" method="GET">
+                  <div class="form-group">
+                    <input type="text" name="newplaca" id="newplaca" style="margin-left:15px" placeholder="ABC0123">
+                    <input type="hidden" name="cedula" id="cedula" >
+                    <input type="hidden" name="nombres" id="nombres">
+                    <input type="hidden" name="celular" id="celular">
+                    <input type="hidden" name="transportista" id="transportista">
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" name="guardarplaca" class="btn btn-primary">Guardar</button>
+                  </div>
+                </form>
+              </div>
+              </div>
+            </div>
+  </div>
+
+</div>
+
+{% endblock content %}
+
+{% block extrajs %}
+<script>
+   
+//     $("#placa_cabezales").hide().val("");
+    
+    $("#nuevaplaca").on('click', firstClick)
+    function firstClick() {
+    //alert("First Clicked");
+//     $("#placa_chofer").hide().val("");
+    $("#placa_cabezales").show();
+   
+//     $("#mascampos").hide().val("");
+
+   }   
+
+  //  $('#nuevaplaca').click(function(){
+  //   // var filaactual = $(this).closest("tr"); // obtiene la fila actual
+  //   // var id = filaactual.find("td:eq(0)").text(); //obtener el valor del primer td de la fila actual
+  //   // var id = $(this).find("td:first").html()
+  //   // var id = $(this).find('{{pedido.numpedido.numpedido}}')
+  //   // var id='{{pedido.numpedido}}'
+	// 	// var id=$(this).val();
+	// 	// var first=$('#firstname'+id).text();
+	// 	// var last=$('#lastname'+id).text();
+	// 	// var address=$('#address'+id).text();
+  //   var cedula = $('#id_cedula').text();
+  //   let nombres = $('#id_nombres').text();
+  //   let celular = $('#id_telefono').text();
+  //   let transportista = ('#id_transportista').val();
+
+  //   alert(cedula);
+	
+	// 	// $('#edit').modal('show');
+	// 	$('#cedula').val(cedula);
+  //   $('#nombres').val(nombres);
+  //   $('#celular').val(celular);
+  //   $('#transportista').val(transportista);
+	// 	// $('#elastname').val(last);
+	// 	// $('#eaddress').val(address);
+	// });
+
+
+  $(document).ready(function(){
+    $('#nuevaplaca').click(function(){
+      let cedula = $('#id_cedula').val();
+      let nombres = $('#id_nombres').val();
+      let celular = $('#id_telefono').val();
+      let transportista = $('#id_transportista').val();
+
+      // alert('Sign new href executed.' + cedula);
+
+      $('#cedula').val(cedula);
+      $('#nombres').val(nombres);
+      $('#celular').val(celular);
+      $('#transportista').val(transportista);
+    });
+
+    $( "#id_transportista").val('{{ transportista }}');
+
+  });
+
+</script>
+{% endblock %}

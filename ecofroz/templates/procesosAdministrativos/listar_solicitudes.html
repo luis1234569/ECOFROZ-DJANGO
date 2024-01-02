@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+<!-- {% load tz %} -->
+
+{% block extrahead %}
+<style type="text/css">
+
+
+
+</style>
+
+
+
+{% endblock %}
+
+{% block content %}
+<div class="loader"></div>
+<div class="container" style="margin: 25px auto;">
+  <div class="row">
+    <div class="col-md 12 search">
+      <form class="form-inline my-2 my-lg-0" method="GET">
+        <input class="form-control mr-sm-2" style="margin-left:-95px;" type="text" size="40;" placeholder="Busque el número de Solicitud.." name="buscar" {% if busqueda %} value="{{ busqueda }}" {% endif %}>
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+        <a class="btn btn-secondary my-2 my-sm-0" style="margin-left: 10px;" href="{% url 'trabajosinternos:listar_trabajos_internos' %}"></button>Limpiar</a>
+      </form>
+    </div>
+    
+      <div class="col-md-6">
+        <a class="btn btn-lg btn-success rounded-circle" style="float: right;" title="Nueva Solicitud" href="{% url 'trabajosinternos:ingreso_ordenes' %}">+</a>
+      </div>
+      <!-- <a class="btn btn-success" href="">Exportar Excel</a>
+      <a href="{% url 'trabajos:comprasdirectas' %}" class="btn btn-primary">Ver Compras Directas</a>
+      <a href="{% url 'trabajos:aprueba_pagos' %}" class="btn btn-warning">Ver Ordenes de Pago</a> -->
+    
+  </div>
+</div>
+<div style="width: 98%; margin: auto;">
+<table class=" table table-sm table-hover table-warning table-striped">
+    <thead>
+      <tr>
+        <th scope="col">N°</th>
+        <th scope="col">Solicita</th>
+        <th scope="col">Fecha Solicitud</th>
+        <th scope="col" >Tipo</th>
+        <th scope="col">Autoriza Ger</th>
+        <th scope="col">Observaciones Ger</th>
+        <th scope="col">Estado Mant</th>
+        <th scope="col">Observaciones Mant</th>
+        <th scope="col">Asignado a</th>
+        
+        <th scope="col">Opciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for pedido in form %}
+    
+        <tr>
+        <td>{{ pedido.numtrabajo.numtrabajo }}</td>
+        <td>{{ pedido.numtrabajo.usuario_solicita }}</td>
+        <td>{{ pedido.numtrabajo.fchsolicita|date:"M d, H:i" }}</td>
+        <td>{{ pedido.numtrabajo.get_tipo_display }}</td>
+        {% if pedido.numtrabajo.estado1n == 1  %}
+        <td style="text-align: center;">--</td>
+        {% elif pedido.numtrabajo.estado1n == 2 %}
+        <td style="text-align: center;"><i class="glyphicon glyphicon-ok" style="font-size: 2rem; color:darkgreen" title="Autorizada"></i></td>
+        {% elif pedido.numtrabajo.estado1n == 3 %}
+        <td style="text-align: center;"><i class="glyphicon glyphicon-remove" style="font-size: 2rem; color:red" title="Rechazada"></i></td>
+        {% endif %}
+
+        <td>{{ pedido.numtrabajo.observaciones_rechazo1n | default:"--"}}</td>
+
+
+        {% if pedido.numtrabajo.estado2n == 1 %}
+        <td style="text-align: center;">--</td>
+        {% elif pedido.numtrabajo.estado2n == 2 %}
+        <td style="text-align: center;"><i class="glyphicon glyphicon-wrench" style="font-size: 2rem; color:chocolate" title="En proceso"></i></td>
+        {% elif pedido.numtrabajo.estado2n == 3 %}
+        <td style="text-align: center;"><i class="glyphicon glyphicon-transfer" style="font-size: 2rem; color:crimson" title="Devuelta con Observaciones"></i></td>
+        {% elif pedido.numtrabajo.estado2n == 4 %}
+        <td style="text-align: center;"><i class="glyphicon glyphicon-ok" style="font-size: 2rem; color:darkgreen" title="Finalizado"></i></td>
+        {% elif pedido.numtrabajo.estado2n == 5 %}
+        <td style="text-align: center;"><i class="glyphicon glyphicon-random" style="font-size: 2rem; color:blue" title="Convertida a SIA Trabajos. Req.# {{pedido.numtrabajo.num_req_sia}}"></i></td>
+       {% else %}
+       <td style="text-align: center;">--</td>
+        {% endif %}
+       
+        
+        <td>{{ pedido.numtrabajo.observaciones_devuelve_mantenimiento | default:"--" }}</td>
+        <td>
+          {% for j in pedido.numtrabajo.responsables.all %}
+          {{ j.responsable.first_name}}&nbsp;{{ j.responsable.last_name }}<br>
+          {% endfor %}
+        </td>
+        
+        
+        <td style="text-align: center;"> 
+        {% if pedido.numtrabajo.estado1n == 2 %}
+          {% if pedido.numtrabajo.estado2n == 3 %}
+          <a href="{% url 'trabajosinternos:edita_trabajos' pedido.numtrabajo.numtrabajo %}" title="Ver/Editar" class="btn btn-warning glyphicon glyphicon-edit"></a>
+          <a href="{% url 'trabajosinternos:anula' pedido.numtrabajo.numtrabajo %}" class="btn btn-danger glyphicon glyphicon-thumbs-down" title="Anular"></a>
+          {% else %}
+          <a href="{% url 'trabajosinternos:ver_solamente' pedido.numtrabajo.numtrabajo %}" class="btn btn-primary glyphicon glyphicon-eye-open" title="Ver"></a>
+          {% endif %}
+         
+        
+        {% elif pedido.numtrabajo.estado1n == 1 %}
+        <a href="{% url 'trabajosinternos:edita_trabajos' pedido.numtrabajo.numtrabajo %}" title="Ver/Editar" class="btn btn-warning glyphicon glyphicon-edit" ></a>
+        <a href="{% url 'trabajosinternos:anula' pedido.numtrabajo.numtrabajo %}" class="btn btn-danger glyphicon glyphicon-thumbs-down" title="Anular"></a>
+        {% elif pedido.numtrabajo.estado1n == 3 %}
+        <a href="{% url 'trabajosinternos:edita_trabajos' pedido.numtrabajo.numtrabajo %}" title="Ver/Editar" class="btn btn-warning glyphicon glyphicon-edit"></a>
+        <a href="{% url 'trabajosinternos:anula' pedido.numtrabajo.numtrabajo %}" class="btn btn-danger glyphicon glyphicon-thumbs-down" title="Anular"></a>
+      
+        {% elif pedido.numtrabajo.estado2n == 3 %}
+        <a href="{% url 'trabajosinternos:edita_trabajos' pedido.numtrabajo %}" title="Ver/Editar" class="btn btn-warning glyphicon glyphicon-edit"></a>
+        <a href="{% url 'trabajosinternos:anula' pedido.numtrabajo.numtrabajo %}" class="btn btn-danger glyphicon glyphicon-thumbs-down" title="Anular"></a>
+        
+        {% elif pedido.numtrabajo.estado2n == 5 %}
+        <a href=""></a>
+
+        {% endif %}
+        
+        </td>
+        <!-- <td style="margin"><a href="" class="btn btn-danger glyphicon glyphicon-thumbs-down" title="Anular"></a></td> -->
+      </tr>
+      {% endfor %}
+    </tbody>
+</table>
+</div>
+
+
+<div class="pagination">
+  <span class="step-links">
+      {% if form.has_previous %}
+          <a href="?page=1">&laquo; inicio</a>
+          <a href="?page={{ form.previous_page_number }}">previo</a>
+      {% endif %}
+
+      <span class="current">
+          Page {{ form.number }} of {{ form.paginator.num_pages }}.
+      </span>
+
+      {% if form.has_next %}
+          <a href="?page={{ form.next_page_number }}">próximo</a>
+          <a href="?page={{ form.paginator.num_pages }}">último &raquo;</a>
+      {% endif %}
+  </span>
+</div>
+
+
+{% endblock %}
+
+{% block extrajs %}
+
+<script>
+
+  $(window).on("load",function() {
+        $(".loader").fadeOut("slow");
+    });
+
+    
+  </script>
+
+{% endblock %}

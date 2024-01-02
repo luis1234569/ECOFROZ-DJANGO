@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+<!-- {% load tz %} -->
+{% block extrahead %}
+  <style>
+    body {font-family: Arial;}
+    
+    /* Style the tab */
+    .tab {
+      overflow: hidden;
+      border: 1px solid #ccc;
+      background-color: #f1f1f1;
+    }
+    
+    /* Style the buttons inside the tab */
+    .tab button {
+      background-color: inherit;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.3s;
+      font-size: 17px;
+    }
+    
+    /* Change background color of buttons on hover */
+    .tab button:hover {
+      background-color: #ddd;
+    }
+    
+    /* Create an active/current tablink class */
+    .tab button.active {
+      background-color: #ccc;
+    }
+    
+    /* Style the tab content */
+    .tabcontent {
+      display: none;
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      border-top: none;
+    }
+    
+    /* Style the close button */
+    .topright {
+      float: right;
+      cursor: pointer;
+      font-size: 28px;
+    }
+    
+    .topright:hover {color: red;}
+  </style>
+{% endblock %}
+
+{% block content %}
+<div class="container" style="margin: 25px auto;">
+  <div class="row">
+    <div class="col-md 12 search">
+      <form class="form-inline my-2 my-lg-0" method="GET">
+        <input class="form-control mr-sm-2" type="text" placeholder="N° Pedido" name="buscar" {% if busqueda %} value="{{ busqueda }}" {% endif %}>
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+        <a class="btn btn-secondary my-2 my-sm-0" style="margin-left: 10px;" href="{% url 'ordenpedido:activaciones' %}"></button>Limpiar</a>
+      </form>
+    </div>
+  </div>
+</div>
+<div style="margin: 25px auto;">
+  <div class="tab">
+    <button class="tablinks" onclick="openTab(event, 'PAprobar')" id="defaultOpen">Consultas</button>
+    <button class="tablinks" onclick="openTab(event, 'Aprobados')">Historial</button>
+  </div>
+
+  <div id="PAprobar" class="tabcontent">
+    <span onclick="this.parentElement.style.display='none'" class="topright">&times</span>
+    <div>
+      <table class="table table-sm table-hover table-dark">
+        <h5>Consulta Para Activaciones</h5>
+        {% if form %}
+          <thead>
+            <tr>
+              <th scope="col">Pedido</th>
+              <th scope="col">Usuario</th>
+              <th scope="col">Departamento</th>
+              <!-- <th scope="col">Area</th> -->
+              <!-- <th scope="col">Regimen Especial</th> -->
+              <th scope="col">Fecha Solicitud</th>
+              <th scope="col">Proyecto</th>
+              
+              <th scope="col">Tipo Activo</th>
+              <th scope="col">Valor</th>
+              <th scope="col">Opciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for pedido in form %}
+            <tr class="table-active">
+              <td>{{ pedido.numpedido.numpedido }}</td>
+              <td>{{ pedido.numpedido.usuario_solicita.first_name }} {{ pedido.numpedido.usuario_solicita.last_name }}</td>
+              <td>{{ pedido.numpedido.departamento }}</td>
+              <!-- <td>{{ pedido.numpedido.area }}</td> -->
+              <!-- <td>{{ pedido.regimenespecial }}</td> -->
+              <td>{{ pedido.numpedido.fchsolicita|date:'Y-m-d' }}</td>
+              <td>{{ pedido.numpedido.numproyecto | default:"--" }}</td>
+              
+              <td>{{ pedido.numpedido.tipoactivo }}</td>
+              <td>{{ pedido.valor }}</td>
+              <td>
+                <a href="{% url 'ordenpedido:activa' pedido.numpedido.numpedido %}" class="btn btn-primary">Abrir</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+          {% else %}
+            <div class="alert-danger" role="alert">
+              <h3 style="text-align: center;">No Hay Adquisisciones Para Activar</h3>
+            </div>
+          {% endif %}
+      </table>
+    </div>  
+  </div>
+
+  <div id="Aprobados" class="tabcontent">
+    <span onclick="this.parentElement.style.display='none'" class="topright">&times</span>
+    <div>
+      <table class="table table-sm table-warning">
+        <h4>Historial de Activaciones</h4>
+        <thead class="thead-dark" style="text-align: center;">
+          <tr>
+            <th>Pedido</th>
+            <th>Usuario</th>
+            <th>Departamento</th>
+            <!-- <th>Area</th> -->
+            <!-- <th>Regimen Especial</th> -->
+            <th>Fecha Solicitud</th>
+            <th>Proyecto</th>
+            
+            <th>Tipo Activo</th>
+            <th>Estado</th>
+            <th>Codigo Activo</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for aprobado in form2 %}
+          <tr>
+            <td>{{ aprobado.numpedido }}</td>
+            <td>{{ aprobado.usuario_solicita.first_name }} {{ aprobado.usuario_solicita.last_name }}</td>
+            <td>{{ aprobado.departamento }}</td>
+            <!-- <td>{{ aprobado.area }}</td> -->
+            <!-- <td>{{ aprobado.regimenespecial }}</td> -->
+            <td>{{ aprobado.fchsolicita|date:'Y-m-d' }}</td>
+            <td>{{ aprobado.numproyecto | default:"--" }}</td>
+            
+            <td>{{ aprobado.tipoactivo }}</td>
+            {% if aprobado.activado_activo == True %}
+              <td>Activado</td>
+            {% else %}
+            <td>No Activado</td>
+            {% endif %}
+            <td>{{ aprobado.cod_activo|default:'Pendiente' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+      </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+  function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
+  }
+
+  // Get the element with id="defaultOpen" and click on it
+  document.getElementById("defaultOpen").click();
+</script>
+{% endblock %}

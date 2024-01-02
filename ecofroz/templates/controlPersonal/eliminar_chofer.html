@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form method="post">
+    {%csrf_token %}
+    <h3>Confirma que desea eliminar el registro {{object.nombres}} ?</h3>
+    <button class="btn btn-danger" type="submit">Sí, Eliminar</button>
+    <a class= "btn btn-default" href="{% url 'personal:listar_chofer'%}">Cancelar</a>
+</form>
+{% endblock %}
+

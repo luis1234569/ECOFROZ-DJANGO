@@ -1,0 +1,13 @@
+COMANDOS LINUX (PUTTY)
+
+* VER ERRORES EN APACHE
+  Acceder a putty e ir al directprio del archivo de error_log 
+     cd /var/log/httpd
+  Ejecutarl e comando tail con el nombre del archivo
+     tail -50f error_log
+
+free -h  -- Ver memoria usado libre y swap
+top -- monitor de desempeño del equipo
+kill -9 numero de pid  --  matar procesos desconocidos
+ps -eaf | grep apache  --  sacar sesiones por usuarios o busqueda por filtros(grep)
+vmstat 2(numero de refresco  -- monitoreo de desempeño

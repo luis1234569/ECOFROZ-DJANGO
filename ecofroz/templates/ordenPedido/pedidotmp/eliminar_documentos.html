@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form method="post">
+    {%csrf_token %}
+    <h4>Confirma que desea eliminar el documento {{documento.archivos.name}} ?</h4>
+    <button class="btn btn-danger" type="submit">Sí, Eliminar</button>
+    
+</form>
+{% endblock %}
+

@@ -1,0 +1,276 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+
+{% block extrahead %}
+<!DOCTYPE html>
+<style>
+
+table {
+  border-collapse: collapse;
+  width: 100%;  
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+ul.opciones {
+  list-style-type:none;
+}
+
+input[type=text] {
+  border: none;
+  border-bottom: 1px solid #34bdeb ;
+  background-color: none;
+  outline: none;
+  box-shadow: none !important;
+  /* border: none; */
+  border-bottom-color: 1px solid #34bdeb  ;
+}
+
+input[type=number] {
+  border: none;
+  border-bottom: 1px solid #34bdeb ;
+  background-color: none;
+  outline: none;
+  box-shadow: none !important;
+  /* border: none; */
+  border-bottom-color: 1px solid #34bdeb  ;
+  width: 80px;
+}
+
+.button {
+background-color: #4CAF50;
+border: none;
+color: white;
+padding: 4px 20px; */
+text-align: center;
+text-decoration: none;
+display: inline-block;
+font-size: 16px;
+margin: 4px 2px;
+cursor: pointer;
+border-radius: 4px;
+}
+
+
+
+.select-box {
+    -webkit-appearance: button;
+    -moz-appearance: button;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -webkit-padding-end: 20px;
+    -moz-padding-end: 20px;
+    -webkit-padding-start: 2px;
+    -moz-padding-start: 2px;
+    background-color: #faf9f7; /* Fallback color if gradients are not supported */
+    
+    background-position: center right;
+    background-repeat: no-repeat;
+    border: 1px solid #AAA;
+    outline: 0px;
+    border-radius: 2px;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+    color:#262625;
+    font-size: inherit;
+    margin: 0;
+    overflow: hidden;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#tabla-reporte{
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#tabla-reporte td, #tabla-reporte th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#tabla-reporte tr:hover {background-color: #ddd;}
+#tabla-reporte tr:hover {background-color: #ddd;}
+
+#tabla-reporte th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}
+
+#salto-linea-ancho{
+  margin-top: 20px;
+  width: 150px;
+}
+
+
+</style>
+
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid" style="width: 90%; margin-top: 25px;">
+  <div class="form-row">
+  <h3 class="display-5">Calificación de proveedores Ecofroz. Uso Interno de Calidad&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>
+  
+    <a class="btn btn-outline-success" title="Volver a documntos del proveedor" href="{% url 'proveedores:califica_ecofroz_calidad' form.id %}"><b>Volver a Documentos del Proveedor</b></a>
+  </div>
+  <br>
+  
+  <br>
+  
+
+  <div class="form-row">  
+
+    <div class="form-group col-xs-12 col-md-8 form-inline" >
+      <label for="{{ form.nombre_empresa.label }}">Usted está viendo las <mark>Fichas Técnicas Foliares</mark> de:&nbsp;&nbsp;</label>
+      <input type="text" size="45px;" value="{{ form.nombre_empresa }}" readonly="True"> 
+      
+    </div>
+
+    <div class="form-group col-md-18 form-inline" >
+      <label for="{{ form.categoria.label }}">Ubicado en la categoría:&nbsp;&nbsp;</label> 
+      <input type="text" size="45px;" value="{{ form.categoria }}" readonly="True"> 
+
+      
+    </div>
+  </div>
+
+    
+<p>
+    
+  
+
+  <div class="container"  style="width: 95%; margin-top: 25px;">
+    <h5>Registro de Observaciones Internas de Calidad</h5> 
+    
+    <form enctype="multipart/form-data" method="POST" action="{% url 'proveedores:observaciones_revision_ficha' prove %}">
+      {% csrf_token %}
+    <textarea id="registro" name="registro" rows="5" cols="10" class="form-control">{{registro_cal}}</textarea>
+    
+  
+<div class="row" style="width:40%"></div>
+    <button type="submit" style="margin-top:5px;" class="btn btn-primary">Guardar</button>
+    
+<br>
+</form>
+
+  <br>
+  </div>  
+    {# 3. TABLE TO DISPLAY THE UPLOADED DOCS #}
+    
+    <div class="container"  style="width: 95%; margin-top: 25px;">
+    <table id="gallery" class="table table-bordered">
+      <thead>
+        <tr>
+          <th style="width: 5%;">No</th>
+          <th>Fichas Enviadas</th>
+          <th>Revisado</th>
+          <th>Marcar Estado</th>
+          <th>Se han guardado comentarios?</th>
+          <th>Opciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for documento in documentos_list %}
+        <form enctype="multipart/form-data" method="POST" action="{% url 'proveedores:save_record_ficha_cal' documento.id documento.proveedor.id %}">
+          {% csrf_token %}
+    
+          <tr>
+            <td style="width: 5%;"><strong>{{ forloop.counter }}</strong></td>
+            <!-- <td><a href="{{ documento.archivos.url }}">{{ documento.archivos.name }}</a></td> -->
+            {% if documento.nombre_corto %} 
+            <td><a href="{{ documento.archivos.url }}">{{ documento.nombre_corto }}</a></td>
+            {% else %}
+            <td><a href="{{ documento.archivos.url }}">{{ documento.archivos.name }}</a></td> 
+            {% endif %}
+            <td>
+              <select name="revisado" id="revisado">
+                {% if documento.revisado_cal == False %}
+                <option selected="selected" value="False">NO</option>
+                <option value="True">SI</option>             
+                {% else %}
+                <option selected="selected" value="True">SI</option>
+                <option value="False">NO</option>
+                {% endif %}
+
+              </select> 
+            </td>
+            <td>
+              <select name="marca" id="marca">
+                {% if documento.marca_cal == 'DESACTUALIZADA' %}
+                <option selected="selected" value="DESACTUALIZADA">DESACTUALIZADA</option>
+                <option value="">---</option>
+                <option value="INCORRECTA">INCORRECTA</option>
+                <option value="CORRECTA">CORRECTA</option>
+                {% elif documento.marca_cal == 'INCORRECTA' %}
+                <option selected="selected" value="INCORRECTA">INCORRECTA</option>
+                <option value="DESACTUALIZADA">DESACTUALIZADA</option>
+                <option value="CORRECTA">CORRECTA</option>
+                <option value="">---</option>
+                {% elif documento.marca_cal == 'CORRECTA' %}
+                <option selected="selected" value="CORRECTA">CORRECTA</option>
+                <option value="DESACTUALIZADA">DESACTUALIZADA</option>
+                <option value="INCORRECTA">INCORRECTA</option>
+                <option value="">---</option>
+                {% else %}
+                <option selected="selected" value="">---</option>
+                <option value="INCORRECTA">INCORRECTA</option>
+                <option value="CORRECTA">CORRECTA</option>
+                <option value="DESACTUALIZADA">DESACTUALIZADA</option>
+                {% endif %}
+
+
+              </select> 
+
+            <td style="text-align: center;">
+            {% if documento.observaciones_cal %}
+            <a class="glyphicon glyphicon-ok"></a>
+              {% else %}
+              <label>--</label>
+              {% endif %}
+
+          
+
+            </td>
+
+
+            <td><a class="btn btn-outline-warning glyphicon glyphicon-edit" title="Registar comentarios de este documento" href="{% url 'proveedores:save_observa_ficha_cal' documento.id documento.proveedor.id %}"></a>
+            <button type="submit" class="btn btn-outline-primary glyphicon glyphicon-floppy-saved" title="Almacenar Respuesta"></button>
+          </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <p>
+
+    <div class="form-group col-md-12 " >
+      <label for="{{ form.fake }}"></label> 
+      <br>
+    </div>
+       
+  </form>
+  
+
+
+
+
+<br>
+
+</div>
+
+<br>
+<br>
+
+
+
+
+{% endblock content %}

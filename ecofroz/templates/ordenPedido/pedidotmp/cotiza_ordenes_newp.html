@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <h2>Cotizar Ordenes de Pedidos</h2>
+{% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block content %}
+    <div class="container" style="margin: 25px auto;">
+      {% if cot %}
+      <table class="table table-bordered table-sm">
+          <tbody>
+            {% for form in cot %}
+            <tr>
+              <th class="table-dark" scope="col" style="width: 25%;">N° de Pedido:</th>
+              <td style='font-size: 11px;'>{{ form.numpedido.numpedido }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Usuario Solicitante:</th>
+              <td>{{ form.numpedido.usuario_solicita }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Departamento Solicitante:</th>
+              <td>{{ form.numpedido.departamento }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Area Solicitante:</th>
+              <td>{{ form.numpedido.area }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Proyecto:</th>
+              <td>{{ form.numpedido.numproyecto }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Tipo Activo:</th>
+              <td>{{ form.numpedido.tipoactivo }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Descripciòn:</th>
+              <td>{{ form.descripcion }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+      </table>
+      {% else %}
+      <div class="alert alert-danger">
+        NO EXISTEN DATOS
+      </div>
+      {% endif %}
+      <div class="dropdown-divider" style="margin: 25px auto;"></div>
+      <h4 class="display-6">Ingreso de Cotizaciones</h4>
+      <div style="margin: 25px auto">
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ detalle.management_form }}
+        <div class="form-group">
+          <input id="usuario_solicita" type="hidden" name="pedido" value="{{ pedido }}">
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>{{ detalle.valor.label }}</th>
+              <th>{{ detalle.empresa_cotiza.label }}</th>
+              <th>{{ detalle.pdf_cotiza.label }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for detalle in detalle %}
+            <tr>
+              <th>{{ detalle.valor }}</th>
+              <th>{{ detalle.empresa_cotiza }}</th>
+              <th>{{ detalle.pdf_cotiza }}</th>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <th><button type="submit" class="btn btn-primary" style="margin: auto 25px;">Anexar</button></th>
+      </form>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}
+    <h2>Cotizar Ordenes de Pedidos</h2>
+{% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block content %}
+    <div class="container" style="margin: 25px auto;">
+        <table class="table table-bordered table-sm">
+                <tbody>
+                  {% for form in cot %}
+                  <tr>
+                    <th class="table-dark" scope="col" style="width: 25%;">N° de Pedido:</th>
+                    <td style='font-size: 18px;color:blue;font-weight: bold;'>{{ form.numpedido.numpedido }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Usuario Solicitante:</th>
+                    <td>{{ form.numpedido.usuario_solicita }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Departamento Solicitante:</th>
+                    <td>{{ form.numpedido.departamento }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Area Solicitante:</th>
+                    <td>{{ form.numpedido.area }}</td>
+                  </tr>
+                  {% if form.numpedido.numproyecto %}
+                  <tr>
+                    <th class="table-dark" scope="col">Proyecto:</th>
+                    <td>{{ form.numpedido.numproyecto | default:"--" }}</td>
+                  </tr>
+                  {% endif %}
+                  <tr>
+                    <th class="table-dark" scope="col">Descripción:</th>
+                    <td>{{ form.descripcion }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Justificación de Compra:</th>
+                    <td>{{ form.numpedido.justificacion_compra | default:"--" }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Observaciones Adquisiciones:</th>
+                    <td>{{ form.numpedido.cotiza_observa | default:"--"}}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Observaciones Autorizador:</th>
+                    <td>{{ form.numpedido.observa_selec_cot | default:"--"}}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Observaciones Administrativas:</th>
+                    <td>{{ form.numpedido.observa_compra | default:"--" }}</td>
+                  </tr>
+                  
+                  
+                  {% if form.cotiza_Ref %}
+                  <tr>
+                    <th class="table-dark" scope="col">Cotización Referencial:</th>
+                    <td><a class="card-link" href="/media/{{ form.cotiza_Ref }}" target="_blank">{{ form.cotiza_Ref }}</a></td>
+                  </tr>
+                  {% endif %}
+
+                  {% if form.otros_doc %}
+                  <tr>
+                    <th class="table-dark" scope="col">Otros Documentos:</th>
+                    <td><a class="card-link" href="/media/{{ form.otros_doc }}" target="_blank">{{ form.otros_doc }}</a></td>
+                  </tr>
+                  {% endif %}
+
+                  {% if form.otros_doc_adqui %}
+                  <tr>
+                    <th class="table-dark" scope="col">Documentos de Adquisiciones:</th>
+                    <td><a class="card-link" href="/media/{{ form.otros_doc_adqui }}" target="_blank">{{ form.otros_doc_adqui }}</a></td>
+                  </tr>
+                  {% endif %}
+
+
+
+                  <tr>
+                    <th class="table-dark" scope="col">Activación Gerencia Financiera:</th>
+                    {% if form.numpedido.activado_activo %}
+                      <td>SI ACTIVADO</td>
+                    {% elif form.numpedido.activado_activo == False %}
+                      <td>NO ACTIVADO</td>
+                    {% else %}
+                    <td>PENDIENTE RESPUESTA</td>
+                    {% endif %}
+                  </tr>
+                  {% if form.img_1 %}
+                  <tr>
+                    <th class="table-dark" scope="col">Imagen 1:</th>
+                    <td>
+                      <a class="card-link" href="#" data-toggle="modal" data-target="#img_1" data-whatever="@getbootstrap">{{ form.img_1 }}</a>
+                      <div class="modal fade" id="img_1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div>
+                              <img src="/media/{{ form.img_1 }}" class="img-thumbnail rounded" alt="...">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endif %}
+                  {% if form.img_2 %}
+                  <tr>
+                    <th class="table-dark" scope="col">Imagen 2:</th>
+                    <td>
+                      <a class="card-link" href="#" data-toggle="modal" data-target="#img_2" data-whatever="@getbootstrap">{{ form.img_2 }}</a>
+                      <div class="modal fade" id="img_2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div>
+                              <img src="/media/{{ form.img_2 }}" class="img-thumbnail rounded" alt="...">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endif %}
+                  {% endfor %}
+                </tbody>
+        </table>
+      <div class="dropdown-divider" style="margin: 25px auto;"></div>
+      <h4 class="display-6">Cotizaciones</h4>
+      <div style="margin: 25px auto">
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Valor</th>
+              <th>Provedor</th>
+              <th>Selección</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for detalle in detalle %}
+            <tr>
+              <td>{% render_field detalle.id disabled=True %}</td>
+              <td>{% render_field detalle.valor disabled=True %}</td>
+              <td>{% render_field detalle.empresa_cotiza disabled=True %}</td>
+              <td>{% render_field detalle.cotiza_seleccion disabled=True %}</td>
+              <td>
+                <a href="http://{{ request.META.HTTP_HOST }}/media/{{detalle.pdf_cotiza.value}}" target="blank_">Ver</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+{% endblock %}

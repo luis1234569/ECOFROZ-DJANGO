@@ -1,0 +1,266 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block extrahead %}
+<style>
+    li{
+        list-style: none;
+    }
+</style>
+{% endblock %}
+
+{% block title %}
+    <h2>Ordenes de Pedidos</h2>
+{% endblock %}
+
+{% block content %}
+<div class="loader"></div>
+<div class="jumbotron" style="width: 75%; margin:auto; padding-top: 25px; margin-top: 50px; margin-bottom: 25px;">
+<h2 class="display-5">Requerimiento de Nuevos Insumos/Trabajos</h2>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+        <input id="usuario_solicita" type="text" name="usuario_solicita" value="{{ user.id }}" hidden>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label>{{ form.ubica.label }}</label>
+            <select name="ubica" id="ubica" class="form-control">
+                <option value="" selected>-------</option>
+                {% for i in ubica %}
+                <option value="{{ i.id }}" {% if i.id == ubicacion %} selected {% endif %}>{{ i.ubica_nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group col-md-6">
+            <label>{{ form.departamento.label }}</label>
+            {{ form.departamento }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label>{{ form.area.label }}</label>
+            <select name="area" id="area" class="form-control">
+                <option value="">-------</option>
+                {% for i in areas %}
+                <option value="{{ i.area_codigo }}" data-chained="{{ i.area_ubica }}" {% if i.area_codigo == area %} selected {% endif %}>{{ i.area_nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-12">
+            <label >{{ form.tipo_pedi.label }}</label>
+            {{ form.tipo_pedi }}
+        </div>
+    </div>
+    <div class="form-row" id="proyecto">
+        <label>Ingrese el nombre del proyecto (Cuenta Contable)</label>
+        <!-- {{ form.numproyecto }} -->
+        <label>Proyecto</label>
+            <!-- {{ form.numproyecto }} -->
+            <select name="numproyecto" id="numproyecto" class="form-control">
+                <option value="">-------</option>
+                {% for p in proy %}
+                <option value="{{ p.id }}" {% if proy_select == p.id %} selected {% endif %}>{{ p.nombre_proyecto }}</option>
+                {% endfor %}
+            </select>
+    </div>
+    <pre></pre>
+    <div class="form-row" id="refer">
+        <div class="form-row col-md-10">
+            <div class="form-group col-md-6">
+                <label>{{ form.refer_orden.label }}</label>
+                {{ form.refer_orden }}
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row"  id="refer">
+        <div class="form-group col-md-12" id="orden_ref">
+            <label for="">Orden Referencial</label>
+            <select class="form-control" name="orden_referencial" id="orden_referencial">
+                <option value="" selected>Seleccione la Orden</option>
+                {% for i in orden %}
+                <option value="{{ i.numtrabajo.numtrabajo }}" {% if i.numtrabajo.numtrabajo == refer %}selected{% endif %}>{{ i.numtrabajo.numtrabajo }}&nbsp;&nbsp;{{i.descripcion}}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+
+    <div class="form-row">
+        <div class="col-md-12">    
+            <label for="{{ form2.descripcion.desc }}">{{ form2.descripcion.label }}</label>
+            {% render_field form2.descripcion rows=4 %}
+        </div>
+    </div>
+    <div class="form-row" style="margin-top: 25px;">
+        <div class="col-md-12">
+            <label for="{{ form2.justificacion_compra.jc }}">Justificación de Compra / Observaciones</label>
+            {% render_field form.justificacion_compra rows=4 %}
+            
+        </div>
+    </div>
+<pre></pre>
+    <div class="form-group col-md-12">
+        <label><strong>ZONA DE CARGA DE ARCHIVOS</strong></label>
+        <p>Si lo requiere puede adjuntar a continuación imágenes, cotizaciones referenciales u otros documentos</p>
+    </div>
+    <br>
+    <br>
+    <div class="form-row" style="margin-top: -25px;">
+        <div class="col-md-6">
+            <label for="{{ form2.cantidad.cant }}"><b>{{ form2.img_1.label }}</b></label>
+            {{ form2.img_1 }}
+        </div>
+        <div class="col-md-6">
+            <label for="{{ form2.unimedida.uni }}"><b>{{ form2.img_2.label }}</b></label>
+            {{ form2.img_2 }}
+        </div>
+    </div>
+    <br>
+    <div class="form-row" style="margin-top: 10px;">
+        <div class="col-md-6">
+            <label for="{{ form.cotiza_Ref.cant }}"><b>{{ form2.cotiza_Ref.label }}</b></label>
+            {{ form2.cotiza_Ref }}
+        </div>
+        <div class="col-md-6">
+            <label for="{{ form.otros_doc.cant }}"><b>Otros Documentos</b></label>
+            {{ form2.otros_doc }}
+        </div>
+    </div>
+    <br>    
+<br>
+    <div class="row">
+        <div class="col-md-12" style="margin-top: 10px;">
+            <button type="submit" class="btn btn-primary" id="enviar" name="enviar">Generar</button>
+        </div>
+    </div>
+</form>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script>   
+    // $("#proyecto").hide().val("");
+    $("#proyecto").val("");
+    // $("#reemplazo_accion_label").hide();
+
+    
+    // $("#tipo_pedido").change(function(){
+    //     var opcion = $(this).val();
+
+    //     if (opcion == "PR")
+    //         $("#proyecto").show();
+    //     else
+    //         $("#proyecto").hide().val("");
+    //         // $("#reemplazo_accion_label").hide();
+    // });
+
+    $(document).ready(function(){
+        let selec = $('input:radio[name=refer_orden]:checked').val()
+        if (selec == 'False'){
+            // alert(selec)
+            $("#orden_ref").hide().val("");
+        }else{
+            $("#orden_ref").show();
+            //$("#refer").css("margin-bottom", "25px");
+        }
+
+        // var pedido = document.getElementById("tipo_pedido");
+        // var selectedValue = pedido.options[pedido.selectedIndex].value;
+        // if (selectedValue == "PR") {
+        //     $("#proyecto").show();
+        // }else{
+        //     $("#proyecto").hide().val("");
+
+        //     }
+
+    });
+    
+    $(":radio").click(function(){
+        var opcion = $(this).val();
+
+        if (opcion == "True"){
+            $("#orden_ref").show();
+            // $("#refer").css("margin-bottom", "25px");
+        } else{
+            $("#orden_ref").hide().val("");
+            //$("#refer").css("margin-bottom", "63px");
+            // $("#reemplazo_accion_label").hide();
+        }
+    });
+
+    function ordenarSelect(id_componente)
+    {
+      var selectToSort = jQuery('#' + id_componente);
+      var optionActual = selectToSort.val();
+      selectToSort.html(selectToSort.children('option').sort(function (a, b) {
+        return a.text === b.text ? 0 : a.text < b.text ? -1 : 1;
+      })).val(optionActual);
+    }
+    $(document).ready(function () {
+      ordenarSelect('selectPaises');
+    });
+
+    function ordenarSelect(id_componente)
+    {
+      var selectToSort = jQuery('#' + id_componente);
+      var optionActual = selectToSort.val();
+      selectToSort.html(selectToSort.children('option').sort(function (a, b) {
+        return a.text === b.text ? 0 : a.text < b.text ? -1 : 1;
+      })).val(optionActual);
+    }
+    $(document).ready(function () {
+      ordenarSelect('tiempo_tipo');
+    });
+
+    $(window).on("load", function() {
+        $(".loader").fadeOut("slow");
+    });
+
+    $(document).ready(function() {    
+        $('#enviar').on('click', function(){
+            //Añadimos la imagen de carga en el contenedor
+            $(".loader").show();
+            $(window).on("load", function(){
+                $(".loader").fadeOut("slow");
+            });
+        });              
+    }); 
+
+    $("#ubica").on('change', function () {
+        var id = $(this).val();
+        var ubica = $("#area");
+        var options = "<option value=''>---------</option>"
+        if (id === ''){
+            ubica.html(options);
+            return false;
+        }
+        $.ajax({
+            url: "{% url 'ordenpedido:ubica_area_ajax' %}",
+            type: "GET",
+            data: {
+                'action': 'search_ubica',
+                'id': id,
+                // 'csrfmiddlewaretoken': '{{ csrf_token }}',
+            },
+            dataType: "json",
+        }).done(function (data) {
+            if (!data.hasOwnProperty("error")){
+                $.each(data, function(key, value){
+                    options += "<option value='" + value.area_codigo + "'>" + value.area_nombre + "</option>"
+                });
+                return false;
+            }
+        }).fail(function (jqXHR, textStatus, errorThrown ) {
+            alert(textStatus + ': ' + errorThrown);
+            console.log(jqXHR);
+        }).always(function (data) {
+            ubica.html(options)
+        })
+    });
+</script>
+{% endblock %}

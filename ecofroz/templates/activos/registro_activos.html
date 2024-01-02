@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="jumbotron" style="width: 75%; margin:auto; padding-top: 25px; margin-top: 50px; margin-bottom: 25px;">
+        <h2 class="display-5">Registro de Activos</h2>
+<br>
+<form action="{% url 'activos:genera_nomenclatura' %}" method="GET" id="form">
+{% csrf_token %}
+<div class="form-row" style="width: 65%;"> 
+        <div class="form-group" >
+                <label for="{{ form2.activo_nomenclatura.label }}">{{ form2.activo_nomenclatura.label }}</label>   
+               {% render_field form2.activo_nomenclatura class="form-control" onChange="form.submit();" style="width: 65%;"  %} 
+               <br>
+        </div>
+</div>
+</form>
+
+
+        <form action="{% url 'activos:registro_nuevo' %}" method="POST" id="form2">
+                {% csrf_token %}
+                <label for="{{ form2.activo_codigo.label }}">{{ form2.activo_codigo.label }}</label> 
+                {% render_field form2.activo_codigo value=form3 style="width: 42%;" readonly="True" %}
+                {% render_field form2.activo_nomenclatura style="visibility:hidden;"  %}
+                <label for="{{ form2.activo_grupo.label }}">{{ form2.activo_grupo.label }}</label> 
+                {% render_field form2.activo_grupo style="width: 42%" %} 
+                <label for="{{ form2.activo_tipo.label }}">{{ form2.activo_tipo.label }}</label> 
+                {% render_field form2.activo_tipo style="width: 42%"  %}
+                <label for="{{ form2.activo_ubica.label }}">{{ form2.activo_ubica.label }}</label> 
+                {% render_field form2.activo_ubica style="width: 42%"  %}
+                <label for="{{ form2.activo_depar.label }}">{{ form2.activo_depar.label }}</label> 
+                {% render_field form2.activo_depar style="width: 42%" %}
+                <label for="{{ form2.activo_area.label }}">{{ form2.activo_area.label }}</label> 
+                {% render_field form2.activo_area style="width: 42%" %}
+                <label for="{{ form2.cod_activo_padre.label }}">{{ form2.cod_activo_padre.label }}</label> 
+                {% render_field form2.cod_activo_padre style="width: 42%" %}
+                <label for="{{ form2.activo_descripcion.label }}">{{ form2.activo_descripcion.label }}</label> 
+                {% render_field form2.activo_descripcion  style="width: 90%" %}
+              
+                <div>
+                        <button style="margin-top: 40px;" type="submit" class="btn btn-primary btn-lg">Guardar</button>
+               
+                        <button style="margin-top: 40px;" type="button" class="btn btn-success btn-lg" onclick="location.href='{% url 'activos:registro_nuevo' %}'">Limpiar</button>
+                        
+                </div>
+        </form>
+
+</div>
+
+{% endblock content %}
+
+{% block extrajs %}
+<script>
+        function limpiarFormulario() {
+          document.getElementById("form").reset();
+          document.getElementById("form2").reset();
+        }
+</script>
+{% endblock %}

@@ -1,0 +1,254 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}
+    <h2>Cotizar Ordenes de Pedidos</h2>
+{% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block content %}
+<div class="loader"></div>
+    <div class="container" style="margin: 25px auto;">
+        <table class="table table-bordered table-sm">
+                <tbody>
+                  {% for form in cot %}
+                  <tr>
+                    <th class="table-dark" scope="col" style="width: 25%;">N° Orden:</th>
+                    <td style='font-size: 18px; font-weight: bold;'>{{ form.numtrabajo.numtrabajo }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Usuario:</th>
+                    <td>{{ form.numtrabajo.usuario_solicita.first_name }} {{ form.numtrabajo.usuario_solicita.last_name }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Departamento:</th>
+                    <td>{{ form.numtrabajo.departamento }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Area:</th>
+                    <td>{{ form.numtrabajo.area | default:'--' }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Tipo</th>
+                    <td>{{ form.numtrabajo.get_tipo_pedi_display }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Proyecto:</th>
+                    <td>{{ form.numtrabajo.numproyecto | default:'--' }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Descripción:</th>
+                    <td>{{ form.descripcion | default:'--' }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Observación Aprobador:</th>
+                    <td>{{ form.numtrabajo.observa_selec_cot | default:'--' }}</td>
+                  </tr>
+                  <!-- <tr>
+                    <th class="table-dark" scope="col">Observación Administrativa:</th>
+                    <td>{{ form.numtrabajo.observa_compra | default:'--' }}</td>
+                  </tr> -->
+                  <tr>
+                    <th class="table-dark" scope="col">Observación Adquisiciones:</th>
+                    <td>{{ form.numtrabajo.cotiza_observa | default:'--' }}</td>
+                  </tr>
+                  {% if form.cotiza_Ref %}
+                  <tr>
+                    <th class="table-dark" scope="col">Cotización Referencial:</th>
+                    <td><a class="card-link" href="/media/{{ form.cotiza_Ref }}" target="_blank">{{ form.cotiza_Ref }}</a></td>
+                  </tr>
+                  {% endif %}
+
+                  {% if form.otros_doc %}
+                  <tr>
+                    <th class="table-dark" scope="col">Otros Documentos:</th>
+                    <td><a class="card-link" href="/media/{{ form.otros_doc }}" target="_blank">{{ form.otros_doc }}</a></td>
+                  </tr>
+                  {% endif %}
+
+                  {% if form.otros_doc_adqui %}
+                  <tr>
+                    <th class="table-dark" scope="col">Otros Documentos Adquisiciones:</th>
+                    <td><a class="card-link" href="/media/{{ form.otros_doc_adqui }}" target="_blank">{{ form.otros_doc_adqui }}</a></td>
+                  </tr>
+                  {% endif %}
+
+
+                  {% if form.img_1 %}
+                  <tr>
+                    <th class="table-dark" scope="col">Imagen 1:</th>
+                    <td>
+                      <a class="card-link" href="#" data-toggle="modal" data-target="#img_1" data-whatever="@getbootstrap">{{ form.img_1 }}</a>
+                      <div class="modal fade" id="img_1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div>
+                              <img src="/media/{{ form.img_1 }}" class="img-thumbnail rounded" alt="...">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endif %}
+                  {% if form.img_2 %}
+                  <tr>
+                    <th class="table-dark" scope="col">Imagen 2:</th>
+                    <td>
+                      <a class="card-link" href="#" data-toggle="modal" data-target="#img_2" data-whatever="@getbootstrap">{{ form.img_2 }}</a>
+                      <div class="modal fade" id="img_2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div>
+                              <img src="/media/{{ form.img_2 }}" class="img-thumbnail rounded" alt="...">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endif %}
+                  {% endfor %}
+                </tbody>
+        </table>
+      <div class="dropdown-divider" style="margin: 15px auto;"></div>
+      <h5 class="display-6">Cotizaciones</h5>
+      <div style="margin: 25px auto">
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ detalle.management_form }}
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <!-- <th>Id</th> -->
+              <th>Valor</th>
+              <th>Provedor</th>
+              <th>Selección</th>
+            </tr>
+          </thead>
+            <tbody>
+            {% for detalle in detalle %}
+              <tr>
+                <td hidden>{% render_field detalle.id readonly=True %}</td>
+                <td>{% render_field detalle.valor disabled=True %}</td>
+                <td>{% render_field detalle.empresa_cotiza disabled=True %}</td>
+                <td style="text-align: center;">
+                  {{ detalle.cotiza_seleccion }}
+                  <a href="http://{{ request.META.HTTP_HOST }}/media/{{detalle.pdf_cotiza.value}}" target="blank_" style="padding-left: 15px;">Ver</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <div style="margin-top: 10px;">
+          <div>
+            <label><input type ="radio" id="paradevolver" name="paradevolver" value="radio">&nbsp;La(s) cotización(es) enviadas contienen errores y necesitan ser devueltas a Adquisiciones para Revisión</label>
+          </div>
+        </div>
+
+        <div style="margin-top: 10px;">
+          <h4 class="display-6">Observaciones/Recomendaciones </h4> 
+          <div>
+            <textarea class="form-control" id="exampleFormControlTextarea1" name="observa_aut_cot" id="observa_cotiza" rows="5"></textarea>
+            <input type="text" id="prove" name="prove" hidden>
+          </div>
+        </div>
+
+        
+        
+        <button id="enviar" name="enviar" style="margin: 25px auto" type="submit" class="btn btn-primary">Enviar para Aprobación</button>
+        <button formaction="{% url 'trabajos:devuelve_cotiza' pk %}" type="submit" id="devolver" name="devolver" style="margin: 25px auto"   class="btn btn-warning">Devolver a Adquisiciones con Observaciones</button>
+        </form>
+      
+    </div>
+    
+    
+  </div>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+  $(document).ready(function() {
+     //$(':input[type="submit"]').attr('disabled', true);
+     $(':input[id="enviar"]').attr('disabled', true);
+     $(':input[id="devolver"]').attr('disabled', true);
+     
+     $('input[type="checkbox"]').click(function () {
+        //check if checkbox is checked
+        if ($(this).is(':checked')) {
+            
+            $('#enviar').removeAttr('disabled'); //enable input
+        
+            
+        } else {
+            $('#enviar').attr('disabled', true); //disable input
+        }
+    });
+  
+    $('input[type="radio"]').click(function () {
+        //check if checkbox is checked
+        if ($(this).is(':checked')) {
+            
+            $('#devolver').removeAttr('disabled'); //enable input
+        
+            
+        } else {
+            $('#devolver').attr('disabled', true); //disable input
+        }
+    });
+
+
+
+  });
+
+  $(window).on("load", function() {
+    $(".loader").fadeOut("slow");
+  });
+
+  $(document).ready(function() {    
+    $('#enviar').on('click', function(){
+      //Añadimos la imagen de carga en el contenedor
+      $(".loader").show();
+      $(window).on("load", function(){
+          $(".loader").fadeOut("slow");
+      });
+    });              
+  });  
+
+  $(document).ready(function(){
+      $('#id_cotizatrabajo_set-0-cotiza_seleccion').on('click', function(){
+        $('#prove').val()
+        var filaactual = $(this).closest("tr");
+        var name = filaactual.find('select').eq(0).val();
+        $('#prove').val(name);
+      });
+
+      $('#id_cotizatrabajo_set-1-cotiza_seleccion').on('click', function(){
+        $('#prove').val()
+        var filaactual = $(this).closest("tr");
+        var name = filaactual.find('select').eq(0).val();
+        $('#prove').val(name);
+      });
+
+      $('#id_cotizatrabajo_set-2-cotiza_seleccion').on('click', function(){
+        $('#prove').val()
+        var filaactual = $(this).closest("tr");
+        var name = filaactual.find('select').eq(0).val();
+        $('#prove').val(name);
+      });
+    }); 
+</script>
+{% endblock %}

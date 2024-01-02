@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block extrahead %}
+<style type="text/css">
+    #salida_activo li {
+     display:inline;
+     margin-left: -10px;
+     padding-left:3px;
+     padding-right:60px;
+    }
+</style> 
+{% endblock %}
+
+{% block title %}
+    <h2>Ordenes de Pedidos</h2>
+{% endblock %}
+
+{% block content %}
+<div class="loader"></div>
+<div class="jumbotron" style="width: 75%; margin:auto; padding-top: 25px; margin-top: 50px; margin-bottom: 25px;">
+<h2 class="display-5">Requerimiento de Nuevos Insumos/Trabajos</h2>
+<form enctype="multipart/form-data">
+    {% csrf_token %}
+    <!-- {{ form.as_p }} -->
+    {{ form.ubica_nombre }}
+    {{ form.area_nombre }}
+    <button type="submit" class="btn btn-primary button" id="enviar" name="enviar">Generar</button>
+</form>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+    $("#proyecto").hide().val("");
+    // $("#reemplazo_accion_label").hide();
+    $('#sale').hide().val("");
+    
+    $("#tipo_pedido").change(function(){
+        var opcion = $(this).val();
+
+        if (opcion == "PR")
+            $("#proyecto").show();
+        else if(opcion == "MC")
+            $('#sale').show();
+        else
+            $("#proyecto").hide().val("");
+            // $("#reemplazo_accion_label").hide();
+    });
+
+    $("#orden_ref").hide().val("");
+    // $("#reemplazo_accion_label").hide();
+    
+    // $(":radio").click(function(){
+    $("#refer_orden_0").click(function(){
+        var opcion = $(this).val();
+
+        if (opcion == "True"){
+            $("#orden_ref").show();
+            $("#refer").css("margin-bottom", "25px");
+        } else{
+            $("#orden_ref").hide().val("");
+            $("#refer").css("margin-bottom", "63px");
+            // $("#reemplazo_accion_label").hide();
+        }
+    });
+
+    $("#refer_orden_1").click(function(){
+        var opcion = $(this).val();
+
+        if (opcion == "True"){
+            $("#orden_ref").show();
+            $("#refer").css("margin-bottom", "25px");
+        } else{
+            $("#orden_ref").hide().val("");
+            $("#refer").css("margin-bottom", "63px");
+            // $("#reemplazo_accion_label").hide();
+        }
+    });
+
+    function ordenarSelect(id_componente)
+    {
+      var selectToSort = jQuery('#' + id_componente);
+      var optionActual = selectToSort.val();
+      selectToSort.html(selectToSort.children('option').sort(function (a, b) {
+        return a.text === b.text ? 0 : a.text < b.text ? -1 : 1;
+      })).val(optionActual);
+    }
+
+    $(document).ready(function () {
+      ordenarSelect('tiempo_tipo');
+    });
+
+    $(document).ready(function () {
+      ordenarSelect('orden_referencial');
+    });
+    // function ordenarSelect(id_componente)
+    // {
+    //   var selectToSort = jQuery('#' + id_componente);
+    //   var optionActual = selectToSort.val();
+    //   selectToSort.html(selectToSort.children('option').sort(function (a, b) {
+    //     return a.text === b.text ? 0 : a.text < b.text ? -1 : 1;
+    //   })).val(optionActual);
+    // };
+
+    $(window).on("load", function() {
+        $(".loader").fadeOut("slow");
+    });
+
+    $(document).ready(function() {    
+        $('#enviar').on('click', function(){
+            //Añadimos la imagen de carga en el contenedor
+            $(".loader").show();
+            $(window).on("load", function(){
+                $(".loader").fadeOut("slow");
+            });
+        });              
+    });    
+    
+</script>
+{% endblock %}

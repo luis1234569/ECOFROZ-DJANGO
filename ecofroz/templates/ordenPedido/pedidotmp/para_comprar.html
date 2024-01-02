@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+<!-- {% load tz %} -->
+
+{% block extrahead %}
+<style>
+    body {font-family: Arial;}
+    
+    /* Style the tab */
+    .tab {
+      overflow: hidden;
+      border: 1px solid #ccc;
+      background-color: #f1f1f1;
+    }
+    
+    /* Style the buttons inside the tab */
+    .tab button {
+      background-color: inherit;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.3s;
+      font-size: 17px;
+    }
+    
+    /* Change background color of buttons on hover */
+    .tab button:hover {
+      background-color: #ddd;
+    }
+    
+    /* Create an active/current tablink class */
+    .tab button.active {
+      background-color: #ccc;
+    }
+    
+    /* Style the tab content */
+    .tabcontent {
+      display: none;
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      border-top: none;
+    }
+    
+    /* Style the close button */
+    .topright {
+      float: right;
+      cursor: pointer;
+      font-size: 28px;
+    }
+    
+    .topright:hover {color: red;}
+  </style>
+{% endblock %}
+
+{% block content %}
+
+  <div class="container" style="margin-top: 25px;">
+    <div class="row">
+      <div class="col-md 12 search">
+        <form class="form-inline my-2 my-lg-0" method="GET">
+          <input class="form-control mr-sm-2" type="text" placeholder="N° Pedido, Proveedor, Descripción" name="buscar" {% if busqueda %} value="{{ busqueda }}" {% endif %}>
+          <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+          <a class="btn btn-secondary my-2 my-sm-0" style="margin-left: 10px;" href="{% url 'ordenpedido:ver_compras' %}"></button>Limpiar</a>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div style="margin: 25px auto;">
+    <div>
+      <div>
+        <table class="table table-sm table-hover table-warning">
+          <h4>Ordenes Aprobadas de Activos para comprar</h4>
+    
+        <thead>
+        <tr>
+          <th>Pedido</th>
+          <th>Usuario</th>
+          <th>Departamento</th>
+          <th>Fecha Solicitud</th>
+          <th>Tipo Activo</th>
+          <th>Descripción</th>
+          <th>Proveedor</th>
+          <th>Autorización de Compra</th>
+          <th>Recepción Bodega</th>
+          <th>Entregado Solicita</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for aprobado in form2 %}
+        <tr data-href="{% url 'ordenpedido:observa_refer' aprobado.numpedido.numpedido %}" style="cursor: pointer;">
+          <td>{{ aprobado.numpedido.numpedido }}</td>
+          <td>{{ aprobado.numpedido.usuario_solicita.username}}</td>
+          <td>{{ aprobado.numpedido.departamento | default:'--' }}</td>
+          <!-- <td>{{ aprobado.numpedido.area }}</td> -->
+          <!-- <td>{{ aprobado.regimenespecial }}</td> -->
+          <!-- <td>{{ aprobado.numpedido.numproyecto }}</td> -->
+          <td>{{ aprobado.numpedido.fchsolicita|date:'d-M-Y' }}</td>
+          <td>{{ aprobado.numpedido.tipoactivo | default:'--' }}</td>
+          <td>{{ aprobado.descripcion |default:'--' }}</td>
+          <td>{{ aprobado.numpedido.proveedor |default:'--' }}</td>
+          {% if aprobado.numpedido.genera_compra == 1 %}
+            <td>Aprobado</td>
+          {% elif aprobado.numpedido.genera_compra == 0 %}
+            <td>Rechazado</td>
+          {% else %}
+            <td>Pendiente</td>
+          {% endif %}
+          {% if aprobado.numpedido.recibido_bodega == True %}
+            <td>Recibido</td>
+          {% else %}
+            <td>Pendiente</td>
+          {% endif %}
+          {% if aprobado.numpedido.entregado_bodega == True %}
+            <td>Entregado</td>
+          {% else %}
+            <td>Pendiente</td>
+          {% endif %}
+          <td>
+            <a href="{% url 'ordenpedido:observa_refer' aprobado.numpedido.numpedido %}" class="btn btn-primary glyphicon glyphicon-eye-open" title="Ver"></a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="pagination">
+      <span class="step-links">
+          {% if form2.has_previous %}
+              <a href="?page=1">&laquo; inicio</a>
+              <a href="?page={{ form2.previous_page_number }}">previo</a>
+          {% endif %}
+    
+          <span class="current">
+              Page {{ form2.number }} of {{ form2.paginator.num_pages }}.
+          </span>
+    
+          {% if form2.has_next %}
+              <a href="?page={{ form2.next_page_number }}">próximo</a>
+              <a href="?page={{ form2.paginator.num_pages }}">último &raquo;</a>
+          {% endif %}
+      </span>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
+
+{% block extrajs %}
+<script>
+  $(document).ready(function(){
+    $('*[data-href]').on('click', function(){
+      window.location = $(this).data("href");
+    });
+  });
+</script>
+{% endblock %}

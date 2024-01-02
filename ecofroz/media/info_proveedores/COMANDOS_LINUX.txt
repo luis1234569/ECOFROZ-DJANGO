@@ -1,0 +1,8 @@
+COMANDOS LINUX (PUTTY)
+
+* VER ERRORES EN APACHE
+  Acceder a putty e ir al directprio del archivo de error_log 
+     cd /var/log/httpd
+  Ejecutarl e comando tail con el nombre del archivo
+     tail -50f error_log
+

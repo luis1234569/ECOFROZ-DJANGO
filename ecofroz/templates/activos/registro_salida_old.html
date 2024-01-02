@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+{% load filters %}
+
+
+{% block content %}
+<div class="jumbotron" style="width: 75%; margin:auto; padding-top: 25px; margin-top: 50px; margin-bottom: 25px;">
+        <h2 class="display-5">Registro de Salida de Activos (ECAD-R-2-10)</h2>
+<br>
+
+        <form action="{% url 'activos:identifica_valores' %}" method="GET" id="form">
+        {% csrf_token %}
+        <div class="form-row"> 
+                <div class="form-group col-md-3" >
+                        <label for="{{ form2.activo_codigo.label }}">{{ form.activo_codigo.label }}</label>   
+                       {% render_field form.activo_codigo class="form-control" onChange="form.submit();" style="width: 100%;"  %} 
+                       
+                </div>
+        </div>
+        </form>
+
+
+
+        <form method="POST" action="{% url 'activos:salida_activos_func' %}"> 
+                {% csrf_token %}
+  
+                {% render_field form.activo_codigo  value=form.activo_codigo style="visibility:hidden" %}
+                
+               <div class="form-row">
+                <div class="form-group col-md-3" >
+                <label for="{{ form.activo_num_serie.label }}">{{ form.activo_num_serie.label }}</label> 
+                
+                {% if query %}
+                {% for valor in query %}
+                {% render_field form.activo_num_serie  style="width: 100%" value=valor.desc_activo_num_serie %}
+                {% endfor %}
+                {% else %}
+                {% render_field form.activo_num_serie  %}
+                {% endif %}
+                
+                </div>
+                
+                <div class="form-group col-md-3" >
+                <label for="{{ form.marca.label }}">{{ form.marca.label }}</label> 
+                {% if query %}
+                {% for valor in query %}
+                {% render_field form.marca  style="width: 100%" value=valor.desc_activo_marca %}
+                {% endfor %}
+                {% else %}
+                {% render_field form.marca  %}
+                {% endif %}
+                </div>
+        
+
+                <div class="form-group col-md-3" >
+                        <label for="{{ form.fake }}"></label> 
+                        </div>
+              
+
+                
+                
+                <div class="form-group col-md-10" >
+                <label for="{{ form.detalle_activo.label }}">{{ form.detalle_activo.label }}</label> 
+                {% if query %}
+                {% for valor in query %}
+                {% render_field form.detalle_activo  style="width: 90%" value=valor.desc_activo_codigo.activo_descripcion %}
+                {% endfor %}
+                {% else %}
+                {% render_field form.detalle_activo style="width: 90%"  %}
+                {% endif %}
+                </div>
+
+                <div class="form-group col-md-3">  
+                        <label for="{{ form.retorno.label }}">{{ form.retorno.label }}</label> 
+                        {% render_field form.retorno style="width: 70%; margin-left:8px"  %}
+                        
+                </div>
+                
+               
+                <div class="form-group col-md-3" >
+                <label for="{{ form.num_orden_trabajo.label }}">{{ form.num_orden_trabajo.label }}</label> 
+                {% render_field form.num_orden_trabajo style="width: 100%" %}
+                </div>
+
+                <div class="form-group col-md-3" >
+                <label for="{{ form.solicitado_por.label }}">{{ form.solicitado_por.label }}</label> 
+                {% render_field form.solicitado_por style="width: 100%" %}
+                </div>
+               
+                
+                <div class="form-group col-md-9" >
+                <label for="{{ form.motivo.label }}">{{ form.motivo.label }}</label> 
+                {% render_field form.motivo style="width: 95%" %}
+                <br>
+                </div>
+                <div class="form-group col-md-3" >
+                        <label for="{{ form.fake }}"></label> 
+                        </div>
+
+                <label for="{{ form.empresa_mantenimiento.label }}">{{ form.empresa_mantenimiento.label }}</label> 
+                {% render_field form.empresa_mantenimiento style="width: 52%;margin-left:8px" %}
+                <br>
+                <!-- <div class="form-group col-md-4" >
+                        <label for="{{ form.fake }}"></label> 
+                        </div> -->
+                        <div class="form-group col-md-12" >
+                                <label for="{{ form.fake }}"></label> 
+                                </div>
+
+                
+                <label for="{{ form.fecha_estimada_retorno.label }}">{{ form.fecha_estimada_retorno.label }}</label> 
+                {% render_field form.fecha_estimada_retorno style="width: 20%" %}
+                
+               
+                <label for="{{ form.hora_salida.label }}">{{ form.hora_salida.label }}</label> 
+                {% render_field form.hora_salida style="width: 15%" placeholder="00:00" %}
+               
+
+                <div class="form-group col-md-3" >
+                        <label for="{{ form.fake }}"></label> 
+                        </div>
+                        
+                        <div class="form-group col-md-12" >
+                                <label for="{{ form.fake }}"></label> 
+                                </div>
+                                
+
+                <div class="form-group col-md-3" >
+                        <label for="{{ form.persona_retira.label }}">{{ form.persona_retira.label }}</label> 
+                        {% render_field form.persona_retira style="width: 100%" readonly="true" %}
+                      
+                </div>
+                
+
+                <div class="form-group col-md-9" >
+                        <label for="{{ form.fake }}"></label> 
+                        </div>
+                        <br>
+
+                
+                        <button  type="submit" class="btn btn-primary btn-lg">Guardar</button>
+               
+                        <button class="btn btn-warning my-2 btn-lg" type="reset" onclick="location.href='{% url 'activos:salida_activos_func' %}'">Limpiar</button> 
+                        
+                </div>
+        </form>
+
+</div>
+
+{% endblock content %}
+
+{% block extrajs %}
+<script>
+  function ordenarSelect(id_componente)
+    {
+      var selectToSort = jQuery('#' + id_componente);
+      var optionActual = selectToSort.val();
+      selectToSort.html(selectToSort.children('option').sort(function (a, b) {
+        return a.text === b.text ? 0 : a.text < b.text ? -1 : 1;
+      })).val(optionActual);
+    }
+    $(document).ready(function () {
+      ordenarSelect('id_activo_codigo');
+    });
+
+    $('#id_activo_codigo').change(function(){
+            $('#id_codigo').val($('#id_activo_codigo option:selected').text())
+    })
+</script>
+
+
+<script>
+  $(document).ready(function(){
+    $('#id_persona_retira').val('{{ user.username }}')
+  })
+</script>
+
+
+
+
+{% endblock %}

@@ -1,0 +1,256 @@
+{% extends 'base.html' %}
+
+{% load tz %}
+{% block extrahead %}
+
+
+
+<style>
+    body {font-family: Arial;}
+    
+    /* Style the tab */
+    .tab {
+      overflow: hidden;
+      border: 1px solid #ccc;
+      background-color: #f1f1f1;
+    }
+    
+    /* Style the buttons inside the tab */
+    .tab button {
+      background-color: inherit;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.3s;
+      font-size: 17px;
+    }
+    
+    /* Change background color of buttons on hover */
+    .tab button:hover {
+      background-color: #ddd;
+    }
+    
+    /* Create an active/current tablink class */
+    .tab button.active {
+      background-color: #ccc;
+    }
+    
+    /* Style the tab content */
+    .tabcontent {
+      display: none;
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      border-top: none;
+    }
+    
+    /* Style the close button */
+    .topright {
+      float: right;
+      cursor: pointer;
+      font-size: 28px;
+    }
+    
+    .topright:hover {color: red;}
+  </style>
+{% endblock %}
+
+{% block content %}
+<!-- <div class="loader"></div> -->
+{%if guia %}
+<div class="container-fluid" style="margin: 25px auto;" id="caja_busqueda">
+  <div class="row">
+    <div class="col-md-auto">
+      <h3>Eventos en línea Planta</h3>
+      <!-- <form class="input-group mb-3" method="GET">
+        <input class="form-control" type="text" size="40px;" placeholder="Busque números de guías o placas" name="buscar">
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+      </form> -->
+    </div>
+    
+  </div> 
+</div>
+{% endif %}
+
+
+<table class="table table-small table-dark table-striped" style="margin: 5px auto">
+  
+    <thead>
+      <tr>
+        <th scope="col">Proceso</th>
+        <th scope="col">Estado</th>
+        <th scope="col">Time</th>
+        <th scope="col">Linea</th>
+        <th scope="col">Eyector</th>
+        <th scope="col">Peso(mg)</th>
+        <th scope="col">Píxels</th>
+        <th scope="col">Defecto</th>
+        <!-- <th scope="col">Def</th> -->
+        <th scope="col">Receta</th>
+        <th scope="col">Inicia</th>
+        <th scope="col">Finaliza</th>
+        
+      </tr>
+    </thead>
+    <tbody>
+      
+      {% for i in datos %}
+      <tr>
+        <!-- <td>{{ forloop.counter }}</td> -->
+        <td>{{i.proceso}}</td>
+        {% if i.estado == 'CERRADO' %}
+        <td style="color:coral">{{i.estado}}</td>
+        {% elif i.estado == 'ABIERTO' %} 
+        <td style="color:chartreuse">{{i.estado}}</td>
+        {% else %}
+        <td>{{i.estado|default:"--"}}</td>
+        {% endif %}
+        <td>{{i.fecha_evento}}</td>
+        {% if i.linea == 'L1' %}
+        <td style="color:yellow">{{i.linea}}</td>  
+        {% endif %}  
+        <td>{{i.counter}}</td>
+        <td>{{i.weight}}</td>
+        <td>{{i.pixels}}</td>
+        <!-- <td>{{i.defect_key}}</td> -->
+        <td>{{i.defecto}}</td>
+        <td>{{i.receta}}</td>
+        <td>{{i.usuini | default:"--"}}</td>
+        <td>{{i.usufin | default:"--"}}</td>
+        
+      </tr>
+      {% endfor %}
+
+      
+            <!-- <div class="alert-danger" role="alert">
+              <h3 style="text-align: center;">No hay inspecciones para gestionar</h3>
+              
+            </div> -->
+          
+    </tbody>
+</table>
+  
+</div>  
+</div>
+
+<div id="Aprobadas" class="tabcontent">
+  <span onclick="this.parentElement.style.display='none'" class="topright">&times</span>
+  <div>
+
+    <table class="table table-success table-striped container">
+    
+      <thead class="thead-dark table-striped">
+        <tr>
+          <th scope="col">N°</th>
+        <th scope="col">Guía N°</th>
+        <th scope="col">Producto</th>
+        <th scope="col">Fecha Registro</th>
+        <th scope="col">Registra</th> 
+        <th scope="col">Transportista</th>
+        <th scope="col">Placa</th>
+        <th scope="col">Inspección</th>
+        <th scope="col">Muestreo</th>
+        <th style="text-align: center;" scope="col"></th>
+        
+        
+      </tr>
+    </thead>
+    <tbody>
+
+      
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        
+              
+      
+        
+        
+        
+        
+          <td>
+          
+          <a  href="" class="btn btn-primary" title="Realizar Muestreo">Muestreo</a>
+          
+          <button  class="btn btn-secondary bi bi-pencil-square" title="Realizar Muestreo"></button>
+      
+        </td>
+        
+      </tr>
+    
+          
+    </tbody>
+  </table>
+
+  <div class="pagination">
+    <span class="step-links">
+        {% if form.has_previous %}
+            <a href="?&page=1">&laquo; inicio</a>
+            <a href="?&page={{ query.previous_page_number }}">previo</a>
+        {% endif %}
+  
+        <span class="current">
+            Page {{ query.number }} of {{ query.paginator.num_pages }}.
+        </span>
+  
+        {% if form.has_next %}
+            <a href="?&page={{ query.next_page_number }}">próximo</a>
+            <a href="?&page={{ query.paginator.num_pages }}">último &raquo;</a>
+        {% endif %}
+    </span>
+  </div>
+  
+</div>
+</div>
+
+
+{% endblock %}
+
+{% block extrajs %}
+
+<script>
+
+  window.setTimeout( function() {
+  window.location.reload();
+}, 300000);
+
+  $(window).on("load",function() {
+        $(".loader").fadeOut("slow");
+    });
+
+  $(document).ready(function() {    
+    $('#enviar').on('click', function(){
+        //Añadimos la imagen de carga en el contenedor
+        $(".loader").show();
+        $(window).on("load", function(){
+            $(".loader").fadeOut("slow");
+        });
+    });
+
+  });
+    
+  
+
+  function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
+  }
+
+  // Get the element with id="defaultOpen" and click on it
+  document.getElementById("defaultOpen").click();
+
+
+
+
+  </script>
+
+{% endblock %}

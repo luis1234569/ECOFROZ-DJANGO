@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block extrahead %}
+
+
+<meta charset="utf-8">
+
+<style type="text/css">
+    #salida_activo li {
+     display:inline;
+     margin-left: -10px;
+     padding-left:3px;
+     padding-right:60px;
+    }
+</style> 
+{% endblock %}
+
+{% block title %}
+    <h2>Ordenes de Pedidos</h2>
+{% endblock %}
+
+{% block content %}
+<div class="loader"></div>
+<div class="container" style="width: 85%; margin:auto; padding-top: 15px; margin-top: 10px; margin-bottom: 25px;">
+
+<h4 class="display-5">Bitácora Digital en linea (ECSEG-R-1.1-1)</h4>
+<br>
+<form method="POST" id="ingreso" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+        <!-- {{form.usuario_solicita}} -->
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label>Reporte N°</label><br>
+            <input type="text" class="form-control" value="{{numrepo}}" readonly>
+            
+        </div>
+        <div class="form-group col-md-4">
+            <label>{{form.fchregistro.label}}</label>
+            {{ form.fchregistro }}
+        </div>
+
+        <div class="form-group col-md-4">
+          
+        </div>
+
+        <pre></pre>
+        <div class="form-group col-md-4">
+            <label>Guardia N° 1:</label>
+            {{ form3.guardia1 }}
+        </div>
+
+        <div class="form-group col-md-4">
+            <label>Guardia N° 2:</label>
+            {{ form3.guardia2 }}
+        </div>
+
+
+        
+        <div class="form-group col-md-10">
+            <label>{{form.asunto.label}}</label>
+            {{ form.asunto }}
+            
+        </div>
+
+        <div class="form-group col-md-2">
+        </div>
+
+    
+
+    </div>
+  
+    <div class="form-row">
+    
+    <div class="form-group col-md-10">
+        <label>{{form.observaciones_guardias.label}}</label>
+        {{form.observaciones_guardias}}
+    </div>  
+
+    <div class="form-group col-md-10">
+        <label>{{form.observaciones_seg.label}}</label>
+        {{form.observaciones_seg}}
+    </div>
+    <div class="form-group col-md-10">
+        <label><strong>ZONA DE CARGA DE IMAGENES</strong></label>
+        <p>Ingrese imágenes a continuación para ampliar su reporte</p>
+        
+        
+    {{ formdet.management_form }}
+    <div class="container">
+        <table class="table">
+            <thead>
+                <th>Selección de Fotos</th>
+                <th>Añadir Más/Quitar</th>
+            </thead>
+            <tbody>
+                {% for i in formdet %}
+                <tr class="add-row">
+                    
+                    <td>{{ i.img_1 }}</td>
+                    <td>
+                        <div class="input-group-append">
+                            <button class="btn btn-success add-form-row">+</button>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+ 
+
+    </div>
+    <br>
+    <br>
+    
+    <div class="row">
+        <div class="col-md-12" style="margin-top: 10px;">
+            <button type="submit" class="btn btn-lg btn-primary button" id="enviar" name="enviar">Guardar</button>
+        </div>
+    </div>
+</form>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+ 
+
+
+
+    $(window).on("load", function() {
+        $(".loader").fadeOut("slow");
+    });
+
+    $(document).ready(function() {    
+        $('#enviar').on('click', function(){
+            var incompletos = false
+            $('.in').each(function(){
+                if ($(this).val().trim() == ''){
+                    incompletos = true
+                }
+            });
+            if (incompletos == false){
+                //Añadimos la imagen de carga en el contenedor
+                $(".loader").show();
+                $(window).on("load", function(){
+                    $(".loader").fadeOut("slow");
+                });
+            }
+        });              
+    });    
+
+    function ordenarSelect(id_componente)
+    {
+      var selectToSort = jQuery('#' + id_componente);
+      var optionActual = selectToSort.val();
+      selectToSort.html(selectToSort.children('option').sort(function (a, b) {
+        return a.text === b.text ? 0 : a.text < b.text ? -1 : 1;
+      })).val(optionActual);
+    }
+
+    $(document).ready(function () {
+      ordenarSelect('id_guardia1');
+    });
+
+    $(document).ready(function () {
+      ordenarSelect('id_guardia2');
+    });
+
+    $(document).ready(function(){
+        document.getElementById("id_guardia1").value = "{{ persona_registra }}";
+        document.getElementById("id_fchregistro").value = "{{ fecha_registro }}";
+        $('#id_observaciones_seg').attr('readonly','readonly');
+    });
+
+    $(document).on('click', '.add-form-row', function(e){
+        e.preventDefault();
+        cloneMore('.add-row:last', 'form');
+        return false;
+    });
+
+    $(document).on('click', '.remove-form-row', function(e){
+        e.preventDefault();
+        deleteForm('form', $(this));
+        return false;
+    });
+
+</script>
+
+
+
+
+{% endblock %}

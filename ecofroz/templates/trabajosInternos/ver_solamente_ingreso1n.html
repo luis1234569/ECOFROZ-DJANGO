@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+
+{% block extrahead %}
+
+
+<meta charset="utf-8">
+
+<style type="text/css">
+    #salida_activo li {
+     display:inline;
+     margin-left: -10px;
+     padding-left:3px;
+     padding-right:60px;
+    }
+</style> 
+{% endblock %}
+
+{% block title %}
+    <h2>Ordenes de Pedidos</h2>
+{% endblock %}
+
+{% block content %}
+<!-- <div class="loader"></div> -->
+<div class="container jumbotron" style="background-color:whitesmoke;width: 80%; margin:auto; padding-top: 15px; margin-top: 10px; margin-bottom: 25px;">
+<h2 class="display-5">Orden de Trabajo Interna #&nbsp;{{numtrabajo}}</h2>
+<br>
+
+    <div class="form-group">
+        <!-- {{form.usuario_solicita}} -->
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label> {{form.ubica.label}}</label><br>
+            {{form.ubica}}
+            
+        </div>
+        <div class="form-group col-md-4">
+            <label>{{ form.departamento.label }}</label>
+            {{ form.departamento }}
+        </div>
+
+        <div class="form-group col-md-4">
+            <label>{{ form.tipo.label }}</label>
+            {{ form.tipo }}
+        </div>
+
+        
+        <div class="form-group col-md-12">
+            <label>Sector</label>
+            {{ form.area }}
+            <input 
+                  type="text"
+                  name="nsector"
+                  class="form-control"
+                  value="{{sectordj}}"
+                  readonly>
+        
+           
+    </div>
+
+    
+
+    </div>
+  
+    <div class="form-row">
+    
+    <div class="form-group col-md-12">
+        <label>{{form.descripcion.label}}</label>
+        {{form.descripcion}}
+    </div>  
+
+    <div class="form-group col-md-12">
+        <label>{{form.justificacion.label}}</label>
+        {{form.justificacion}}
+    </div>
+    {% if observa %}
+    <div class="form-group col-md-12">
+        <label>Observaciones de Rechazo</label>
+        <textarea class="form-control" name="observarechazo" id="observarechazo" cols="60" rows="3" readonly>{{observa}}</textarea>
+    </div>
+    {% endif %}
+    <div class="form-group col-md-12">
+        <label><strong>ZONA DE CARGA DE IMAGENES</strong></label>
+        <p>Arrastre imágenes en el área a continuación para ampliar su solicitud</p>
+        <div class="row">
+        <div class="col-6">
+        <label>Imágen #1</label>
+        {{form2.img_1}}
+        </div>
+
+        <div class="col-6">
+        <label>Imágen #2</label>
+        {{form2.img_2}}
+    </div>
+
+</div>
+
+    </div>
+    <br>
+    <br>
+    
+    <div class="row">
+        <div class="col-md-12" style="margin-top: 10px;">
+            <a href="{% url 'trabajosinternos:listar1n' %}"  class="btn btn-lg btn-primary button" id="regresar" name="regresar">Regresar</a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+ 
+
+
+
+    $(window).on("load", function() {
+        $(".loader").fadeOut("slow");
+    });
+
+    $(document).ready(function() {    
+        $('#enviar').on('click', function(){
+            var incompletos = false
+            $('.in').each(function(){
+                if ($(this).val().trim() == ''){
+                    incompletos = true
+                }
+            });
+            if (incompletos == false){
+                //Añadimos la imagen de carga en el contenedor
+                $(".loader").show();
+                $(window).on("load", function(){
+                    $(".loader").fadeOut("slow");
+                });
+            }
+        });              
+    });    
+
+</script>
+
+
+{% load static %}
+
+<script src="https://unpkg.com/vue@3"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script type="module" src="{% static 'vue/apps/trabajosInternos/addSector.js' %}"></script>
+
+{% endblock %}

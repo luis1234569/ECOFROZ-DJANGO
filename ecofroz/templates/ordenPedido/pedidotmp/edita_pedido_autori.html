@@ -1,0 +1,229 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <h2>Ordenes de Pedidos</h2>
+{% endblock %}
+
+{% block content %}
+<div class="loader"></div>
+<div class="jumbotron" style="width: 75%;margin:auto; padding-top: 25px; margin-top: 50px; margin-bottom: 25px;">
+    <h2 class="display-5">Edición/Aprobación de Ordenes de Pedido Activos</h2>
+    <!-- <h4 class="display-6">Hola {{ user.first_name }} {{ user.last_name }}</h4> -->
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <input id="usuario_solicita" type="hidden" name="usuario_solicita" value="{{ user.id }}">
+            {{ form.auth_user }}
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label>{{ form.ubica.label }}</label>
+                <select name="ubica" id="ubica" class="form-control">
+                    <option value="" selected>-------</option>
+                    {% for i in ubica %}
+                    <option value="{{ i.id }}" {% if ubicacion == i.id %} selected {% endif %}>{{ i.ubica_nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group col-md-6">
+                <label>{{ form.departamento.label }}</label>
+                {{ form.departamento }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label>{{ form.grupo.label }}</label>
+                <select name="grupo" id="grupo" class="form-control">
+                    <option value="" selected>-------</option>
+                    {% for g in grupo %}
+                    <option value="{{ g.id }}" {% if gruposelect == g.id %} selected {% endif %}>{{ g.grupo_nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="{{ form.area.area }}">{{ form.area.label }}</label>
+                {{ form.area }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label>{{ form.tipoactivo.label }}</label>
+                {{ form.tipoactivo }}
+            </div>
+            <div class="form-group col-md-4">
+                <label>{{ form.tiempo_vida.label }}</label>
+                {{ form.tiempo_vida }}
+            </div>  
+            <div class="form-group col-md-2">
+                <label>{{ form.tiempo_tipo.label }}</label>
+                {{ form.tiempo_tipo }}
+            </div>
+        </div>
+        <div class="form-row" style="margin-left: 21px;">
+            <label for="{{ form.parte_activo.pa }}">{{ form.parte_activo.label }}</label>
+            {{ form.parte_activo }}
+        </div>
+        <div class="form-group col-md-12">
+            <label>Proyecto</label>
+            <!-- {{ form.numproyecto }} -->
+            <select name="numproyecto" id="numproyecto" class="form-control">
+                <option value="">-------</option>
+                {% for p in proy %}
+                <option value="{{ p.id }}" {% if proy_select == p.id %} selected {% endif %}>{{ p.nombre_proyecto }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <!-- <div class="form-group col-md-12">
+            <div class="form-check">
+                {{ form.regimenespecial }}
+                <label>{{ form.regimenespecial.label }}</label>
+            </div>
+        </div> -->
+        <div class="form-group col-md-12">
+            <label>{{ form2.descripcion.label }}</label>
+            {{ form2.descripcion }}
+        </div>
+        <div class="form-row">
+            <div class="col-md-10">
+                <label>{{ form2.cantidad.label }}</label>
+                {{ form2.cantidad }}
+            </div>
+            <div class="col-md-2">
+                <label>{{ form2.unimedida.label }}</label>
+                {{ form2.unimedida }}
+            </div>
+        </div>
+       
+        <div class="form-row">
+            <div class="col-md-4">
+                <label for="{{ form.motivo_compra.mc }}">{{ form.motivo_compra.label }}</label>
+                {{ form.motivo_compra }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-12">
+                <label for="{{ form.justificacion_compra.jc }}">{{ form.justificacion_compra.label }}</label>
+                {{ form.justificacion_compra }}
+            </div>
+        </div>
+        <div class="form-row" id="reemplazo_accion_div">
+            <div class="col-md-4">
+                <label for="{{ form.reemplazo_accion.ra }}">{{ form.reemplazo_accion.label }}</label>
+                {{ form.reemplazo_accion }}
+            </div>
+        </div>
+                  
+                    
+        <div class="form-row"> 
+            <div class="col-md-4">
+                <label>Código del activo a ser reemplazado</label>
+                {{ form.codigo_activo_reemplazado }}
+            </div>
+
+            <div class="col-md-6">
+            </div>
+        </div>
+
+        <div class="form-row"> 
+            <div class="col-md-12">
+                <label for="{{ form.reemplazo_observa.ro }}">{{ form.reemplazo_observa.label }}</label>
+                {{ form.reemplazo_observa }}
+            </div>
+        </div>
+
+        <div class="form-row" style="margin-bottom: 10px; margin-top: 10px;">
+            <div class="col-md-6">
+                <label>{{ form2.img_1.label }}</label>
+                {{ form2.img_1 }}
+            </div>
+            <div class="col-md-6">
+                <label>{{ form2.img_2.label }}</label>
+                {{ form2.img_2 }}
+            </div>
+        </div>
+        <div class="form-row" style="margin-top: 10px;">
+            <div class="col-md-6">
+                <label for="{{ form2.cotiza_Ref.cant }}">{{ form2.cotiza_Ref.label }}</label>
+                {{ form2.cotiza_Ref }}
+            </div>
+        </div>
+
+        <pre></pre>
+
+
+        <div class="row">
+            <div class="col-md-12" style="margin-top: 10px;">
+                <button type="submit" class="btn btn-primary" id="enviar">Guardar y Aprobar</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+    $(document).ready(function(){
+        var opcion = $("#motivo_compra").val();
+
+        if (opcion == "reemplazo_m" || opcion == "reemplazo_o" || opcion == 'reemplazo_r')
+            $("#reemplazo_accion_div").show();
+        else   
+            $("#reemplazo_accion_div").hide().val("");
+    });
+    
+    $("#motivo_compra").change(function(){
+        var opcion = $(this).val();
+
+        if (opcion == "reemplazo_m" || opcion == "reemplazo_o" || opcion == 'reemplazo_r')
+            $("#reemplazo_accion_div").show();
+        else
+            $("#reemplazo_accion_div").hide().val("");
+    });
+
+    $(window).on("load", function() {
+        $(".loader").fadeOut("slow");
+    });
+
+    $(document).ready(function() {    
+        $('#enviar').on('click', function(){
+            //Añadimos la imagen de carga en el contenedor
+            $(".loader").show();
+            $(window).on("load", function(){
+                $(".loader").fadeOut("slow");
+            });
+        });              
+    }); 
+
+    $("#ubica").on('change', function () {
+        var id = $(this).val();
+        var ubica = $("#area");
+        var options = "<option value=''>---------</option>"
+        if (id === ''){
+            ubica.html(options);
+            return false;
+        }
+        $.ajax({
+            url: "{% url 'ordenpedido:ubica_area_ajax' %}",
+            type: "GET",
+            data: {
+                'action': 'search_ubica',
+                'id': id,
+                // 'csrfmiddlewaretoken': '{{ csrf_token }}',
+            },
+            dataType: "json",
+        }).done(function (data) {
+            if (!data.hasOwnProperty("error")){
+                $.each(data, function(key, value){
+                    options += "<option value='" + value.area_codigo + "'>" + value.area_nombre + "</option>"
+                });
+                return false;
+            }
+        }).fail(function (jqXHR, textStatus, errorThrown ) {
+            alert(textStatus + ': ' + errorThrown);
+            console.log(jqXHR);
+        }).always(function (data) {
+            ubica.html(options)
+        })
+    });
+</script>
+{% endblock %}

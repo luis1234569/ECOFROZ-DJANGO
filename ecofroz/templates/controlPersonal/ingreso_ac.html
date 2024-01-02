@@ -1,0 +1,232 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block title %}
+    <h2>Control Personal</h2>
+{% endblock %}
+
+{% block content %}
+<body>
+<div style="float: right; margin-right: 18px;">
+    <script type="text/javascript">
+        //<![CDATA[
+        var  today = new Date();
+        var d = today.getDate() < 10 ? '0' + today.getDate() : today.getDate();
+        var m = today.getMonth() + 1;
+        var y = today.getFullYear();
+        var h = today.getHours();
+        var mi = today.getMinutes();
+        var se = today.getSeconds();
+        var mes = (m < 10) ? '0' + m : m;
+            document.write('Fecha Actual: ' + d + '/' + mes + '/' + y  + '  ' + h + ':' + mi);
+  
+
+        //]]> 
+    </script>
+</div>
+<div class="row" style="width: 98%; margin:auto; padding-top: 25px; margin-top: 50px; margin-bottom: 25px;">
+<div class="col-6"><h3 class="display-6">Ingreso de Personal Agua Clara</h3></div>
+<div class="col-6" style="text-align: right;"><h6>Personal en Agua Clara: {{ contadorp }}<p>Vehiculos en Agua Clara: {{ contadorv }}</p></h6></div>
+<!-- <div class="col-6" style="text-align: right;"><h6>Personal en Planta: {{ contadorp }}<p>Vehiculos en Planta: {{ contadorv }}</p></h6></div> -->
+<!-- <h4 class="display-6">Hola {{ user.first_name }} {{ user.last_name }}</h4> -->
+
+{% if ran.mensaje == 'PASE' %}
+<div class="alert alert-success col bg-success" style="text-align: center; color: white;">
+    <h1>{{ ran.mensaje }}</h1>
+</div>
+{% elif ran.mensaje == 'REVISIÓN DEL VEHÍCULO' %}
+<div class="alert alert-danger col bg-danger" style="text-align: center; color: white;">
+    <h1>{{ ran.mensaje }}</h1>
+</div>
+{% elif ran.mensaje == 'CARNET NO ESTA ACTIVO. DETENGA EL INGRESO Y CONSULTE CON RRHH' %}
+<div class="alert alert-danger col bg-danger" style="text-align: center; color: white;">
+    <h1>{{ ran.mensaje }}</h1>
+</div>
+{% endif %}
+</div>
+<div class="container-fluid">
+    <table class="table table-bordered tb">
+        <thead><!-- class="thead-dark" style="text-align: center;">-->
+            <!-- <tr> -->
+                <th>N°</th>
+                <th></th>
+                <th>Identificación</th>
+                <th>Nombre</th>
+                <th>Fecha Ingreso</th>
+                <th>Hora de Ingreso</th>
+                <th>Fecha Salida</th>
+                <th>Hora Salida</th>
+            </tr>
+        </thead>
+        <tbody style="text-align: center;">
+            {% for i in reg %}
+            {% if i.persona|length <= 7 %}
+            <tr style="background-color: #28a745; color:#ffffff">
+                <td>{{ forloop.revcounter }}</td>
+                <td><img src="/media/img/bg/carrito.jpg" width="40"/></td>
+                <td>{{ i.persona }}</td>
+                <td>{{ i.persona__first_name }} {{ i.persona__last_name }}</td>
+                <td>{{ i.fch_ingreso }}</td>
+                <td>{{ i.hr_ingreso_txt }}</td>
+                <td>{{ i.fch_salida | default:"--"}}</td>
+                <td>{{ i.hr_salida_txt | default:"--" }}</td>
+            </tr>
+            {% elif i.persona|length == 6 %}
+            <tr style="background-color: #28a745; color:#ffffff">
+                <td>{{ forloop.revcounter }}</td>
+                <td><img src="/media/img/bg/moto.jpg" width="40"/></td>
+                <td>{{ i.persona }}</td>
+                <td>{{ i.persona__first_name }} {{ i.persona__last_name }}</td>
+                <td>{{ i.fch_ingreso }}</td>
+                <td>{{ i.hr_ingreso_txt }}</td>
+                <td>{{ i.fch_salida | default:"--"}}</td>
+                <td>{{ i.hr_salida_txt | default:"--" }}</td>
+            </tr>
+          
+            {% else %}
+            <tr style="background-color:#2e2c2c; color:#ffffff">
+                <td>{{ forloop.revcounter }}</td>
+                <td><img src="/media/img/bg/persona.jpg" width="40"/></td>
+                <td>{{ i.persona }}</td>
+                <td>{{ i.persona__first_name }} {{ i.persona__last_name }}</td>
+                <td>{{ i.fch_ingreso }}</td>
+                <td>{{ i.hr_ingreso_txt }}</td>
+                <td>{{ i.fch_salida | default:"--" }}</td>
+                <td>{{ i.hr_salida_txt | default:"--" }}</td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="pagination">
+    <span class="step-links">
+        {% if reg.has_previous %}
+            <a href="?page=1">&laquo; inicio</a>
+            <a href="?page={{ reg.previous_page_number }}">previo</a>
+        {% endif %}
+  
+        <span class="current">
+            Page {{ reg.number }} of {{ reg.paginator.num_pages }}.
+        </span>
+  
+        {% if reg.has_next %}
+            <a href="?page={{ reg.next_page_number }}">próximo</a>
+            <a href="?page={{ reg.paginator.num_pages }}">último &raquo;</a>
+        {% endif %}
+    </span>
+  </div>
+  <div class="col">
+    <form autocomplete="off" method="POST" name="registrop" action="{% url 'personal:registros_ac' %}">
+        {% csrf_token %}
+        <div class="row"> 
+            <div class="form-group col-md-12">
+                <!-- <label># Cédula o Placa</label> -->
+                <input class="form-control" type="text" name="persona" id="persona" autofocus style="width: 0px; height: 0px; border:0px; float: left; margin-left:-50px;">
+            </div>
+            <div class="form-group col-md-3" hidden>
+                <label>Hora</label>
+                <input class="form-control" type="text" name="hr_txt" id="hr_txt">
+            </div>
+        </div>
+        <div class="row" hidden>
+            <div class="form-group col-md-6">
+                <input class="form-control" type="text" name="fch" id="fch">
+                <input class="form-control" type="text" name="fch_txt" id="fch_txt">
+                <input class="form-control" type="text" name="hr" id="hr">
+                <input class="form-control" type="text" name="user" id="user" value="{{ user.id }}">
+            </div>
+        </div>
+    </form>
+    </div>
+</body>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+// function inputCharacters(event) {
+//     // Si el evento es una tecla Enter
+//     if (event.key === 'Enter') {
+//         $("#fch_ingreso").val('06/03/2020');
+//         // event.preventDefault();
+//         // document.registrop.submit();
+//     }
+// }
+
+// $(document).ready(function(){
+//     document.write(d.getDate());
+// });
+
+// Si pulsamos tecla en un Input
+$("#persona").keydown(function (e){
+    // Capturamos qué telca ha sido
+    var keyCode= e.which;
+    // Si la tecla es el Intro/Enter
+    if (keyCode == 13){
+        // Calculo de fecha y hora
+        var xx= new Date();
+
+        var dia = xx.getDate() < 10 ? '0' + xx.getDate() : xx.getDate();
+        var mes =  xx.getMonth() + 1;
+        var mes = (mes < 10) ? '0' + mes : mes;
+        var anio = xx.getFullYear(); 
+        var hh = xx.getHours() < 10 ? '0' + xx.getHours() : xx.getHours();
+        var mm = xx.getMinutes() < 10 ? '0' + xx.getMinutes() : xx.getMinutes();
+
+        var fechatotal = anio + "-"+ mes +"-" + dia
+        var fechatxt = anio.toString() + mes.toString() + dia.toString()
+        var hora = hh + ":" + mm
+        
+    //    alert(fechatotal);
+    // Evitamos que se ejecute eventos
+        $("#fch").val(fechatotal);
+        $("#fch_txt").val(fechatxt);
+        $("#hr").val(fechatotal + " " + hora);
+        $("#hr_txt").val(hora);
+    // event.preventDefault();
+        document.registrop.submit();
+    // Devolvemos falso
+    //  return false;
+   }
+ });
+
+// $(document).ready(function() { 
+//     var barcode=""; 
+//     $(document).keydown(function(e) { 
+//         var code = (e.keyCode ? e.keyCode : e.which); 
+//         if(code==13){ 
+//             // alert(barcode)
+//             var xx= new Date();
+
+//             var dia = xx.getDate() < 10 ? '0' + xx.getDate() : xx.getDate();
+//             var mes =  ("0" + (xx.getMonth() + 1));
+//             var anio = xx.getFullYear(); 
+//             var hh = xx.getHours() < 10 ? '0' + xx.getHours() : xx.getHours();
+//             var mm = xx.getMinutes() < 10 ? '0' + xx.getMinutes() : xx.getMinutes();
+
+//             var fechatotal = anio + "-"+ mes +"-" + dia
+//             var fechatxt = anio + mes + dia
+//             var hora = hh + ":" + mm
+//         //    alert(fechatotal);
+//         // Evitamos que se ejecute eventos
+//             $("#fch").val(fechatotal);
+//             $("#fch_txt").val(fechatxt);
+//             $("#hr").val(fechatotal + " " + hora);
+//             $("#hr_txt").val(hora);
+//             $("#persona").val(barcode);
+//         // event.preventDefault();
+//             document.registrop.submit();
+//         // Devolvemos falso
+//         //  return false;
+//         } else if(code==9) { 
+//             alert(barcode); 
+//         } else { 
+//             barcode=barcode+String.fromCharCode(code);
+//         }
+//     }); 
+// });
+</script>
+{% endblock %}

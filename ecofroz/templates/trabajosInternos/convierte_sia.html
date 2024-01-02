@@ -1,0 +1,281 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block extrahead %}
+
+
+<meta charset="utf-8">
+
+<style type="text/css">
+    #salida_activo li {
+     display:inline;
+     margin-left: -10px;
+     padding-left:3px;
+     padding-right:60px;
+    }
+</style> 
+{% endblock %}
+
+{% block title %}
+    <h2>Ordenes de Pedidos</h2>
+{% endblock %}
+
+{% block content %}
+<!-- <div class="loader"></div> -->
+
+<div class="jumbotron" style="width: 80%; margin:auto; padding-top: 15px; margin-top: 15px; margin-bottom: 25px;">
+<h2 class="display-5">Conversión de Ordenes de Trabajo Internas para Requisición de Trabajos</h2>
+<label for="">Confirme y/o actualice la información:</label>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+        <input id="usuario_solicita" type="text" name="usuario_solicita" value="{{ user.id }}" hidden>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label>Ubicación</label>
+        
+        
+            {% render_field form.area hidden="True" %}
+           
+
+            <select name="ubicacion" id="ubicacion" class="form-control" required>
+                <option value="{{ ubi.id }}" selected>{{ ubi.ubica_nombre }}</option>
+                {% for i in ubica %}
+                <option value="{{ i.id }}">{{ i.ubica_nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group col-md-6">
+            <label>Departamento</label>
+            <select name="depar" id="depar" class="form-control in" required>
+                <option value="{{ dep.id }}" selected>{{dep.dep_nombre}}</option>
+                {% for i in depar %}
+                <option value="{{ i.id }}">{{ i.dep_nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    
+    <div class="form-row">
+       
+        <div class="form-group col-md-12" id="vueapp">
+            <label>Sector</label>
+            <input type="text" name="area_s" value="{{area_s}}" hidden>
+            <input 
+                  type="text"
+                  name="nsector"
+                  class="form-control"
+                  placeholder="{{area_s}}"
+                  v-model="kword"
+            >
+        
+           <li
+           v-for="sector in lista_sectores"
+           :key="sector.id"
+           class="list-group-item d-flex p-1 border-1"
+           @click="AgregarSector(sector.area_nombre)">${ sector.area_nombre }$
+        </li>
+        </div>
+   
+    
+        <div class="form-group col-md-6">
+            <label>Tipo Pedido</label>
+            <select name="tipo" id="tipo" class="form-control in" required>
+                <option></option>
+                {% for i in tipo_all %}
+                <option value="{{ i.cod }}">{{ i.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+        <div class="form-group col-md-6">
+            
+        </div>
+    
+        <!-- <div class="form-group col-md-12">
+            <label for="proyecto" name="proyecto_label" id="proyecto_label">Nombre del Proyecto</label>
+            <input type="text" class="form-control" name="proyecto" id="proyecto" ></input>
+        </div> -->
+
+        <div class="form-group col-md-12" id="proyecto">
+            <label>Proyecto</label>
+            <!-- {{ form2.numproyecto }} -->
+                <select name="numproyecto" id="numproyecto" class="form-control">
+                    <option value="">-------</option>
+                    {% for p in form4 %}
+                    <option value="{{ p.id }}">{{ p.nombre_proyecto }}</option>
+                    {% endfor %}
+                </select>
+        </div>
+   
+    
+    <div class="form-group col-md-12">
+        <label for="">Descripción</label>
+        <textarea class="form-control" name="describe" id="describe" cols="30" rows="10">{{ descripcion }}</textarea>
+    </div>
+
+
+    <div class="form-group col-md-12">
+        <label><strong>ZONA DE CARGA DE ARCHIVOS</strong></label>
+        <p>Si lo requiere puede adjuntar a continuación imágenes, cotizaciones referenciales u otros documentos</p>
+    </div>
+    <br>
+    <br>
+    <div class="form-row">
+        <div class="col-md-4">
+            <label for=""><b>Imágen #1</b></label>
+            {{ form2.img_1}}
+            
+        </div>
+        <div class="col-md-2">
+           
+        </div>
+        <div class="col-md-4">
+            <label for=""><b>Imágen #2</b></label>
+            {{ form2.img_2}}
+        
+        </div>
+        
+    </div>
+    <br>
+    
+    <div class="form-row" style="margin-top:30px;">
+        <div class="col-md-4">
+            <b><label for="">Cotización Referencial</label></b>
+            {{ form2.cotiza_Ref}}
+        </div>
+        <div class="col-md-2">
+           
+        </div>
+        
+        <div class="col-md-4">
+        <b><label for="">Otros Documentos</label></b>
+            {{ form2.otros_doc}}
+        </div>
+        <br>
+    </div>
+        
+    
+    <br>
+    
+        <div class="form-group col-md-12" style="margin-top:30px;">
+            <label for="">Justificación de Compra / Observaciones</label>
+             <textarea class="form-control" name="justifica" id="justifica" cols="60" rows="4">{{ justificacion }}</textarea>
+        </div>
+    
+    
+        <div class="col-md-12">
+            <button type="submit" class="btn btn-lg btn-primary button" id="enviar" name="enviar">Generar</button>
+        </div>
+    
+</form>
+</div>
+
+
+{% endblock %}
+
+{% block extrajs %}
+<script>
+    
+    
+    // $("#proyecto").hide().val("");
+    // $("#proyecto_label").hide();
+   
+    
+    // $("#id_tipo_trabajo").change(function(){
+    //     var opcion = $(this).val();
+
+    //     if (opcion == 1){   
+    //         $("#proyecto").show();
+    //         $("#proyecto").focus();
+    //         $("#proyecto_label").show();
+            
+    //     }else{
+    //         $("#proyecto").hide().val("");
+    //         $("#proyecto_label").hide();
+            
+    //          $("#reemplazo_accion_label").hide();
+    // }});
+
+    // $("#orden_ref").hide().val("");
+    // // $("#reemplazo_accion_label").hide();
+    
+    // // $(":radio").click(function(){
+    // $("#refer_orden_0").click(function(){
+    //     var opcion = $(this).val();
+
+    //     if (opcion == "True"){
+    //         $("#orden_ref").show();
+    //         //$("#refer").css("margin-bottom", "25px");
+    //     } else{
+    //         $("#orden_ref").hide().val("");
+    //         //$("#refer").css("margin-bottom", "63px");
+    //         // $("#reemplazo_accion_label").hide();
+    //     }
+    // });
+
+    // $("#refer_orden_1").click(function(){
+    //     var opcion = $(this).val();
+
+    //     if (opcion == "True"){
+    //         $("#orden_ref").show();
+    //         //$("#refer").css("margin-bottom", "5px");
+    //     } else{
+    //         $("#orden_ref").hide().val("");
+    //         //$("#refer").css("margin-bottom", "63px");
+    //         // $("#reemplazo_accion_label").hide();
+    //     }
+    // });
+
+    // function ordenarSelect(id_componente)
+    // {
+    //   var selectToSort = jQuery('#' + id_componente);
+    //   var optionActual = selectToSort.val();
+    //   selectToSort.html(selectToSort.children('option').sort(function (a, b) {
+    //     return a.text === b.text ? 0 : a.text < b.text ? -1 : 1;
+    //   })).val(optionActual);
+    // }
+
+    // $(document).ready(function () {
+    //   ordenarSelect('tiempo_tipo');
+    // });
+
+    // $(document).ready(function () {
+    //   ordenarSelect('orden_referencial');
+    // });
+   
+
+    // $(window).on("load", function() {
+    //     $(".loader").fadeOut("slow");
+    // });
+
+    // $(document).ready(function() {    
+    //     $('#enviar').on('click', function(){
+    //         var incompletos = false
+    //         $('.in').each(function(){
+    //             if ($(this).val().trim() == ''){
+    //                 incompletos = true
+    //             }
+    //         });
+    //         if (incompletos == false){
+    //             //Añadimos la imagen de carga en el contenedor
+    //             $(".loader").show();
+    //             $(window).on("load", function(){
+    //                 $(".loader").fadeOut("slow");
+    //             });
+    //         }
+    //     });              
+    // });    
+
+</script>
+
+
+{% load static %}
+
+<script src="https://unpkg.com/vue@3"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script type="module" src="{% static 'vue/apps/trabajosInternos/addSector.js' %}"></script>
+
+{% endblock %}

@@ -1,0 +1,33 @@
+<div class="form-popup" id="myForm">
+    <form class="form-container" action="{% url 'login' %}" method="post" accept-charset="utf-8">
+      {% csrf_token %}
+      <div class="col-md-mr">
+        <input type="text" placeholder="Username" class="form-control" name="username">
+      </div>      
+      <div class="col-md-mr"> 
+        <input type="password" placeholder="Password" class="form-control" name="password">
+      </div> 
+        <button type="submit" class="btn btn-success col-sm-12">Login</button>
+        <button type="button" class="btn btn-danger col-sm-12" onclick="closeForm()" style="margin-top: 10px;">Close</button>
+    </form>
+  </div>
+
+  <div class="form-popup" id="myForm2" tabindex="-1">
+    <div class="form-container-login">
+      <span class="navbar-text">
+        Hola {{ user.first_name }} 
+      </span>
+      <a class="btn btn-warning col-sm-12" href="{% url 'password_change' %}">Cambiar Contraseña</a>
+      <a type="button" class="btn btn-outline-secondary col-sm-12" href="{% url 'logout' %}" style="margin-top: 10px;">Cerrar Sesión</a>
+    </div>
+  </div>
+
+  <div class="form-popup" id="notificaciones" tabindex="-1">
+    <div class="form-container">
+      <div>
+        <h6>Notificaciones</h6>
+      </div>
+      <div class="list-group" id="noti">
+      </div>
+    </div>
+  </div>

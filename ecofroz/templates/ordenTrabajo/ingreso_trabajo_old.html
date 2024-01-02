@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+
+{% block extrahead %}
+<style type="text/css">
+    #salida_activo li {
+     display:inline;
+     margin-left: -10px;
+     padding-left:3px;
+     padding-right:60px;
+    }
+</style> 
+{% endblock %}
+
+{% block title %}
+    <h2>Ordenes de Pedidos</h2>
+{% endblock %}
+
+{% block content %}
+<div class="loader"></div>
+<div class="jumbotron" style="width: 75%; margin:auto; padding-top: 25px; margin-top: 50px; margin-bottom: 25px;">
+<h2 class="display-5">Requerimiento de Nuevos Insumos/Trabajos</h2>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+        <input id="usuario_solicita" type="text" name="usuario_solicita" value="{{ user.id }}" hidden>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label>{{ form2.ubica.label }}</label>
+            <select name="ubica" id="ubica" class="form-control">
+                <option value="" selected>-------</option>
+                {% for i in ubica %}
+                <option value="{{ i.id }}">{{ i.ubica_nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group col-md-6">
+            <label>{{ form2.departamento.label }}</label>
+            {{ form2.departamento }}
+        </div>
+    </div>
+    <div class="form-row">
+        <!-- <div class="form-group col-md-6">
+            <label>{{ form2.grupo.label }}</label>
+            <select name="grupo" id="grupo" class="form-control">
+                <option value="" selected>-------</option>
+                {% for g in grupo %}
+                <option value="{{ g.id }}">{{ g.grupo_nombre }}</option>
+                {% endfor %}
+            </select>
+        </div> -->
+        <div class="form-group col-md-6">
+            <label for="{{ form2.area.area }}">{{ form2.area.label }}</label>
+            {{ form2.area }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label >{{ form2.tipo_pedi.label }}</label>
+            {{ form2.tipo_pedi }}
+        </div>
+        <div class="form-group col-md-6" id="sale">
+            <label>{{ form2.salida_activo.label }}</label>
+            {{ form2.salida_activo }}
+        </div>
+    </div>
+    <div class="form-group col-md-12" id="proyecto">
+        <label for="{{ form2.numproyecto.numpro }}">{{ form2.numproyecto.label }}</label>
+        {{ form2.numproyecto }}
+    </div>
+    <div class="form-row" style="margin-bottom: 63px;" id="refer">
+        <div class="form-row col-md-8">
+            <div class="form-group col-md-6">
+                <label>{{ form2.refer_orden.label }}</label>
+                {{ form2.refer_orden }}
+            </div>
+            <div class="form-group col-md-6" id="orden_ref">
+                <label for="">Orden Referencial</label>
+                <select class="form-control" name="orden_referencial" id="orden_referencial">
+                    <option value="" selected>Seleccione la Orden</option>
+                    {% for i in orden %}
+                    <option value="{{ i.numtrabajo }}">N° de Orden {{ i.numtrabajo }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="form-group col-md-12">
+        <label for="{{ form.descripcion.desc }}">{{ form.descripcion.label }}</label>
+        {{ form.descripcion }}
+    </div>
+    <div class="form-row" style="margin-top: 10px;">
+        <div class="col-md-6">
+            <label for="{{ form.cantidad.cant }}">{{ form.img_1.label }}</label>
+            {{ form.img_1 }}
+        </div>
+        <div class="col-md-6">
+            <label for="{{ form.unimedida.uni }}">{{ form.img_2.label }}</label>
+            {{ form.img_2 }}
+        </div>
+    </div>
+    <div class="form-row" style="margin-top: 10px;">
+        <div class="col-md-6">
+            <label for="{{ form.cotiza_Ref.cant }}">{{ form.cotiza_Ref.label }}</label>
+            {{ form.cotiza_Ref }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-12">
+            <label for="{{ form2.justificacion_compra.jc }}">{{ form2.justificacion_compra.label }}</label>
+            {{ form2.justificacion_compra }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12" style="margin-top: 10px;">
+            <button type="submit" class="btn btn-primary button" id="enviar" name="enviar">Generar</button>
+        </div>
+    </div>
+</form>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+    $("#proyecto").hide().val("");
+    // $("#reemplazo_accion_label").hide();
+    $('#sale').hide().val("");
+    
+    $("#tipo_pedido").change(function(){
+        var opcion = $(this).val();
+
+        if (opcion == "PR")
+            $("#proyecto").show();
+        else if(opcion == "MC")
+            $('#sale').show();
+        else
+            $("#proyecto").hide().val("");
+            // $("#reemplazo_accion_label").hide();
+    });
+
+    $("#orden_ref").hide().val("");
+    // $("#reemplazo_accion_label").hide();
+    
+    // $(":radio").click(function(){
+    $("#refer_orden_0").click(function(){
+        var opcion = $(this).val();
+
+        if (opcion == "True"){
+            $("#orden_ref").show();
+            $("#refer").css("margin-bottom", "25px");
+        } else{
+            $("#orden_ref").hide().val("");
+            $("#refer").css("margin-bottom", "63px");
+            // $("#reemplazo_accion_label").hide();
+        }
+    });
+
+    $("#refer_orden_1").click(function(){
+        var opcion = $(this).val();
+
+        if (opcion == "True"){
+            $("#orden_ref").show();
+            $("#refer").css("margin-bottom", "25px");
+        } else{
+            $("#orden_ref").hide().val("");
+            $("#refer").css("margin-bottom", "63px");
+            // $("#reemplazo_accion_label").hide();
+        }
+    });
+
+    function ordenarSelect(id_componente)
+    {
+      var selectToSort = jQuery('#' + id_componente);
+      var optionActual = selectToSort.val();
+      selectToSort.html(selectToSort.children('option').sort(function (a, b) {
+        return a.text === b.text ? 0 : a.text < b.text ? -1 : 1;
+      })).val(optionActual);
+    }
+
+    $(document).ready(function () {
+      ordenarSelect('tiempo_tipo');
+    });
+
+    $(document).ready(function () {
+      ordenarSelect('orden_referencial');
+    });
+    // function ordenarSelect(id_componente)
+    // {
+    //   var selectToSort = jQuery('#' + id_componente);
+    //   var optionActual = selectToSort.val();
+    //   selectToSort.html(selectToSort.children('option').sort(function (a, b) {
+    //     return a.text === b.text ? 0 : a.text < b.text ? -1 : 1;
+    //   })).val(optionActual);
+    // };
+
+    $(window).load(function() {
+        $(".loader").fadeOut("slow");
+    });
+
+    $(document).ready(function() {    
+        $('#enviar').on('click', function(){
+            //Añadimos la imagen de carga en el contenedor
+            $(".loader").show();
+            $(window).load(function(){
+                $(".loader").fadeOut("slow");
+            });
+        });              
+    });    
+    
+</script>
+{% endblock %}

@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block title %}
+    <h2>Ordenes de Pedidos</h2>
+{% endblock %}
+
+{% block content %}
+<!-- <div>
+    {{ object.reg }}
+</div> -->
+<div style="float: right; margin-right: 18px;">
+    <script type="text/javascript">
+        //<![CDATA[
+        var  today = new Date();
+        var d = today.getDate() < 10 ? '0' + today.getDate() : today.getDate();
+        var m = today.getMonth() + 1;
+        var y = today.getFullYear();
+        var h = today.getHours();
+        var mi = today.getMinutes();
+        var se = today.getSeconds();
+        var mes = (m < 10) ? '0' + m : m;
+          document.write('Fecha Actual: ' + d + '/' + mes + '/' + y);
+        //]]> 
+    </script>
+</div>
+<div class="jumbotron" style="width: 98%; margin:auto; padding-top: 25px; margin-top: 50px; margin-bottom: 25px;">
+<h2 class="display-5">Salida de Personal</h2>
+<!-- <h4 class="display-6">Hola {{ user.first_name }} {{ user.last_name }}</h4> -->
+<form method="POST" name="registrop">
+    {% csrf_token %}
+    <div class="row">
+        <div class="form-group col-md-4">
+            <label for="{{ form.persona.p }}">{{ form.persona.label }}</label>
+            {{ form.persona }}
+        </div>
+        <div class="form-group col-md-3">
+            <label for="{{ form.hr_salida_txt.hr }}">{{ form.hr_salida_txt.label }}</label>
+            {{ form.hr_salida_txt }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-6">
+            {{ form.hr_salida }}
+        </div>
+    </div>
+</form>
+</div>
+<div class="container-fluid">
+    <table class="table table-boderless">
+        <thead class="thead-dark" style="text-align: center;">
+            <tr>
+                <th>N°</th>
+                <th>Cédula</th>
+                <th>Nombre</th>
+                <th>Fecha</th>
+                <th>Hora de Ingreso</th>
+                <th>Hora Salida</th>
+            </tr>
+        </thead>
+        <tbody style="text-align: center;">
+            {% for i in reg %}
+            <tr>
+                <td>{{ forloop.revcounter }}</td>
+                <td>{{ i.persona.cedula }}</td>
+                <td>{{ i.persona }}</td>
+                <td>{{ i.fch_ingreso }}</td>
+                <td>{{ i.hr_ingreso_txt }}</td>
+                <td>{{ i.hr_salida_txt }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="pagination">
+    <span class="step-links">
+        {% if reg.has_previous %}
+            <a href="?page=1">&laquo; inicio</a>
+            <a href="?page={{ reg.previous_page_number }}">previo</a>
+        {% endif %}
+  
+        <span class="current">
+            Page {{ reg.number }} of {{ reg.paginator.num_pages }}.
+        </span>
+  
+        {% if reg.has_next %}
+            <a href="?page={{ reg.next_page_number }}">próximo</a>
+            <a href="?page={{ reg.paginator.num_pages }}">último &raquo;</a>
+        {% endif %}
+    </span>
+  </div>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+var d= new Date();
+
+var dia = d.getDate() < 10 ? '0' + d.getDate() : d.getDate();
+var mes =  ("0" + (d.getMonth() + 1));
+var anio = d.getFullYear(); 
+var hh = d.getHours() < 10 ? '0' + d.getHours() : d.getHours();
+var mm = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes();
+
+var fechatotal = anio + "-"+ mes +"-" + dia
+var fechatxt = anio + mes + dia
+var hora = hh + ":" + mm
+
+var mensaje = '{{ msj }}'
+
+// $(document).ready(function(){
+//     document.write(d.getDate());
+// });
+
+// Si pulsamos tecla en un Input
+$("#id_persona").keydown(function (e){
+    // Capturamos qué telca ha sido
+    var keyCode= e.which;
+    // Si la tecla es el Intro/Enter
+    if (keyCode == 13){
+    //    alert(fechatotal);
+    // Evitamos que se ejecute eventos
+    // $("#fch_salida").val(fechatxt);
+    $("#id_hr_salida").val(fechatotal + " " + hora);
+    $("#id_hr_salida_txt").val(hora);
+    // event.preventDefault();
+    document.registrop.submit();
+    // Devolvemos falso
+    //  return false;
+   }
+ });
+
+$(document).ready(function(){
+    if (mensaje != ""){
+        alert(mensaje);
+    };
+});
+ 
+</script>
+{% endblock %}

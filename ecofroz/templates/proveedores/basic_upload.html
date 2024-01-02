@@ -1,0 +1,26 @@
+<button type="button" class="btn btn-primary js-upload-photos">
+    <span class="glyphicon glyphicon-cloud-upload"></span> Upload photos
+  </button>
+  
+  {# 2. FILE INPUT TO BE USED BY THE PLUG-IN #}
+  <input id="fileupload" type="file" name="archivos" multiple
+         style="display: none;"
+         data-url="{% url 'proveedores:basic_upload' %}"
+         data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'>
+  
+  {# 3. TABLE TO DISPLAY THE UPLOADED DOCS #}
+  <table id="gallery" class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Documentos Enviados</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for documento in documentos_list %}
+        <tr>
+          <td><a href="{{ documento.file.url }}">{{ documento.file.name }}</a></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  

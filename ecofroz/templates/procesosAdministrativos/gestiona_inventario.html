@@ -1,0 +1,351 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load l10n %}
+
+{% block extrahead %}
+
+<style>
+
+table {
+  border-collapse: collapse;
+  width: 100%;  
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+
+th {
+  background-color: #4CAF50;
+  color: white;
+}
+
+
+#tabla-reporte{
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#tabla-reporte td, #tabla-reporte th {
+  border: 1px solid #ddd;
+  padding: 0px;
+}
+
+#tabla-reporte tr:hover {background-color: #ddd;}
+#tabla-reporte tr:hover {background-color: #ddd;}
+
+#tabla-reporte th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}
+
+ul.opciones {
+  list-style-type:none;
+}
+
+</style>
+
+
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="container-fluid">
+  <div class="row" style="margin-top: 25px;">
+    <!-- <div class="col-12">
+      <form class="form-inline my-2 my-lg-0" method="GET">
+        {% if busqueda %}
+          <input class="form-control mr-sm-2" type="text" size="50;" placeholder="Nombre del Producto..." name="buscar" value="{{busqueda}}">
+        {% else %}
+        <input class="form-control mr-sm-2" type="text" size="50;" placeholder="Nombre del Producto..." name="buscar">
+        {% endif %}  
+        <button class="btn btn-outline-secondary bi bi-search my-2 my-sm-0"  type="submit" title="buscar"></button>
+        <a class="btn btn-outline-secondary my-2 my-sm-0" style="margin-left:4px;" href="{% url 'procesosadministrativos:gestiona_inventario_agri' %}">Limpiar</a>
+       
+      </form>
+     
+    </div> -->
+
+    <div class="row">
+      <div class="col">
+        <h3>Inventario Semanal y Egresos Planificación Agrícola.</h3>
+        <h6>Busque por producto o por semana</h6>
+        <p>
+      </div>
+  
+  <form method="GET" id="form" > 
+    <div class="row">
+      <div class="col-sm">
+        <ul class="opciones">
+          <li>
+            <label for="xproducto">Por <u>Producto</u>&nbsp;</label><input type="text" name="buscar" {% if busqueda %} value="{{busqueda}}" {% endif %}><button style="margin-top:-4px;" type="submit" id="busca_productos" name="busca_productos" class="btn btn-sm btn-primary">Buscar</button>
+          </li> 
+          <li>
+            <label for="xsemana">Por <u>Semana</u>&nbsp;</label>
+            <select name ="anio" id="anio">
+              <option value="--">--</option>
+              <script>
+                for (let i = 2023; i <= 2025; i++) {
+                  document.write('<option value="' + i + '">' + i + '</option>');
+                }
+              </script>
+            </select>
+            <select name ="semana" id="semana" onchange=submit()>
+              <option value="--">--</option>
+              <script>
+                for (let i = 1; i <= 52; i++) {
+                  document.write('<option value="' + i + '">' + i + '</option>');
+                }
+              </script>
+            </select>
+          </li>
+      
+  </form> 
+    
+
+    <li><a class="btn btn-sm btn-info" href="{% url 'procesosadministrativos:gestiona_inventario_agri' %}" title="Reset">Reset</a></li>
+
+  </ul>
+  </div>
+</div> 
+  </div>
+</div>
+</div>
+    
+    </div>
+  </div>
+   
+  
+
+  <pre></pre>
+
+  <div class="col">
+   <div class="row">
+   
+  <div class="col-8">
+  
+    <table id="tabla-reporte">  
+      <thead>
+        <tr>
+            
+            <th scope="col"><strong>Producto</strong></th>
+            <th scope="col"><strong>Tipo</strong></th>
+            <th scope="col"><strong>Peso</strong></th>
+            <th scope="col"><strong>Unidad</strong></th>
+            <th scope="col"><strong>Mes</strong></th>
+            <th scope="col"><strong>Semana</strong></th>
+            <th scope="col"><strong>Comentarios</strong></th>
+            <th scope="col"><strong>Opción</strong></th>
+            <!-- <th style="background-color:white;border-color: white;"> <a class="btn btn-outline-secondary bi bi-plus-circle-dotted rounded-square" style="float:left;margin-top:-10px;"  title="Nueva Ruta" data-toggle="modal" data-target="#exampleModal" href=""></a></th> -->
+            <!-- <th style="background-color:white;border-color: white;"> <button class="btn btn-outline-secondary bi bi-save rounded-square" id="guarda-estados" style="float:left;margin-top:-10px;margin-left:-10px;" title="Guardar"  ></button></th> -->
+           
+        </tr>
+      </thead>
+    <tbody>
+      {% if queryset %}
+      {% for i in queryset  %} 
+      
+        <tr class="fila">
+          <td>{{ i.producto }}</td>
+          <td>{{ i.tipo }}</td>
+          <td>{{ i.peso }}</td>
+          <td>{{ i.unimed }}</td>
+          {% if i.mes == 1 %}<td>Enero</td>{% elif i.mes == 2 %}<td>Febrero</td>>{% elif i.mes == 3 %}<td>Marzo</td>
+          {% elif i.mes == 4 %}<td>Abril</td>{% elif i.mes == 5 %}<td>Mayo</td>{% elif i.mes == 6 %}<td>Junio</td>
+          {% elif i.mes == 7 %}<td>Julio</td>{% elif i.mes == 8 %}<td>Agosto</td>{% elif i.mes == 9 %}<td>Septiembre</td>
+          {% elif i.mes == 10 %}<td>Octubre</td>{% elif i.mes == 11 %}<td>Noviembre</td>{% elif i.mes == 12 %}<td>Diciembre</td>{%endif%}
+          <td>{{ i.semana}}</td>
+          <td>{{ ruta.comentarios | default:"--"}}</td>
+          
+          <!-- {% if ruta.activo == True %}
+          <td style="text-align: center;"><a href="" class="bi bi-check" style="font-size:30px;"></a></td>
+          {% else %}
+          <td></td>
+          {% endif %} -->
+          
+        
+          <!-- <td style="align-content: center;"><a class="btn btn-outline-secondary bi bi-pencil-fill"  title="Editar {{proyecto.id}}" data-toggle="modal" data-target="#modal-div" data-whatever="@getbootstrap"></a></td> -->
+          <td style="align-content: center;"><a id="abrirmodal" onclick="actualizar('{{ ruta.id }}')" class="btn btn-outline-secondary bi bi-pencil-fill"  title="Generar Egreso"></a></td>
+         
+        
+
+        </tr>
+      
+      
+     </div>
+    </div>
+  </div>
+  
+  {% endfor %}
+ 
+  {% endif %}
+
+  <!-- <div class="pagination">
+    <span class="step-links">
+        {% if queryset.has_previous %}
+            <a href="?page=1">&laquo; inicio</a>
+            <a href="?page={{ queryset.previous_page_number }}">previo</a>
+        {% endif %}
+  
+        <span class="current">
+            Página {{ queryset.number }} de {{ queryset.paginator.num_pages }}.
+        </span>
+  
+        {% if queryset.has_next %}
+            <a href="?page={{ queryset.next_page_number }}">próximo</a>
+            <a href="?page={{ queryset.paginator.num_pages }}">último &raquo;</a>
+        {% endif %}
+    </span>
+  </div> -->
+
+
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Registro de nueva Ruta</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+        <form action="{% url 'procesosadministrativos:registra_nueva_ruta' %}" method="GET">
+          <label for="codigo_proyecto">Ingrese el Código de la Ruta</label>
+          <input type="text" class="form-control" name="codigo_ruta" id="codigo_ruta">
+          <label for="origen">Ingrese el origen</label>
+          <input type="text" class="form-control" name="origen" id="origen">
+          <label for="destino">Ingrese el destino</label>
+          <input type="text" class="form-control" name="destino" id="destino">
+          <label for="tarifa">Ingrese la tarifa</label>
+          <input type="text" class="form-control" name="tarifa" id="tarifa">
+          <label for="comentarios">Comentarios</label>
+          <textarea class="form-control" name="comentarios" id="comentarios"  rows="3"></textarea>
+          <pre></pre>
+          
+       
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edita Ruta</h5>
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+        <form action="{% url 'procesosadministrativos:actualiza_estado_ruta' %}" method="POST">
+          {% csrf_token %}
+          <label for="">Código de la Ruta</label>
+          <input type="text" class="form-control" name="codigo_ruta2" id="codigo_ruta2">
+          
+          <label for="">Origen</label>
+          <input type="text" class="form-control" name="origen2" id="origen2">
+          
+          <label for="">Destino</label>
+          <input type="text" class="form-control" name="destino2" id="destino2">
+        
+          <label for="">Tarifa</label>
+          <input type="text" class="form-control" name="tarifa2" id="tarifa2">
+        
+          <label>Comentarios</label>
+          <textarea class="form-control" name="comentarios2" id="comentarios2"  rows="2"></textarea>
+         <input type="text" name="rutaid" id="rutaid" hidden>
+          
+          
+          <pre></pre>
+          <h6>Estado</h6>
+          <div class="form-group"> 
+            
+          
+            <div>
+                <input type="radio" name="radio" id="sipo"  value="SI" >
+                <label for="sipo">Activo</label>
+            
+                <input type="radio" name="radio" id="nope"  value="NO">
+                <label for="nope">No activo</label>
+              </div>   
+          
+        
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+
+
+{% endblock content %}
+
+{% block extrajs %}
+<script>
+
+document.getElementById("codigo_ruta").required = true;
+document.getElementById("origen").required = true;
+document.getElementById("destino").required = true;
+document.getElementById("tarifa").required = true;
+
+  jQuery(document).ready(function($){
+    $('*[data-href]').on('click', function(){
+      window.location = $(this).data("href");
+    });
+  });
+  
+  const resume_table = document.getElementById("tabla-reporte");
+  const tableRows = document.querySelectorAll('#tabla-reporte tr.fila');
+
+
+  function actualizar(id){
+    $.ajax({
+      url: '/procesosadministrativos/ajaxcallruta/',
+      data:{
+        'id': id,
+      },
+      success: function(data) {
+        $.each(data, function(key, value){
+          $("#rutaid").val(value.id);
+          $("#codigo_ruta2").val(value.codigo_ruta);
+          $("#estado2").val(value.estado);
+          $("#origen2").val(value.origen);
+          $("#destino2").val(value.destino);
+          $("#tarifa2").val(value.tarifa);
+          $("#comentarios2").val(value.comentarios);
+          if(value.estado == true){
+          $("#sipo").prop("checked", true);
+          $("#nope").prop("checked", false);
+          }
+          else{
+            $("#nope").prop("checked", true);
+            $("#sipo").prop("checked", false);
+          }
+        }); 
+        $("#exampleModal2").modal('show');
+      }
+    });
+  }
+
+</script>
+
+
+{% endblock %}

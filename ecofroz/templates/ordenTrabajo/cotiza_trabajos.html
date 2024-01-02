@@ -1,0 +1,281 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}
+    <h2>Cotizar Ordenes de Trabajo</h2>
+{% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block content %}
+<div class="loader"></div>
+    <div class="container" style="margin: 25px auto;">
+      {% if form %}
+      <table class="table table-bordered table-sm">
+          <tbody>
+            {% for form in cot %}
+            <tr>
+              <th class="table-dark" scope="col" style="width: 25%;">N° de Orden:</th>
+              <td style='font-size: 18px; font-weight: bold;'>{{ form.numtrabajo.numtrabajo }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Usuario Solicitante:</th>
+              <td>{{ form.numtrabajo.usuario_solicita.first_name }} {{ form.numtrabajo.usuario_solicita.last_name }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Departamento Solicitante:</th>
+              <td>{{ form.numtrabajo.departamento }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Sector:</th>
+              <td>{{ form.numtrabajo.area }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Tipo</th>
+              <td>{{ form.numtrabajo.tipo_pedi }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Proyecto:</th>
+              <td>{{ form.numtrabajo.numproyecto | default:"--" }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Descripción:</th>
+              <td>{{ form.descripcion }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Orden Referencial:</th>
+              <td>
+              {% if form.numtrabajo.orden_referencial %}
+              <a href="http://{{ request.META.HTTP_HOST }}/trabajos/observa_refer/{{ form.numtrabajo.orden_referencial }}">
+                {{ form.numtrabajo.orden_referencial }}
+              </a>
+              {% else %}
+              --
+              {% endif %}
+              </td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Observaciones Adquisiciones:</th>
+              <td>{{ form.numtrabajo.cotiza_observa | default:'--' }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Observaciones Aprobador:</th>
+              <td>{{ form.numtrabajo.observa_selec_cot | default:'--' }}</td>
+            </tr>
+            <!-- <tr>
+              <th class="table-dark" scope="col">Observaciones Administrativa:</th>
+              <td>{{ form.numtrabajo.observa_compra | default:'--' }}</td>
+            </tr> -->
+            {% if form.cotiza_Ref %}
+            <tr>
+              <th class="table-dark" scope="col">Cotización Referencial:</th>
+              <td><a class="card-link" href="/media/{{ form.cotiza_Ref }}" target="_blank">{{ form.cotiza_Ref }}</a></td>
+            </tr>
+            {% endif %}
+            {% if form.img_1 %}
+            <tr>
+              <th class="table-dark" scope="col">Imagen 1:</th>
+              <td>
+                <a class="card-link" href="#" data-toggle="modal" data-target="#img_1" data-whatever="@getbootstrap">{{ form.img_1 }}</a>
+                <div class="modal fade" id="img_1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div>
+                        <img src="/media/{{ form.img_1 }}" class="img-thumbnail rounded" alt="...">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            {% endif %}
+            {% if form.img_2 %}
+            <tr>
+              <th class="table-dark" scope="col">Imagen 2:</th>
+              <td>
+                <a class="card-link" href="#" data-toggle="modal" data-target="#img_2" data-whatever="@getbootstrap">{{ form.img_2 }}</a>
+                <div class="modal fade" id="img_2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div>
+                        <img src="/media/{{ form.img_2 }}" class="img-thumbnail rounded" alt="...">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+          </tbody>
+      </table>
+      {% else %}
+      <div class="alert alert-danger">
+        NO EXISTEN DATOS
+      </div>
+      {% endif %}
+      <div class="dropdown-divider" style="margin: 25px auto;"></div>
+      <h5 class="display-6">Ingreso de Cotizaciones</h5>
+      <div style="margin: 25px auto">
+      <form method="POST" enctype="multipart/form-data" id="cotiza" onsubmit="return confirmation()">
+        {% csrf_token %}
+        {{ detalle.management_form }}
+        <div class="form-group">
+          <input id="usuario_solicita" type="hidden" name="pedido" value="{{ pedido }}">
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="compra_directa" name="compra_directa">
+          <label class="custom-control-label" for="compra_directa">Monto de Aprobación Menor a $1000 (Compra Directa)</label>
+        </div>
+        <!-- <div class="custom-control custom-checkbox" id="pagomba">
+          <input type="checkbox" class="custom-control-input" id="pago_mba" name="pago_mba">
+          <label class="custom-control-label" for="pago_mba">Pago MBA</label>
+        </div> -->
+        <table style="margin-top: 25px;" id="cotizaciones">
+          {% for detalle in detalle %}
+          <thead>
+            <tr>
+              
+              <th>Proveedor</th>
+              <th>Valor</th>
+              <th>Cotización</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if cot.numtrabajo.genera_compra == 2 %}
+            <tr>
+                
+                <th>{% render_field detalle.empresa_cotiza disabled="True" %}</th>
+                <th>{% render_field detalle.valor placeholder="000000.000" data-mask="999999.999" disabled="True" %}</th>
+                <th>{% render_field detalle.pdf_cotiza disabled="True" %}</th>
+            </tr>
+            {% else %}
+            <tr>
+                
+                <th>{% render_field detalle.empresa_cotiza %}</th>
+                <th>{% render_field detalle.valor placeholder="000000.000" data-mask="999999.999" %}</th>
+                <th>{{ detalle.pdf_cotiza }}</th>
+            </tr>
+            {% endif %}
+          </tbody>
+          {% endfor %}
+        </table>
+
+        <div class="dropdown-divider" style="margin: 25px auto;"></div>
+        <h5 class="display-6">Ingreso de Documentación Anexa</h5>
+         <label for="">(Ej: Comparativos, Cartas de Auspicio, Certificaciones, otros.)</label>
+         <input type="file" name="otros_docs_adqui" class="form-control">
+        <pre></pre>
+        <div style="margin-top: 10px;">
+          <h5 class="display-6">Observaciones/Recomendaciones</h5> 
+          <div>
+            <textarea class="form-control" id="exampleFormControlTextarea1" name="observa_cotiza" id="observa_cotiza" rows="5"></textarea>
+          </div>
+        </div>
+        <th><button type="submit" class="btn btn-primary" style="margin: 25px auto;" name="envia" id="envia">Enviar</button></th>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+  $('#compra_directa').on('change', function(){
+    if($(this).is(':checked')){
+      // $('#cotizaciones *').prop('disabled', true);
+      $('#id_cotizatrabajo_set-1-valor').prop('disabled', true);
+      $('#id_cotizatrabajo_set-1-empresa_cotiza').prop('disabled', true);
+      $('#id_cotizatrabajo_set-1-pdf_cotiza').prop('disabled', true);
+      $('#id_cotizatrabajo_set-2-valor').prop('disabled', true);
+      $('#id_cotizatrabajo_set-2-empresa_cotiza').prop('disabled', true);
+      $('#id_cotizatrabajo_set-2-pdf_cotiza').prop('disabled', true);
+      // $("#pagomba").show();
+      $('#envia').html('Guardar');
+    } else {
+      // $('#cotizaciones *').prop('disabled', false);
+      $('#id_cotizatrabajo_set-1-valor').prop('disabled', false);
+      $('#id_cotizatrabajo_set-1-empresa_cotiza').prop('disabled', false);
+      $('#id_cotizatrabajo_set-1-pdf_cotiza').prop('disabled', false);
+      $('#id_cotizatrabajo_set-2-valor').prop('disabled', false);
+      $('#id_cotizatrabajo_set-2-empresa_cotiza').prop('disabled', false);
+      $('#id_cotizatrabajo_set-2-pdf_cotiza').prop('disabled', false);
+      $("#pago_mba").removeAttr('checked');
+      // $("#pagomba").hide();
+      $('#envia').html('Enviar');
+      // $('cotizaciones *').removeAttr("disabled")
+    }
+  });
+    // $("#compra_directa").change(function(){
+    //     let opcion = $(this).val();
+
+    //     alert(opcion);
+
+    //     if (opcion == "on")
+    //         $("#cotizaciones").hide();
+    //     else
+    //         $("#cotizaciones").show();
+    //         // $("#reemplazo_accion_label").hide();
+    // });
+
+  function ordenarSelect(id_componente)
+    {
+      var selectToSort = jQuery('#' + id_componente);
+      var optionActual = selectToSort.val();
+      selectToSort.html(selectToSort.children('option').sort(function (a, b) {
+        return a.text === b.text ? 0 : a.text < b.text ? -1 : 1;
+      })).val(optionActual);
+    }
+    $(document).ready(function () {
+      ordenarSelect('id_cotizatrabajo_set-0-empresa_cotiza');
+    });
+    $(document).ready(function () {
+      ordenarSelect('id_cotizatrabajo_set-1-empresa_cotiza');
+    });
+    $(document).ready(function () {
+      ordenarSelect('id_cotizatrabajo_set-2-empresa_cotiza');
+    });
+
+    $(window).on("load", function() {
+        $(".loader").fadeOut("slow");
+    });
+
+    function confirmation(){
+      if(confirm("Recordó adjuntar las cotizaciones?")){
+        $(".loader").show();
+        return true;
+      }else{
+        return false;
+      }
+    }
+
+    $(document).ready(function() {    
+        $('#envia').on('click', function(){
+          if($('#id_cotizatrabajo_set-0-valor').val().length == 0 || $('#id_cotizatrabajo_set-0-empresa_cotiza').val().length == 0){
+            $('#id_cotizatrabajo_set-0-valor').prop('required', true);
+            $('#id_cotizatrabajo_set-0-empresa_cotiza').prop('required', true);
+          } else {
+            // Añadimos la imagen de carga en el contenedor
+            $(".loader").show();
+            $(window).on("load", function(){
+                $(".loader").fadeOut("slow");
+            });
+          }
+        });              
+    }); 
+
+    $(document).ready(function() {
+      $("#pagomba").hide();
+    });
+</script>
+{% endblock %}

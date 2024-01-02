@@ -1,0 +1,419 @@
+{% extends 'base_calendar.html' %}
+<!-- {% load tz %} -->
+
+{% block extrahead %}
+<style type="text/css"> 
+ 
+.ui-front {
+            z-index: 1100 !important;
+        }
+
+ul.ui-autocomplete {
+    z-index: 1100 !important;
+}
+
+
+.currencyinput {
+    border: 1px inset #ccc;
+}
+.currencyinput input {
+    border: 0;
+}
+
+
+</style>
+
+
+
+
+
+
+{% endblock %}
+
+{% block content %}
+<div class="loader"></div>
+<div class="container" style="margin: 25px auto;">
+  <div class="row">
+    <div class="col">
+    <div class="col-md 12 search">
+      <form class="form-inline my-2 my-lg-0" method="GET">
+        <input class="form-control mr-sm-2" style="margin-left:-95px;" type="text" size="40;" placeholder="Busque el número de Solicitud.." name="buscar" {% if busqueda %} value="{{ busqueda }}" {% endif %}>
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+        <a class="btn btn-secondary my-2 my-sm-0" style="margin-left: 3px;" href="{% url 'trabajos:listar_solicitudes_anticipos' %}">Limpiar</a>
+      </form>
+    </div>
+  </div>
+    
+      <div class="col-md-6">
+        <a class="btn btn-lg btn-success rounded-circle" data-toggle="modal" data-target="#Add-Event" style="float: right;" title="Nueva Solicitud" href="">+</a>
+      </div>
+      <!-- <a class="btn btn-success" href="">Exportar Excel</a>
+      <a href="{% url 'trabajos:comprasdirectas' %}" class="btn btn-primary">Ver Compras Directas</a>
+      <a href="{% url 'trabajos:aprueba_pagos' %}" class="btn btn-warning">Ver Ordenes de Pago</a> -->
+    
+  </div>
+</div>
+<div style="width: 100%; margin: auto;">
+<table class=" table table-sm table-hover table-warning table-striped">
+    <thead>
+      <tr>
+        <th scope="col">N°</th>
+        
+        <th scope="col">Fecha Solicitud</th>
+        <th scope="col" >Origen</th>
+        <th scope="col" >N° Req.</th>
+        <th scope="col" >Proveedor</th>
+        <th scope="col" >Valor</th>
+        <th scope="col" >Notas</th>
+        <th scope="col">Autoriza Ger</th>
+        <th scope="col">Estado Cont</th>
+        
+        
+        <th scope="col">Opciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for pedido in form %}
+    
+        <tr>
+        <td>{{ pedido.numsolic }}</td>
+        
+        <td>{{ pedido.fch_solicita|date:"M d, H:i" }}</td>
+        <td>{{ pedido.get_origen_display }}</td>
+        {% if pedido.origen == 3 %}
+        <td>{{ pedido.numtrabajo.numtrabajo }}</td>
+        {% elif pedido.origen == 2 %}
+        <td>{{ pedido.numpedido.numpedido }}</td>
+        {% elif pedido.origen == 1 %}
+        <td>{{ pedido.num_mba }}</td>
+        {% endif %}
+       
+        <td>{{ pedido.prove }}</td>
+        <td>{{ pedido.valor }}</td>
+        <td>{{ pedido.observa_solicita }}</td>
+
+        {% if pedido.aprobado_ger == None  %}
+        <td style="text-align: center;">--</td>
+        {% elif pedido.aprobado_ger == True %}
+        <td style="text-align: center;"><i class="glyphicon glyphicon-ok" style="font-size: 2rem; color:darkgreen" title="Autorizada"></i></td>
+        {% elif pedido.aprobado_ger == False %}
+        <td style="text-align: center;"><i class="glyphicon glyphicon-remove" style="font-size: 2rem; color:red" title="{{pedido.observa_autoriza}}"></i></td>
+        {% else %}
+        <td>--</td>
+        {% endif %}
+        
+
+          {% if pedido.aceptado_conta == True %}
+          <td style="text-align: center;"><i class="glyphicon glyphicon-ok" style="font-size: 2rem; color:darkgreen" title="Generado"></i></td>
+          {% elif pedido.aceptado_conta == False %}
+          <td style="text-align: center;"><i class="glyphicon glyphicon-remove" style="font-size: 2rem; color:red" title="{{pedido.observa_cont}}"></i></td>
+          {% else %}
+          <td>--</td>
+          {% endif %}
+
+        <td>
+        {% if pedido.aprobado_ger == None %}
+        <a class=" btn btn-warning glyphicon glyphicon-thumbs-down" title="Anular" href="{% url 'trabajos:anula_solic_anticipos' pedido.numsolic %}"></a>
+        {% endif %}
+        {% if pedido.docs %}
+        <a class=" btn btn-info glyphicon glyphicon-paperclip"  href="{{ pedido.docs.url }}" target="_blank" title="{{ pedido.docs }}"></a>
+        {% endif %}
+
+        {% if pedido.comprobante %}
+        <a class=" btn btn-warning glyphicon glyphicon-paperclip"  href="{{ pedido.comprobante.url }}" target="_blank" title="Comprobante"></a>
+        {% endif %}
+
+      </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+</table>
+</div>
+
+
+<div class="modal fade" id="Add-Event" tabindex="-1"  aria-labelledby="exampleModalLabel" aria-hidden="True">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Información de la solicitud</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hideen="True">&times;</span>
+        </button>
+      </div>
+      <form method="post" action="" enctype="multipart/form-data" id="formula" name="formula">
+        {% csrf_token %}
+        <div class="modal-boddy">
+          <div class="container">
+            <div class="form-group">
+             
+                
+                 
+                    <label for="ruta">Proveedor</label>
+                    <input class="form-control" name="ruta" id="ruta" hidden>
+                    <input class="form-control" name="rutatexto" id="rutatexto" required placeholder="Nombre empresa ó RUC">
+                    
+                  
+              </div>
+            
+            <div class="form-group" id="nombre_evento">
+              <label for="">Origen Requisición</label>
+              <select name="origen" id="origen" class="form-control" required onchange="consulta();">
+                <option value="" default>--</option>
+                <option value="trabajos">SIA Trabajos</option>
+                <option value="activos">SIA Activos</option>
+                <option value="mba">MBA</option>
+              
+              </select>
+            </div>
+               
+            <div class="form-group" id="opcion-list">
+              <label for="ruta">N° Requisición</label>
+              <input class="form-control" name="trabajos" id="trabajos">
+              <input class="form-control" name="activos" id="activos">
+              <input class="form-control" name="mba" id="mba">
+              <input class="form-control" name="num-req" id="num-req" hidden>
+            
+            </div>
+
+
+                <div class="form-group" id="tarifa-div">
+                  <label for="ruta">Valor Anticipo</label>
+                  <input class="form-control" name="tarifa" id="tarifa" data-mask="9999.99" placeholder="$">
+                
+                </div>
+                
+
+            <div class="form-group" id="evento_desc">
+              <label for="">Notas</label>
+              <textarea class="form-control" name="desc_evento" id="desc_evento" rows="3"></textarea>
+            </div>
+
+            <div class="form-group" id="filediv">
+              <label for="">Soportes</label><br>
+              <input
+                    type="file"
+                    name = "docs"
+                    id = "id_docs"
+                    accept=".pdf,.doc,.jpg,.jpeg,.png,.xlsx,application/msword,application/msexcel" />
+              
+            </div>
+
+
+          </div>
+        </div>  
+
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Enviar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+
+<div class="pagination">
+  <span class="step-links">
+      {% if form.has_previous %}
+          <a href="?page=1">&laquo; inicio</a>
+          <a href="?page={{ form.previous_page_number }}">previo</a>
+      {% endif %}
+
+      <span class="current">
+          Page {{ form.number }} of {{ form.paginator.num_pages }}.
+      </span>
+
+      {% if form.has_next %}
+          <a href="?page={{ form.next_page_number }}">próximo</a>
+          <a href="?page={{ form.paginator.num_pages }}">último &raquo;</a>
+      {% endif %}
+  </span>
+</div>
+
+
+{% endblock %}
+
+{% block extrajs %}
+
+<script>
+
+  $(window).on("load",function() {
+        $(".loader").fadeOut("slow");
+    });
+
+
+
+    $(document).ready(function(){
+    $("#opcion-list").hide()
+    
+    $("#rutatexto").autocomplete({source: "{% url 'trabajos:ajaxcallproveedor' %}",
+    success: function(data) {
+        response($.map(data, function(item) {
+          
+          return {
+            // ruc:item[3],
+            label: item[0],
+            value: item[1]
+          };
+        }));  
+    },
+
+    select: function(event, ui) {
+    $("#rutatexto").val(ui.item.label);
+    $("#ruta").val(ui.item.value);
+    // $("#tarifa").val(ui.item.tarifa);
+    
+    return false;
+  } ,
+    focus: function(event, ui) {
+    $("#ruta").val(ui.item.value);
+    return false;
+  },
+    change: function (event, ui) {
+        if (ui.item == null){ 
+         //here is null if entered value is not match in suggestion list
+            $(this).val((ui.item ? ui.item.value : ""));
+        }
+    }
+
+  })
+
+
+})
+
+function consulta(){
+    var valor =  document.getElementById('origen').value;
+    if (valor == 'trabajos'){
+    $("#opcion-list").show();
+    $("#trabajos").show();
+    $("#trabajos").prop('required',true);   
+    $("#activos").hide();
+    $("#mba").hide();
+
+
+    $("#trabajos").autocomplete({source: "{% url 'trabajos:ajaxcalltrabajos' %}",
+    success: function(data) {
+        response($.map(data, function(item) {
+          
+          return {
+            // ruc:item[3],
+            label: item[0],
+            value: item[1],
+          };
+        }));  
+    },
+
+    select: function(event, ui) {
+    $("#trabajos").val(ui.item.label);
+    $("#num-req").val(ui.item.value);
+    // $("#tarifa").val(ui.item.tarifa);
+    
+    return false;
+  } ,
+    focus: function(event, ui) {
+    $("#trabajos").val(ui.item.value);
+    return false;
+  },
+    change: function (event, ui) {
+        if (ui.item == null){ 
+         //here is null if entered value is not match in suggestion list
+            $(this).val((ui.item ? ui.item.value : ""));
+        }
+    }
+
+  })
+
+
+   }
+   else if (valor == 'activos'){
+    $("#opcion-list").show();
+    $("#activos").show();
+    $("#activos").prop('required',true);  
+    $("#trabajos").hide();
+    $("#mba").hide();
+
+    $("#activos").autocomplete({source: "{% url 'trabajos:ajaxcallactivos' %}",
+    success: function(data) {
+        response($.map(data, function(item) {
+          
+          return {
+            // ruc:item[3],
+            label: item[0],
+            value: item[1],
+          };
+        }));  
+    },
+
+    select: function(event, ui) {
+    $("#activos").val(ui.item.label);
+    $("#num-req").val(ui.item.value);
+    // $("#tarifa").val(ui.item.tarifa);
+    
+    return false;
+  } ,
+    focus: function(event, ui) {
+    $("#activos").val(ui.item.value);
+    return false;
+  },
+    change: function (event, ui) {
+        if (ui.item == null){ 
+         //here is null if entered value is not match in suggestion list
+            $(this).val((ui.item ? ui.item.value : ""));
+        }
+    }
+
+  })
+
+
+   }
+   else if (valor == 'mba'){
+    $("#opcion-list").show();
+    $("#mba").show();
+    $("#mba").prop('required',true);  
+    $("#trabajos").hide();
+    $("#activos").hide();
+    $("#num-req").val("");
+
+
+   }
+
+  }
+
+
+$(document).on('submit', '#formula', function (e) {
+
+var form = $(this);
+var req = $("#num-req")
+// console.log(transpo);
+var formData = new FormData(form[0]);
+// formData.append('color', '#ffff6e')
+
+  
+  $.ajax({
+    type:"post",
+    url:'add_solic/',
+    data: formData,
+    processData: false,
+    contentType: false,
+    dataType: "json",
+    success: function (data) {
+      console.log(data);
+      alert("Actualizado Satisfactoriamente.")
+      location.reload();
+    
+    },
+    error: function (data) {
+      alert("No se pudo guardar. Comuníquese con IT")
+    }
+  });
+
+
+})
+
+
+  </script>
+
+{% endblock %}

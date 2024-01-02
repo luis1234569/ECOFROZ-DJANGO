@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="form-row" style="margin-top: 25px;margin-left: -200px;">
+      <div class="container">
+        <div class="row">
+        <div class="col-sm">
+    <h4>El cambio de ubicación de&nbsp;{{codigo}} se almacenó correctamente.</h4>
+    <a class= "btn btn-primary" href="{% url 'activos:busqueda_salida'%}">Regresar</a>
+    <a class= "btn btn-warning" href="{% url 'activos:imprime_movimientos_internos' codigo %}" target="_blank">Imprimir Acta de Entrega/Recepción</a>
+
+
+
+  </div>
+</div>
+</div>
+</div>
+</div>
+
+{% endblock %}
+

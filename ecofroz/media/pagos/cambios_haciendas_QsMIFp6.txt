@@ -1,0 +1,8 @@
+* Flexibilidad para cambio de programas a media periodo de siembra 3 dias
+
+* Pedidos de productos de mas de una semana de programacion  4 dias
+
+* Sistema de generacion de extras por arte del ingeniero ara egresos de productos emergentes 3 dias
+
+* Reporte de plan semanal poner espacios para temperatura, velocidad del viento, hora de aplocacion al final poner la sumatoria de todos los productos cuanto se debe egresar 3 dias
+

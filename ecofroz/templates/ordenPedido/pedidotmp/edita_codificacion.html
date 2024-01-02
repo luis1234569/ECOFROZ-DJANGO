@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block title %}
+    <h2>Ordenes de Pedidos</h2>
+{% endblock %}
+
+{% block content %}  
+<div class="loader"></div>
+<div class="container" style="margin: 25px auto;">
+<!-- <h4 class="display-6">Hola {{ user.first_name }} {{ user.last_name }}</h4> -->
+<form method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+        <input id="usuario_solicita" type="text" name="usuario_solicita" hidden value="{{ user.id }}">
+    </div>
+    <div class="form-group col-md-6">
+        <!-- <label>{{ form.activo_nomenclatura.label }}</label> -->
+        {{ form.activo_nomenclatura }}
+    </div>
+    <div class="form-group col-md-6">
+        <label>{{ form.activo_codigo.label }}</label>
+        {{ form.activo_codigo }}
+    </div>
+    <div class="form-group col-md-6">
+        <label for="{{ form.activo_grupo.ag }}">{{ form.activo_grupo.label }}</label>
+        {{ form.activo_grupo }}
+    </div>
+    <div class="form-group col-md-6">
+        <label for="{{ form.activo_tipo.at }}">{{ form.activo_tipo.label }}</label>
+        {{ form.activo_tipo }}
+    </div>
+    <div class="form-group col-md-6">
+        <label for="{{ form.activo_depar.ad }}">{{ form.activo_depar.label }}</label>
+        {{ form.activo_depar }}
+    </div>
+    <div class="form-group col-md-6">
+        <label for="{{ form.activo_area.aa }}">{{ form.activo_area.label }}</label>
+        {{ form.activo_area }}
+    </div>
+    <div class="col-md-12">
+        <label for="{{ form.activo_descripcion.ad }}">{{ form.activo_descripcion.label }}</label>
+        {{ form.activo_descripcion }}
+    </div>
+    <div class="col-md-2">
+        <!-- <label for="{{ form2.desc_activo_usuario_registra.daur }}">{{ form2.desc_activo_usuario_registra.label }}</label> -->
+        {{ form2.desc_activo_usuario_registra }}
+    </div>
+    <div class="form-group col-md-6">
+        <label for="{{ form.activo_ubica.au }}">{{ form.activo_ubica.label }}</label>
+        {{ form.activo_ubica }}
+    </div>
+    <div class="form-group col-md-6">
+        <label for="{{ form2.desc_activo_marca.ma }}">{{ form2.desc_activo_marca.label }}</label>
+        {{ form2.desc_activo_marca }}
+    </div>
+    <div class="form-group col-md-6">
+        <label for="{{ form2.desc_activo_num_serie.ns }}">{{ form2.desc_activo_num_serie.label }}</label>
+        {{ form2.desc_activo_num_serie }}
+    </div>
+    <div class="form-group col-md-6">
+        <label for="{{ form2.desc_activo_modelo.mo }}">{{ form2.desc_activo_modelo.label }}</label>
+        {{ form2.desc_activo_modelo }}
+    </div>
+    <div class="form-group col-md-6">
+        <label for="{{ form2.desc_activo_proveedor.ap }}">{{ form2.desc_activo_proveedor.label }}</label>
+        {{ form2.desc_activo_proveedor }}
+    </div>
+    <div class="row">
+        <div class="col-md-3" style="margin-top: 10px;">
+            <button type="submit" class="btn btn-primary" id="enviar">Guardar</button>
+        </div>
+    </div> 
+</form>
+</div>
+
+<!-- <div style="float: right; width: 30%; padding: 0px 0px 0px 10px">
+    <h3>Contenido derecho</h3>
+</div> -->
+{% endblock %}
+
+{% block extrajs %}
+<script>
+    $("#reemplazo_accion_div").hide().val("");
+    // $("#reemplazo_accion_label").hide();
+    
+    $("#motivo_compra").change(function(){
+        var opcion = $(this).val();
+
+        if (opcion == "reemplazo_m" || opcion == "reemplazo_o")
+            $("#reemplazo_accion_div").show();
+        else
+            $("#reemplazo_accion_div").hide().val("");
+            // $("#reemplazo_accion_label").hide();
+    });
+
+    function ordenarSelect(id_componente)
+    {
+      var selectToSort = jQuery('#' + id_componente);
+      var optionActual = selectToSort.val();
+      selectToSort.html(selectToSort.children('option').sort(function (a, b) {
+        return a.text === b.text ? 0 : a.text < b.text ? -1 : 1;
+      })).val(optionActual);
+    }
+    $(document).ready(function () {
+      ordenarSelect('selectPaises');
+    });
+
+    function ordenarSelect(id_componente)
+    {
+      var selectToSort = jQuery('#' + id_componente);
+      var optionActual = selectToSort.val();
+      selectToSort.html(selectToSort.children('option').sort(function (a, b) {
+        return a.text === b.text ? 0 : a.text < b.text ? -1 : 1;
+      })).val(optionActual);
+    }
+    $(document).ready(function () {
+      ordenarSelect('tiempo_tipo');
+    });
+
+    $(window).on("load", function() {
+        $(".loader").fadeOut("slow");
+    });
+
+    $(document).ready(function() {    
+        $('#enviar').on('click', function(){
+            //Añadimos la imagen de carga en el contenedor
+            $(".loader").show();
+            $(window).on("load", function(){
+                $(".loader").fadeOut("slow");
+            });
+        });              
+    }); 
+</script>
+{% endblock %}

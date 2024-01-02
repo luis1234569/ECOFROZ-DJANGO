@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+{% load filters %}
+
+
+{% block content %}
+<!-- <div class="loader"></div> -->
+<div class="jumbotron" style="width: 75%; margin:auto; padding-top: 25px; margin-top: 50px; margin-bottom: 25px;">
+        <h2 class="display-5" style="margin-top: 15px;">Detalle de Baja, Donación o Venta de Activos.</h2>
+        <br>
+        
+                
+        
+        
+        <div class="form-row">
+                <div class="form-group col-md-10" >
+                        
+                        <label><b><u>Código Activo:</u></b></label>
+                        {{query.desc_activo_codigo.activo_codigo}}
+                        
+                        <br>
+                        <label><b><u>Marca: </u></b></label>
+                        {{query.desc_activo_marca | default:"--"}}
+                        <br>
+                        <label><b><u>Modelo: </u></b></label>
+                        {{query.desc_activo_modelo | default:"--"}}
+                        <br>
+                        <label><b><u>Serie: </u></b></label>
+                        {{query.desc_activo_num_serie | default:"--"}}
+                        <br>
+                        
+                        <label><b><u>Descripción: </u></b></label>
+                        {{query.desc_activo_codigo.activo_descripcion}}
+                        <br>
+
+                        <label><b><u>Ubicacion Actual: </u></b></label>
+                        {{query.desc_activo_codigo.activo_ubica}}
+                        <br>
+
+                        <label><b><u>Departamento Actual: </u></b></label>
+                        {{query.desc_activo_codigo.activo_depar}}
+                        <br>
+
+                        <label><b><u>Sector Actual: </u></b></label>
+                        {{query.desc_activo_codigo.activo_area}}
+                        <br>
+
+                        <label><b><u>Sub-sector Actual: </u></b></label>
+                        {{query.desc_activo_codigo.activo_subsec | default:"--"}}
+                        <br>
+
+                        <label><b><u>Estado: </u></b></label>
+                        {{query.desc_activo_codigo.activo_estado | default:"--"}}
+                        <br>
+
+                        <label><b><u>Persona registra Baja, Donación, Venta: </u></b></label>
+                        {{query.usuario_realiza_baja_dona_vende | default:"--"}}
+                        <br>
+
+                        <label><b><u>Fecha de registro Baja, Donación, Venta : </u></b></label>
+                        {{query.fecha_baja_dona_vende | default:"--"}}
+                        <br>
+
+                        <label><b><u>Observaciones/Notas: </u></b></label>
+                        
+                        {{query.notas_baja_dona_vende | default:'--'}}
+                
+                           
+
+                </div>
+        </div>
+        <div class="form-row"> 
+                <p>
+                </div>
+        
+
+        <div class="form-row">
+                <p>
+        </div>
+
+        <form method="POST"> 
+        {% csrf_token %}
+        <div class="form-row">
+        <h4 class="display-5">Actualice la ubicación final del activo si se requiere</h4>
+        <p>
+        </div>
+        <div class="form-row">
+
+        <div class="form-group col-md-3" >
+                <label for="{{ form.activo_ubica.label }}">Nuevo Departamento</label> 
+                <!-- {% render_field form.activo_depar class="form-control"   %}  -->
+                 <select name="activo_depar" id="activo_depar" class="form-control in" required>
+                        <option value="{{query.desc_activo_codigo.activo_depar.id}}" selected>{{query.desc_activo_codigo.activo_depar}}</option>
+                        {% for i in depar %}
+                        <option value="{{ i.id }}">{{ i.dep_nombre }}</option>
+                        {% endfor %}
+                </select> 
+       
+       
+        </div>
+
+        <div class="form-group col-md-4" >
+                <label for="{{ form.activo_area.label }}">Nuevo Sector</label> 
+                <!-- {% render_field form.activo_area class="form-control"   %}  -->
+                <select name="activo_area" id="activo_area" class="form-control in" required>
+                        <option value="{{query.desc_activo_codigo.activo_area.area_codigo}}" selected>{{query.desc_activo_codigo.activo_area}}</option>
+                        {% for i in area %}
+                        <option value="{{ i.area_codigo }}" data-chained="{{ i.area_departamento_id }}">{{ i.area_nombre }}</option>
+                        {% endfor %}
+                </select> 
+       
+       
+        </div>
+        
+        <div class="form-group col-md-4" >
+                <!-- <label for="{{ form.activo_subsec.label }}">{{ form.activo_subsec.label }}</label>  -->
+                {% render_field form.activo_subsec class="form-control" hidden="True"   %} 
+               
+        </div>
+
+        <div class="form-group col-md-3" >
+                {% render_field form.activo_ubica value=form.activo_ubica class="form-control"  hidden="True" %} 
+                 
+        </div>
+
+        </div>
+
+     
+
+
+                <button id="guardar" type="submit" class="btn btn-primary btn-lg">Guardar</button>
+        </form>
+</div>
+
+{% endblock content %}
+
+{% block extrajs %}
+<script>
+// $('#activo_depar').val(113);
+// $("#activo_area").chained("#activo_depar"); 
+// $('#activo_area').val(41);
+
+  function ordenarSelect(id_componente)
+    {
+      var selectToSort = jQuery('#' + id_componente);
+      var optionActual = selectToSort.val();
+      selectToSort.html(selectToSort.children('option').sort(function (a, b) {
+        return a.text === b.text ? 0 : a.text < b.text ? -1 : 1;
+      })).val(optionActual);
+    }
+    $(document).ready(function () {
+      ordenarSelect('id_activo_codigo');
+    });
+
+    $('#id_activo_codigo').change(function(){
+            $('#id_codigo').val($('#id_activo_codigo option:selected').text())
+    })
+
+//     $('#activo_depar').change(function(){
+//         $("#activo_area").chained("#activo_depar"); 
+            
+//     })
+
+
+  $(document).ready(function(){
+    $('#id_persona_retira').val('{{ user.username }}')
+  })
+
+//   $(window).on("load", function() {
+//         $(".loader").fadeOut("slow");
+//     });
+
+    $(document).ready(function() {    
+        $('#guardar').on('click', function(){
+            //Añadimos la imagen de carga en el contenedor
+            $(".loader").show();
+            $(window).on("load", function(){
+                $(".loader").fadeOut("slow");
+            });
+        });              
+    });
+
+    $(document).ready(function(){
+        let descripcion = '{{ desc }}';
+        document.getElementById('id_detalle_activo').innerHTML = descripcion
+    });
+</script>
+
+{% endblock %}

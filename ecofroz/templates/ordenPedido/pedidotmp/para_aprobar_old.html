@@ -1,0 +1,244 @@
+{% extends 'base.html' %}
+<!-- {% load tz %} -->
+
+{% block extrahead %}
+  <style>
+    body {font-family: Arial;}
+    
+    /* Style the tab */
+    .tab {
+      overflow: hidden;
+      border: 1px solid #ccc;
+      background-color: #f1f1f1;
+    }
+    
+    /* Style the buttons inside the tab */
+    .tab button {
+      background-color: inherit;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.3s;
+      font-size: 17px;
+    }
+    
+    /* Change background color of buttons on hover */
+    .tab button:hover {
+      background-color: #ddd;
+    }
+    
+    /* Create an active/current tablink class */
+    .tab button.active {
+      background-color: #ccc;
+    }
+    
+    /* Style the tab content */
+    .tabcontent {
+      display: none;
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      border-top: none;
+    }
+    
+    /* Style the close button */
+    .topright {
+      float: right;
+      cursor: pointer;
+      font-size: 28px;
+    }
+    
+    .topright:hover {color: red;}
+  </style>
+{% endblock %}
+
+{% block content %}
+
+  <div class="container" style="margin-top: 25px;">
+    <div class="row">
+      <div class="col-md 12 search">
+        <form class="form-inline my-2 my-lg-0" method="GET">
+          <input class="form-control mr-sm-2" type="text" placeholder="N° Pedido, Descripción" name="buscar" {% if busqueda %} value="{{ busqueda }}" {% endif %}>
+          <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+          <a class="btn btn-secondary my-2 my-sm-0" style="margin-left: 10px;" href="{% url 'ordenpedido:aprueba_ordenes' %}"></button>Limpiar</a>
+        </form>
+      </div>
+    </div>
+  </div>
+<div style="margin: 25px auto;">
+  <div class="tab">
+    <button class="tablinks" onclick="openTab(event, 'PAprobar' )" id="defaultOpen">Ordenes Para Aprobación</button>
+    <button class="tablinks" onclick="openTab(event, 'Aprobados')">Ordenes Aprobadas</button>
+  </div>
+
+  <div id="PAprobar" class="tabcontent">
+    <span onclick="this.parentElement.style.display='none'" class="topright">&times</span>
+    <div>
+      <table class="table table-hover table-dark">
+        <h2>Ordenes Para Aprobación</h2>
+        {% if form %}
+          <thead>
+            <tr>
+              <th scope="col">Pedido</th>
+              <th scope="col">Usuario</th>
+              <th scope="col">Fecha Solicitud</th>
+              <th scope="col">Proyecto</th>
+              <th scope="col">Tipo Activo</th>
+              <th scope="col">Descripción</th>
+              <th colspan="3">Opciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for pedido in form %}
+            <tr class="table-active">
+              <td>{{ pedido.numpedido.numpedido }}</td>
+              <td>{{ pedido.numpedido.usuario_solicita.first_name }} {{ pedido.numpedido.usuario_solicita.last_name }}</td>
+              <td>{{ pedido.numpedido.fchsolicita|date:'Y-m-d' }}</td>
+              <td>{{ pedido.numpedido.numproyecto }}</td>
+              <td>{{ pedido.numpedido.tipoactivo }}</td>
+              <td>{{ pedido.descripcion }}</td>
+              <!-- {% if pedido.aprobado == 1 %}
+                <td>Aprobado</td>
+              {% elif pedido.aprobado == 0 %}
+                <td>Rechazado</td>
+              {% else %}
+                <td>Pendiente</td>
+              {% endif %} -->
+              <td>
+                <form action="{% url 'ordenpedido:aprobado' pedido.numpedido.numpedido %}" method="GET">
+                  <button type="submit" name="aprobar" class="btn btn-primary glyphicon glyphicon-ok"></button>
+                </form>
+              </td>
+              <td>
+                <form action="{% url 'ordenpedido:editar_pedido' pedido.numpedido.numpedido %}" method="GET">
+                  <button type="submit" name="aprobar" class="btn btn-success glyphicon glyphicon-edit"></button>
+                </form>
+              </td>
+              <td>
+                <button type="button" id="rech" name="rech" class="btn btn-danger glyphicon glyphicon-remove" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap"></button>
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel" style="color: black;">Ingrese el motivo del rechazo</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <form class="modal-body" action="{% url 'ordenpedido:rechazado' pedido.numpedido.numpedido %}" method="GET">
+                        <div class="form-group">
+                          <input type="text" name="pedido" id="pedido"/>
+                          <textarea class="form-control" id="message-text" name="text"></textarea>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                          <button type="submit" name="rechazar" class="btn btn-primary">Enviar</button>
+                        </div>
+                      </form>
+                    </div>
+                    </div>
+                  </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+          {% else %}
+            <div class="alert-danger" role="alert">
+              <h3 style="text-align: center;">No Hay Ordenes Para Aprobar</h3>
+            </div>
+          {% endif %}
+      </table>
+    </div>  
+  </div>
+
+  <div id="Aprobados" class="tabcontent">
+    <span onclick="this.parentElement.style.display='none'" class="topright">&times</span>
+    <div>
+      <table class="table table-borderless">
+        <h2>Ordenes Aprobadas</h2>
+        <thead class="thead-dark" style="text-align: center;">
+          <tr>
+            <th scope="col">Pedido</th>
+            <th scope="col">Usuario</th>
+            <th scope="col">Fecha Solicitud</th>
+            <th scope="col">Proyecto</th>
+            <th scope="col">Tipo Activo</th>
+            <th scope="col">Descripción</th>
+            <th scope="col">Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for aprobado in form2 %}
+          <tr>
+            <td id="pedido">{{ aprobado.numpedido.numpedido }}</td>
+            <td>{{ aprobado.numpedido.usuario_solicita.first_name }} {{ aprobado.numpedido.usuario_solicita.last_name }}</td>
+            <td>{{ aprobado.numpedido.fchsolicita|date:'Y-m-d' }}</td>
+            <td>{{ aprobado.numpedido.numproyecto }}</td>
+            <td>{{ aprobado.numpedido.tipoactivo }}</td>
+            <td>{{ aprobado.descripcion }}</td>
+            {% if aprobado.numpedido.aprobado == 1 %}
+              <td>Aprobado</td>
+            {% elif aprobado.numpedido.aprobado == 0 %}
+              <td>Rechazado</td>
+            {% else %}
+              <td>Pendiente</td>
+            {% endif %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      </div>
+  </div>
+
+</div>
+
+{% endblock %}
+
+{% block extrajs %}
+<script>
+  function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
+  }
+  
+  // Get the element with id="defaultOpen" and click on it
+  document.getElementById("defaultOpen").click();
+  
+  // $(document).ready(function (e) {
+  //   $('#exampleModal').on('show.bs.modal', function(e) {    
+  //     var id = $(e.relatedTarget).data().id;
+  //       $(e.currentTarget).find('#pedido').val(id);
+  //   });
+  // });
+
+$(document).ready(function(){
+	$(document).on('click', '#rech', function(){
+    var filaactual = $(this).closest("tr"); // obtiene la fila actual
+    var id = filaactual.find("td:eq(0)").text(); //obtener el valor del primer td de la fila actual
+    // var id = $(this).find("td:first").html()
+    // var id = $(this).find('{{pedido.numpedido.numpedido}}')
+    // var id='{{pedido.numpedido}}'
+		// var id=$(this).val();
+		// var first=$('#firstname'+id).text();
+		// var last=$('#lastname'+id).text();
+		// var address=$('#address'+id).text();
+	
+		// $('#edit').modal('show');
+		$('#pedido').val(id);
+		// $('#elastname').val(last);
+		// $('#eaddress').val(address);
+	});
+});
+
+</script>
+{% endblock %}

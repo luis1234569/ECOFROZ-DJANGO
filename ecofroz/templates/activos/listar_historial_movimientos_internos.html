@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load l10n %}
+
+{% block extrahead %}
+
+<style>
+
+table {
+  border-collapse: collapse;
+  width: 100%;  
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+
+th {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  background-color: #4a6cac;
+  color: white;
+}
+
+
+#tabla-reporte{
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#tabla-reporte td, #tabla-reporte th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#tabla-reporte tr:hover {background-color: #ddd;}
+#tabla-reporte tr:hover {background-color: #ddd;}
+
+#tabla-reporte th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4c77af;
+  color: white;
+}
+
+.th-destino {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #727404;
+  color: white;
+}
+
+.th-origen {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #e4b419;
+  color: white;
+}
+
+
+</style>
+
+
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="container-fluid">
+  <div class="form-row" style="margin-top: 25px;">
+    
+    </div>
+
+    </div>
+  </div>
+</div>
+<br>
+<div class="container-fluid">
+  {% for activo in movimientos|slice:":1"   %}
+    <h3 class="display-5">Historial de Movimientos de {{activo.activo_codigo}} . </h3>
+  {% endfor %}
+    <table>  
+  <thead>
+    <tr>
+        <!-- <th scope="col"><strong>N°</strong></th> -->
+        <th scope="col"><strong>Fecha Movimiento.</strong></th>
+        <th scope="col"><strong>Usuario Registra</strong></th>
+        <th scope="col"><strong>Codigo Activo</strong></th>
+        <th class="th-origen" scope="col"><strong>Ubicación Original</strong></th>
+        <!-- <th scope="col"><strong>Departamento</strong></th> -->
+        <th class="th-origen" scope="col"><strong>Sector Origen</strong></th>
+        <th class="th-destino" scope="col"><strong>Ubicación Destino</strong></th>
+        <!-- <th scope="col"><strong>Departamento</strong></th> -->
+        <th class="th-destino" scope="col"><strong>Sector Destino</strong></th>
+        <th scope="col"><strong>Justificación</strong></th>
+    </tr>
+  </thead>
+<tbody>
+  {% if movimientos %}
+  {% for activo in movimientos   %} 
+  
+    <tr>
+      <!-- <td>{{ forloop.counter }}</td> -->
+      <td>{{ activo.fecha_registro }}</td>
+      <td>{{ activo.usuario_registra | default:"--" }}</td>
+      <td>{{ activo.activo_codigo }}</td>
+      <td>{{ activo.ubicacion}}</td>
+      <!-- <td>{{ activo.departamento | default:"--" }}</td> -->
+      <td>{{ activo.sector | default:"--" }}</td>
+      <td>{{ activo.nuevo_ubicacion | default:"--" }}</td>
+      <!-- <td>{{ activo.nuevo_departamento | default:"--" }}</td> -->
+      <td>{{ activo.nuevo_sector | default:"--" }}</td>
+      <td>{{ activo.justificacion_movimiento | default:"--" }}</td>
+    </tr>
+  </div>
+
+    
+{% endfor %}
+
+{% else %}
+<h5>No hay registros</h5>
+              
+{% endif %}
+
+</tbody>
+
+</table>
+
+</div>
+
+
+
+
+
+
+{% endblock content %}
+
+{% block extrajs %}
+<script>
+  jQuery(document).ready(function($){
+    $('*[data-href]').on('click', function(){
+      window.location = $(this).data("href");
+    });
+  });
+  // $("#container").on('click-row.bs.table', function(e, row, $element){
+  //   window.location = $(this).data('url');
+  // });
+</script>
+
+
+{% endblock %}

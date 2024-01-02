@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+<!-- {% load tz %} -->
+
+{% block content %}
+<div class="container" style="margin: 25px auto;">
+  <div class="row">
+    <div class="col-md-6 search">
+      <form class="form-inline my-2 my-lg-0" method="GET">
+        <input class="form-control mr-sm-2" type="text" placeholder="N° de Orden" name="buscar" {% if busqueda %} value="{{ busqueda }}" {% endif %}>
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+        <a class="btn btn-secondary my-2 my-sm-0" style="margin-left: 10px;" href="{% url 'trabajos:ingreso_pagos' %}"></button>Limpiar</a>
+      </form>
+    </div>
+    <div class="col-md-6">
+      <a class="btn btn-success rounded-circle" style="float: right;" href="{% url 'trabajos:genera_pagos' %}">+</a>
+    </div>
+  </div>
+</div>
+<table class="table table-hover table-dark container" style="margin: 25px auto">
+    <thead>
+      <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Fecha Solicitud</th>
+        <th scope="col">Origen</th>
+        <th scope="col">Orden Numero</th>
+        <th scope="col">Documento</th>
+        <th scope="col">Analista</th>
+        <th scope="col">Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for pedido in ordenes %}
+      <tr>
+        <td>{{ pedido.id }}</td>
+        <td>{{ pedido.fch_genera}}</td>
+        <td>{{ pedido.get_origen_display }}</td>
+        <td>{{ pedido.numero }}</td>
+        <td><a href="/media/{{ pedido.documento }}" target="_blank">{{ pedido.documento }}</a></td>
+        <td>{{ pedido.usuario_solicita }}</td>
+        {% if pedido.estado == True %}
+          <td>Aprobado</td>
+        {% elif pedido.estado == False %}
+          <td>Rechazado</td>
+        {% else %}
+          <td>Pendiente</td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

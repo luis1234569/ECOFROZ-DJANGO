@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}
+    <h2>Generación de Ticket de Soporte</h2>
+{% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block content %}
+<div class="loader"></div>
+<div class="jumbotron" style="width: 75%; margin:auto; padding-top: 25px; margin-top: 50px; margin-bottom: 25px;">
+<h2 class="display-5"></h2>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+        <input id="usuario_solicita" type="text" name="usuario_solicita" value="{{ user.id }}" hidden>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-5">
+            <label>{{ form.solicita_nombre.label }}</label>
+            {{ form.solicita_nombre }}
+        </div>
+        <div class="form-group col-md-5">
+            <label>{{ form.solicita_apellido.label }}</label>
+            {{ form.solicita_apellido }}
+        </div>
+        <!-- <div class="form-group col-md-2">
+            <label>{{ form.solicita_codigo.label }}</label>
+            {{ form.solicita_codigo }}
+        </div> -->
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-5">
+            <label>{{ form.ubicacion.label }}</label>
+            {{ form.ubicacion }}
+        </div>
+        <div class="form-group col-md-5">
+            <label>{{ form.departamento.label }}</label>
+            {{ form.departamento }}
+        </div>
+        <!-- <div class="form-group col-md-2">
+            <label>{{ form.area.label }}</label>
+            {{ form.area }}
+        </div> -->
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-5">
+            <label >{{ form.tipo_problema.label }}</label>
+            {{ form.tipo_problema }}
+        </div>
+    </div>
+    <div>
+        <div class="form-group col-md-12">
+            <label>{{ form.descripcion_problema.label }}</label>
+            {{ form.descripcion_problema }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label>{{ form.area_responsable.label }}</label>
+            {{ form.area_responsable }}
+        </div>
+        <div class="form-group col-md-6">
+            <label>{{ form.usuario_responsabe.label }}</label>
+            {{ form.usuario_responsabe }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12" style="margin-top: 10px;">
+            <button type="submit" class="btn btn-primary button" id="enviar" name="enviar">Generar</button>
+        </div>
+    </div>
+</form>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script>    
+    function ordenarSelect(id_componente)
+    {
+      var selectToSort = jQuery('#' + id_componente);
+      var optionActual = selectToSort.val();
+      selectToSort.html(selectToSort.children('option').sort(function (a, b) {
+        return a.text === b.text ? 0 : a.text < b.text ? -1 : 1;
+      })).val(optionActual);
+    }
+    $(document).ready(function () {
+      ordenarSelect('selectPaises');
+    });
+
+    function ordenarSelect(id_componente)
+    {
+      var selectToSort = jQuery('#' + id_componente);
+      var optionActual = selectToSort.val();
+      selectToSort.html(selectToSort.children('option').sort(function (a, b) {
+        return a.text === b.text ? 0 : a.text < b.text ? -1 : 1;
+      })).val(optionActual);
+    }
+    $(document).ready(function () {
+      ordenarSelect('tiempo_tipo');
+    });
+
+    $(window).on("load", function() {
+        $(".loader").fadeOut("slow");
+    });
+
+    $(document).ready(function() {    
+        $('#enviar').on('click', function(){
+            //Añadimos la imagen de carga en el contenedor
+            $(".loader").show();
+            $(window).on("load", function(){
+                $(".loader").fadeOut("slow");
+            });
+        });              
+    }); 
+</script>
+{% endblock %}

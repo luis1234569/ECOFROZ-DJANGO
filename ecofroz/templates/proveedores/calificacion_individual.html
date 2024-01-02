@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+
+% block extrahead %}
+<!DOCTYPE html>
+
+<style>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+#salto-linea-ancho{
+    margin-top: 80px;
+    width: 250px;
+  }
+
+  .spacer {
+  padding-top: 80px;
+  padding-bottom: 40px
+}
+
+#wrapper
+{
+  border: 1px solid #888;
+  display: inline-block;
+  padding:40px;
+  
+}
+
+</style>
+
+{% block content %}  
+<div class="jumbotron container" style="width: 85%; margin-top: 25px;">
+    <h4 class="display-5">Calificación Ecofroz para:&nbsp; {{nombre_empresa}}</h4>
+    <p>
+    <div class="container-fluid">
+    <h5 class="display-5">Calificación actual:&nbsp; </h5>
+    <label>1.¿El proveedor encuestado cumple muy frecuentemente con el procedimiento de facturacion?&nbsp; <strong>{{q1}}</strong></label>
+    <label>2.¿El proveedor encuestado cumple muy frecuentemente con el procedimiento de entrega?&nbsp; <strong>{{q2}}</strong></label>
+    <label>3.¿El proveedor encuestado cumple muy frecuentemente con el procedimiento de compra?&nbsp; <strong>{{q3}}</strong></label> 
+    <label>4.¿De acuerdo con la normativa BASC, se ha verificado antecedentes del Representante Legal de la Empresa?&nbsp; <strong>{{q4}}</strong></label>
+    </div>
+
+      <form action="{% url 'proveedores:retroalimentacion_ecofroz' prove %}" method="POST">
+        {% csrf_token %}
+    <div class="row spacer" id="salto-linea-ancho">
+      <br>
+    </div> 
+
+      <div class="container-fluid">
+        <h5 class="display-5">Ingrese Nueva Calificación:&nbsp; </h5>
+
+        <label>1.¿El proveedor encuestado cumple muy frecuentemente con el procedimiento de facturacion?</label>
+        
+        <p>
+          <div>
+            <input type="radio" id="pregunta1-si" name="pregunta1"  value="SI">
+            <label for="pregunta1-si">Sí</label>
+  
+          <input style="margin-left: 25px;" type="radio" id="pregunta1-no" name="pregunta1" value="NO">
+          <label for="pregunta1-no">No</label>
+          </div>
+        
+        </p>
+
+        <label>2.¿El proveedor encuestado cumple muy frecuentemente con el procedimiento de entrega?</label>
+        <p>
+          <div>
+            <input type="radio" id="pregunta2-si" name="pregunta2" value="SI">
+            <label for="pregunta2-si">Sí</label>
+  
+          <input style="margin-left: 25px;" type="radio" id="pregunta2-no" name="pregunta2" value="NO">
+          <label for="pregunta2-no">No</label>
+          </div>
+        </p>
+
+
+        <label>3.¿El proveedor encuestado cumple muy frecuentemente con el procedimiento de compra?</label>
+        <p>
+          <div>
+            <input type="radio" id="pregunta3-si" name="pregunta3" value="SI">
+            <label for="pregunta3-si">Sí</label>
+  
+          <input style="margin-left: 25px;" type="radio" id="pregunta3-no" name="pregunta3" value="NO">
+          <label for="pregunta3-no">No</label>
+          </div>
+        </p>
+
+
+        <label>4.¿De acuerdo con la normativa BASC, se ha verificado antecedentes del Representante Legal de la Empresa?</label>
+        <p>
+          <div>
+            <input type="radio" id="pregunta4-si" name="pregunta4" value="SI">
+            <label for="pregunta4-si">Sí</label>
+  
+          <input style="margin-left: 25px;" type="radio" id="pregunta4-no" name="pregunta4" value="NO">
+          <label for="pregunta4-no">No</label>
+          </div>
+        </p>
+     
+      
+      <div class="row spacer" id="salto-linea-ancho">
+        <br>
+      </div> 
+  
+    
+    <button type="submit" style="margin-left:3px;" class="btn btn-primary mb-2">Guardar</button>
+    </form>
+  </div>
+  </div>
+
+
+
+{% endblock content %} 

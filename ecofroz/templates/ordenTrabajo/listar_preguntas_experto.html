@@ -1,0 +1,243 @@
+{% extends 'base.html' %}
+
+
+{% block extrahead %}
+<style>
+    body {font-family: Arial;}
+    
+    /* Style the tab */
+    .tab {
+      overflow: hidden;
+      border: 1px solid #ccc;
+      background-color: #f1f1f1;
+    }
+    
+    /* Style the buttons inside the tab */
+    .tab button {
+      background-color: inherit;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.3s;
+      font-size: 17px;
+    }
+    
+    /* Change background color of buttons on hover */
+    .tab button:hover {
+      background-color: #ddd;
+    }
+    
+    /* Create an active/current tablink class */
+    .tab button.active {
+      background-color: #ccc;
+    }
+    
+    /* Style the tab content */
+    .tabcontent {
+      display: none;
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      border-top: none;
+    }
+    
+    /* Style the close button */
+    .topright {
+      float: right;
+      cursor: pointer;
+      font-size: 28px;
+    }
+    
+    .topright:hover {color: red;}
+
+    .loader{
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background: url('/media/img/load.gif') 50% 50% no-repeat rgb(249,249,249);
+        opacity: .8;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+<div class="loader"></div>
+
+
+
+<div class="tab" style="margin-top: 25px;">
+  {% if form %}
+  <button class="tablinks" onclick="openTab(event, 'Pendientes')" id="defaultOpen">Nuevas Preguntas</button>
+  <button class="tablinks" onclick="openTab(event, 'Aprobadas')">Respondidas</button>
+  {% else %}
+  <button class="tablinks" onclick="openTab(event, 'Aprobadas')" id="defaultOpen">Respondidas</button>
+  <button class="tablinks" onclick="openTab(event, 'Pendientes')" >Nuevas Preguntas</button>
+  {% endif %}
+</div>
+
+<div id="Pendientes" class="tabcontent">
+  <span onclick="this.parentElement.style.display='none'" class="topright">&times</span>
+
+<div>
+<table class="table table-hover table-striped table-dark" style="margin: 25px auto">
+  {% if form %}
+    <thead>
+      <tr>
+        <th scope="col">Pregunta N°</th>
+        <th scope="col">Fecha Pregunta</th>
+        <th scope="col">Req. N°</th>
+        <th scope="col">Solicita Pedido</th>
+        <th scope="col">Realiza Pregunta</th>
+        <th scope="col">Tipo</th>
+        <th scope="col">Proyecto</th> 
+        <th scope="col">Ver</th>
+        
+      </tr>
+    </thead>
+    <tbody>
+      {% if form %}
+      {% for i in form %}
+      <tr>
+        <td>{{ i.id }}</td>
+        <td>{{ i.fecha_pregunta }}</td>
+        <td>{{ i.numtrabajo.numtrabajo }}</td>
+        <td>{{ i.numtrabajo.usuario_solicita }}</td>
+        <td>{{ i.persona_pregunta }}</td>
+        <td>{{ i.numtrabajo.tipo_pedi }}</td>
+        <td>{{ i.numtrabajo.numproyecto | default:"--" }}</td>
+        
+        <td>
+          
+          <a href="{% url 'trabajos:ver_preguntas_rol_experto' i.id  %}" class="btn btn-warning glyphicon glyphicon-eye-open" title="Ver pregunta"></a>
+        </td>
+      </tr>
+      {% endfor %}
+      {% endif %}
+      
+
+      {% else %}
+            <div class="alert-danger" role="alert">
+              <h3 style="text-align: center;">No tiene Nuevas Preguntas</h3>
+            </div>
+       {% endif %}
+      
+    </tbody>
+  </table>
+  
+  </div>  
+</div>  
+
+<div id="Aprobadas" class="tabcontent">
+  <span onclick="this.parentElement.style.display='none'" class="topright">&times</span>
+
+<div>
+
+    <table class="table table-success table-striped">
+      
+    
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Pregunta N°</th>
+          <th scope="col">Fecha Pregunta</th>
+          <th scope="col">Req. N°</th>
+          <th scope="col">Solicita Pedido</th>
+          <th scope="col">Tipo</th> 
+          <th scope="col">Cosulta</th>
+          <th scope="col">Pregunta</th>
+          <th scope="col">Respuesta</th>
+         
+        
+        
+      </tr>
+    </thead>
+    <tbody>
+      
+
+      {% if form2 %}
+      
+      {% for i in form2 %}
+       
+      <tr class="table-success" >
+      
+      
+      <td>{{ i.id }}</td>
+      <td>{{ i.fecha_pregunta }}</td>
+      <td>{{ i.numtrabajo.numtrabajo }}</td>
+      <td>{{ i.numtrabajo.usuario_solicita }}</td>
+      <td>{{ i.numtrabajo.tipo_pedi }}</td>
+      <td>{{ i.persona_pregunta }}</td>
+      <td>{{ i.pregunta }}</td>
+      <td>{{ i.respuesta }}</td>
+      
+      </tr>
+      {% endfor %}
+      {% endif %}
+          
+    </tbody>
+  </table>
+  
+</div>
+</div>
+
+<!-- <div class="pagination">
+  <span class="step-links">
+      {% if procesadas.has_previous %}
+          <a href="?page=1">&laquo; inicio</a>
+          <a href="?page={{ procesadas.previous_page_number }}">previo</a>
+      {% endif %}
+
+      <span class="current">
+          Page {{ procesadas.number }} of {{ procesadas.paginator.num_pages }}.
+      </span>
+
+      {% if procesadas.has_next %}
+          <a href="?page={{ procesadas.next_page_number }}">próximo</a>
+          <a href="?page={{ procesadas.paginator.num_pages }}">último &raquo;</a>
+      {% endif %}
+  </span>
+</div> -->
+
+{% endblock %}
+
+{% block extrajs %}
+
+<script>
+
+  $(window).on("load",function() {
+        $(".loader").fadeOut("slow");
+    });
+
+    $(document).ready(function() {    
+        $('#enviar').on('click', function(){
+            //Añadimos la imagen de carga en el contenedor
+            $(".loader").show();
+            $(window).on("load",function(){
+                $(".loader").fadeOut("slow");
+            });
+        });              
+    }); 
+
+
+  function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
+  }
+
+  // Get the element with id="defaultOpen" and click on it
+  document.getElementById("defaultOpen").click();
+  </script>
+
+{% endblock %}

@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block title %}
+    <h2>Ordenes de Pedidos</h2>
+{% endblock %}
+
+{% block content %}
+<div class="loader"></div>
+<div class="jumbotron" style="width: 75%; margin:auto; padding-top: 25px; margin-top: 50px; margin-bottom: 25px;">
+<h2 class="display-5">Ingreso de Ordenes de Pagos</h2>
+<!-- <h4 class="display-6">Hola {{ user.first_name }} {{ user.last_name }}</h4> -->
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+        <input id="usuario_solicita" type="text" name="usuario_solicita" hidden value="{{ user.id }}">
+        <input type="text" id="fch_genera" name="fch_genera" hidden>
+        <input type="text" id="fch_genera_txt" name="fch_genera_txt" hidden>
+    </div>
+    <div class="form-row col-md-12">
+        <div class="form-group col-md-6">
+            <label>{{ form.origen.label }}</label>
+            {{ form.origen }}
+        </div>
+        <div class="form-group col-md-6">
+            <label id="etiqueta_numero">{{ form.numero.label }}</label>
+            <input type="numero" id="numero" name="mba" class="form-control on">
+            <select name="numero" id="numero" class="form-control in">
+                <option value="" selected>que</option>
+                {% for i in numero %}
+                <option value="{{ i.numtrabajo }}">{{ i.numtrabajo }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="form-group col-md-12" style="margin-top: 25px;">
+        <label><strong>ZONA DE CARGA DE ARCHIVOS</strong><p>Los nombres de los archivos no deben contener tildes, eñes o caracteres especiales</p></label>
+    </div>
+    <div class="form-row" style="margin-top: -25px;">
+        <div class="col-md-6">
+            <label for="{{ form.cantidad.cant }}">{{ form.documento.label }}</label>
+            {{ form.documento }}
+        </div>
+    </div>
+    <div class="form-row col-md-12" style="margin-top: 25px;">
+        <label for="{{ form2.observaciones_adqui}}">{{ form.observaciones_adqui.label }}</label>
+        {{ form.observaciones_adqui }}
+    </div>
+    <div class="row">
+        <div class="col-md-12" style="margin-top: 10px;">
+            <button type="submit" class="btn btn-primary" id="enviar">Generar</button>
+        </div>
+    </div>
+</form>
+</div>
+<!-- <div style="float: right; width: 30%; padding: 0px 0px 0px 10px">
+    <h3>Contenido derecho</h3>
+</div> -->
+{% endblock %}
+
+{% block extrajs %}
+<script>
+    $("document").ready(function(e){
+        var d= new Date();
+
+        var dia = d.getDate() < 10 ? '0' + d.getDate() : d.getDate();
+        var mes =  d.getMonth() + 1;
+        var mes = (mes < 10) ? '0' + mes : mes;
+        var anio = d.getFullYear(); 
+        var hh = d.getHours() < 10 ? '0' + d.getHours() : d.getHours();
+        var mm = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes();
+
+        var fechatotal = anio + "-"+ mes +"-" + dia
+        var fechatxt = anio.toString() + mes.toString() + dia.toString()
+        var hora = hh + ":" + mm
+
+
+        // $("#fch").val(fechatotal);
+        $("#fch_genera").val(fechatotal);;
+        $("#fch_genera_txt").val(fechatxt);
+    });
+
+    // $("#area").chained("#ubica");
+
+    $(".in").hide().val("");
+    $(".on").hide().val("");
+    $("#etiqueta_numero").hide();
+    // $("#reemplazo_accion_label").hide();
+    
+    $("#id_origen").change(function(){
+        var opcion = $(this).val();
+
+        if (opcion == 2){
+            $(".on").hide().val("");
+            $(".in").show();
+            $("#etiqueta_numero").show();
+        }
+        else if (opcion == 1){
+            $(".in").hide().val("");
+            $(".on").show();
+            $("#etiqueta_numero").show();
+        } else {
+            $("#etiqueta_numero").hide();
+            $(".in").hide().val("");
+            $(".on").hide().val("");
+        }
+           
+            // $("#reemplazo_accion_label").hide();
+    });
+
+    function ordenarSelect(id_componente)
+    {
+      var selectToSort = jQuery('#' + id_componente);
+      var optionActual = selectToSort.val();
+      selectToSort.html(selectToSort.children('option').sort(function (a, b) {
+        return a.text === b.text ? 0 : a.text < b.text ? -1 : 1;
+      })).val(optionActual);
+    }
+    $(document).ready(function () {
+      ordenarSelect('id_origen');
+    });
+
+    // function ordenarSelect(id_componente)
+    // {
+    //   var selectToSort = jQuery('#' + id_componente);
+    //   var optionActual = selectToSort.val();
+    //   selectToSort.html(selectToSort.children('option').sort(function (a, b) {
+    //     return a.text === b.text ? 0 : a.text < b.text ? -1 : 1;
+    //   })).val(optionActual);
+    // }
+    // $(document).ready(function () {
+    //   ordenarSelect('tiempo_tipo');
+    // });
+
+    $(window).on("load", function() {
+        $(".loader").fadeOut("slow");
+    });
+
+    $(document).ready(function() {    
+        $('#enviar').on('click', function(){
+            var incompletos = false
+            $('.in').each(function(){
+                if ($(this).val().trim() == ''){
+                    incompletos = true
+                }
+            });
+            if (incompletos == false){
+                //Añadimos la imagen de carga en el contenedor
+                $(".loader").show();
+                $(window).on("load", function(){
+                    $(".loader").fadeOut("slow");
+                });
+            }
+        });              
+    });   
+</script>
+{% endblock %}

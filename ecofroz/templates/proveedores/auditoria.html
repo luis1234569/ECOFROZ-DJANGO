@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+
+<head>
+<style  type="text/css">
+
+table, th, td {
+border: 1px solid Black;}
+
+/* make the table a 100% wide by default */
+table {
+width: 100%;}
+
+/* if the browser window is at least 800px-s wide: */
+@media screen and (min-width: 800px) {
+  table {
+  width: 90%;}
+}
+
+/* if the browser window is at least 1000px-s wide: */
+@media screen and (min-width: 1000px) {
+  table {
+  width: 80%;}
+}
+
+
+</style>
+
+</head>
+
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row" style="margin-top: 25px;">
+    <div class="col-md 18 search">
+      
+    </div>
+     
+    </div>
+  </div>
+<br>
+<table class="table table-hover table-striped table-dark table-sm container-fluid" style="width: 98%;">
+  <thead>
+    <tr>
+        
+        <td scope="col"><strong>No</strong></td>
+        <td scope="col"><strong>Proveedor Afectado</strong></td>
+        <td scope="col"><strong>Fecha</strong></td>
+        <td scope="col"><strong>Usurio realiza</strong></td>
+        <td scope="col"><strong>Acción</strong></td>
+        <td scope="col"><strong>Opciones</strong></td>
+       
+    </tr>
+  </thead>
+<tbody>
+  
+  {% for proveedor in form %}
+
+      <tr>
+
+       
+      <td>{{ forloop.counter0|add:form.start_index }}</td>
+      <td>{{ proveedor.nombre_empresa }}</td>
+      <td>{{ proveedor.history_date }}</td>
+      <td>{{ proveedor.history_user }}</td>
+      <td>{{ proveedor.get_history_type_display }}</td>  
+     
+     
+      
+      
+      <td>
+        
+        <td>
+          <a class="btn btn-primary" href="{% url 'proveedores:auditoriadetalle' proveedor.id %}">Ver</a>
+        </td>
+  
+      </td>
+    
+    </tr>
+      <!-- <td>{{ proveedor.codigo_id.nombre_empresa }}</td>
+      <td>{{ proveedor.codigo_id.nombre_comercial | default:"--" }}</td>
+      <td>{{ proveedor.codigo_id.categoria | default:"--" }}</td>
+      <td>{{ proveedor.giro_negocio | default:"--" }}</td>
+      <td>{{ proveedor.codigo_id.celular | default:"--" }}</td>
+      <td>{{ proveedor.codigo_id.nombre_contacto_ecofroz | default:"--" }}</td>
+      -->
+  {% endfor %}
+    
+
+ 
+
+
+</tbody>
+
+</table>
+
+<div class="pagination container-fluid" style="width: 98%;">
+  <span class="step-links">
+      {% if form.has_previous %}
+          <a href="?page=1">&laquo; inicio</a>
+          <a href="?page={{ form.previous_page_number }}">previo</a>
+      {% endif %}
+
+      <span class="current">
+          Page {{ form.number }} of {{ form.paginator.num_pages }}.
+      </span>
+
+      {% if form.has_next %}
+          <a href="?page={{ form.next_page_number }}">próximo</a>
+          <a href="?page={{ form.paginator.num_pages }}">último &raquo;</a>
+      {% endif %}
+  </span>
+</div>
+
+{% endblock content %}
+
+{% block extrajs %}
+<script>
+  jQuery(document).ready(function($){
+    $('*[data-href]').on('click', function(){
+      window.location = $(this).data("href");
+    });
+  });
+</script>
+{% endblock %}

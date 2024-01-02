@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load tz %}
+
+
+{% block extrahead %}
+
+
+{% endblock %}
+
+{% block content %}
+<div class="loader"></div>
+<div class="container-fluid" style="width: 75%; margin:auto; margin-top: 20px; margin-bottom: 20px;">
+        <h5 class="display-6">Detalle de Solicitud de Anticipo.</h5>
+        <p>
+                <p>
+        
+        
+        <div class="form-row">
+                <div class="form-group col-md-10" >
+
+                        <label><b><u>Información de la Solicitud: </u></b></label>
+                        <table class=" table table-sm table-warning table-striped table-responsive{-sm|-md|-lg|-xl|-xxl}" style="margin: 10px auto">
+                                <thead>
+                                  
+                                </thead>
+                                <tbody>
+                                
+                                  <tr>
+                                    <td><b>Solicitud N°</b></td>
+                                    <td><b>{{ solic.numsolic }}</b></td>
+                                  </tr>
+
+                                  <tr>
+                                    <td>Solicita</td>
+                                    <td>{{ solic.psolicita }}</td>
+                                  </tr>
+
+                                  
+                                  <tr>
+                                        <td>Fecha Solicitud</td>
+                                        <td>{{ solic.fch_solicita | timezone:"America/Guayaquil" | date:'d M, Y H:i'}}</td>
+                                  </tr>
+
+                                  <tr>
+                                        <td><b>Autoriza</b></td>
+                                        <td><b>{{ solic.usuario_aprueba }}</b></td>
+                                  </tr>
+
+                                  <tr>
+                                    <td>Fecha Autoriza</td>
+                                    <td>{{ solic.fch_aprueba | timezone:"America/Guayaquil" | date:'d M, Y H:i' }}</td>
+                                  </tr>
+
+                                  <tr>
+                                    <td><b>Empresa Beneficiaria</b></td>
+                                    <td><b>{{ solic.prove }}</b></td>
+                                  </tr>
+
+                                  <tr>
+                                    <td><b>Valor Anticipo</b></td>
+                                    <td><b>{{ solic.valor }}</b></td>
+                                  </tr>
+
+                                  {% if solic.numtrabajo %}
+                                  <tr>
+                                    <td>Requisición SIA Trabajos relacionada</td>
+                                    <td>{{ solic.numtrabajo.numtrabajo }}</td>
+                                   </tr>
+                                  {% endif %}
+
+                                  {% if solic.numpedido %}
+                                  <tr>
+                                    <td>Requisición SIA Activos relacionada</td>
+                                    <td>{{ solic.numpedido.numpedido }}</td>
+                                   </tr>
+                                  {% endif %}
+
+                                  {% if solic.num_mba %}
+                                  <tr>
+                                    <td>Requisición MBA relacionada</td>
+                                    <td>{{ solic.num_mba }}</td>
+                                   </tr>
+                                  {% endif %}
+
+
+                                  {% if solic.observa_solicita %}
+                                  <tr>
+                                    <td>Observaciones Solicitante</td>
+                                    <td>{{ solic.observa_solicita }}</td>
+                                   </tr>
+                                  {% endif %}
+                                   
+                                  {% if solic.observa_autoriza %}
+                                  <tr>
+                                    <td>Observaciones Autorizador</td>
+                                    <td>{{ solic.observa_autoriza }}</td>
+                                   </tr>
+                                  {% endif %}
+
+                                  {% if solic.docs %}
+                                  <tr>
+                                    <td>Soportes</td>
+                                    <td><a name="soportes" id="soportes" href="{{ solic.docs.url }}" target="_blank">{{ solic.docs.name }}</a></td>
+                                   </tr>
+                                   {% endif %}
+
+                                   {% if solic.comprobante %}
+                                   <tr>
+                                    <td>Comprobantes</td>
+                                    <td><a name="comprobantes" id="comprobantes" href="{{ solic.comprobante.url }}" target="_blank">{{ solic.comprobante.name }}</a></td>
+                                   </tr>
+                                   {% endif %}
+
+
+                                </tbody>
+                              </table>
+
+                             
+                              {% if not solic.comprobante %}
+                              <form enctype="multipart/form-data" method="POST" action="{% url 'trabajos:save_comprobante' solic.numsolic %}">
+                                {% csrf_token %}
+
+                                  <div class="form-group" id="filediv">
+                                    <label for=""><b>Comprobantes</b></label><br>
+                                    <input
+                                          type="file"
+                                          name = "comprobante"
+                                          id = "comprobante"
+                                          accept=".pdf,.doc,.jpg,.jpeg,.png,.xlsx,application/msword,application/msexcel" />
+                                    
+                                  </div>
+                        
+                          </div>
+                        </div>      
+              
+               <button type="submit" style="margin-left: 3px;" class="btn btn-primary">Guardar</a>
+               
+        </div>
+      </form>
+
+  {% else %}
+
+
+
+</tbody>
+</table>
+
+</div>
+</div>      
+
+
+
+
+<a type="button" style="margin-left: 3px;" class="btn btn-info"  href="{% url 'trabajos:listar_gestiona_anticipos_2n' %}">Volver</a>
+
+
+
+</div>
+
+
+
+{% endif %}
+
+   
+
+
+
+
+
+{% endblock content %}
+
+{% block extrajs %}
+<script>
+  $(window).on("load", function() {
+        $(".loader").fadeOut("slow");
+    });
+
+    $(document).ready(function() {    
+        $('#enviar').on('click', function(){
+            //Añadimos la imagen de carga en el contenedor
+            $(".loader").show();
+            $(window).on("load", function(){
+                $(".loader").fadeOut("slow");
+            });
+        });              
+    });    
+</script>
+
+{% endblock %}

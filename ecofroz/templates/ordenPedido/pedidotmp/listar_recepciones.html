@@ -1,0 +1,451 @@
+{% extends 'base.html' %}
+<!-- {% load tz %} -->
+{% block extrahead %}
+  <style>
+    body {font-family: Arial;}
+    
+    /* Style the tab */
+    .tab {
+      overflow: hidden;
+      border: 1px solid #ccc;
+      background-color: #f1f1f1;
+    }
+    
+    /* Style the buttons inside the tab */
+    .tab button {
+      background-color: inherit;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.3s;
+      font-size: 17px;
+    }
+    
+    /* Change background color of buttons on hover */
+    .tab button:hover {
+      background-color: #ddd;
+    }
+    
+    /* Create an active/current tablink class */
+    .tab button.active {
+      background-color: #ccc;
+    }
+    
+    /* Style the tab content */
+    .tabcontent {
+      display: none;
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      border-top: none;
+    }
+    
+    /* Style the close button */
+    .topright {
+      float: right;
+      cursor: pointer;
+      font-size: 28px;
+    }
+    
+    .topright:hover {color: red;}
+  </style>
+{% endblock %}
+
+{% block content %}
+<div class="container" style="margin: 25px auto;">
+  <div class="row">
+    <div class="col-md 12 search">
+      <form class="form-inline my-2 my-lg-0" method="GET">
+        <input class="form-control mr-sm-2" type="text" placeholder="N° Pedido, Descripción" name="buscar">
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+      </form>
+    </div>
+  </div>
+</div>
+<div style="margin: 25px auto;">
+  <div class="tab">
+    <button class="tablinks" onclick="openTab(event, 'Pendientes')" id="pendientes">Pendientes</button>
+    <button class="tablinks" onclick="openTab(event, 'Generadas')" id="generadas">Generadas</button>
+    <button class="tablinks" onclick="openTab(event, 'Entregadas')" id="entregadas">Entregadas</button>
+  </div>
+
+  <div id="Pendientes" class="tabcontent">
+    <span onclick="this.parentElement.style.display='none'" class="topright">&times</span>
+    <div>
+      <table class="table table-hover table-dark">
+        <h2>Recepción de Productos</h2>
+        {% if form %}
+          <thead>
+            <tr>
+              <th scope="col">Pedido</th>
+              <th scope="col">Usuario</th>
+              <th scope="col">Departamento</th>
+              <!-- <th scope="col">Area</th> -->
+              <!-- <th scope="col">Regimen Especial</th> -->
+              <th scope="col">Proyecto</th>
+              <th scope="col">Fecha Solicitud</th>
+              <th scope="col">Tipo Activo</th>
+              <th scope="col">Descripción</th>
+              <!-- <th scope="col">Observaciòn Adquisiciones</th> -->
+              <th></th>
+              <th scope="col">Opciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for pedido in form %}
+              {% if pedido.numpedido.codigo_genera == None or pedido.numpedido.codigo_genera == False %}
+              <tr class="table-active">
+                <td>{{ pedido.numpedido.numpedido }}</td>
+                <td>{{ pedido.numpedido.usuario_solicita.first_name }} {{ pedido.numpedido.usuario_solicita.last_name }}</td>
+                <td>{{ pedido.numpedido.departamento }}</td>
+                <!-- <td>{{ pedido.numpedido.area }}</td> -->
+                <!-- <td>{{ pedido.regimenespecial }}</td> -->
+                <td>{{ pedido.numpedido.numproyecto | default:'--' }}</td>
+                <td>{{ pedido.numpedido.fchsolicita|date:'Y-m-d' }}</td>
+                <td>{{ pedido.numpedido.tipoactivo }}</td>
+                <td>{{ pedido.descripcion }}</td>
+                <!-- <td>{{ pedido.numpedido.cotiza_observa }}</td> -->
+                <!-- {% if pedido.genera_compra == 1 %}
+                  <td>Generado</td>
+                {% endif %} -->
+                {% if pedido.numpedido.recibido_bodega != True %}
+                <td>
+                  <a href="{% url 'ordenpedido:recibido' pedido.numpedido.numpedido %}" class="btn btn-success">Recibido</a>
+                </td>
+                {% else %}
+                <td>
+                  <label for="">Recibido</label>
+                  <input type="checkbox" checked>
+                </td>
+                {% endif %}
+                <!-- if pedido.numpedido.activado_activo != None and pedido.numpedido.recibido_bodega == True -->
+                {% if pedido.numpedido.recibido_bodega == True %}
+                <td>
+                  <a href="{% url 'ordenpedido:codificacion' pedido.numpedido.numpedido %}" class="btn btn-warning">Genera Codigo</a>
+                </td>
+                {% else %}
+                <td>
+                  <a href="" aria-readonly="true" class="btn btn-secondary">Genera Código</a>
+                </td>
+                {% endif %}
+              </tr>
+              {% endif %}
+            {% endfor %}
+          </tbody>
+          {% else %}
+            <div class="alert-danger" role="alert">
+              <h3 style="text-align: center;">No Hay Productos Pendientes</h3>
+            </div>
+        {% endif %}
+      </table>
+    </div>
+    
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center col-sm-12">
+          {% if form.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page_recep=1">&laquo;first</a>
+                </li>
+              <li class="page-item">
+                <a class="page-link" href="?page_recep={{ form.previous_page_number }}">previous</a>
+              </li>
+          {% endif %}
+  
+          {% for i in form.paginator.page_range %}
+          {% if i <= form.number|add:5 and i >= form.number|add:-5 %}
+              {% if i == form.number %}
+                  <li class="page-item active">
+                      <a class="page-link" href="#">{{ i }}</a>
+                  </li>
+              {% else %}
+                  <li class="page-item">
+                      <a class="page-link" href="?page_recep={{ i }}">{{ i }}</a>
+                  </li>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+  
+          {% if form.has_next %}
+              <li class="page-item">
+                  <a class="page-link" href="?page_recep={{ form.next_page_number }}">next</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="?page_recep={{ form.paginator.num_pages }}">last&raquo;</a>
+              </li>
+          {% endif %}
+      </ul>
+    </nav>
+  </div>
+
+  <div id="Generadas" class="tabcontent">
+    <span onclick="this.parentElement.style.display='none'" class="topright">&times</span>
+    <div>
+      <table class="table table-borderless">
+        <h2>Productos Generados Código</h2>
+        <thead class="thead-dark" style="text-align: center;">
+          <tr>
+            <th>Pedido</th>
+            <th>Usuario</th>
+            <th>Departamento</th>
+            <!-- <th>Area</th> -->
+            <!-- <th>Regimen Especial</th> -->
+            <th>Proyecto</th>
+            <th>Fecha Solicitud</th>
+            <th>Tipo Activo</th>
+            <th>Descripción</th>
+            <th>Estado</th>
+            <th>Opciones</th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for aprobado in form2 %}
+            {% if aprobado.numpedido.recibido_bodega == True and aprobado.numpedido.codigo_genera == True and aprobado.numpedido.entregado_bodega == None %}
+            <tr>
+              <td>{{ aprobado.numpedido.numpedido }}</td>
+              <td>{{ aprobado.numpedido.usuario_solicita }}</td>
+              <td>{{ aprobado.numpedido.departamento }}</td>
+              <!-- <td>{{ aprobado.numpedido.area }}</td> -->
+              <!-- <td>{{ aprobado.regimenespecial }}</td> -->
+              <td>{{ aprobado.numpedido.numproyecto | default:"--"}}</td>
+              <td>{{ aprobado.numpedido.fchsolicita|date:'Y-m-d' }}</td>
+              <td>{{ aprobado.numpedido.tipoactivo }}</td>
+              <td>{{ aprobado.descripcion }}</td>
+              {% if aprobado.numpedido.activado_activo == True %}
+                <td>Activado</td>
+              {% else %}
+              <td>No Activado</td>
+              {% endif %}
+              <td>
+                <a class="btn btn-primary glyphicon glyphicon-print" href="{% url 'ordenpedido:crea_pdf' aprobado.numpedido.cod_activo %}" target="_blank" title="Imprimir Código"></a>
+                
+            
+              </td>
+              
+            
+              {% if aprobado.numpedido.grabado_activo == true %}
+                <td>
+                  <form action="{% url 'ordenpedido:grabado' aprobado.numpedido.numpedido %}" method="GET">
+                    {% csrf_token %}
+                    <select name="grabado" id="grabado" onchange="form.submit()">
+                      <option value="">----</option>
+                      <option value="NO">NO</option>
+                      <option value="ETIQUETA">ETIQUETA</option>
+                      <option value="GRABADO">GRABADO</option>
+                    </select>
+                  </form>
+                </td>
+              {% else %}
+              <td>
+              </td>
+              {% endif %}
+              <td>
+                <!-- <button type="button" id="rech" name="rech" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap" title="Entrega">Entrega</button> -->
+                <a class="btn btn-warning" href="{% url 'ordenpedido:entrega_de_activos' aprobado.numpedido.numpedido %}"  title="Entrega de Activos">Entrega</a>
+
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel" style="color: black;">Entrega de Producto</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <form class="modal-body" action="{% url 'ordenpedido:entrega' aprobado.numpedido.numpedido %}" method="GET">
+                          <div class="form-group">
+                            <textarea class="form-control" id="message-text" name="text" placeholder="Ingrese el nombre a quien entrega o alguna observación adicional"></textarea>
+                            <input type="text" name="pedido" id="pedido" hidden>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" name="rechazar" class="btn btn-primary">Enviar</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+              </td>
+              </tr>
+              {% endif %}
+            {% endfor %}
+        </tbody>
+      </table>
+      </div>
+
+      <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center col-sm-12">
+            {% if form2.has_previous %}
+                  <li class="page-item">
+                      <a class="page-link" href="?page_gen=1">&laquo;first</a>
+                  </li>
+                <li class="page-item">
+                  <a class="page-link" href="?page_gen={{ form2.previous_page_number }}">previous</a>
+                </li>
+            {% endif %}
+    
+            {% for i in form2.paginator.page_range %}
+            {% if i <= form2.number|add:5 and i >= form2.number|add:-5 %}
+                {% if i == form2.number %}
+                    <li class="page-item active">
+                        <a class="page-link" href="#">{{ i }}</a>
+                    </li>
+                {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page_gen={{ i }}">{{ i }}</a>
+                    </li>
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+    
+            {% if form2.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page_gen={{ form2.next_page_number }}">next</a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="?page_gen={{ form2.paginator.num_pages }}">last&raquo;</a>
+                </li>
+            {% endif %}
+        </ul>
+      </nav>
+  </div>
+
+  <div id="Entregadas" class="tabcontent">
+    <span onclick="this.parentElement.style.display='none'" class="topright">&times</span>
+    <div>
+      <table class="table table-borderless">
+        <h2>Productos Entregados</h2>
+        <thead class="thead-dark" style="text-align: center;">
+          <tr>
+            <th>Pedido</th>
+            <th>Usuario</th>
+            <th>Departamento</th>
+            <!-- <th>Area</th> -->
+            <!-- <th>Regimen Especial</th> -->
+            <!-- <th>Proyecto</th> -->
+            <th>Fecha Solicitud</th>
+            <th>Fecha Entrega</th>
+            <th>Tipo Activo</th>
+            <th>Código</th>
+            <th>Descripción</th>
+            <th>Estado</th>
+            <th>Entrega</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for aprobado in form3 %}
+            {% if aprobado.numpedido.entregado_bodega == True %}
+            <tr>
+              <td>{{ aprobado.numpedido.numpedido }}</td>
+              <td>{{ aprobado.numpedido.usuario_solicita }}</td>
+              <td>{{ aprobado.numpedido.departamento }}</td>
+              <!-- <td>{{ aprobado.numpedido.area }}</td> -->
+              <!-- <td>{{ aprobado.regimenespecial }}</td> -->
+              <!-- <td>{{ aprobado.numpedido.numproyecto }}</td> -->
+              <td>{{ aprobado.numpedido.fchsolicita|date:'Y-m-d' }}</td>
+              <td>{{ aprobado.numpedido.fecha_entrega|date:'Y-m-d' }}</td>
+              <td>{{ aprobado.numpedido.tipoactivo }}</td>
+              <td>{{ aprobado.numpedido.cod_activo }}</td>
+              <td>{{ aprobado.descripcion }}</td>
+              {% if aprobado.numpedido.entregado_bodega == True %}
+                <td>Entregado</td>
+              {% endif %}
+              <td>{{ aprobado.numpedido.persona_entrega_en_bodega }}</td>
+              <td>
+                <a class="btn btn-primary glyphicon glyphicon-print" href="{% url 'ordenpedido:crea_pdf' aprobado.numpedido.cod_activo %}" target="_blank" title="Imprimir Código"></a>
+                {% if aprobado.numpedido.entregado_bodega == True %}
+                <a class="btn btn-warning glyphicon glyphicon-print" href="{% url 'ordenpedido:acta_de_entrega' aprobado.numpedido.numpedido %}" target="_blank" title="Ver/Imprimir Acta de Entrega"></a>
+                <a class="btn btn-success glyphicon glyphicon-edit" href="{% url 'ordenpedido:confirma_custodio' aprobado.numpedido.numpedido %}"  title="Confirmar Ubicación y/o Custodio"></a>
+                
+                {% endif %}
+              
+              </td>
+              </tr>
+              {% endif %}
+            {% endfor %}
+        </tbody>
+      </table>
+      </div>
+
+      <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center col-sm-12">
+            {% if form3.has_previous %}
+                  <li class="page-item">
+                      <a class="page-link" href="?page_ent=1">&laquo;first</a>
+                  </li>
+                <li class="page-item">
+                  <a class="page-link" href="?page_ent={{ form3.previous_page_number }}">previous</a>
+                </li>
+            {% endif %}
+    
+            {% for i in form3.paginator.page_range %}
+            {% if i <= form3.number|add:5 and i >= form3.number|add:-5 %}
+                {% if i == form3.number %}
+                    <li class="page-item active">
+                        <a class="page-link" href="#">{{ i }}</a>
+                    </li>
+                {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page_ent={{ i }}">{{ i }}</a>
+                    </li>
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+    
+            {% if form3.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page_ent={{ form3.next_page_number }}">next</a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="?page_ent={{ form3.paginator.num_pages }}">last&raquo;</a>
+                </li>
+            {% endif %}
+        </ul>
+      </nav>
+  </div>
+  <pre></pre>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+
+  var act = '{{ activate }}';
+  console.log(act)
+
+  $(document).on('click', '#rech', function(){
+    var filaactual = $(this).closest("tr"); // obtiene la fila actual
+    var id = filaactual.find("td:eq(0)").text(); //obtener el valor del primer td de la fila actual
+    $('#pedido').val(id);
+  });
+
+  function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
+  }
+
+  // Get the element with id="defaultOpen" and click on it
+
+  $(document).ready(function(){
+    if (act == 0){
+      document.getElementById("pendientes").click();
+    }else{
+      document.getElementById(act).click();
+    }
+  });
+  // document.getElementById("defaultOpen").click();
+  // console.log("{{ form3.paginator }}")
+</script>
+{% endblock %}

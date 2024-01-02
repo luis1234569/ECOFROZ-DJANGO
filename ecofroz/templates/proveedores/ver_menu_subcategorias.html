@@ -1,0 +1,58 @@
+
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+
+{% block extrahead %}
+
+<meta charset="utf-8">
+
+<style>
+  th, td {
+  text-align: left;
+  padding: 8px;
+}
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid" style="width: 100%; margin-top: 25px;">
+<div class="col-8">
+  <div class="row">
+    <h5 style="margin-left: 50px;">{{ subcate }}:</h5>
+  </div>
+    <div class="row">
+    <h5 style="margin-left: 50px;">Opciones de carga de documentos para:&nbsp; {{ prove.nombre_empresa }}</h5>
+  </div>
+  <br> 
+  
+    <div class="row">
+      <h2 style="margin-left: 50px;color:khaki" class="glyphicon glyphicon-folder-close"></h2>&nbsp;&nbsp;<a  title="Fichas Tecnicas" href="{% url 'proveedores:ver_fichas_agricolas' prove.id subcate_id %}"><b>Fichas Tecnicas</b></a>&nbsp;
+    </div>
+    <div class="row">
+      <h2 style="margin-left: 50px;color:khaki;" class="glyphicon glyphicon-folder-close"></h2>&nbsp;&nbsp;<a  title="Regitros Agrocalidad/MAGAP" href=""><b>Registros Agrocalidad/MAGAP</b></a>&nbsp;
+    </div>
+    <div class="row">
+      <h2 style="margin-left: 50px;color:khaki" class="glyphicon glyphicon-folder-close"></h2>&nbsp;&nbsp;<a  title="Certificados" href=""><b>Certificados</b></a>&nbsp;
+    </div>
+</div>
+
+  <br>
+  <br>
+  <br>
+
+
+  <a style="margin-left: 50px;" class="btn btn-outline-success" href="{% url 'proveedores:ver_documentos' prove.id %}">Regresar a Documentos</a>
+
+  
+  
+
+
+ 
+
+
+{% endblock content %}
+
+

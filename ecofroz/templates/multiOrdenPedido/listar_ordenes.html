@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+<!-- {% load tz %} -->
+
+{% block content %}
+<div class="container" style="margin: 25px auto;">
+  <div class="row">
+    <div class="col-md 12 search">
+      <form class="form-inline my-2 my-lg-0" method="GET">
+        <input class="form-control mr-sm-2" type="text" placeholder="Buscar..." name="buscar">
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+      </form>
+    </div>
+  </div>
+</div>
+<table class="table table-hover table-dark container" style="margin: 25px auto">
+    <thead>
+      <tr>
+        <th scope="col">Pedido</th>
+        <th scope="col">Usuario</th>
+        <th scope="col">Departamento</th>
+        <th scope="col">Area</th>
+        <!-- <th scope="col">Regimen Especial</th> -->
+        <th scope="col">Proyecto</th>
+        <th scope="col">Fecha Solicitud</th>
+        <!-- <th scope="col">Tipo Activo</th> -->
+        <th scope="col">Estado</th>
+        {% if perms.ordenPedido.change_ordenespedidos or perms.ordenPedido.delete_ordenespedidos %}
+        <th scope="col">Opciones</th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for pedido in form %}
+      <tr>
+        <td>{{ pedido.numpedido }}</td>
+        <td>{{ pedido.usuario_solicita }}</td>
+        <td>{{ pedido.departamento }}</td>
+        <td>{{ pedido.area }}</td>
+        <!-- <td>{{ pedido.regimenespecial }}</td> -->
+        <td>{{ pedido.numproyecto }}</td>
+        <td>{{ pedido.fchsolicita|date:'Y-m-d' }}</td>
+        <!-- <td>{{ pedido.tipoactivo }}</td> -->
+        {% if pedido.aprobado == 1 %}
+          <td>Aprobado</td>
+        {% elif pedido.aprobado == 0 %}
+          <td>Rechazado</td>
+        {% else %}
+          <td>Pendiente</td>
+        {% endif %}
+        {% if perms.ordenPedido.change_ordenespedidos %}
+        <td>
+        {% if pedido.aprobado == 1 and pedido.aprobado == 0 %}
+          <a href="#" class="btn btn-secondary">Editar</a>
+        {% else %}
+          <a href="{% url 'ordenpedido:editar_orden' pedido.numpedido %}" class="btn btn-primary">Editar</a>
+        {% endif %}
+        </td>
+        {% endif %}
+        {% if perms.ordenPedido.delete_ordenespedidos %}
+        <td>
+          <a href="{% url 'ordenpedido:eliminar_pedido' pedido.numpedido %}" class="btn btn-danger">Eliminar</a>
+        </td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

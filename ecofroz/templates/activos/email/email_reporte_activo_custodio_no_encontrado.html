@@ -1,0 +1,114 @@
+<html>
+  <head>
+    <style type="text/css">
+      .asteriskField{
+        display: none;
+      }
+      form .alert ul li  {
+        list-style: none;
+      }
+      form .alert ul {
+        padding: 0;
+        margin: 0;
+      }
+
+      .btn {
+        display: inline-block;
+        text-decoration: none;
+        font-weight: 400;
+        color: #ffffff;
+        text-align: center;
+        vertical-align: middle;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        background-color: transparent;
+        border: 1px solid transparent;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        border-radius: 0.25rem;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+      }
+      .btn-primary {
+        color: #fff;
+        background-color: #007bff;
+        border-color: #007bff;
+      }
+      .btn-primary:hover {
+        color: #fff;
+        background-color: #0069d9;
+        border-color: #0062cc;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <p>
+        <h4>Reporte de Activos No Encontrados o Custodio incorrecto</h4>
+      </p>
+    </div>
+      <table style="border: 1px;" cellspacing='0' cellpadding='10'>
+          <tbody>
+            {% for registro in aprob.detalle.all %}
+            <tr>
+              <td scope="col" style='font-size: 11px;'>Fecha de reporte:</td>
+              <td style='font-size: 11px;'>{{ registro.fecha_envia_reporte_no_custodio }}</td>
+            </tr>
+          {% endfor %}
+            {% for aprob in aprob %}
+            <tr>
+              <td scope="col" style='font-size: 11px;'>Código Activo:</td>
+              <td style='font-size: 11px;'>{{ aprob.activo_codigo }}</td>
+            </tr>
+            
+            <tr>
+              <td scope="col" style='font-size: 11px;'>Ubicación:</td>
+              <td style='font-size: 11px;'>{{ aprob.activo_ubica }}</td>
+            </tr>
+            <tr>
+              <td scope="col" style='font-size: 11px;'>Tipo:</td>
+              <td style='font-size: 11px;'>{{ aprob.activo_tipo }}</td>
+            </tr>
+            <tr>
+              <td scope="col" style='font-size: 11px;'>Sector:</td>
+              <td style='font-size: 11px;'>{{ aprob.activo_area }}</td>
+            </tr>
+            <tr>
+              <td scope="col" style='font-size: 11px;'>Descripción:</td>
+              <td style='font-size: 11px;'>{{ aprob.activo_descripcion }}</td>
+            </tr>
+            <tr>
+              <td scope="col" style='font-size: 11px;'>Activo se encuentra identificado?:</td>
+              {% if aprob.grabado == "ETIQUETA" %}
+                <td style='font-size: 11px;'>ETIQUETA</td>  
+              {% elif aprob.grabado == "GRABADO" %}
+                <td style='font-size: 11px;'>GRABADO</td>
+              {% else %}
+              <td style='font-size: 11px;'>NO</td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+            {% for registro in aprob.detalle.all %}
+            <tr>
+              <td scope="col" style='font-size: 11px;'>Observaciones de usuario que registra novedad:</td>
+              <td style='font-size: 11px;'>{{ registro.observaciones_reporte_no_custodio }}</td>
+            </tr>
+            {% endfor %}
+
+            <tr>
+              <td scope="col" style='font-size: 11px;'>Usuario registra novedad:</td>
+              <td style='font-size: 11px;'>{{ usuario }}</td>
+            </tr>
+           
+         
+              
+          </tbody>
+      </table>
+      <div>
+        <p>Vaya a http://192.168.27.118/activos/listar_entregas_activos para actualizar los registros.</p>
+      </div>
+  </body>
+</html>

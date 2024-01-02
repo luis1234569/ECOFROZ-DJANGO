@@ -1,0 +1,462 @@
+{% extends 'base_calendar.html' %}
+
+{% block extrahead %}
+
+
+<meta charset="utf-8">
+
+<style type="text/css">
+    #salida_activo li {
+     display:inline;
+     margin-left: -10px;
+     padding-left:3px;
+     padding-right:60px;
+    }
+
+    .btn-flotante {
+        /*font-size: 16px; /* Cambiar el tamaño de la tipografia */
+        /*text-transform: uppercase; /* Texto en mayusculas */
+        /*font-weight: bold; /* Fuente en negrita o bold */
+        /*color: #ffffff; /* Color del texto */
+        /*border-radius: 5px; /* Borde del boton */
+        /*letter-spacing: 2px; /* Espacio entre letras */
+        /*background-color: #E91E63; /* Color de fondo */
+        /*padding: 18px 30px; Relleno del boton */
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        transition: all 300ms ease 0ms;
+        box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+        z-index: 99;
+    }
+    .btn-flotante:hover {
+        background-color: #2c2fa5; /* Color de fondo al pasar el cursor */
+        box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.3);
+        transform: translateY(-7px);
+    }
+    @media only screen and (max-width: 600px) {
+        .btn-flotante {
+            font-size: 14px;
+            padding: 12px 20px;
+            bottom: 20px;
+            right: 20px;
+        }
+    } 
+
+    popup { 
+  display: none; 
+  border: 1px black solid;
+  width: 400px; height: 200px; 
+  top:20px; left:20px;
+  background-color: white;
+  z-index: 10;
+  padding: 2em;
+  position: fixed;
+}
+
+.darken { background: rgba(0, 0, 0, 0.7); }
+
+#iframe { border: 0; }
+
+    
+</style> 
+{% endblock %}
+
+{% block title %}
+    <h2>Solicitudes de Transporte</h2>
+{% endblock %}
+
+{% block content %}
+<div class="loader"></div>
+<div class="container jumbotron" style="background-color:whitesmoke;width: 80%; margin:auto; padding-top: 15px; margin-top: 10px; margin-bottom: 25px;">
+<h2 class="display-6">Solicitudes de Transporte / Encomiedas / Vales</h2>
+<br>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+        <!-- {{form.usuario_solicita}} -->
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label> {{form.ubica.label}}</label><br>
+            {{form.ubica}}
+            
+        </div>
+        <div class="form-group col-md-4">
+            <label>{{ form.departamento.label }}</label>
+            {{ form.departamento }}
+        </div>
+
+        <div class="form-group col-md-4">
+            <label>{{ form.tipo.label }}</label>
+            {{ form.tipo }}
+        </div>
+
+        <div class="form-group col-md-8" name="la-ruta">
+            <label for="ruta" id="lbl-la-ruta">Seleccione una Ruta (Si no encuentra una ruta seleccione "Otra Ruta")</label>
+            <input type="text" id="rutatexto" name="rutatexto" class="form-control" required>
+        </div>
+
+        <div class="form-group col-md-8">
+       {{form.ruta}}
+        </div>
+
+        <!-- <div class="form-group col-md-12" name="check-otra-ruta" id="check-otra-ruta">
+            <label for="">Necesito ingresar una ruta diferente</label>
+            <input type="checkbox" id="input-check" name="input-check" onclick="show_new_ruta()">
+        </div> -->
+
+       
+
+     
+        <div class="form-group col-md-8" name="otra-ruta-div" id="otra-ruta-div">
+            <label for="input-otra-ruta">Escriba la Ruta</label>
+            <input type="text" class="form-control"  id="input-otra-ruta" name="input-otra-ruta">
+        </div>
+
+        <div class="form-group col-md-12" name="retornodiv" id="retornodiv">
+            <label for="retorno" id="lbl-la-ruta">Requiero transporte de retorno</label>
+            {{ form.retorno }}
+        </div>
+
+        <div class="form-group col-md-8" name="nombre-pasajero-div" id="nombre-pasajero-div">
+            <label id="lbl-nombre-pasajero" name="lbl-nombre-pasajero">Ingrese el nombre del pasajero</label>
+            <input type="text" class="form-control" id="input-nombre-pasajero" name="input-nombre-pasajero" placeholder="Digite una letra">
+        </div>
+
+        <div class="form-group col-md-8" name="nombre-beneficiario-vale-div" id="nombre-beneficiario-vale-div">
+            <label id="lbl-nombre-beneficiario-vale" name="lbl-nombre-beneficiario-vale">Ingrese el nombre del beneficiario del Vale</label>
+            <input type="text" class="form-control" id="input-nombre-beneficio-vale" name="input-nombre-beneficio-vale" placeholder="Digite una letra">
+        </div>
+
+        <div class="form-group col-md-12" name="check-otro-beneficiario-div" id="check-otro-beneficiario-div">
+            <label for="">Necesito ingresar otro beneficario del vale</label>
+            <input type="checkbox" id="input-check-beneficiario" name="input-check-beneficiario" onclick="show_more_beneficiarios()">
+        </div>
+
+        <div class="form-group col-md-12" name="check-otros-pasajeros-div" id="check-otros-pasajeros-div">
+            <label for="">Necesito ingresar otro(s) pasajero(s)</label>
+            <input type="checkbox" id="input-check-passengers" name="input-check-passengers" onclick="show_more_passengers()">
+        </div>
+
+        <div class="form-group col-md-12" name="show-more-passengers-div" id="show-more-passengers-div">
+            <label for="">Ingrese el nombre de otro(s) pasajero(s)</label>
+            <input type="text" class="form-control" id="input-nombre-otros-pasajeros" name="input-nombre-otros-pasajeros">
+        </div>
+
+        <div class="form-group col-md-5" name="fecha-evento-lbl-div" id="fecha-evento-lbl-div">
+            <label>Ingrese la fecha del evento</label>
+        </div>
+        <div class="form-group col-md-3" name="fecha-evento-div" id="fecha-evento-div">
+            <input type="datetime-local" id="fechahora" name="fechahora" class="form-control" required>
+        </div>
+
+        <div class="form-group col-md-6" name="show-more-beneficiarios-div" id="show-more-beneficiarios-div">
+            <label for="">Ingrese el nombre de otro beneficario</label>
+            <input type="text" class="form-control" id="input-nombre-beneficiario" name="input-nombre-beneficiario">
+        </div>
+
+    </div>
+  
+    <div class="form-row">
+    
+    <div class="form-group col-md-12">
+        <label>{{form.justificacion.label}}</label>
+        {{form.justificacion}}
+    </div>
+    <br>
+    <div class="form-group col-md-12">
+        <label><strong>PUEDE AMPLIAR SU SOLICITUD ADJUNTANDO IMAGENES</strong></label>
+        <p>Seleccione y adjunte imágenes</p>
+        <div class="row">
+        <div class="col-6">
+        <label>Imágen #1</label>
+        {{form2.img_1}}
+        </div>
+
+        <div class="col-6">
+        <label>Imágen #2</label>
+        {{form2.img_2}}
+    </div>
+
+</div>
+
+    </div>
+    <br>
+    <br>
+    
+    <!-- <button class="btn btn-primary btn-flotante bi bi-journal-text" id="flotante" name="flotante" type="button"  title="Consulta Rutas Fijas"></button> -->
+
+    <div class="row">
+        <div class="col-md-12" style="margin-top: 10px;">
+            <button type="submit" class="btn btn-lg btn-primary button" id="enviar" name="enviar">Generar</button>
+        </div>
+    </div>
+</form>
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+
+{% endblock %}
+
+{% block extrajs %}
+<script>    
+
+
+
+// $("#ruta").change(function(event, ui) {
+//         if (ui.item == "OTRA RUTA => ."){ 
+//             alert(ui.item)
+//          //here is null if entered value is not match in suggestion list
+           
+//         $("#la-ruta").hide();
+//         $("#lbl-la-ruta").hide();
+//         $("#rutatexto").hide();
+//         $("#otra-ruta-div").show();
+//         $("#input-otra-ruta").show();
+//         $("#ruta").hide().val("");
+
+//         $("#la-ruta").show();
+//         $("#lbl-la-ruta").show();
+//         $("#ruta").show();
+//         $("#otra-ruta-text").hide().val("");
+//         $("#input-otra-ruta").hide();
+//         $("#otra-ruta-div").hide();
+//         $("#rutatexto").show();
+
+//     }
+//     else{
+//         alert(ui.item)
+//     }
+
+// })
+
+$("#id_tipo").change(function(){
+                var opcion = $(this).val();
+
+                if (opcion == 1 ){
+            
+                $("#nombre-pasajero-div").show();
+                $("#check-otros-pasajeros-div").show();
+                $('#nombre-pasajeros-div').attr('required',1)
+                $('#check-otros-pasajeros-div').attr('required',1)
+                
+                $('#nombre-beneficiario-vale-div').hide().val("");
+                $('#check-otro-beneficiario-div').hide().val("");
+                $('#fecha-evento-div').show();
+                $("#fechahora").prop('required',true);
+                $('#fecha-evento-lbl-div').show();
+                
+                 }
+                else if (opcion == 3){
+                    $('#nombre-beneficiario-vale-div').show();
+                    $('#check-otro-beneficiario-div').show();
+                    $('#nombre-beneficiario-vale-div').attr('required',1);
+                    $('#check-otro-beneficiario-div').attr('required',1);
+
+                    $("#nombre-pasajero-div").hide().val("");
+                    $('#check-otros-pasajeros-div').hide().val("");
+                    $("#show-more-passengers-div").hide().val("");
+                    // $('#check-otra-ruta').hide().val("");
+                    $('#fecha-evento-div').hide().val("");
+                    $("#fechahora").prop('required',false);
+                    $('#fecha-evento-lbl-div').hide().val("");
+                    $('#retornodiv').hide();
+
+                    
+                }
+                else {
+                      $("#nombre-pasajero-div").hide().val("");
+                      $("#check-otros-pasajeros-div").hide().val("");
+                      $("#show-more-passengers-div").hide().val("");
+                      $('#nombre-beneficiario-vale-div').hide().val("");
+                      $('#check-otro-beneficiario-div').hide().val("");
+
+                      $("#input-otra-ruta").hide().val("");
+                      $("#nombre-pasajero-div").hide().val("");
+                      $("#check-otros-pasajeros-div").hide().val("");
+   
+                      $("#show-more-beneficiarios-div").hide().val("");
+                      $('#fecha-evento-div').show();
+                      $("#fechahora").prop('required',true);
+                      $('#fecha-evento-lbl-div').show();
+                      
+
+                      }
+                    
+    });
+
+
+
+function show_new_ruta(){
+    if (document.getElementById('input-check').checked) {
+        $("#la-ruta").hide();
+        $("#lbl-la-ruta").hide();
+        $("#rutatexto").hide();
+        $("#otra-ruta-div").show();
+        $("#input-otra-ruta").show();
+        $("#ruta").hide().val("");
+
+        } else {
+            $("#la-ruta").show();
+            $("#lbl-la-ruta").show();
+            $("#ruta").show();
+            $("#otra-ruta-text").hide().val("");
+            $("#input-otra-ruta").hide();
+            $("#otra-ruta-div").hide();
+            $("#rutatexto").show();
+            
+        }
+}
+
+function show_more_passengers(){
+    if (document.getElementById('input-check-passengers').checked )   {
+        
+        $("#show-more-passengers-div").show();
+
+        } else {
+           
+            $("#show-more-passengers-div").hide().val("");
+            
+        }
+}
+
+function show_more_beneficiarios(){
+    if (document.getElementById('input-check-beneficiario').checked )   {
+        
+        $("#show-more-beneficiarios-div").show();
+        $("#nombre-beneficiario-vale-div").hide().val("");
+
+ 
+
+        } else {
+           
+            $("#show-more-beneficiarios-div").hide().val("");
+            $("#nombre-beneficiario-vale-div").show();
+            
+        }
+}
+
+$(document).ready(function() {    
+    $("#otra-ruta-div").hide();
+    $("#input-otra-ruta").hide().val("");
+    $("#nombre-pasajero-div").hide().val("");
+    $("#check-otros-pasajeros-div").hide().val("");
+    $("#show-more-passengers-div").hide().val("");
+    $("#nombre-beneficiario-vale-div").hide().val("");
+    $("#check-otro-beneficiario-div").hide().val("");
+    $("#show-more-beneficiarios-div").hide().val("");
+
+
+    });   
+
+
+
+    $(window).on("load",function() {
+        $(".loader").fadeOut("slow");
+    });
+
+    $(document).ready(function() {    
+        $('#enviar').on('click', function(){
+            //Añadimos la imagen de carga en el contenedor
+            $(".loader").show();
+
+            $(window).on("load", function(){
+                $(".loader").fadeOut("slow");
+            });
+        });              
+    });    
+
+
+    $(document).ready(function(){
+ 
+   
+    
+    $("#rutatexto").autocomplete({source: "{% url 'procesosadministrativos:ajaxcallnombreruta' %}",
+    success: function(data) {
+        response($.map(data, function(item) {
+          return {
+            label: item[2],
+            value: item[0]
+          };
+        }));  
+    },
+    select: function(event, ui) {
+    
+    $("#rutatexto").val(ui.item.label);
+    $("#ruta").val(ui.item.id);
+    
+    valor = $("#ruta").val();
+    if (valor == 42){
+    $("#otra-ruta-div").show();
+    $("#input-otra-ruta").show();
+    }
+    else{
+        $("#otra-ruta-div").hide();
+        $("#input-otra-ruta").hide();
+    }
+    
+    
+    
+    return false;
+  } ,
+    focus: function(event, ui) {
+    $("#ruta").val(ui.item.id);
+    return false;
+  },
+    change: function (event, ui) {
+        if (ui.item == null){ 
+         //here is null if entered value is not match in suggestion list
+            $(this).val((ui.item ? ui.item.id : ""));
+        }
+        
+    }
+})
+
+    $("#input-nombre-pasajero").autocomplete({source: "{% url 'procesosadministrativos:ajaxcallnombrepasajero' %}",
+    selectFirst: true,
+    change: function (event, ui) {
+        if (ui.item == null){ 
+         //here is null if entered value is not match in suggestion list
+            $(this).val((ui.item ? ui.item.id : ""));
+        }
+    }
+})
+
+$("#input-nombre-beneficio-vale").autocomplete({source: "{% url 'procesosadministrativos:ajaxcallnombrepasajero' %}",
+    selectFirst: true,                                                              
+    change: function (event, ui) {
+        if (ui.item == null){ 
+         //here is null if entered value is not match in suggestion list
+            $(this).val((ui.item ? ui.item.id : ""));
+        }
+    }
+})
+
+
+  
+    })
+
+
+
+
+
+</script>
+
+{% load static %}
+
+<script src="https://unpkg.com/vue@3"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script type="module" src="{% static 'vue/apps/trabajosInternos/addSector.js' %}"></script>
+
+
+
+{% endblock %}

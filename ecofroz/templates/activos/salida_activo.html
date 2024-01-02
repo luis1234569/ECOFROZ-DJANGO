@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block title %}
+    <h2>Ordenes de Pedidos</h2>
+{% endblock %}
+
+{% block content %}
+<body>
+<div style="float: right; margin-right: 18px;">
+    <script type="text/javascript">
+        //<![CDATA[
+        var  today = new Date();
+        var d = today.getDate() < 10 ? '0' + today.getDate() : today.getDate();
+        var m = today.getMonth() + 1;
+        var y = today.getFullYear();
+        var h = today.getHours();
+        var mi = today.getMinutes();
+        var se = today.getSeconds();
+        var mes = (m < 10) ? '0' + m : m;
+            document.write('Fecha Actual: ' + d + '/' + mes + '/' + y);
+        //]]> 
+    </script>
+</div>
+<div class="jumbotron row" style="width: 98%; margin:auto; padding-top: 25px; margin-top: 50px; margin-bottom: 25px;">
+<div class="col-12"><h3 class="display-5">Registro de Salida de Activos</h3></div>
+<!-- <h4 class="display-6">Hola {{ user.first_name }} {{ user.last_name }}</h4> -->
+<div class="col">
+<form method="GET" name="registrop" action="{% url 'activos:salida_activo' %}">
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" style="margin-top:25px;">Codigo de Activo</label>
+        <div class="col-sm-3">
+            <input class="form-control" type="text" name="codigo" id="codigo" autofocus value="{{ codigo }}" style="margin-left:-85px;margin-top:25px;text-transform: uppercase;">
+            <input type="text" class="form-control" name="fch" id="fch" hidden>
+            <input type="text" class="form-control" name="fch_txts" id="fch_txts" hidden>
+            <input class="form-control" type="text" name="hr_txt" id="hr_txt" hidden>
+        </div>
+        <div class="col-sm-3" style="margin-top: 25px;">
+            {% if form.estado == 'APROBADO' %}
+                <a href="#" id="saleac" class=" form-control btn btn-primary">Guardar</a>
+            {% endif %}
+        </div>
+    </div>
+</form>
+
+
+{% if form %}
+    {% if form.estado == 'APROBADO' %}
+    <div class="alert alert-success col" style="text-align: center;">
+        <h1>SALIDA AUTORIZADA</h1>
+    </div>
+    {% elif form.estado == 'PENDIENTE' %}
+    <div class="alert alert-danger col" style="text-align: center;">
+        <h1>SALIDA NO AUTORIZADA</h1>
+    </div>
+    {% elif form.estado == 'SALIÓ' %}
+    <div class="alert alert-danger col" style="text-align: center;">
+        <h1>EL ACTIVO ESTA FUERA DE LA EMPRESA COMUNIQUESE CON SU SUPERIOR</h1>
+    </div>
+    {% endif %}
+{% endif %}
+{% if salida_existe == 0 %}
+<div class="alert alert-danger col" style="text-align: center;">
+    <h1>EL ACTIVO NO TIENE GENERADA UNA ORDEN DE SALIDA</h1>
+</div>
+{% endif %}
+{% if form %}
+<form action="{% url 'activos:salida_activo' %}" method="POST" id="sale_activo">
+    {% csrf_token %}
+    <input class="form-control" type="text" name="codigoac" id="codigoac" value="{{ codigo }}" hidden>
+    <input class="form-control" type="text" name="cid" id="cid" value="{{ form.id }}" hidden>
+    <table class="table table-bordered table-sm">
+        <tbody>
+        <tr>
+            <th class="table-dark" scope="col" style="width: 25%;">Fecha Solicitud:</th>
+            <td style="font-weight: bold; font-size: 15pt;">{{ form.fecha_registro }}</td>
+        </tr>
+        <tr>
+            <th class="table-dark" scope="col">Usuario Solicitante:</th>
+            <td>{{ form.solicitado_por }}</td>
+        </tr>
+        <tr>
+            <th class="table-dark" scope="col">Orden de Salida</th>
+            <td>{{ form.id }}</td>
+        </tr>
+        <tr>
+            <th class="table-dark" scope="col">Orden de Trabajo</th>
+            <td>{{ form.num_orden_trabajo }}</td>
+        </tr>
+        <tr>
+            <th class="table-dark" scope="col">Código de Activo:</th>
+            <td>{{ form.activo_codigo }}</td>
+        </tr>
+        <tr>
+            <th class="table-dark" scope="col">Retorno:</th>
+            <td>{{ form.retorno }}</td>
+        </tr>
+        <tr>
+            <th class="table-dark" scope="col">Marca:</th>
+            <td>{{ form.marca }}</td>
+        </tr>
+        <tr>
+            <th class="table-dark" scope="col">N° de Serie:</th>
+            <td>{{ form.activo_num_serie }}</td>
+        </tr>
+        <tr>
+            <th class="table-dark" scope="col">Tipo de Activo:</th>
+            <td>{{ form.activo_tipo }}</td>
+        </tr>
+        <tr>
+            <th class="table-dark" scope="col">Detalle Activo:</th>
+            <td>{{ form.detalle_activo }}</td>
+        </tr>
+        <tr>
+            <th class="table-dark" scope="col">Motivo de Salida:</th>
+            <td>{{ form.sale_por }}</td>
+        </tr>
+        <tr>
+            <th class="table-dark" scope="col">Justificación Salida:</th>
+            <td>{{ form.motivo }}</td>
+        </tr>
+        <tr>
+            <th class="table-dark" scope="col">Empresa Mantenimiento:</th>
+            <td>{{ form.empresa_mantenimiento }}</td>
+        </tr>
+        <tr>
+            <th class="table-dark" scope="col">Fecha Estimada de Retorno:</th>
+            <td>{{ form.fecha_estimada_retorno }}</td>
+        </tr>
+        <tr>
+            <th class="table-dark" scope="col">Persona Autoriza:</th>
+            <td>{{ autoriza }}</td>
+        </tr>
+        <tr>
+            <th class="table-dark" scope="col">Observación Autorización:</th>
+            <td>{{ form.observa_autoriza }}</td>
+        </tr>
+        </tbody>
+    </table>
+    {% if form.estado == 'APROBADO' %}
+    <!-- <button type="submit" class="btn btn-primary" >Guardar</button> -->
+    {% endif %}
+</form>
+{% endif %}
+</div>
+</div>
+</body>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+// Si pulsamos tecla en un Input
+$("#codigo").keydown(function (e){
+    // Capturamos qué telca ha sido
+    var keyCode= e.which;
+    // Si la tecla es el Intro/Enter
+    if (keyCode == 13){
+        var d= new Date();
+
+        var dia = d.getDate() < 10 ? '0' + d.getDate() : d.getDate();
+        var mes =  ("0" + (d.getMonth() + 1));
+        var anio = d.getFullYear(); 
+        var hh = d.getHours() < 10 ? '0' + d.getHours() : d.getHours();
+        var mm = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes();
+
+        var fechatotal = anio + "-"+ mes +"-" + dia
+        var fechatxt = anio + mes + dia
+        var hora = hh + ":" + mm
+    //    alert(fechatotal);
+    // Evitamos que se ejecute eventos
+        $("#fch").val(fechatotal);
+        $("#fch_txt").val(fechatxt);
+        $("#fch_txts").val(fechatxt);
+        $("#hr").val(fechatotal + " " + hora);
+        $("#hr_txt").val(hora);
+    // event.preventDefault();
+        document.registrop.submit();
+    // Devolvemos falso
+    //  return false;
+   }
+ });
+
+ $("#saleac").on("click", function(e){
+    var d= new Date();
+
+    var dia = d.getDate() < 10 ? '0' + d.getDate() : d.getDate();
+    var mes =  ("0" + (d.getMonth() + 1));
+    var anio = d.getFullYear(); 
+    var hh = d.getHours() < 10 ? '0' + d.getHours() : d.getHours();
+    var mm = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes();
+
+    var fechatotal = anio + "-"+ mes +"-" + dia
+    var fechatxt = anio + mes + dia
+    var hora = hh + ":" + mm
+
+    var fecha2_txt = '{{ fch }}'
+    var hora2 = '{{ hora }}'
+
+    // $("#fch").val(fechatotal);
+    $("#fch_txt").val(fechatxt);
+    // $("#hr").val(fechatotal + " " + hora);
+    $("#hr_txt3").val(fechatotal + " " + hora2);
+ });
+
+var comprueba = '{{msje2}}'
+if (comprueba == 'Error') {
+  $(document).ready(function(){
+    alert('{{ msje }}');
+  })
+};
+
+$("#saleac").click(function(){
+    $("#sale_activo").submit();
+});
+
+// jQuery(function($){
+//    $("#contenedori").mask("AAAA999999-9", {placeholder:" ",completed:function(){alert("completed!");}});
+//    $("#contenedors").mask("AAAA999999-9", {placeholder:" ",completed:function(){alert("completed!");}});
+// });
+</script>
+{% endblock %}

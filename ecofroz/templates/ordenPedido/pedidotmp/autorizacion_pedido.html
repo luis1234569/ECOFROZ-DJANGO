@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <h2>Ordenes de Pedidos</h2>
+{% endblock %}
+
+{% block content %}
+<div class="jumbotron" style="width: 80%; margin:auto;">
+    <h2 class="display-3">Ingreso de Ordenes de Pedido</h2>
+    <h4 class="display-3">Hola {{ user.first_name }} {{ user.last_name }}</h4>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <input id="usuario_solicita" type="hidden" name="usuario_solicita" value="{{ user.id }}">
+            {{ form.auth_user }}
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label>{{ form.departamento.label }}</label>
+                {{ form.departamento }}
+            </div>
+            <div class="form-group col-md-6">
+                <label>{{ form.area.label }}</label>
+                {{ form.area }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label>{{ form.tipoactivo.label }}</label>
+                {{ form.tipoactivo }}
+            </div>
+            <div class="form-group col-md-4">
+                <label>{{ form.tiempo_vida.label }}</label>
+                {{ form.tiempo_vida }}
+            </div>  
+            <div class="form-group col-md-2">
+                <label>{{ form.tiempo_tipo.label }}</label>
+                {{ form.tiempo_tipo }}
+            </div>
+        </div>
+        <div class="form-group col-md-12">
+            <label>{{ form.numproyecto.label }}</label>
+            {{ form.numproyecto }}
+        </div>
+        <!-- <div class="form-group col-md-12">
+            <div class="form-check">
+                {{ form.regimenespecial }}
+                <label>{{ form.regimenespecial.label }}</label>
+            </div>
+        </div> -->
+        <div class="form-group col-md-12">
+            <label>{{ form2.descripcion.label }}</label>
+            {{ form2.descripcion }}
+        </div>
+        <div class="form-row">
+            <div class="col-md-10">
+                <label>{{ form2.cantidad.label }}</label>
+                {{ form2.cantidad }}
+            </div>
+            <div class="col-md-2">
+                <label>{{ form2.unimedida.label }}</label>
+                {{ form2.unimedida }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-6">
+                <label>{{ form.aprobado.label }}</label>
+                {{ form.aprobado }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12" style="margin-top: 10px;">
+                <button type="submit" class="btn btn-primary">Aprobar</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

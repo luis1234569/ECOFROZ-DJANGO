@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}
+    <h2>Consulta Detalle de Solicitudes de Salida de Activos</h2>
+{% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block content %}
+<div class="loader"></div>
+    <div class="container" style="margin: 25px auto;">
+      <table class="table table-bordered table-sm">
+        <tbody>
+          <tr>
+            <th class="table-dark" scope="col" style="width: 25%;">N° de Orden:</th>
+            <td style='font-size: 18px; font-weight: bold;'>{{ detalle.id }}</td>
+          </tr>
+          <tr>
+            <th class="table-dark" scope="col" style="width: 25%;">N° de Requisición:</th>
+            <td>{{ detalle.orden_mantenimiento|default:'----' }}</td>
+          </tr>
+          <tr>
+            <th class="table-dark" scope="col" style="width: 25%;">Código de Activo:</th>
+            <td style='font-size: 18px; font-weight: bold;'>{{ detalle.codigo|default:'----' }}</td>
+          </tr>
+          <tr>
+            <th class="table-dark" scope="col">Persona que Solicita:</th>
+            <td>{{ detalle.solicitado_por | default:'--' }}</td>
+          </tr>
+          <tr>
+            <th class="table-dark" scope="col">Departamento Solicitante:</th>
+            <td>{{ dep }}</td>
+          </tr>
+          <tr>
+            <th class="table-dark" scope="col">Fecha de Salida:</th>
+            <td>{{ detalle.fecha_registro }}</td>
+          </tr>
+          <tr>
+            <tr>
+              <th class="table-dark" scope="col">Fecha Aproximada de Retorno:</th>
+              <td>{{ detalle.fecha_estimada_retorno }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Tipo de Activo:</th>
+              <td>{{ detalle.activo_tipo | default:'--' }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Serie:</th>
+              <td>{{ detalle.activo_num_serie | default:'--' }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Marca:</th>
+              <td>{{ detalle.marca | default:'--' }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Empresa de Mantenimiento:</th>
+              <td>{{ detalle.empresa_mantenimiento | default:'--' }}</td>
+            </tr>
+          
+          <tr>
+            <th class="table-dark" scope="col">Descripción del Activo:</th>
+            <td>{{ detalle.detalle_activo | default:'--' }}</td>
+          </tr>
+          <tr>
+            <th class="table-dark" scope="col">Motivo de Salida:</th>
+            <td>{{ detalle.motivo | default:'--' }}</td>
+          </tr>
+          <tr>
+            <th class="table-dark" scope="col">Observaciones del Autorizador:</th>
+            <td>{{ detalle.observa_autoriza | default:'--' }}</td>
+          </tr>
+        </tbody>
+</table>
+<div class="form-check">
+  <input class="form-check-input" type="checkbox" value="" id="codificado">
+  <label class="form-check-label" for="defaultCheck1">
+    Se ha verificado el activo y se encuentra codificado
+  </label>
+</div>
+<div class="form-group" style="margin-top: 25px;">
+        <a class="btn btn-primary" href="{% url 'activos:aprueba_bodega' detalle.id %}" id="enviar">Guardar y Enviar</a>
+        
+        <button type="button" class="btn btn-warning">Imprimir Código</button>
+      </div> 
+        
+      </div>
+
+{% endblock %}
+
+{% block extrajs %}
+<script>
+  // $("#enviar").each(function() {
+  //   $(this).attr("data-oldhref", $(this).attr("href"));
+  //   $(this).removeAttr("href");
+  // });
+  $.each($('#enviar'), function(index, value) {
+    $(this).css('pointer-events','none');
+    $(this).css('cursor','not-allowed');
+  });
+
+  $(window).on("load", function() {
+        $(".loader").fadeOut("slow");
+    });
+
+  
+
+  $(document).ready(function() { 
+    var cod = 
+    $('#codificado').change(function(){
+    if ($(this).is(':checked', true)){
+      $('#enviar').css('pointer-events','auto');
+      $('#enviar').css('cursor','pointer');
+    } else {
+      $('#enviar').css('pointer-events','none');
+      $('#enviar').css('cursor','not-allowed');
+    }
+  });
+
+    // $('#enviar').on('click', function(){
+    //     //Añadimos la imagen de carga en el contenedor
+    //     $(".loader").show();
+    //     $(window).on("load", function(){
+    //         $(".loader").fadeOut("slow");
+    //     });
+    // });  
+    
+    
+  });    
+
+  $(document).ready(function(){
+    $('#pers_gestiona_bodega').val('{{ user.username }}')
+  })
+</script>
+
+{% endblock %}

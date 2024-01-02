@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block title %}
+    <h2>Ordenes de Pedidos</h2>
+{% endblock %}
+
+{% block content %}
+<body>
+<div style="float: right; margin-right: 18px;">
+    <script type="text/javascript">
+        //<![CDATA[
+        var  today = new Date();
+        var d = today.getDate() < 10 ? '0' + today.getDate() : today.getDate();
+        var m = today.getMonth() + 1;
+        var y = today.getFullYear();
+        var h = today.getHours();
+        var mi = today.getMinutes();
+        var se = today.getSeconds();
+        var mes = (m < 10) ? '0' + m : m;
+            document.write('Fecha Actual: ' + d + '/' + mes + '/' + y  + '  ' + h + ':' + mi);
+  
+
+        //]]> 
+    </script>
+</div>
+<div class="jumbotron row" style="width: 98%; margin:auto; padding-top: 25px; margin-top: 50px; margin-bottom: 25px;">
+<div class="col-12"><h2 class="display-5">Almuerzo</h2></div>
+<!-- <h4 class="display-6">Hola {{ user.first_name }} {{ user.last_name }}</h4> -->
+<div class="col">
+<form method="POST" name="registrop" action="{% url 'personal:almuerzo' %}">
+    {% csrf_token %}
+    <div class="row">
+        <div class="form-group col-md-4">
+            <label># Cédula</label>
+            <input class="form-control" type="text" name="persona" id="persona" autofocus>
+        </div>
+        <div class="form-group col-md-3">
+            <label>Hora</label>
+            <input class="form-control" type="text" name="hr_txt" id="hr_txt">
+        </div>
+    </div>
+    <div class="row" hidden>
+        <div class="form-group col-md-6">
+            <input class="form-control" type="text" name="fch" id="fch">
+            <input class="form-control" type="text" name="fch_txt" id="fch_txt">
+            <input class="form-control" type="text" name="hr" id="hr">
+            <input class="form-control" type="text" name="user" id="user" value="{{ user.id }}">
+        </div>
+    </div>
+</form>
+</div>
+</div>
+<div class="container-fluid">
+    <table class="table table-boderless">
+        <thead class="thead-dark" style="text-align: center;">
+            <tr>
+                <th>N°</th>
+                <th>Cédula</th>
+                <th>Nombre</th>
+                <th>Fecha</th>
+                <th>Hora Salida Almuerzo</th>
+                <th>Hora Ingreso Almuerzo</th>
+            </tr>
+        </thead>
+        <tbody style="text-align: center;">
+            {% for i in reg %}
+            <tr>
+                <td>{{ forloop.revcounter }}</td>
+                <td>{{ i.persona.cedula }}</td>
+                <td>{{ i.persona.first_name }} {{ i.persona.last_name }}</td>
+                <td>{{ i.fecha }}</td>
+                <td>{{ i.hr_salida_almuerzo_txt }}</td>
+                <td>{{ i.hr_entrada_almuerzo_txt | default:"--"}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="pagination">
+    <span class="step-links">
+        {% if reg.has_previous %}
+            <a href="?page=1">&laquo; inicio</a>
+            <a href="?page={{ reg.previous_page_number }}">previo</a>
+        {% endif %}
+  
+        <span class="current">
+            Page {{ reg.number }} of {{ reg.paginator.num_pages }}.
+        </span>
+  
+        {% if reg.has_next %}
+            <a href="?page={{ reg.next_page_number }}">próximo</a>
+            <a href="?page={{ reg.paginator.num_pages }}">último &raquo;</a>
+        {% endif %}
+    </span>
+  </div>
+</body>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+// function inputCharacters(event) {
+//     // Si el evento es una tecla Enter
+//     if (event.key === 'Enter') {
+//         $("#fch_ingreso").val('06/03/2020');
+//         // event.preventDefault();
+//         // document.registrop.submit();
+//     }
+// }
+
+// $(document).ready(function(){
+//     document.write(d.getDate());
+// });
+
+// Si pulsamos tecla en un Input
+$("#persona").keydown(function (e){
+    // Capturamos qué telca ha sido
+    var keyCode= e.which;
+    // Si la tecla es el Intro/Enter
+    if (keyCode == 13){
+        // Calculo de fecha y hora
+        var xx= new Date();
+
+        var dia = xx.getDate() < 10 ? '0' + xx.getDate() : xx.getDate();
+        var mes =  ("0" + (xx.getMonth() + 1));
+        var anio = xx.getFullYear(); 
+        var hh = xx.getHours() < 10 ? '0' + xx.getHours() : xx.getHours();
+        var mm = xx.getMinutes() < 10 ? '0' + xx.getMinutes() : xx.getMinutes();
+
+        var fechatotal = anio + "-"+ mes +"-" + dia
+        var fechatxt = anio + mes + dia
+        var hora = hh + ":" + mm
+    //    alert(fechatotal);
+    // Evitamos que se ejecute eventos
+        $("#fch").val(fechatotal);
+        $("#fch_txt").val(fechatxt);
+        $("#hr").val(fechatotal + " " + hora);
+        $("#hr_txt").val(hora);
+    // event.preventDefault();
+        document.registrop.submit();
+    // Devolvemos falso
+    //  return false;
+   }
+ });
+</script>
+{% endblock %}

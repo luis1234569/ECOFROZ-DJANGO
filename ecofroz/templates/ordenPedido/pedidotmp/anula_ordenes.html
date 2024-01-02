@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+{% load l10n %}
+
+{% block extrahead %}
+<style>
+    body {font-family: Arial;}
+    
+    /* Style the tab */
+    .tab {
+      overflow: hidden;
+      border: 1px solid #ccc;
+      background-color: #f1f1f1;
+    }
+    
+    /* Style the buttons inside the tab */
+    .tab button {
+      background-color: inherit;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.3s;
+      font-size: 17px;
+    }
+    
+    /* Change background color of buttons on hover */
+    .tab button:hover {
+      background-color: #ddd;
+    }
+    
+    /* Create an active/current tablink class */
+    .tab button.active {
+      background-color: #ccc;
+    }
+    
+    /* Style the tab content */
+    .tabcontent {
+      display: none;
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      border-top: none;
+    }
+    
+    /* Style the close button */
+    .topright {
+      float: right;
+      cursor: pointer;
+      font-size: 28px;
+    }
+    
+    .topright:hover {color: red;}
+  </style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <br>
+  <h5>Anulación de Ordenes de Activos</h5>
+  <div class="row" style="margin-top: 25px;">
+    <div class="col-md 18 search">
+      <form class="form-inline my-2 my-lg-0"  method="GET">
+          <input class="form-control mr-sm-2" type="text" size="40;" placeholder="# de Orden ó palabra clave en descripción." name="buscar">
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+      </form>
+    </div>
+        <!-- <a class="btn btn-success" style="margin-right: 15px;"  href="">Exportar a Excel</a> -->
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+
+<div class="tab" style="margin-top: 25px;">
+  <button class="tablinks" onclick="openTab(event, 'PCotizar')" id="defaultOpen">Ordenes Para Anular</button>
+  <button class="tablinks" onclick="openTab(event, 'Cotizadas')">Ordenes Anuladas</button>
+</div>
+
+<div id="PCotizar" class="tabcontent">
+  <span onclick="this.parentElement.style.display='none'" class="topright">&times</span>
+  <div>
+    <table class="table table-dark table-striped" >
+      {%if consulta %}
+      <h4>Ordenes para Anular</h4>
+        <thead>
+          <tr>
+            <td scope="col"><strong>Orden N°</strong></td>
+            <td scope="col"><strong>Persona Solicita</strong></td>
+            <td scope="col"><strong>Fecha Solicitud</strong></td>
+            <td scope="col"><strong>Fecha Autorizacion</strong></td>
+            <td scope="col"><strong>Descripción</strong></td>
+            <td scope="col"><strong>Justificacion</strong></td>
+            <td scope="col"><strong>Analista de Compras</strong></td>
+            <td scope="col"><strong>Cotizado</strong></td>
+            <td scope="col"><strong>Opciones</strong></td>
+       
+          </tr>
+        </thead>
+        <tbody>
+          {% if consulta %}
+          {% for orden in consulta  %} 
+              <tr>
+                <td>{{ orden.numpedido_id }}</td>
+                <td>{{ orden.numpedido.usuario_solicita.first_name }}&nbsp;{{ orden.numpedido.usuario_solicita.last_name }}</td>
+                <td>{{ orden.numpedido.fchsolicita }}</td>
+                <td>{{ orden.numpedido.fchaprueba | default:"--" }}</td>
+                <td>{{ orden.descripcion}}</td>
+                <td>{{ orden.numpedido.justificacion_compra | default:"--" }}</td>
+                <td>{{ orden.numpedido.usuario_cotiza | default:"--" }}</td>
+                 {% if orden.numpedido.estado_cotiza %}
+                <td>SI</td>
+                 {% else %}
+                <td>NO</td>
+                {% endif %}
+
+                <td>
+                  <a class=" btn btn-primary glyphicon glyphicon-eye-open" title="Ver" href="{% url 'ordenpedido:anula_ordenes_confirma' orden.numpedido_id %}"></a>
+                  
+                </td>
+                
+
+              </tr>
+        
+         
+        {% endfor %}
+        {% endif %}
+        
+        {% else %}
+          <div class="alert-danger" role="alert">
+            <h3 style="text-align: center;">No hay Ordenes para Anular</h3>
+          </div>
+        {% endif %}
+    </table>
+  </div>  
+</div>
+
+<div id="Cotizadas" class="tabcontent">
+  <span onclick="this.parentElement.style.display='none'" class="topright">&times</span>
+  <div>
+    <table class="table table-borderless table-striped">
+      <h4>Ordenes Anuladas</h4>
+      <thead class="thead-dark" style="text-align: center;">
+        <tr>
+          <td scope="col"><strong>Orden N°</strong></td>
+          <td scope="col"><strong>Persona Solicita</strong></td>
+          <td scope="col"><strong>Fecha Solicitud</strong></td>
+          <td scope="col"><strong>Fecha Autorizacion</strong></td>
+          <td scope="col"><strong>Descripción</strong></td>
+          <td scope="col"><strong>Analista de Compras</strong></td>
+          <td scope="col"><strong>Cotizado</strong></td>
+          <td scope="col"><strong>Fecha Anulación</strong></td>
+          <td scope="col"><strong>Observaciones Anulación</strong></td>
+        </tr>
+      </thead>
+      <tbody>
+        {% for orden in anuladas %}
+        <tr>
+          <td>{{ orden.numpedido.numpedido }}</td>
+          <td>{{ orden.numpedido.usuario_solicita.first_name }}&nbsp;{{ orden.numpedido.usuario_solicita.last_name }}</td>
+          <td>{{ orden.numpedido.fchsolicita }}</td>
+          <td>{{ orden.numpedido.fchaprueba | default:"--" }}</td>
+          <td>{{ orden.descripcion}}</td>
+          <td>{{ orden.numpedido.usuario_cotiza | default:"--" }}</td>
+           {% if orden.numpedido.estado_cotiza %}
+          <td>SI</td>
+           {% else %}
+          <td>NO</td>
+          {% endif %}          
+          <td>{{ orden.numpedido.fchgenerac }}</td>
+          <td>{{ orden.numpedido.observa_compra }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+</div>
+
+<script>
+function openTab(evt, tabName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(tabName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+</script>
+{% endblock %}

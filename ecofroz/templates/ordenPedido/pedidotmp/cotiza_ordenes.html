@@ -1,0 +1,246 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}
+    <h2>Cotizar Ordenes de Pedidos</h2>
+{% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block content %}
+<div class="loader"></div>
+    <div class="container" style="margin: 25px auto;">
+      {% if form %}
+      <table class="table table-bordered table-sm">
+          <tbody>
+            {% for form in cot %}
+            <tr>
+              <th class="table-dark" scope="col" style="width: 25%;">N° de Pedido:</th>
+              <td style='font-size: 18px;color:blue;font-weight: bold;'>{{ form.numpedido.numpedido }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Usuario Solicitante:</th>
+              <td>{{ form.numpedido.usuario_solicita.first_name }} {{ form.numpedido.usuario_solicita.last_name }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Departamento Solicitante:</th>
+              <td>{{ form.numpedido.departamento }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Sector:</th>
+              <td>{{ form.numpedido.area }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Proyecto:</th>
+              <td>{{ form.numpedido.numproyecto | default:"--" }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Tipo Activo:</th>
+              <td>{{ form.numpedido.tipoactivo }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Descripción:</th>
+              <td>{{ form.descripcion }}</td>
+            </tr>
+            <tr>
+              <th class="table-dark" scope="col">Justificación Compra:</th>
+              <td>{{ form.numpedido.justificacion_compra }}</td>
+            </tr>
+            {% if form.numpedido.cotiza_observa %}
+            <tr>
+              <th class="table-dark" scope="col">Observaciones Adquisiciones:</th>
+              <td>{{ form.numpedido.cotiza_observa | default:"--" }}</td>
+            </tr>
+            {% endif %}
+            {% if form.numpedido.observa_selec_cot %}
+            <tr>
+              <th class="table-dark" scope="col">Observaciones Aprobador:</th>
+              <td>{{ form.numpedido.observa_selec_cot | default:"--" }}</td>
+            </tr>
+            {% endif %}
+            {% if form.numpedido.observa_compra %}
+            <tr>
+              <th class="table-dark" scope="col">Observaciones Administrativa:</th>
+              <td>{{ form.numpedido.observa_compra | default:"--" }}</td>
+            </tr>
+            {% endif %}
+            {% if form.cotiza_Ref %}
+            <tr>
+              <th class="table-dark" scope="col">Cotización Referencial:</th>
+              <td><a class="card-link" href="/media/{{ form.cotiza_Ref }}" target="_blank">{{ form.cotiza_Ref }}</a></td>
+            </tr>
+            {% endif %}
+
+            {% if form.otros_doc %}
+            <tr>
+              <th class="table-dark" scope="col">Otros Documentos:</th>
+              <td><a class="card-link" href="/media/{{ form.otros_doc }}" target="_blank">{{ form.otros_doc }}</a></td>
+            </tr>
+            {% endif %}
+
+            {% if form.img_1 %}
+            <tr>
+              <th class="table-dark" scope="col">Imagen 1:</th>
+              <td>
+                <a class="card-link" href="#" data-toggle="modal" data-target="#img_1" data-whatever="@getbootstrap">{{ form.img_1 }}</a>
+                <div class="modal fade" id="img_1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div>
+                        <img src="/media/{{ form.img_1 }}" class="img-thumbnail rounded" alt="...">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            {% endif %}
+            {% if form.img_2 %}
+            <tr>
+              <th class="table-dark" scope="col">Imagen 2:</th>
+              <td>
+                <a class="card-link" href="#" data-toggle="modal" data-target="#img_2" data-whatever="@getbootstrap">{{ form.img_2 }}</a>
+                <div class="modal fade" id="img_2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div>
+                        <img src="/media/{{ form.img_2 }}" class="img-thumbnail rounded" alt="...">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+          </tbody>
+      </table>
+      {% else %}
+      <div class="alert alert-danger">
+        NO EXISTEN DATOS
+      </div>
+      {% endif %}
+      <div class="dropdown-divider" style="margin: 25px auto;"></div>
+      <h5 class="display-6">Ingreso de Cotizaciones</h5>
+
+
+      <div style="margin: 25px auto">
+      <form method="POST" enctype="multipart/form-data" id="cotiza" onsubmit="return confirmation()">
+        {% csrf_token %}
+        {{ detalle.management_form }}
+        <div class="form-group">
+          <input id="usuario_solicita" type="hidden" name="pedido" value="{{ pedido }}">
+        </div>
+        <div class="custom-control custom-checkbox" hidden>
+          <input type="checkbox" class="custom-control-input" id="compra_directa" name="compra_directa">
+          <label class="custom-control-label" for="compra_directa">Monto de Aprobación Menor a $1000 (Compra Directa)</label>
+        </div>
+        <h6 id="cotiza1">Ingrese solo una cotización!</h6>
+        <table>
+          {% for detalle in detalle %}
+          <thead>
+            <tr>
+              <th>Valor</th>
+              <th>Proveedor</th>
+              <th>Cotización</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>{% render_field detalle.valor placeholder="000000.000" data-mask="999999.999" %}</th>
+              <th>{{ detalle.empresa_cotiza }}</th>
+              <th>{{ detalle.pdf_cotiza }}</th>
+            </tr>
+          </tbody>
+          {% endfor %}
+        </table>
+
+        <div class="dropdown-divider" style="margin: 25px auto;"></div>
+         <h5 class="display-6">Ingreso de Documentación Anexa</h5>
+          <label for="">(Ej: Comparativos, Cartas de Auspicio, Certificaciones, otros.)</label>
+          <input type="file" name="otros_docs_adqui" class="form-control">
+
+
+        <div style="margin-top: 20px;">
+          <h5 class="display-6">Observaciones/Recomendaciones</h5> 
+          <div>
+            <textarea class="form-control" id="exampleFormControlTextarea1" name="observa_cotiza" id="observa_cotiza" rows="5"></textarea>
+          </div>
+        </div>
+        <th><button type="submit" class="btn btn-primary" style="margin: 25px auto;" id="enviar">Enviar</button></th>
+      </form>
+      
+
+    </div>
+  </div>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+  function ordenarSelect(id_componente)
+    {
+      var selectToSort = jQuery('#' + id_componente);
+      var optionActual = selectToSort.val();
+      selectToSort.html(selectToSort.children('option').sort(function (a, b) {
+        return a.text === b.text ? 0 : a.text < b.text ? -1 : 1;
+      })).val(optionActual);
+    }
+    $(document).ready(function () {
+      ordenarSelect('id_cotizapedido_set-0-empresa_cotiza');
+    });
+    $(document).ready(function () {
+      ordenarSelect('id_cotizapedido_set-1-empresa_cotiza');
+    });
+    $(document).ready(function () {
+      ordenarSelect('id_cotizapedido_set-2-empresa_cotiza');
+    });
+
+    $(window).on("load", function() {
+        $(".loader").fadeOut("slow");
+    });
+
+  function confirmation(){
+    if(confirm("Recordó adjuntar las cotizaciones?")){
+      $(".loader").show();
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+
+    $(document).ready(function(){
+      $('#cotiza1').hide();
+      $('#compra_directa').on('change', function(){
+        if ($(this).is(':checked')) {
+          $('#cotiza1').show();
+          $('#id_cotizapedido_set-1-valor').prop('disabled', true);
+          $('#id_cotizapedido_set-1-empresa_cotiza').prop('disabled', true);
+          $('#id_cotizapedido_set-1-pdf_cotiza').prop('disabled', true);
+          $('#id_cotizapedido_set-2-valor').prop('disabled', true);
+          $('#id_cotizapedido_set-2-empresa_cotiza').prop('disabled', true);
+          $('#id_cotizapedido_set-2-pdf_cotiza').prop('disabled', true);
+        } else {
+          $('#cotiza1').hide();
+          $('#id_cotizapedido_set-1-valor').prop('disabled', false);
+          $('#id_cotizapedido_set-1-empresa_cotiza').prop('disabled', false);
+          $('#id_cotizapedido_set-1-pdf_cotiza').prop('disabled', false);
+          $('#id_cotizapedido_set-2-valor').prop('disabled', false);
+          $('#id_cotizapedido_set-2-empresa_cotiza').prop('disabled', false);
+          $('#id_cotizapedido_set-2-pdf_cotiza').prop('disabled', false);
+        }
+      });
+    });
+</script>
+{% endblock %}

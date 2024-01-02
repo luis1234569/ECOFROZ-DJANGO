@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block extrahead %}
+
+<style>
+.photo_gallery {
+    display: flex;    
+}
+
+.photo_gallery a {
+        display: inline-block;
+        height: 300px;
+    }
+
+.photo_gallery img {
+        object-position: center;
+        object-fit:scale-down;
+        height: 100%;
+        width: 100%;
+    }
+
+
+    
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/simplelightbox/2.7.0/simple-lightbox.css" integrity="sha512-8WAX0xL/cHZ38RXoX2gtuqkAwmDVAzGwoFVmHvn46IDHGWOjTHx0vcl9OapNrfOzpFtql0SNkv+0y0b5Fm8ZkA==" crossorigin="anonymous" />
+
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container" style="margin-top: 15px;">
+    <div class="row">
+        <div class="col">
+            <h4>Galería de fotos de&nbsp;<u>{{activo.activo_codigo }} </u></h4><br>
+            <u><h5>Descripción:</h5></u>
+            {{activo.activo_descripcion}}
+            {% for registro in activo.detalle.all %}
+            <h6>CUSTODIO ACTUAL:&nbsp;<u>{{registro.desc_activo_custodio }} </u></h6>
+            {% endfor %}
+
+            <a style="margin-top: 15px;" class=" btn btn-outline-secondary" title="Editar" href="{% url 'activos:editar_activos'  activo.id %}">Editar características del activo / Cargar Fotos</a>
+            <a style="margin-top: 15px;" class=" btn btn-outline-secondary" title="Regresar a Listar Activos" href="{% url 'activos:listar_activos'%}">Regresar a Listar Activos</a>
+   
+            <!-- PHOTO GALLERY -->
+    <section class="photo_gallery" style="margin-top: 15px;">
+      {% for gallery_image in activo.img_activos.all %}
+      <a href="{{ gallery_image.imagen_activo.url }}"><img src="{{ gallery_image.imagen_activo.url }}" alt="" title="" /></a>
+      {% endfor %}
+  </section>
+    
+</div>
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/simplelightbox/2.7.0/simple-lightbox.min.js" integrity="sha512-ZajFBgnksNp8Rj+AbmYe8ueOu45HiSjtf3QpqnRbHlq719m6VK0FkbYIqQ8wEnlVuJ1i9pC+z6Z9ewmDnUTMCg==" crossorigin="anonymous"></script>
+
+
+
+{% endblock content %}
+
+
+{% block extrajs %}
+
+<script>
+    var gallery = new SimpleLightbox('.photo_gallery a');
+</script>
+
+
+
+{% endblock %}

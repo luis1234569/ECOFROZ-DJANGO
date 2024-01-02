@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}
+    <h2>Ver Reportes Diarios de Noverdades Seguridad</h2>
+{% endblock %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block content %}
+<div class="loader"></div>
+    <div class="container" style="margin: 25px auto;">
+      <div class="btn-group" style="float: right;margin-bottom: 15px;">
+        <form method="POST">
+          {% csrf_token %}
+        <a type="button" class="btn btn-outline-secondary" href="{% url 'personal:listar_novedades' %}">Volver</a>
+        <button type="submit" class="btn btn-outline-primary" href="">Guardar</button>
+        <a type="button" class="btn btn-outline-warning" href="{% url 'personal:close_edit' pk %}">Cerrar Edición</a>
+      </div>
+      
+        <table class="table table-bordered table-sm" style="margin-top:15px;">
+                <tbody>
+                  
+                  <tr>
+                    <th class="table-dark" scope="col" style="width: 25%;">N° Reporte:</th>
+                    <td style='font-size: 18px; font-weight: bold;'>{{ query.numreporte }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Fecha y Hora de Reporte:</th>
+                    <td>{{ query.fchregistro }}</td>
+                  </tr>
+                  <tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Persona Registra:</th>
+                    <td>{{ query.guardia1 }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Guardia Acompañante:</th>
+                    <td>{{ query.guardia2 }}</td>
+                  </tr>
+                  <tr>
+                    <th class="table-dark" scope="col">Asunto:</th>
+                    <td>{{ query.asunto }}</td>
+                  </tr>
+
+          
+                 
+                
+                </tbody>
+        </table>
+      <div class="dropdown-divider" style="margin: 0px auto;"></div>
+      
+      <div>
+        <h5 class="display-6">Observaciones Guardianía:</h5> 
+        <div>
+
+      <div>
+        <textarea class="form-control" name="detalle" id=""  rows="15">{{ query.observaciones_guardias }}</textarea>
+
+      </div>
+      
+        <pre></pre>
+          <div>
+            <h5 class="display-6">Observaciones Administrativas de Seguridad:</h5> 
+            <div>
+              <textarea class="form-control" id="message-text" name="observaciones" rows="5">{{ query.observaciones_seg }}</textarea>
+            </div>
+            <pre></pre>
+            
+          </div>
+          <pre></pre>
+         
+        </form>
+      </div>
+    </div>
+    
+{% endblock %}
+
+{% block extrajs %}
+<script>
+  $(window).on("load", function() {
+        $(".loader").fadeOut("slow");
+    });
+
+    $(document).ready(function() {    
+        $('#enviar').on('click', function(){
+            //Añadimos la imagen de carga en el contenedor
+            $(".loader").show();
+            $(window).on("load", function(){
+                $(".loader").fadeOut("slow");
+            });
+        });              
+    });    
+</script>
+{% endblock %}

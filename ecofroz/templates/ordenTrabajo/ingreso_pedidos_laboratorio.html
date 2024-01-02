@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block extrahead %}
+<style type="text/css">
+    #salida_activo li {
+     display:inline;
+     margin-left: -10px;
+     padding-left:3px;
+     padding-right:60px;
+    }
+</style> 
+{% endblock %}
+
+{% block title %}
+    <h2>Laboratorio de Calidad</h2>
+{% endblock %}
+
+{% block content %}
+<div class="loader"></div>
+<div class="jumbotron" style="width: 75%; margin:auto; padding-top: 25px; margin-top: 15px; margin-bottom: 25px;">
+<h2 class="display-5">Ingreso de Facturas de Servicios Calidad</h2>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ detalle.management_form }}
+    <div class="form-group">
+        <input id="usuario_solicita" type="text" name="usuario_solicita" value="{{ user.id }}" hidden>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <!-- <label>{{ form2.ubica.label }}</label> -->
+            <select name="ubica" id="ubica" class="form-control in" required hidden >
+                <option value="" selected>-------</option>
+                {% for i in ubica %}
+                <option value="{{ i.id }}">{{ i.ubica_nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+            <!-- <label>{{ form2.departamento.label }}</label> -->
+            {% render_field form2.departamento hidden="True" %}
+        
+    </div>
+    
+       
+        <div class="form-group col-md-6">
+            <!-- <label>{{ form2.area.label }}</label> -->
+            <select name="area" id="area" class="form-control in" required hidden>
+                <option value="" selected>-------</option>
+                {% for i in area %}
+                <option value="{{ i.area_codigo }}" data-chained="{{ i.area_ubica }}">{{ i.area_nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group col-md-6">
+            <label>{{ form2.tipo_pedi.label }}</label>
+            <select name="tipo_pedi" id="tipo_pedi" class="form-control in" required>
+                <option value="" selected>-------</option>
+                {% for i in tipo %}
+                <option value="{{ i.cod }}" data-chained="{{ i.area_ubica }}">{{ i.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    
+
+
+    
+     <label>Ingrese la descripción del servicio</label>          
+      
+        {% render_field form.descripcion rows=5  %}
+
+        <p>
+        <div class="form-row" style="margin-top: 10px;">
+            <div class="col-md3">
+                <label>Ingrese el valor de la factura sin IVA</label>
+                <input id="valor" name="valor" placeholder="0000.00" class="form-control" data-mask="999999.99" required>
+            </div>
+
+            <div class="col-md6">
+                <label>Seleccione el proveedor</label>
+                <select name="proveedor" id="proveedor" class="form-control in" required>
+                    <option value="" selected>-------</option>
+                    {% for i in proveedor %}
+                    <option value="{{ i.nombre_empresa }}">{{ i.nombre_empresa }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-12">
+                <label></label>
+                
+            </div>
+        
+            <div class="col-md-6">
+                <label for="{{ form.cotiza_Ref.cant }}">Cargue la factura</label>
+                {%render_field form.cotiza_Ref id="facturaref"  %}
+            </div>
+            <div class="col-md-6">
+                <label for="{{ form.otros_doc.cant }}">Detalle Factura</label>
+                {{ form.otros_doc }}
+            </div>
+        
+        
+
+        <div class="col-md-12">
+            <p>    
+        </div>
+        
+        <div class="col-md-12">
+            <label for="{{ form2.justificacion_compra.jc }}">Justificación/Observaciones</label> 
+            {%render_field form2.justificacion_compra rows=5  %}
+            
+        </div>
+   
+  <div class="form-row">
+    <p>    
+</div>
+   
+  <div class="form-row">
+    <div class="col-md-12" style="margin-top: 10px;">
+        <button type="submit" class="btn btn-primary" id="enviar" name="enviar">Enviar</button>
+    </div>
+</div>  
+</form>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+
+
+$('#enviar').click(function(){
+ $('#facturaref').val($('#factura'))
+
+})
+
+$('#ubica').val(4);
+$('#departamento').val(107);
+$('#area').val(30);
+$('#tipo_pedido').val('OS');
+$('#descripcion').attr('required');
+//$('#justificacion_compra').val('Servicios de Laboratorio');
+
+
+  
+$("#orden_ref").hide().val("");
+
+function ordenarSelect(id_componente)
+    {
+      var selectToSort = jQuery('#' + id_componente);
+      var optionActual = selectToSort.val();
+      selectToSort.html(selectToSort.children('option').sort(function (a, b) {
+        return a.text === b.text ? 0 : a.text < b.text ? -1 : 1;
+      })).val(optionActual);
+    }
+
+    $(document).ready(function (){
+      ordenarSelect('proveedor');
+    });
+
+
+    $(window).on("load", function() {
+        $(".loader").fadeOut("slow");
+    });
+
+    $(document).ready(function() {    
+        $('#enviar').on('click', function(){
+                $(window).on("load", function(){
+                    $(".loader").fadeOut("slow");
+                });
+            });
+        });              
+    
+     
+
+</script>
+{% endblock %}

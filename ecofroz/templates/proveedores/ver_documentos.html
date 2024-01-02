@@ -1,0 +1,531 @@
+
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+
+{% block extrahead %}
+
+<meta charset="utf-8">
+
+<style>
+  th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+.caja {
+  margin-top: 10px;
+}
+
+.span-mod {
+   position: relative;
+   top: 0em;
+   left: 0em;
+   /* background-color: lime; */
+}
+
+.subtitulos {
+  font-weight: bold;
+}
+
+
+
+.carpetas {
+  color:khaki;
+  left: 1em;
+}
+
+.enlace {
+  position: relative;
+  left: 2.5em;
+}
+
+.centrado {
+  text-align:center;
+}
+
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+
+
+{% for nombre in proveedor %}  
+<div class="container-fluid">
+  
+  {% if messages %}
+
+  
+    <div class="row">
+      <div class="col-sm">
+        
+      </div>
+      <div class="col-sm">
+        {% for message in messages %}
+      <p{% if message.tags %} class="{{ message.tags }}"{% endif %} style="text-align: center;background-color:#17a2b8;color:white;font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">{{ message }}</p>
+      {% endfor %}
+      </div>
+      <div class="col-sm">
+        
+      </div>
+    </div>
+  
+
+    
+
+  {% endif %}
+
+
+<div class="row">
+  <div class="col-12">
+    <div class="row">
+    <h5 style="margin-top: 15px;">Documentos Anexos de {{ nombre.codigo_id.nombre_empresa }} - {{catego}}&nbsp;({{nota}}&nbsp;{{grade}})&nbsp;</h5>
+    </div>
+    
+    <div class="row">
+      <div style="width: 80%;" class="btn-group">
+        <a type="button" class="btn btn-success" href="{% url 'proveedores:actualiza_calf_indi' nombre.codigo_id.id %}">Actualiza Calificación</a>
+        <a type="button" style="margin-left: 3px;" class="btn btn-outline-secondary" href="{% url 'proveedores:editar_proveedor' nombre.codigo_id.id %}">Editar Info. General</a>
+        <a type="button" style="margin-left: 3px;" class="btn btn-outline-secondary" href="{% url 'proveedores:resp_encuesta' nombre.codigo_id.id %}">Ver Respuestas Encuesta</a>
+        {% if cate != 2 and cate != 5 and cate != 10 and cate != 20 and cate != 1 and cate != 19 and cate != 8 and cate != 9 and cate != 17 and cate != 21  %}
+        <a type="button" style="margin-left: 3px;" class="btn btn-outline-secondary" title="Ver/Cargar Fichas" href="{% url 'proveedores:ver_fichas' nombre.codigo_id.id %}">Ver/Cargar Fichas</a>
+        {% endif %}
+        {% if cate == 11 or cate == 3 or cate == 13 or cate == 14 or cate == 12 %}
+        <a type="button" style="margin-left: 3px;" class="btn btn-outline-secondary" title="Ver/Cargar Hojas MSDS" href="{% url 'proveedores:ver_hojas_msds' nombre.codigo_id.id %}">Cargar Hojas MSDS</a>
+        {% endif %}
+        {% if cate == 3 or cate == 13 or cate == 14 or cate == 12 %}
+        <a type="button" style="margin-left: 3px;" class="btn btn-outline-secondary" title="Ver/Cargar Etiquetas de Productos" href="{% url 'proveedores:ver_etiquetas_productos' nombre.codigo_id.id %}">Cargar Etiquetas de Productos</a>
+        {% endif %}
+      </div>
+    </div>
+    
+</div> 
+</div> 
+
+<!-- SUBCATEGORIAS AGRICOLAS (NO BORRAR): SE USAN CON LA LLAMADA A "{% url 'proveedores:ver_fichas_agricolas' nombre.codigo_id.id 1 %}"
+    1 FICHAS TECNICAS Pesticidas
+    2 FICHAS TECNICAS Foliares
+    3. FICHAS TECNICAS Fertilizantes
+    4. FICHAS TECNICAS MATERIA ORGANICA
+
+    13. FICHAS TECNICAS SEMILLAS
+
+    5. REGISTROS MAGAP PESTICIDAS
+    6. REGISTROS MAGAP Foliares
+    7. REGISTROS MAGAP Fertilizantes
+    8. REGISTROS MAGAP MAteria Orgánica
+
+    14. REGISTROS MAGAP SEMILLAS
+
+    9. MSDS PESTICIDAS
+    10. MSDS Foliares
+    11. MSDS Fertilizantes
+    12. MSDS Materia Orgánica
+
+    15. MSDS Semillas
+    16.Etiquetas de productos Foliares
+    17. Etiquetas de productos Pesticidas
+    18. Etiquetas de productos Fertilizantes
+    19. Etiquetas de productos MAteria Orgánica
+    20. Etiquetas de productis Semillas
+
+    21. Análisis Pesticidas
+    22. Análsis Foliares
+    23. Análisis Fertilizantes
+    24. Analsiis Materia Orgánica
+    25. Análisis Semillas
+
+    26. Certificados Pesticidas
+    27. Certificados Foliares
+    28. Certificados Fertilizantes
+    29. Certificados MAO
+    30. Certificados Semillas-->
+  
+  
+
+
+{% if cate == 20 %}
+<div class="container-fluid">
+  <br>
+
+  <div class="row">
+    {% if pes.respuesta == 'SI' %}
+    <div class="col">
+      <h5 class="centrado">Pesticidas<b>&nbsp;<a style="color:green;" class="glyphicon glyphicon-ok"></a></b></h5>
+      <div class="row container">
+      <div class="col">
+      <h4 class="glyphicon glyphicon-folder-close carpetas"></h4><a class="enlace"  title="Fichas Técnicas" href="{% url 'proveedores:ver_fichas_agricolas' nombre.codigo_id.id 1 %}"><b>Fichas Tecnicas</b></a>
+    </div>
+    <div class="col">
+      <h4 class="glyphicon glyphicon-folder-close carpetas"></h4><a class="enlace"  title="Regitros Agrocalidad/MAGAP" href="{% url 'proveedores:ver_fichas_agricolas' nombre.codigo_id.id 5 %}"><b>Agrocalidad</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+    <div class="col">
+      <h4 class="glyphicon glyphicon-folder-close carpetas"></h4><a class="enlace" title="Hojas MSDS" href="{% url 'proveedores:ver_fichas_agricolas' nombre.codigo_id.id 9 %}"><b>Hojas MSDS</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+    <div class="col"> 
+      <h4 class="glyphicon glyphicon-folder-close carpetas"></h4><a class="enlace" title="Etiquetas" href="{% url 'proveedores:ver_fichas_agricolas' nombre.codigo_id.id 17 %}"><b>Etiquetas</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+    <div class="col">
+      <h4 class="glyphicon glyphicon-folder-close carpetas"></h4><a class="enlace" title="Análisis" href="{% url 'proveedores:ver_fichas_agricolas' nombre.codigo_id.id 21 %}"><b>Análisis</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </div>  
+    <div class="col">
+    <h4 class="glyphicon glyphicon-folder-close carpetas"></h4><a class="enlace" title="Certificados" href="{% url 'proveedores:ver_fichas_agricolas' nombre.codigo_id.id 26 %}"><b>Certificados</b></a>&nbsp;
+  </div>
+  </div>
+    </div>
+    
+    {% else %}
+    <div class="col">
+        <h5 class="centrado">Pesticidas<b>&nbsp;<a style="color:red;" class="glyphicon glyphicon-remove"></a></b></h5>
+    </div> 
+    {% endif %}
+
+    {% if fol.respuesta == 'SI' %}
+    <div class="col">
+      <h5 class="centrado">Foliares<b>&nbsp;<a style="color:green;" class="glyphicon glyphicon-ok"></a></b></h5>
+      <div class="row container">
+    <div class="col">
+    <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace"  title="Fichas Tecnicas" href="{% url 'proveedores:ver_fichas_agricolas' nombre.codigo_id.id 2 %}"><b>Fichas Tecnicas</b></a>
+   </div>
+   <div class="col">
+    <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Regitros Agrocalidad/MAGAP" href="{% url 'proveedores:ver_fichas_agricolas' nombre.codigo_id.id 6 %}"><b>Agrocalidad</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </div>
+  <div class="col">
+    <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Certificados" href="{% url 'proveedores:ver_fichas_agricolas' nombre.codigo_id.id 10 %}"><b>Hojas MSDS</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </div>
+  <div class="col">
+    <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Etiquetas" href="{% url 'proveedores:ver_fichas_agricolas' nombre.codigo_id.id 16 %}"><b>Etiquetas</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </div>
+  <div class="col">  
+  <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Análisis" href="{% url 'proveedores:ver_fichas_agricolas' nombre.codigo_id.id 22 %}"><b>Análisis</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</div>
+<div class="col">  
+  <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Certificados" href="{% url 'proveedores:ver_fichas_agricolas' nombre.codigo_id.id 27 %}"><b>Certificados</b></a>&nbsp;
+</div> 
+</div>
+  </div>
+  {% else %}
+    <div class="col">
+        <h5 class="centrado">Foliares<b>&nbsp;<a style="color:red;" class="glyphicon glyphicon-remove"></a></b></h5>
+    </div> 
+  {% endif %}
+
+  {% if fer.respuesta == 'SI' %}
+    <div class="col">
+      <h5 class="centrado">Fertilizantes<b>&nbsp;<a style="color:green;" class="glyphicon glyphicon-ok"></a></b></h5>
+    <div class="row span-mod container">
+    <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Fichas Tecnicas" href="{% url 'proveedores:ver_fichas_agricolas' nombre.codigo_id.id 3 %}"><b>Fichas Tecnicas</b></a>
+    <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Regitros Agrocalidad/MAGAP" href="{% url 'proveedores:ver_fichas_agricolas' nombre.codigo_id.id 7 %}"><b>Agrocalidad</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Certificados" href="{% url 'proveedores:ver_fichas_agricolas' nombre.codigo_id.id 11 %}"><b>Hojas MSDS</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Etiquetas" href="{% url 'proveedores:ver_fichas_agricolas' nombre.codigo_id.id 18 %}"><b>Etiquetas</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Análisis" href="{% url 'proveedores:ver_fichas_agricolas' nombre.codigo_id.id 23 %}"><b>Análisis</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Certificados" href="{% url 'proveedores:ver_fichas_agricolas' nombre.codigo_id.id 28 %}"><b>Certificados</b></a>&nbsp;
+  </div>
+  </div>
+  {% else %}
+    <div class="col">
+        <h5 class="centrado">Fertilizantes<b>&nbsp;<a style="color:red;" class="glyphicon glyphicon-remove"></a></b></h5>
+    </div> 
+  {% endif %}
+
+  {% if mao.respuesta == 'SI' %}
+    <div class="col">
+      <h5 class="centrado">Materia Orgánica<b>&nbsp;<a style="color:green;" class="glyphicon glyphicon-ok"></a></b></h5>
+      <div class="row span-mod container">
+      <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Fichas Tecnicas" href="{% url 'proveedores:ver_fichas_agricolas' nombre.codigo_id.id 4 %}"><b>Fichas Tecnicas</b></a>&nbsp;
+      <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Regitros Agrocalidad/MAGAP" href="{% url 'proveedores:ver_fichas_agricolas' nombre.codigo_id.id 8 %}"><b>Agrocalidad</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Hojas MSDS" href="{% url 'proveedores:ver_fichas_agricolas' nombre.codigo_id.id 12 %}"><b>Hojas MSDS</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Etiquetas" href="{% url 'proveedores:ver_fichas_agricolas' nombre.codigo_id.id 19 %}"><b>Etiquetas</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Análisis" href="{% url 'proveedores:ver_fichas_agricolas' nombre.codigo_id.id 24 %}"><b>Análisis</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Certificados" href="{% url 'proveedores:ver_fichas_agricolas' nombre.codigo_id.id 29 %}"><b>Certificados</b></a>&nbsp;
+    </div>
+    </div>
+  {% else %}
+    <div class="col">
+        <h5 class="centrado">Materia Orgánica<b>&nbsp;<a style="color:red;" class="glyphicon glyphicon-remove"></a></b></h5>
+    </div> 
+  {% endif %}
+
+
+  {% if sem.respuesta == 'SI' %}
+    <div class="col">
+      <h5 class="centrado">Semillas<b>&nbsp;<a style="color:green;" class="glyphicon glyphicon-ok"></a></b></h5>
+      <div class="row span-mod container">
+        <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Fichas Tecnicas" href="{% url 'proveedores:ver_fichas_agricolas' nombre.codigo_id.id 13 %}"><b>Fichas Tecnicas</b></a>&nbsp;
+        <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Regitros Agrocalidad/MAGAP" href="{% url 'proveedores:ver_fichas_agricolas' nombre.codigo_id.id 14 %}"><b>Agrocalidad</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Certificados" href="{% url 'proveedores:ver_fichas_agricolas' nombre.codigo_id.id 15 %}"><b>Hojas MSDS</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Etiquetas" href="{% url 'proveedores:ver_fichas_agricolas' nombre.codigo_id.id 20 %}"><b>Etiquetas</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Análisis" href="{% url 'proveedores:ver_fichas_agricolas' nombre.codigo_id.id 25 %}"><b>Análisis</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <h4 class="glyphicon glyphicon-folder-close carpetas"></h4>&nbsp;&nbsp;<a class="enlace" title="Certificados" href="{% url 'proveedores:ver_fichas_agricolas' nombre.codigo_id.id 30 %}"><b>Certificados</b></a>&nbsp;
+      </div>
+  </div>
+  {% else %}
+    <div class="col">
+        <h5 class="centrado">Semillas<b>&nbsp;<a style="color:red;" class="glyphicon glyphicon-remove"></a></b></h5>
+    </div> 
+  {% endif %}
+
+
+
+</div>
+</div>
+
+  
+{% endif %} 
+
+    
+{% endfor %}
+  
+ 
+ 
+<div class="container-fluid bg-dark text-white" style="margin-top: 15px;">  
+  <div class="well text-muted text-center" style="padding-top: 1rem; padding-bottom: 1rem;">
+    <span class="glyphicon glyphicon-arrow-down" style="font-size: 2rem;"></span>
+    <h3>Arrastre los documentos aquí (Solamante Documentos Generales y de la categoria) </h3>
+  </div>
+</div>
+    
+    <div class="modal fade" id="modal-progress" data-backdrop="static" data-keyboard="false">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Uploading...</h4>
+          </div>
+          <div class="modal-body">
+            <div class="progress">
+              <div class="progress-bar" role="progressbar" style="width: 0%;">0%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+    {# 2. FILE INPUT TO BE USED BY THE PLUG-IN #}
+    {% for empresa in proveedor %}
+    <input id="fileupload" type="file" name="archivos" multiple
+           style="display: none;"
+           data-url="{% url 'proveedores:ver_documentos' empresa.codigo_id.id %}"
+           data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'>
+    {% endfor %}
+
+    <div class="container-fluid">
+      <table id="gallery" class="table table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">No</th>
+            <th scope="col">Documento Entregado</th>
+            <th scope="col"></th>
+            <th scope="col">Fecha del Documento</th>
+            <th scope="col">Opciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for documento in cabecera %}
+          <form enctype="multipart/form-data" method="POST" action="{% url 'proveedores:save_fecha_documento' documento.id documento.proveedor.id %}">
+            {% csrf_token %}
+          <tr>
+            <td><strong>{{ forloop.counter }}</strong></td>
+            {% if documento.nombre_corto %} 
+            <td style="width: 700px;"><a href="{{ documento.archivos.url }}" target="_blank">{{ documento.nombre_corto }}</a></td>
+            {% else %}
+            <td style="width: 700px;" ><a href="{{ documento.archivos.url }}" target="_blank">{{ documento.archivos.name }}</a></td> 
+            {% endif %}
+            <td style="text-align:center;width: 150px;"></td>
+              {% if documento.es_doc_categoria  %}
+              <a class="glyphicon glyphicon-ok"></a>
+              {% else %}
+              <label></label>
+            </td>
+            <td>
+              <input type="date" name="fecha-documento-cabecera" id="fecha-documento-cabecera" class="form-control" value="{{ documento.fecha_documento | date:'Y-m-d' }}">
+            </td>
+            
+            {% endif %}
+            
+            <td>
+            <a class="btn btn-danger btn-sm glyphicon glyphicon-remove" title="Eliminar" href="{% url 'proveedores:eliminar_documentos' documento.id documento.proveedor.id %}"></a>
+            <button type="submit" class="btn btn-outline-primary glyphicon glyphicon-floppy-saved" title="Almacenar Fecha Documento"></button>
+          </td>
+          {% endfor %}  
+  </form>
+  <p>    
+    {# 3. TABLE TO DISPLAY THE UPLOADED DOCS #}
+    <div class="container-fluid"  style="margin-top: 15px;">
+      <table id="gallery" class="table table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">No</th>
+            <th scope="col">Documento Entregado</th>
+            <th scope="col">Doc. de la categoría</th>
+            <th scope="col">Fecha del Documento</th>
+            <th scope="col">Opciones</th>
+          </tr>
+        </thead>
+      
+      {% if cate == 20 %}
+        {% for documento in documentos_list %}
+        <form enctype="multipart/form-data" method="POST" action="{% url 'proveedores:save_fecha_documento' documento.id documento.proveedor.id %}">
+          {% csrf_token %}
+          <tr>
+            <td style="width: 5%;"><strong>{{ forloop.counter }}</strong></td>
+            
+             {% if documento.nombre_corto %} 
+            <td style="width: 700px;"><a href="{{ documento.archivos.url }}" target="_blank">{{ documento.nombre_corto }}</a></td>
+             {% else %}
+            <td style="width: 700px;"><a href="{{ documento.archivos.url }}" target="_blank">{{ documento.archivos.name }}</a></td> 
+             {% endif %}
+          
+
+            <td style="width: 150px; text-align:center;">
+              {% if documento.es_doc_categoria  %}
+              <a class="glyphicon glyphicon-ok"></a>
+              {% else %}
+              <label>--</label>
+            </td>
+            
+            {% endif %}
+
+            <td>
+              <input type="date" name="fecha-documento-cuerpo" id="fecha-documento-cuerpo" class="form-control" value="{{ documento.fecha_documento | date:'Y-m-d' }}">
+            </td>
+           
+            <td>             
+            <a class="btn btn-danger btn-sm glyphicon glyphicon-remove" title="Eliminar" href="{% url 'proveedores:eliminar_documentos' documento.id documento.proveedor.id %}"></a>
+            <button type="submit" class="btn btn-outline-primary glyphicon glyphicon-floppy-saved" title="Almacenar Fecha Documento"></button>  
+          </td>
+           
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </form>
+    <p>
+   {% else %}
+    {% for documento in documentos_list %}
+    <form enctype="multipart/form-data" method="POST" action="{% url 'proveedores:save_fecha_documento' documento.id documento.proveedor.id %}">
+      {% csrf_token %}
+          <tr>
+            <td style="width: 5%;"><strong>{{ forloop.counter }}</strong></td>
+           
+           {% if documento.archivos.name == 'FICHAS_TECNICAS' %}
+            <td style="width: 700px;"><a href="{% url 'proveedores:ver_fichas' documento.proveedor.id %}" target="_blank">{{ documento.archivos.name }}</a></td>
+            {% else %}  
+            {% if documento.nombre_corto %} 
+            <td style="width: 700px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><a href="{{ documento.archivos.url }}" target="_blank">{{ documento.nombre_corto }}</a></td>
+            {% else %}
+            <td style="width: 700px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><a href="{{ documento.archivos.url }}" target="_blank">{{ documento.archivos.name }}</a></td> 
+            {% endif %}
+    
+        {% endif %}
+
+
+            <td style="width: 150px;text-align:center;">
+              {% if documento.es_doc_categoria  %}
+              <a class="glyphicon glyphicon-ok"></a>
+              {% else %}
+              <label>--</label>
+            </td>
+            {% endif %}
+
+            {% if documento.archivos.name == 'FICHAS_TECNICAS' or documento.archivos.name == 'FICHAS_TECNICAS_PESTICIDAS' or documento.archivos.name == 'FICHAS_TECNICAS_FOLIARES' or documento.archivos.name == 'FICHAS_TECNICAS_FERTILIZANTES' or documento.archivos.name == 'FICHAS_TECNICAS_MATERIA_ORGANICA'   %}
+            <td>
+              <input type="date" class="form-control" value="{{ documento.fecha_documento | date:'Y-m-d' }}" hidden="true">
+            </td>
+            {% else %}
+            <td>
+              <input type="date" name="fecha-documento-cuerpo" id="fecha-documento-cuerpo" class="form-control" value="{{ documento.fecha_documento | date:'Y-m-d' }}">
+            </td>
+            {% endif %}
+
+            <td style="width:10%;text-align: center;">
+              {% if documento.archivos.name == 'FICHAS_TECNICAS_FERTILIZANTES' or documento.archivos.name == 'FICHAS_TECNICAS_FOLIARES' or documento.archivos.name == 'FICHAS_TECNICAS_PESTICIDAS' or documento.archivos.name == 'FICHAS_TECNICAS_MATERIA_ORGANICA' or documento.archivos.name == 'FICHAS_TECNICAS' %}
+            <a class="btn btn-warning glyphicon glyphicon-minus-sign" title="Marcar incompleto" href="{% url 'proveedores:confirma_completo' documento.id documento.proveedor.id %}"></a>
+            {% else %}
+            <a class="btn btn-danger btn-sm glyphicon glyphicon-remove" title="Eliminar" href="{% url 'proveedores:eliminar_documentos' documento.id documento.proveedor.id %}"></a>
+            <button type="submit" class="btn btn-outline-primary glyphicon glyphicon-floppy-saved" title="Almacenar Fecha Documento"></button>
+            {% endif %}
+          </td>
+           
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </form>
+    <p>
+    {% endif %}
+
+
+      {# 4. TABLA PARA MOSTRAR DOCUMENTOS PENDIENTES DE ENTREGA #}
+  <p><strong>Documentos Pendientes de Entrega</strong></p>
+  <table id="gallery" class="table table-bordered">
+    <thead>
+      {% if cate == 20 %}
+      {% for documento in lista_solicitada %} 
+        <tr>
+          <td style="width: 5%;"><strong>{{ forloop.counter }}</strong></td>
+            <td style="width: 700px;">{{ documento.nombre_documento }}</td>
+            {%if documento.nombre_documento == 'FICHAS_TECNICAS' or documento.nombre_documento == 'FICHAS_TECNICAS_PESTICIDAS' or documento.nombre_documento == 'FICHAS_TECNICAS_FOLIARES' or documento.nombre_documento == 'FICHAS_TECNICAS_MATERIA_ORGANICA' or documento.nombre_documento == 'FICHAS_TECNICAS_FERTILIZANTES' %}
+            <td><a class="btn btn-success btn-sm glyphicon glyphicon-check" title="Marcar completo" href="{% url 'proveedores:confirma_completo_agricola' documento.id documento.id_prov documento.nombre_documento %}"></a></td>
+            {% else %}
+            <td></td>
+            {% endif %}
+        </tr>
+      {% endfor %}
+    
+
+      {% else %}
+      {% for documento in lista_solicitada %} 
+        <tr>
+          <td style="width: 5%;"><strong>{{ forloop.counter }}</strong></td>
+            <td style="width: 700px;">{{ documento.nombre_documento }}</td>
+            {%if documento.nombre_documento == 'FICHAS_TECNICAS' or documento.nombre_documento == 'FICHAS_TECNICAS_PESTICIDAS' or documento.nombre_documento == 'FICHAS_TECNICAS_FOLIARES' or documento.nombre_documento == 'FICHAS_TECNICAS_MATERIA_ORGANICA' or documento.nombre_documento == 'FICHAS_TECNICAS_FERTILIZANTES' %}
+            <td><a class="btn btn-success btn-sm glyphicon glyphicon-check" title="Marcar completo" href="{% url 'proveedores:confirma_completo' documento.id documento.id_prov %}"></a></td>
+            {% else %}
+            <td></td>
+            {% endif %}
+        </tr>
+      {% endfor %}
+      {% endif %}
+    </tbody> 
+  </table>
+
+  <!-- <p><strong>Observaciones Administrativas</strong></p>
+  <form enctype="multipart/form-data" method="POST" action="{#}"></form>
+  <textarea class="form-control" rows="8" cols="20">
+  </textarea>
+  <br>
+  <button type="submit" class="btn btn-primary" id="guarda-observa" name="guarda-observa">Guardar</button>
+</form>
+  </div> -->
+    
+    
+
+
+{% endblock content %}
+
+
+{% block extrajs %}
+<!-- <script>
+  if ('{{ mensaje }}'){
+  alert('{{ mensaje }}');
+  }
+</script> -->
+
+{% load static %}
+
+<script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+<script src="{% static 'js/jquery-file-upload/js/vendor/jquery.ui.widget.js' %}"></script>
+<script src="{% static 'js/jquery-file-upload/js/jquery.iframe-transport.js' %}"></script>
+<script src="{% static 'js/jquery-file-upload/js/jquery.fileupload.js' %}"></script>
+
+<script src="{% static 'js/basic-upload.js' %}"></script>
+
+
+
+
+{% endblock %}

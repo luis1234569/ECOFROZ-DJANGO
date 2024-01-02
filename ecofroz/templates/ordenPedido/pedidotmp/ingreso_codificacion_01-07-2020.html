@@ -1,0 +1,154 @@
+{% extends 'ordenPedido/pedidotmp/activaciones.html' %}
+{% load widget_tweaks %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block title %}
+    <h2>Ordenes de Pedidos</h2>
+{% endblock %}
+
+{% block second_content %}  
+<div class="loader"></div>
+<div class="container" style="margin: 25px auto;">
+<!-- <h4 class="display-6">Hola {{ user.first_name }} {{ user.last_name }}</h4> -->
+<form method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+        <input id="usuario_solicita" type="text" name="usuario_solicita" hidden value="{{ user.id }}">
+    </div>
+    <div class="form-group col-md-6">
+        <!-- <label>{{ form2.activo_nomenclatura.label }}</label> -->
+        {{ form2.activo_nomenclatura }}
+    </div>
+    <div class="form-group col-md-6">
+        <!-- <label>{{ form2.activo_codigo.label }}</label> -->
+        {% render_field form2.activo_codigo value=nomen readonly="True" %}
+    </div>
+    <div class="form-group col-md-6">
+        <!-- <label for="{{ form2.activo_grupo.ag }}">{{ form2.activo_grupo.label }}</label> -->
+        {{ form2.activo_grupo }}
+    </div>
+    <div class="form-group col-md-6">
+        <!-- <label for="{{ form2.activo_tipo.at }}">{{ form2.activo_tipo.label }}</label> -->
+        {{ form2.activo_tipo }}
+    </div>
+    <div class="form-group col-md-6">
+        <!-- <label for="{{ form2.activo_depar.ad }}">{{ form2.activo_depar.label }}</label> -->
+        {{ form2.activo_depar }}
+    </div>
+    <div class="form-group col-md-6">
+        <!-- <label for="{{ form2.activo_area.aa }}">{{ form2.activo_area.label }}</label> -->
+        {{ form2.activo_area }}
+    </div>
+    <div class="col-md-12">
+        <!-- <label for="{{ form2.activo_descripcion.ad }}">{{ form2.activo_descripcion.label }}</label> -->
+        {{ form2.activo_descripcion }}
+    </div>
+    <div class="col-md-2">
+        <!-- <label for="{{ form.desc_activo_usuario_registra.daur }}">{{ form.desc_activo_usuario_registra.label }}</label> -->
+        {% render_field form.desc_activo_usuario_registra value=user.username readonly="True" %}
+    </div>
+    <div class="form-group col-md-6">
+        <!-- <label for="{{ form2.activo_ubica.au }}">{{ form2.activo_ubica.label }}</label> -->
+        {% render_field form2.activo_ubica readonly="True" %}
+    </div>
+    <div class="form-group col-md-6">
+        <!-- <label for="{{ form.desc_activo_marca.ma }}">{{ form.desc_activo_marca.label }}</label> -->
+        {{ form.desc_activo_marca }}
+    </div>
+    <div class="form-group col-md-6">
+        <!-- <label for="{{ form.desc_activo_num_serie.ns }}">{{ form.desc_activo_num_serie.label }}</label> -->
+        {{ form.desc_activo_num_serie }}
+    </div>
+    <div class="form-group col-md-6">
+        <!-- <label for="{{ form.desc_activo_modelo.mo }}">{{ form.desc_activo_modelo.label }}</label> -->
+        {{ form.desc_activo_modelo }}
+    </div>
+    <div class="form-group col-md-6">
+        <!-- <label for="{{ form.desc_activo_proveedor.ap }}">{{ form.desc_activo_proveedor.label }}</label> -->
+        {% render_field form.desc_activo_proveedor value=proveedor readonly="True" %}
+    </div>
+    <h4 class="display-6">Activaciones</h4> 
+    <div class="form-check form-check-inline" style="margin-top: 10px;">
+        <input class="form-check-input" type="radio" name="Activaciones" id="inlineRadio1" value="1">
+        <label class="form-check-label" for="inlineRadio1" required>Activar</label>
+    </div>
+    <div class="form-check form-check-inline" style="margin-top: 10px;">
+        <input class="form-check-input" type="radio" name="Activaciones" id="inlineRadio2" value="2">
+        <label class="form-check-label" for="inlineRadio2" required>No Activar</label>
+    </div>
+    <div style="margin-top: 10px;">
+        <h4 class="display-6">Observaciones/Recomendaciones</h4> 
+        <div>
+        <textarea class="form-control" name="observa_activa" id="observa_activa" rows="5"></textarea>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3" style="margin-top: 10px;">
+            <button type="submit" class="btn btn-primary" id="enviar">Guardar</button>
+            <!-- <a class="btn btn-danger" href="{% url 'ordenpedido:crea_pdf' nomen %}" target="_blank">Imprimir</a> -->
+        </div>
+    </div> 
+</form>
+</div>
+
+<!-- <div style="float: right; width: 30%; padding: 0px 0px 0px 10px">
+    <h3>Contenido derecho</h3>
+</div> -->
+{% endblock second_content %}
+
+{% block extrajs %}
+<script>
+    $("#reemplazo_accion_div").hide().val("");
+    // $("#reemplazo_accion_label").hide();
+    
+    $("#motivo_compra").change(function(){
+        var opcion = $(this).val();
+
+        if (opcion == "reemplazo_m" || opcion == "reemplazo_o")
+            $("#reemplazo_accion_div").show();
+        else
+            $("#reemplazo_accion_div").hide().val("");
+            // $("#reemplazo_accion_label").hide();
+    });
+
+    function ordenarSelect(id_componente)
+    {
+      var selectToSort = jQuery('#' + id_componente);
+      var optionActual = selectToSort.val();
+      selectToSort.html(selectToSort.children('option').sort(function (a, b) {
+        return a.text === b.text ? 0 : a.text < b.text ? -1 : 1;
+      })).val(optionActual);
+    }
+    $(document).ready(function () {
+      ordenarSelect('selectPaises');
+    });
+
+    function ordenarSelect(id_componente)
+    {
+      var selectToSort = jQuery('#' + id_componente);
+      var optionActual = selectToSort.val();
+      selectToSort.html(selectToSort.children('option').sort(function (a, b) {
+        return a.text === b.text ? 0 : a.text < b.text ? -1 : 1;
+      })).val(optionActual);
+    }
+    $(document).ready(function () {
+      ordenarSelect('tiempo_tipo');
+    });
+
+    $(window).on("load", function() {
+      $(".loader").fadeOut("slow");
+    });
+
+    $(document).ready(function() {    
+        $('#enviar').on('click', function(){
+            //Añadimos la imagen de carga en el contenedor
+            $(".loader").show();
+            $(window).on("load", function(){
+                $(".loader").fadeOut("slow");
+            });
+        });              
+    });
+</script>
+{% endblock %}

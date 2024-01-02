@@ -1,0 +1,125 @@
+{% extends 'proveedores/base_proveedores.html' %}
+
+{% block content %}
+<div class="jumbotron jumbotron-fluid" style="width: 85%; margin:auto;">
+        <h2 class="display-3">Edición de Información Proveedores</h2>
+    
+    <br>
+    <h3 class="display-3">Información General</h3>
+    <br>
+    <br>
+
+<form enctype="multipart/form-data" method="POST">
+{% csrf_token %}
+  <!-- {{ form.as_p }}  -->
+  <!-- {{ form2.as_p }} -->
+ 
+  <!-- <div class="row" style="width: 40%">  -->
+  <div class="form-row"> 
+    
+    <div class="form-group col-md-6" >
+      <label for="{{ form.respondio_encuesta.label }}">{{ form.respondio_encuesta.label }}</label> 
+      {{ form.respondio_encuesta }}
+      </div> 
+      
+      <div class="form-group col-md-6" >
+        <label for="{{ form.nombre_empresa.label }}">{{ form.nombre_empresa.label }}</label>  
+        {{ form.nombre_empresa }} 
+      </div>
+      <div class="form-group col-md-6" >
+        <label for="{{ form.direccion_matriz.label }}">{{ form.direccion_matriz.label }}</label> 
+        {{ form.direccion_matriz }}
+      </div> 
+      <div class="form-group col-md-6" >
+        <label for="{{ form.horario_trabajo.label }}">{{ form.horario_trabajo.label }}</label> 
+        {{ form.horario_trabajo }}
+      </div>      
+      <div class="form-group col-md-6" >
+        <label for="{{ form.representante_legal.label }}">{{ form.representante_legal.label }}</label> 
+        {{ form.representante_legal }}
+              <br>
+      </div>       
+  </div> 
+
+  <div class="form-group" >
+    <label for="{{ form.ruc.label }}">{{ form.ruc.label }}</label> 
+    {{ form.ruc }}
+          <br>
+  </div> 
+  
+  <div class="form-row">  
+    <div class="form-group col-md-6" >
+        <label for="{{ form.telefono.label }}">{{ form.telefono.label }}</label> 
+        {{ form.telefono }}
+    </div> 
+
+    <div class="form-group col-md-6" >
+          <label for="{{ form.celular.label }}">{{ form.celular.label }}</label> 
+          {{ form.celular }}
+    </div> 
+  </div>
+
+  <div class="form-group" >
+    <label for="{{ form.nombre_contacto_ecofroz.label }}">{{ form.nombre_contacto_ecofroz.label }}</label> 
+    {{ form.nombre_contacto_ecofroz }}
+          <br>
+  </div> 
+
+    
+  <div class="form-row"> 
+    <label for="{{ form.calificacion.label }}">{{ form.calificacion.label }}</label> 
+          {{ form.calificacion }}
+    </div> 
+
+    <div class="form-group col-md-6" >
+        <label for="{{ form2.carta_presentacion.label }}">{{ form2.carta_presentacion.label }}</label> 
+        {{ form2.carta_presentacion }}
+    </div> 
+    
+    <div class="form-group col-md-8" >
+        <label for="{{ form2.monto_ventas_2018.label }}">{{ form2.monto_ventas_2018.label }}</label> 
+        {{ form2.monto_ventas_2018 }}
+  </div> 
+      
+  <div class="form-group col-md-6" >
+    <label for="{{ form2.antiguedad.label }}">{{ form2.antiguedad.label }}</label> 
+    {{ form2.antiguedad }}
+</div> 
+
+<div class="form-group col-md-6" >
+    <label for="{{ form2.num_trabajadores_fijos.label }}">{{ form2.num_trabajadores_fijos.label }}</label> 
+    {{ form2.num_trabajadores_fijos }}
+</div> 
+
+<div class="form-group col-md-6" >
+    <label for="{{ form2.num_clientes.label }}">{{ form2.num_clientes.label }}</label> 
+    {{ form2.num_clientes }}
+</div> 
+
+<div class="form-group col-md-6" >
+    <label for="{{ form2.num_proveedores.label }}">{{ form2.num_proveedores.label }}</label> 
+    {{ form2.num_proveedores }}
+</div> 
+
+<div class="form-group col-md-8" >
+    <label for="{{ form2.valores_empresa.label }}">{{ form2.valores_empresa.label }}</label> 
+    {{ form2.valores_empresa }}
+</div> 
+
+
+
+
+<div class="row" style="width:40%">
+    <button type="submit" style="margin-top:5px;" class="btn btn-primary btn-lg">Guardar</button>
+<br>
+<br>
+</div>
+</div>
+<br>
+<br>
+
+</form>
+</div>
+
+
+{% endblock content %}
