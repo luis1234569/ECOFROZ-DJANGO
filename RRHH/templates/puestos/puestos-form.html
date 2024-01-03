@@ -1,1 +1,51 @@
-<h1>form</h1>
+{% extends "layout/base.html" %}
+{% block content %}
+<div class="jumbotron" style="width: 75%; margin:auto; padding-top: 25px; margin-top: 50px; margin-bottom: 25px;">
+    <h3 class="display-6">Ingreso de solicitud personal</h3>
+    <form method="post">
+
+        {% csrf_token %}
+        <!-- {{ form.as_p }} -->
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label>{{ form.ubicacion.label }}</label>
+                {{ form.ubicacion }}
+            </div>
+            <div class="form-group col-md-6">
+                <label>{{ form.departamento.label }}</label>
+                {{ form.departamento }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="">{{ form.area.label }}</label>
+                {{ form.area }}
+            </div>
+            <div class="form-group col-md-6">
+                <label for="">{{ form.motivo.label }}</label>
+                {{ form.motivo }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="">{{ form.puesto.label }}</label>
+                {{ form.puesto }}
+            </div>
+            <div class="form-group col-md-6">
+                <label for="">{{ form.descripcion.label }}</label>
+                {{ form.descripcion }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <label for="">{{ form.justificacion.label }}</label>
+                {{ form.justificacion }}
+            </div>
+        </div>
+
+    
+        <button class="btn btn-primary" type="submit">Enviar Solicitud</button>
+    </form>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,6 @@
+<form method="post">
+    {% csrf_token %}
+    <p>¿Estás seguro que quieres eliminar esta solicitud?</p>
+    <button type="submit">Sí, eliminar</button>
+    <a href="{% url 'solicita_puestos:listar_solicita_puesto' %}">Cancelar</a>
+</form>

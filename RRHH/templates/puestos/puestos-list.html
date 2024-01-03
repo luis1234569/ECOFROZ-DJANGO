@@ -22,30 +22,53 @@
 {% block content %}
 <div class="container" style="margin: 25px auto;">
     <div class="row">
-        <div class="col-md-6 search">
-        </div>
+      <div class="col-md-6 search">
+        <form class="form-inline my-2 my-lg-0" method="GET">
+          <input class="form-control mr-sm-2" type="text" placeholder="N° Pedido, Descripción" name="buscar" {% if busqueda %} value="{{ busqueda }}" {% endif %}>
+          <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+          <a class="btn  btn-secondary my-2 my-sm-0" style="margin-left: 10px;" href="{% url 'solicita_puestos:listar_solicita_puesto' %}"></button>Limpiar</a>
+        </form>
+      </div>
+      <div class="col-md-6">
+        <a class="btn btn-lg btn-success rounded-circle" style="float: right;" href="{% url 'solicita_puestos:crear_solicita_puesto' %}" title="Nuevo Pedido">+</a>
+      </div>
     </div>
-</div>
+  </div>
 <div class="container">
-    <h4 id="titulo">Requisición de Activos</h4>
+    <h4 id="titulo">Solicitud de ingreso de personal</h4>
 </div>
-<table class="table table-dark table-small table-striped container-fluid" style="margin: 5px auto" id="tabla-reporte">
 
+<table class="table table-dark table-small table-striped container-fluid" style="margin: 5px auto" id="tabla-reporte">
     <thead>
         <tr>
             <th scope="col">Pedido N°</th>
-            <th scope="col">Nombre</th>
-            <th scope="col">Descripción</th>
+            <th scope="col">departamento</th>
+            <th scope="col">Puesto</th>
             <th scope="col">Justificación</th>
+            <th scope="col">Estado Aprobación</th>
+            <th scope="col">Opciones</th>
         </tr>
     </thead>
     <tbody>
         {% for item in puestosSolicitados %}
         <tr>
             <td>{{ item.id }}</td>
+            <td>{{ item.departamento.dep_nombre }}</td>
             <td>{{ item.puesto }}</td>
-            <td>{{ item.descripcion }}</td>
             <td>{{ item.justificacion }}</td>
+            {% if item.estado_aprobacion == 1 %}
+            <td>Aprobado</td>
+            {% elif item.estado_aprobacion == 0 %}
+            <td>Rechazado</td>
+            {% elif item.estado_aprobacion == 2 %}
+            <td style="color:rgb(230, 168, 11)"><b>Anulada</b></td>
+            {% else %}
+            <td>Pendiente</td>
+            {% endif %}
+            <td>
+                <a href="{% url 'solicita_puestos:editar_solicita_puesto' item.id %}" class="btn btn-primary glyphicon glyphicon-edit" title="Editar"></a>
+                <a href="{% url 'solicita_puestos:eliminar_solicita_puesto' item.id %}" class="btn btn-danger glyphicon glyphicon-remove" title="Eliminar"></a>
+            </td>
         </tr>
         {% endfor %}
     </tbody>
