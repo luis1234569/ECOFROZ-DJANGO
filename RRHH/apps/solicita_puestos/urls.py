@@ -3,8 +3,13 @@ from .views import *
 
 urlpatterns = [
     path('', SolicitaPuestoList, name = 'listar_solicita_puesto'),
-    path('form/', SolicitaPuestoCreateView.as_view(), name='crear_solicita_puesto'),
-    path('form/edit/<int:pk>/', SolicitaPuestoUpdateView.as_view(), name='editar_solicita_puesto' ),
-    path('delete/<int:pk>/', SolicitaPuestoDeleteView.as_view(), name='eliminar_solicita_puesto' )
+    path('form-solicita-puesto/', SolicitaPuestoCreateView.as_view(), name='crear_solicita_puesto'),
+    path('form-solicita-puesto/edit/<int:pk>/', SolicitaPuestoUpdateView.as_view(), name='editar_solicita_puesto' ),
+    path('delete-solicita-puesto/<int:pk>/', SolicitaPuestoDeleteView.as_view(), name='eliminar_solicita_puesto' ),
+    path('list-solicita-puesto-aprueba/', SolicitaPuestoListAprueba, name='listar_solicita_puesto_aprueba'  ),
+    path('aprobado/<int:pk>', SolicitarPuestoAprobar, name='aprobar_solicita_puesto'),
+    path('list-solicita-puesto-rrhh/', SolicitaPuestoListRRHH, name='listar_solicita_puesto_rrhh'  ),
+    path('ubica_area_ajax', ubicaAreaAjax, name='ubica_area_ajax'),
+    path('procesosadministrativos/solicita-cargo', SolicitaCargoCreateView), 
     
 ]

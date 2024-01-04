@@ -44,15 +44,24 @@ class activo_areas(models.Model):
         return str(self.area_nombre)
 
 
+class Cargo(models.Model):
+    cargo = models.CharField(max_length=30)
+    descripcion = models.CharField(max_length=100)
+
+    def __str__(self):
+        return str(self.cargo)
+    
 class solicita_puesto(models.Model):
     ubicacion = models.ForeignKey(activo_ubica, models.DO_NOTHING)
     departamento = models.ForeignKey(activo_depar, models.DO_NOTHING)
     area = models.ForeignKey(activo_areas, models.DO_NOTHING)
     puesto = models.CharField(blank=True, null=False, max_length=20)
-    descripcion = models.CharField(blank=True, null=True, max_length=255)
+    cargo = models.ForeignKey(Cargo, models.DO_NOTHING)
     justificacion = models.CharField(blank=True, null=False, max_length=255)
     solicitante = models.CharField(blank=True, null=False, max_length=255)
     fecha_solicitud = models.DateTimeField(auto_now_add=True)
+    fecha_aprueba = models.DateTimeField(blank=True, null=True)
+    usuario_aprueba = models.CharField(max_length=50,blank=True, null=True )
     estado_aprobacion = models.IntegerField(
         blank=True, null=True, choices=estado)
     motivo = models.CharField(
@@ -60,3 +69,4 @@ class solicita_puesto(models.Model):
 
     def __str__(self):
         return str(self.puesto)
+

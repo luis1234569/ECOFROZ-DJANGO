@@ -10,14 +10,10 @@ class SolicitaPuestoForm(forms.ModelForm):
                   'area',
                   'motivo',
                   'puesto',
-                  'descripcion',
                   'justificacion',
                   'solicitante',
                   'estado_aprobacion']
-        # O puedes usar '__all__' para incluir todos los campos
         # fields = '__all__'
-
-        # Opcional: Agregar widgets personalizados, etiquetas, etc.
         widgets = {
             'ubicacion': forms.Select(
                 attrs={

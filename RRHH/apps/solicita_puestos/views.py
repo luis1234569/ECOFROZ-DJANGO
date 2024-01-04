@@ -3,10 +3,11 @@ from django.db.models.query import QuerySet
 from django.db.models import Q
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView
 from django.urls import reverse_lazy
-from .models import solicita_puesto
-from django.shortcuts import render, get_object_or_404
+from .models import solicita_puesto, activo_areas, activo_ubica
+from django.shortcuts import render, get_object_or_404, redirect
 from .forms import SolicitaPuestoForm
 from django.core.paginator import Paginator
+from django.http import JsonResponse
     
 def SolicitaPuestoList(request):
     queryset = request.GET.get("buscar")
@@ -53,6 +54,14 @@ class SolicitaPuestoCreateView(CreateView):
     form_class = SolicitaPuestoForm
     template_name = 'puestos/puestos-form.html'
     success_url = '/'  # Coloca la URL a la que deseas redirigir después de guardar la solicitud
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        ubica = activo_ubica.objects.all()
+        area = activo_areas.objects.none()
+        context['ubica'] =  ubica
+        context['area'] =  area
+        return context
 
     def form_valid(self, form):
         # Aquí puedes realizar acciones adicionales si el formulario es válido
@@ -68,6 +77,23 @@ class SolicitaPuestoUpdateView(UpdateView):
     def form_valid(self, form):
         return super().form_valid(form)
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk = self.kwargs.get('pk',0)
+        solicitud = self.model.objects.get(id=pk) 
+        ubicacion_solicitud = solicitud.ubicacion.id
+        area_solicitud= solicitud.area.area_codigo
+        ubica = activo_ubica.objects.all()
+        areas = activo_areas.objects.all()
+        print(ubicacion_solicitud)
+        context['ubicacion_solicitud']= ubicacion_solicitud
+        context['area_solicitud']= area_solicitud
+        context['ubica'] =  ubica
+        context['areas'] =  areas
+        
+        context['editar'] = True
+        return context
+    
     def get_object(self, queryset=None):
         id_ = self.kwargs.get("pk")
         return get_object_or_404(solicita_puesto, id=id_)
@@ -77,6 +103,64 @@ class SolicitaPuestoDeleteView(DeleteView):
     template_name= 'puestos/puestos-delete.html'
     success_url = reverse_lazy('solicita_puestos:listar_solicita_puesto')
     
+def SolicitaPuestoListAprueba(request):
+    queryset = request.GET.get("buscar")
+    if queryset:
+        solicitudes = solicita_puesto.objects.filter(
+            Q(id__icontains = queryset) |
+            # Q(numpedido__numproyecto__icontains = queryset) |
+            Q(puesto__icontains = queryset)
+        )
+    else:
+        solicitudes2 = solicita_puesto.objects.all()
+        paginator = Paginator(solicitudes2, 100)
+        page = request.GET.get('page')
+        solicitudes = paginator.get_page(page)
+        
+    context={
+        'puestosSolicitados': solicitudes,
+        'busqueda': queryset
+    }
+    return render(request, 'puestos/puestos-list-aprueba.html', context)
+
+def SolicitaPuestoListRRHH(request):
+    queryset = request.GET.get("buscar")
+    if queryset:
+        solicitudes = solicita_puesto.objects.filter(
+            Q(id__icontains = queryset) |
+            Q(puesto__icontains = queryset)
+        ).filter(estado_aprobacion=1)
+    else:
+        solicitudes2 = solicita_puesto.objects.filter(estado_aprobacion=1)
+        paginator = Paginator(solicitudes2, 100)
+        page = request.GET.get('page')
+        solicitudes = paginator.get_page(page)
+        
+    context={
+        'puestosSolicitados': solicitudes,
+        'busqueda': queryset
+    }
+    return render(request, 'puestos/puestos-list-rrhh.html', context)
+    
+def SolicitarPuestoAprobar(request, pk):
+    solicita_puesto.objects.filter(id=pk).update(estado_aprobacion=1)
+    return redirect('solicita_puestos:listar_solicita_puesto_aprueba')
+
+def ubicaAreaAjax(request):
+    data = []
+    action = request.GET['action']
+    area = request.GET['id']
+    print('hola' + ' ' + area)
+    try:
+        for i in activo_areas.objects.filter(area_ubica=area):
+            data.append({
+                'area_codigo': i.area_codigo,
+                'area_nombre': i.area_nombre,
+            })
+
+        return JsonResponse(data, safe=False)
+    except Exception as e:
+        print(e)
 # class SolicitaPuestoListView(ListView):
 #     model= solicita_puesto
 #     template_name = 'puestos/puestos-list.html'
