@@ -22,18 +22,20 @@
 {% block content %}
 <div class="container" style="margin: 25px auto;">
     <div class="row">
-      <div class="col-md-6 search">
-        <form class="form-inline my-2 my-lg-0" method="GET">
-          <input class="form-control mr-sm-2" type="text" placeholder="N° Pedido, Descripción" name="buscar" {% if busqueda %} value="{{ busqueda }}" {% endif %}>
-          <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
-          <a class="btn  btn-secondary my-2 my-sm-0" style="margin-left: 10px;" href="{% url 'solicita_puestos:listar_solicita_puesto' %}"></button>Limpiar</a>
-        </form>
-      </div>
-      <!-- <div class="col-md-6">
+        <div class="col-md-6 search">
+            <form class="form-inline my-2 my-lg-0" method="GET">
+                <input class="form-control mr-sm-2" type="text" placeholder="N° Pedido, Descripción" name="buscar" {% if
+                    busqueda %} value="{{ busqueda }}" {% endif %}>
+                <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+                <a class="btn  btn-secondary my-2 my-sm-0" style="margin-left: 10px;"
+                    href="{% url 'solicita_puestos:listar_solicita_puesto' %}"></button>Limpiar</a>
+            </form>
+        </div>
+        <!-- <div class="col-md-6">
         <a class="btn btn-lg btn-success rounded-circle" style="float: right;" href="{% url 'solicita_puestos:crear_solicita_puesto' %}" title="Nuevo Pedido">+</a>
       </div> -->
     </div>
-  </div>
+</div>
 <div class="container">
     <h4 id="titulo">Solicitudes aprobación ingreso de personal</h4>
 </div>
@@ -74,11 +76,42 @@
             <td>
                 {% if item.estado_aprobacion != 1 and item.estado_aprobacion != 2 %}
                 <form action="{% url 'solicita_puestos:editar_solicita_puesto' item.id %}" method="GET">
-                  <button type="submit" name="aprobar" class="btn btn-info glyphicon glyphicon-edit" title="Ver/Editar"></button>
+                    <button type="submit" name="aprobar" class="btn btn-info glyphicon glyphicon-edit"
+                        title="Ver/Editar"></button>
                 </form>
                 <form action="{% url 'solicita_puestos:aprobar_solicita_puesto' item.id %}" method="GET">
-                    <button type="submit" name="aprobar" class="btn btn-success glyphicon glyphicon-edit" title="Aprobar"></button>
+                    <button type="submit" name="aprobar" class="btn btn-success glyphicon glyphicon-edit"
+                        title="Aprobar"></button>
                 </form>
+                <button type="button" id="rech" name="rech" class="btn btn-danger glyphicon glyphicon-remove"
+                    data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap"
+                    title="Rechazar"></button>
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel" style="color: black;">Ingrese el motivo
+                                    del rechazo
+                                </h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form class="modal-body"
+                                action="{% url 'solicita_puesto:rechazado_solicita_puesto' item.id %}" method="GET">
+                                <div class="form-group">
+                                    <input type="text" name="pedido" id="pedido" />
+                                    <textarea class="form-control" id="message-text" name="text"></textarea>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" name="rechazar" class="btn btn-primary">Enviar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
                 {% endif %}
             </td>
         </tr>

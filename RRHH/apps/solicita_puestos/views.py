@@ -141,14 +141,44 @@ def SolicitaPuestoListRRHH(request):
         'busqueda': queryset
     }
     return render(request, 'puestos/puestos-list-rrhh.html', context)
+
+def SolicitaCargoList(request):
+    queryset = request.GET.get("buscar")
+    if queryset:
+        solicitudes = solicita_puesto.objects.filter(
+            Q(id__icontains = queryset) |
+            # Q(numpedido__numproyecto__icontains = queryset) |
+            Q(puesto__icontains = queryset)
+        )
+    else:
+        solicitudes2 = solicita_puesto.objects.all()
+        paginator = Paginator(solicitudes2, 100)
+        page = request.GET.get('page')
+        solicitudes = paginator.get_page(page)
+        
+    context={
+        'puestosSolicitados': solicitudes,
+        'busqueda': queryset
+    }
+    return render(request, 'puestos/puestos-list-aprueba.html', context)
     
 def SolicitarPuestoAprobar(request, pk):
     solicita_puesto.objects.filter(id=pk).update(estado_aprobacion=1)
     return redirect('solicita_puestos:listar_solicita_puesto_aprueba')
 
+def rechazaDirect(request, numpedido):
+    pedido = request.GET.get("pedido")
+    rechaza = solicita_puesto.objects.get(numpedido=pedido)
+    if request.method == 'GET':
+        rechaza.aprobado = 0
+        rechaza.motRechaza = request.GET.get("text")
+        rechaza.save()
+
+    return redirect('solicita_puestos:listar_solicita_puesto_aprueba')
+
 def ubicaAreaAjax(request):
     data = []
-    action = request.GET['action']
+    # action = request.GET['action']
     area = request.GET['id']
     print('hola' + ' ' + area)
     try:

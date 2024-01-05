@@ -8,6 +8,13 @@ estado = {
     (0, 'No Aprobado'),
     (2, 'Anulada')
 }
+estado_ingreso = {
+    ('', 'Pendiente'),
+    (1, 'Seleccionado'),
+    (0, 'Entrevista'),
+    (2, 'Rechazo')
+}
+
 
 
 motivo = {
@@ -56,16 +63,18 @@ class solicita_puesto(models.Model):
     departamento = models.ForeignKey(activo_depar, models.DO_NOTHING)
     area = models.ForeignKey(activo_areas, models.DO_NOTHING)
     puesto = models.CharField(blank=True, null=False, max_length=20)
-    cargo = models.ForeignKey(Cargo, models.DO_NOTHING)
+    motivo = models.CharField(
+        blank=True, null=True, choices=motivo, default='nuevo')
     justificacion = models.CharField(blank=True, null=False, max_length=255)
     solicitante = models.CharField(blank=True, null=False, max_length=255)
     fecha_solicitud = models.DateTimeField(auto_now_add=True)
     fecha_aprueba = models.DateTimeField(blank=True, null=True)
     usuario_aprueba = models.CharField(max_length=50,blank=True, null=True )
+    motRechaza = models.CharField(max_length=250, blank=True, null=True)
     estado_aprobacion = models.IntegerField(
         blank=True, null=True, choices=estado)
-    motivo = models.CharField(
-        blank=True, null=True, choices=motivo, default='nuevo')
+    estado_ingreso = models.IntegerField(
+        blank=True, null=True, choices=estado)
 
     def __str__(self):
         return str(self.puesto)
