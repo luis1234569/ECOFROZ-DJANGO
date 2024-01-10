@@ -16,7 +16,6 @@ estado_ingreso = {
 }
 
 
-
 motivo = {
     ('nuevo', 'Nuevo'),
     ('reemplazo', 'Reemplazo'),
@@ -57,7 +56,8 @@ class Cargo(models.Model):
 
     def __str__(self):
         return str(self.cargo)
-    
+
+
 class solicita_puesto(models.Model):
     ubicacion = models.ForeignKey(activo_ubica, models.DO_NOTHING)
     departamento = models.ForeignKey(activo_depar, models.DO_NOTHING)
@@ -69,13 +69,13 @@ class solicita_puesto(models.Model):
     solicitante = models.CharField(blank=True, null=False, max_length=255)
     fecha_solicitud = models.DateTimeField(auto_now_add=True)
     fecha_aprueba = models.DateTimeField(blank=True, null=True)
-    usuario_aprueba = models.CharField(max_length=50,blank=True, null=True )
+    usuario_aprueba = models.CharField(max_length=50, blank=True, null=True)
     motRechaza = models.CharField(max_length=250, blank=True, null=True)
     estado_aprobacion = models.IntegerField(
         blank=True, null=True, choices=estado)
+    notasges = models.CharField(max_length=255, blank=True, null=True)
     estado_ingreso = models.IntegerField(
         blank=True, null=True, choices=estado)
 
     def __str__(self):
         return str(self.puesto)
-

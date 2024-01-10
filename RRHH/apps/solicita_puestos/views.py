@@ -16,9 +16,9 @@ def SolicitaPuestoList(request):
             Q(id__icontains = queryset) |
             # Q(numpedido__numproyecto__icontains = queryset) |
             Q(puesto__icontains = queryset)
-        )
+        ).order_by('-fecha_solicitud')
     else:
-        solicitudes2 = solicita_puesto.objects.all()
+        solicitudes2 = solicita_puesto.objects.all().order_by('-fecha_solicitud')
         paginator = Paginator(solicitudes2, 100)
         page = request.GET.get('page')
         solicitudes = paginator.get_page(page)
@@ -110,9 +110,9 @@ def SolicitaPuestoListAprueba(request):
             Q(id__icontains = queryset) |
             # Q(numpedido__numproyecto__icontains = queryset) |
             Q(puesto__icontains = queryset)
-        )
+        ).order_by('-fecha_solicitud')
     else:
-        solicitudes2 = solicita_puesto.objects.all()
+        solicitudes2 = solicita_puesto.objects.all().order_by('-fecha_solicitud')
         paginator = Paginator(solicitudes2, 100)
         page = request.GET.get('page')
         solicitudes = paginator.get_page(page)
@@ -129,9 +129,9 @@ def SolicitaPuestoListRRHH(request):
         solicitudes = solicita_puesto.objects.filter(
             Q(id__icontains = queryset) |
             Q(puesto__icontains = queryset)
-        ).filter(estado_aprobacion=1)
+        ).filter(estado_aprobacion=1).order_by('-fecha_solicitud')
     else:
-        solicitudes2 = solicita_puesto.objects.filter(estado_aprobacion=1)
+        solicitudes2 = solicita_puesto.objects.filter(estado_aprobacion=1).order_by('-fecha_solicitud')
         paginator = Paginator(solicitudes2, 100)
         page = request.GET.get('page')
         solicitudes = paginator.get_page(page)
@@ -148,10 +148,10 @@ def SolicitaCargoList(request):
         solicitudes = solicita_puesto.objects.filter(
             Q(id__icontains = queryset) |
             # Q(numpedido__numproyecto__icontains = queryset) |
-            Q(puesto__icontains = queryset)
+            Q(puesto__icontains = queryset).order_by('-fecha_solicitud')
         )
     else:
-        solicitudes2 = solicita_puesto.objects.all()
+        solicitudes2 = solicita_puesto.objects.all().order_by('-fecha_solicitud')
         paginator = Paginator(solicitudes2, 100)
         page = request.GET.get('page')
         solicitudes = paginator.get_page(page)
@@ -161,14 +161,81 @@ def SolicitaCargoList(request):
         'busqueda': queryset
     }
     return render(request, 'puestos/puestos-list-aprueba.html', context)
+
+def SolicitaCargoNotasRRHH(request, pk):
+    # if request.method == 'GET':
+
+    #     print(numpedido)
+        
+    #     solicitud = DetSolicitudTransporte.objects.filter(numpedido=numpedido).select_related('numpedido')
+    #     print(solicitud)
+    #     solic = SolicitudTransporte.objects.get(numpedido=numpedido)
+       
+    #     num = SolicitudTransporte.objects.get(numpedido=numpedido)
+    #     numt = num.numpedido
+    #     notas = num.notas_del_gestor
+    #     transportista = num.transportista
+    #     valor = num.tarifa_real
+    #     factura = num.num_factura
+    #     fecha_factura = num.fecha_factura
+    #     retorno = num.retorno
+    
+    # context={
+    #     'cot': solicitud,
+    #     'solic': solic,
+    #     'numt': numt,
+    #     'notas': notas,
+    #     'valor_real': valor,
+    #     'transportista': transportista,
+    #     'factura': factura,
+    #     'fecha_factura': fecha_factura,
+    #     'retorno': retorno
+    # }
+
+    #     return render(request, 'procesosAdministrativos/gestiona_solicitudes_transporte.html', context)
+    if request.methos== 'GET':
+        solicitud = solicita_puesto.objects.filter(id=pk)
+        detail_solicitud = solicita_puesto.objects.get(id=pk)
+        note= detail_solicitud.notasges
+        context={
+            'solicitud': solicitud,
+            'note': note
+        }
+
+    
+    return render(request, 'puestos/puestos-list-aprueba.html', context)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
 def SolicitarPuestoAprobar(request, pk):
     solicita_puesto.objects.filter(id=pk).update(estado_aprobacion=1)
     return redirect('solicita_puestos:listar_solicita_puesto_aprueba')
 
-def rechazaDirect(request, numpedido):
-    pedido = request.GET.get("pedido")
-    rechaza = solicita_puesto.objects.get(numpedido=pedido)
+def rechazaDirect(request, pk):
+    print('pasosmsmms')
+    rechaza = solicita_puesto.objects.get(id=pk)
     if request.method == 'GET':
         rechaza.aprobado = 0
         rechaza.motRechaza = request.GET.get("text")

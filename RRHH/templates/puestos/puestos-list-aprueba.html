@@ -24,8 +24,8 @@
     <div class="row">
         <div class="col-md-6 search">
             <form class="form-inline my-2 my-lg-0" method="GET">
-                <input class="form-control mr-sm-2" type="text" placeholder="N° Pedido, Descripción" name="buscar" {% if
-                    busqueda %} value="{{ busqueda }}" {% endif %}>
+                <input class="form-control mr-sm-2" type="text" placeholder="N° Pedido, Descripción" name="buscar" 
+                {% if busqueda %} value="{{ busqueda }}" {% endif %}>
                 <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
                 <a class="btn  btn-secondary my-2 my-sm-0" style="margin-left: 10px;"
                     href="{% url 'solicita_puestos:listar_solicita_puesto' %}"></button>Limpiar</a>
@@ -47,7 +47,7 @@
             <th scope="col">Usuario</th>
             <th scope="col">Fecha Solicitud</th>
             <th scope="col">departamento</th>
-            <th scope="col">Puesto</th>
+            <th scope="col">Cargo</th>
             <!-- <th scope="col">Justificación</th> -->
             <th scope="col">Motivo</th>
             <th scope="col">Estado Aprobación</th>
@@ -99,9 +99,8 @@
                                 </button>
                             </div>
                             <form class="modal-body"
-                                action="{% url 'solicita_puesto:rechazado_solicita_puesto' item.id %}" method="GET">
-                                <div class="form-group">
-                                    <input type="text" name="pedido" id="pedido" />
+                                action="{% url 'solicita_puestos:rechazado_solicita_puesto' item.id %}" method="GET">
+                                 <div class="form-group">                              
                                     <textarea class="form-control" id="message-text" name="text"></textarea>
                                 </div>
                                 <div class="modal-footer">
