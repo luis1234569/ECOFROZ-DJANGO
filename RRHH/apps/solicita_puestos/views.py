@@ -316,7 +316,6 @@ def ubicaAreaAjax(request):
     data = []
     # action = request.GET['action']
     area = request.GET['id']
-    print('hola' + ' ' + area)
     try:
         for i in activo_areas.objects.filter(area_ubica=area):
             data.append({

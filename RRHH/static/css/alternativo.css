@@ -1,0 +1,9 @@
+.add-row {
+    background-color: transparent;
+}
+
+.records {
+    width: 20px;
+    word-wrap: break-word;
+    display: inline-block;
+}
