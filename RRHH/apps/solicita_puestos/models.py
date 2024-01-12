@@ -1,5 +1,6 @@
 from django.db import models
 import datetime
+from django.contrib.auth.models import User
 
 # Create your models here.
 estado = {
@@ -8,7 +9,7 @@ estado = {
     (0, 'No Aprobado'),
     (2, 'Anulada')
 }
-estado_ingreso = {
+estado_seleccionado = {
     ('', 'Pendiente'),
     (1, 'Seleccionado'),
     (0, 'Entrevista'),
@@ -56,6 +57,8 @@ class Cargo(models.Model):
 
     def __str__(self):
         return str(self.cargo)
+    
+    
 
 
 class solicita_puesto(models.Model):
@@ -66,7 +69,7 @@ class solicita_puesto(models.Model):
     motivo = models.CharField(
         blank=True, null=True, choices=motivo, default='nuevo')
     justificacion = models.CharField(blank=True, null=False, max_length=255)
-    solicitante = models.CharField(blank=True, null=False, max_length=255)
+    solicitante = models.ForeignKey(User, models.DO_NOTHING)
     fecha_solicitud = models.DateTimeField(auto_now_add=True)
     fecha_aprueba = models.DateTimeField(blank=True, null=True)
     usuario_aprueba = models.CharField(max_length=50, blank=True, null=True)

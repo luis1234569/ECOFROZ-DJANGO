@@ -12,6 +12,7 @@ class SolicitaPuestoForm(forms.ModelForm):
                   'puesto',
                   'justificacion',
                   'solicitante',
+                  'usuario_aprueba',
                   'estado_aprobacion']
         # fields = '__all__'
         widgets = {

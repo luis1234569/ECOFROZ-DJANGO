@@ -1,0 +1,6 @@
+{% extends "layout/base.html" %}
+{% block content %}
+  {% for item in nonelist %}
+    <li>{{ item.puesto }}</li>
+  {% endfor %}
+{% endblock content %}
