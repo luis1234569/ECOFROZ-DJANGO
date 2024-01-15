@@ -1,0 +1,6 @@
+{% extends "layout/base.html" %}
+{% block content %}
+  {% for item in nonelist %}
+    <li>{{ item.cargo }}</li>
+  {% endfor %}
+{% endblock content %}

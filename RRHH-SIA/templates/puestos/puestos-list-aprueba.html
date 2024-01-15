@@ -1,0 +1,158 @@
+{% extends "layout/base.html" %}
+
+{% block extrahead %}
+<style>
+  
+    /* Style the tab */
+    .tab {
+      overflow: hidden;
+      border: 1px solid #ccc;
+      background-color: #f1f1f1;
+    }
+  
+    /* Style the buttons inside the tab */
+    .tab button {
+      background-color: inherit;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.3s;
+      font-size: 17px;
+    }
+  
+    /* Change background color of buttons on hover */
+    .tab button:hover {
+      background-color: #ddd;
+    }
+  
+    /* Create an active/current tablink class */
+    .tab button.active {
+      background-color: #ccc;
+    }
+  
+    /* Style the tab content */
+    .tabcontent {
+      display: none;
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      border-top: none;
+    }
+  
+    /* Style the close button */
+    .topright {
+      float: right;
+      cursor: pointer;
+      font-size: 28px;
+    }
+  
+    .topright:hover {
+      color: red;
+    }
+  </style>
+{% endblock extrahead %}
+
+{% block content %}
+<div class="container" style="margin: 25px auto;">
+    <div class="row">
+        <div class="col-md-6 search">
+            <form class="form-inline my-2 my-lg-0" method="GET">
+                <input class="form-control mr-sm-2" type="text" placeholder="N° Pedido, Descripción" name="buscar" 
+                {% if busqueda %} value="{{ busqueda }}" {% endif %}>
+                <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+                <a class="btn  btn-secondary my-2 my-sm-0" style="margin-left: 10px;"
+                    href="{% url 'solicita_puestos:listar_solicita_puesto' %}"></button>Limpiar</a>
+            </form>
+        </div>
+        <!-- <div class="col-md-6">
+        <a class="btn btn-lg btn-success rounded-circle" style="float: right;" href="{% url 'solicita_puestos:crear_solicita_puesto' %}" title="Nuevo Pedido">+</a>
+      </div> -->
+    </div>
+</div>
+<div class="container">
+    <h4 id="titulo">Solicitudes aprobación ingreso de personal</h4>
+</div>
+<div style="width: 98%; margin: auto;">
+    <table class="table table-hover table-striped container-fluid" style="margin: 5px auto" id="tabla-reporte">
+        <thead>
+            <tr>
+                <th scope="col">Pedido N°</th>
+                <th scope="col">Solicitante</th>
+                <th scope="col">Fecha Solicitud</th>
+                <th scope="col">departamento</th>
+                <th scope="col">Cargo</th>
+                <!-- <th scope="col">Justificación</th> -->
+                <th scope="col">Motivo</th>
+                <th scope="col">Estado Aprobación</th>
+                <th scope="col">Opciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in puestosSolicitados %}
+            <tr>
+                <td>{{ item.id }}</td>
+                <td>{{ item.solicitante }}</td>
+                <!-- <td>{{ item.solicitante }}</td> -->
+                <td>{{ item.fecha_solicitud|date:'Y-m-d' }}</td>
+                <td>{{ item.departamento.dep_nombre }}</td>
+                <td>{{ item.cargo }}</td>
+                <td>{{ item.motivo }}</td>
+                {% if item.estado_aprobacion == 1 %}
+                <td>Aprobado</td>
+                {% elif item.estado_aprobacion == 0 %}
+                <td>Rechazado</td>
+                {% elif item.estado_aprobacion == 2 %}
+                <td style="color:rgb(230, 168, 11)"><b>Anulada</b></td>
+                {% else %}
+                <td>Pendiente</td>
+                {% endif %}
+                <td>
+                    {% if item.estado_aprobacion != 1 and item.estado_aprobacion != 2 %}
+                    <form action="{% url 'solicita_puestos:editar_solicita_puesto_aprueba' item.id %}" method="GET">
+                        <button type="submit" name="aprobar" class="btn btn-info glyphicon glyphicon-edit"
+                            title="Ver/Editar"></button>
+                    </form>
+                    <form action="{% url 'solicita_puestos:aprobar_solicita_puesto' item.id %}" method="GET">
+                        <button type="submit" name="aprobar" class="btn btn-success glyphicon glyphicon-edit"
+                            title="Aprobar"></button>
+                    </form>
+                    <button type="button" id="rech" name="rech" class="btn btn-danger glyphicon glyphicon-remove"
+                        data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap"
+                        title="Rechazar"></button>
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel" style="color: black;">Ingrese el motivo
+                                        del rechazo
+                                    </h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form class="modal-body"
+                                    action="{% url 'solicita_puestos:rechazado_solicita_puesto' item.id %}" method="GET">
+                                     <div class="form-group">                              
+                                        <textarea class="form-control" id="message-text" name="text"></textarea>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="submit" name="rechazar" class="btn btn-primary">Enviar</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    
+    </table>
+</div>
+
+
+{% endblock content %}

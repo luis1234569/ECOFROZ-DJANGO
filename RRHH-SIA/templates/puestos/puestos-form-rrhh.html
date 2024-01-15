@@ -1,0 +1,174 @@
+{% extends 'layout/base.html' %}
+
+<!-- {% block title %}
+    <h2>Gestión de Solicitudes de Ingreso de personal</h2>
+{% endblock %} -->
+
+{% block extrahead %}
+
+<style>
+  ul {
+    list-style-type: none;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="loader"></div>
+<div class="container" style="margin: 25px auto;">
+  <div class="btn-group" style="float: right;margin-bottom: 15px;">
+    <a type="button" class="btn btn-info" href="{% url 'solicita_puestos:listar_solicita_puesto_rrhh' %}">Volver</a>
+    <!-- <a type="button" style="margin-left: 3px;" class="btn btn-info" data-toggle="modal" data-target="#devolver"
+      data-whatever="@getbootstrap" href="">Rechazar</a> -->
+    <button type="button" style="margin-left: 3px;" class="btn btn-danger" name="confirmab" id="confirmab"
+      onclick="saveStatus(2)">Rechazar</button>
+    <!-- <button type="button" style="margin-left: 3px;" class="btn btn-info" name="proceso" id="proceso" onclick="procesa()">Poner en proceso</button> -->
+    <button type="button" style="margin-left: 3px;" class="btn btn-success" name="confirmab" id="confirmab"
+      onclick="saveStatus(1)">Aprobar</button>
+
+  </div>
+
+
+  <table class="table table-bordered table-sm" style="margin-top:15px;">
+    <tbody>
+      {% for campo in solicitud %}
+      <tr>
+        <th class="table-dark" scope="col" style="width: 25%;">N° Solicitud:</th>
+        <td style='font-size: 18px; font-weight: bold;'>{{ campo.id }}</td>
+      </tr>
+      <tr>
+        <th class="table-dark" scope="col">Fecha Solicitud:</th>
+        <td>{{ campo.fecha_solicitud | default:'--' }}</td>
+      </tr>
+      <tr>
+        <th class="table-dark" scope="col">Usuario Solicitante:</th>
+        <td>{{ campo.solicitante }}</td>
+      </tr>
+
+      <tr>
+        <th class="table-dark" scope="col">Ubicación:</th>
+        <td>{{ campo.ubicacion}}</td>
+      </tr>
+      <tr>
+        <th class="table-dark" scope="col">Departamento Solicitante:</th>
+        <td>{{ campo.departamento.dep_nombre }}</td>
+      </tr>
+      <tr>
+        <th class="table-dark" scope="col">Departamento Solicitante:</th>
+        <td>{{ campo.cargo }}</td>
+      </tr>
+      <tr>
+        <th class="table-dark" scope="col">Motivo:</th>
+        <td><b>{{ campo.motivo | default:'--' }}</b></td>
+      </tr>
+      <tr>
+        <th class="table-dark" scope="col">Justificación:</th>
+        <td><b>{{ campo.justificacion | default:'--' }}</b></td>
+      </tr>
+      <tr>
+        <th class="table-dark" scope="col">Usuario Aprueba::</th>
+        <td><b>{{ campo.usuario_aprueba | default:'--' }}</b></td>
+      </tr>
+      <tr>
+        <th class="table-dark" scope="col">Fecha Aprobación:</th>
+        <td>{{ campo.fecha_solicitud | default:'--' }}</td>
+      </tr>
+
+
+    </tbody>
+  </table>
+
+
+
+  <div>
+    <label for="" style="font-size:75%"><b>Notas del Gestor</b></label>
+    <textarea class="form-control" id="notasges" name="notasges" rows="4"
+      placeholder="Notas del Gestor">{{note | default:""}}</textarea>
+    <input id="pkSolicita" value="{{campo.id}}" type="text" hidden>
+  </div>
+  <br>
+  <button class="btn btn-primary" name="save" id="save" onclick="save()">Guardar</button>
+</div>
+<pre></pre>
+<pre></pre>
+
+
+
+<pre></pre>
+
+
+
+</div>
+
+{% endfor %}
+
+{% endblock %}
+
+{% block extrajs %}
+<script>
+
+  function procesa() {
+    // document.getElementById('proceso').onclick = function() {
+    var sol_id = document.getElementById('idbk').value;
+    var notasg = document.getElementById('notasges').value;
+
+
+    $.ajax({
+      type: "GET",
+      url: 'ajax_cambia_enproceso/',
+      data: { 'sol_id': sol_id, 'notasg': notasg },
+      dataType: "json",
+      success: function (data) {
+        alert("Actualizado satisfactoriamente");
+
+      },
+      error: function (data) {
+        alert("No se pudo guardar. Comuníquese con IT");
+
+      },
+
+    })
+  }
+
+  function save() {
+    var notasg = document.getElementById('notasges').value;
+    var id = document.getElementById('pkSolicita').value
+    $.ajax({
+      type: 'GET',
+      url: 'ajax_save/',
+      data: { 'notasg': notasg, 'id': id },
+      dataType: 'json',
+      success: function (data) {
+        alert("Actualizado satisfactoriamente ");
+
+      },
+      error: function (data) {
+        alert("No se pudo guardar. Comuníquese con IT");
+      },
+
+    })
+  }
+
+  function saveStatus(confirma) {
+    var notasg = document.getElementById('notasges').value;
+    var id = document.getElementById('pkSolicita').value
+    $.ajax({
+      type: 'GET',
+      url: 'ajax_save_status/',
+      data: { 'notasg': notasg, 'id': id, 'aprobar': confirma },
+      dataType: 'json',
+      success: function (data) {
+        alert("La solicitud ha sido "+ data);
+      },
+      error: function (data) {
+        alert("No se pudo guardar. Comuníquese con IT");
+      },
+
+    })
+  }
+
+
+</script>
+
+
+{% endblock %}

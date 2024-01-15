@@ -1,0 +1,102 @@
+{% extends "layout/base.html" %}
+{% block content %}
+<div class="jumbotron" style="width: 75%; margin:auto; padding-top: 25px; margin-top: 50px; margin-bottom: 25px;">
+    <h3 class="display-6">Ingreso de solicitud personal</h3>
+    <form method="post">
+        {% csrf_token %}
+        <input type="text"name="solicitante" id="solicitante" value="{{user.id}}" hidden>
+        <!-- {{ form.as_p }} -->
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label>{{ form.ubicacion.label }}</label>
+                <!-- {{ form.ubicacion }} -->
+                <select name="ubicacion" id="ubicacion" class="form-control in" required>
+                    <option value="" selected>-------</option>
+                    {% for i in ubica %}
+                    <!-- <option value="{{ i.id }}">{{ i.ubica_nombre }}</option> -->
+                    <option value="{{ i.id }}" {% if ubicacion_solicitud == i.id %} selected {% endif %}>{{ i.ubica_nombre }}</option>
+
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group col-md-6">
+                <label>{{ form.departamento.label }}</label>
+                {{ form.departamento }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="">{{ form.area.label }}</label>
+                <select name="area" id="area" class="form-control in" required>
+                    <option value="" selected>-------</option>
+                    {% for i in areas %}
+                    <option value="{{ i.area_codigo }}" {% if area_solicitud == i.area_codigo %} selected {% endif %}>{{ i.area_nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="">{{ form.motivo.label }}</label>
+                {{ form.motivo }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="">{{ form.cargo.label }}</label>
+                {{ form.cargo }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <label for="">{{ form.justificacion.label }}</label>
+                {{ form.justificacion }}
+            </div>
+        </div>
+
+    {% if editar %}
+        <button class="btn btn-primary" type="submit">Editar Solicitud</button>
+    {% else %}
+        <button class="btn btn-primary" type="submit">Enviar Solicitud</button>
+    {% endif %}
+        <!-- <button class="btn btn-primary" type="submit">Enviar Solicitud</button> -->
+    </form>
+</div>
+
+{% endblock content %}
+
+{% block extrajs %}
+  <script>
+    $("#ubicacion").on('change', function () {
+        console.log('paso por aqui')
+        var id = $(this).val();
+        var ubicacion = $("#area");
+        var options = "<option value=''>---------</option>"
+        if (id === ''){
+            ubicacion.html(options);
+            return false;
+        }
+        $.ajax({
+            url: "{% url 'solicita_puestos:ubica_area_ajax' %}",
+            type: "GET",
+            data: {
+                'action': 'search_ubica',
+                'id': id,
+                // 'csrfmiddlewaretoken': '{{ csrf_token }}',
+            },
+            dataType: "json",
+        }).done(function (data) {
+            console.log('paso por aqui')
+            if (!data.hasOwnProperty("error")){
+                $.each(data, function(key, value){
+                    options += "<option value='" + value.area_codigo + "'>" + value.area_nombre + "</option>"
+                });
+                return false;
+            }
+        }).fail(function (jqXHR, textStatus, errorThrown ) {
+            alert(textStatus + ': ' + errorThrown);
+            console.log(jqXHR);
+        }).always(function (data) {
+            ubicacion.html(options)
+        })
+    });
+  </script>
+{% endblock extrajs %}
