@@ -2,55 +2,54 @@
 
 {% block extrahead %}
 <style>
-  
     /* Style the tab */
     .tab {
-      overflow: hidden;
-      border: 1px solid #ccc;
-      background-color: #f1f1f1;
+        overflow: hidden;
+        border: 1px solid #ccc;
+        background-color: #f1f1f1;
     }
-  
+
     /* Style the buttons inside the tab */
     .tab button {
-      background-color: inherit;
-      float: left;
-      border: none;
-      outline: none;
-      cursor: pointer;
-      padding: 14px 16px;
-      transition: 0.3s;
-      font-size: 17px;
+        background-color: inherit;
+        float: left;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 14px 16px;
+        transition: 0.3s;
+        font-size: 17px;
     }
-  
+
     /* Change background color of buttons on hover */
     .tab button:hover {
-      background-color: #ddd;
+        background-color: #ddd;
     }
-  
+
     /* Create an active/current tablink class */
     .tab button.active {
-      background-color: #ccc;
+        background-color: #ccc;
     }
-  
+
     /* Style the tab content */
     .tabcontent {
-      display: none;
-      padding: 6px 12px;
-      border: 1px solid #ccc;
-      border-top: none;
+        display: none;
+        padding: 6px 12px;
+        border: 1px solid #ccc;
+        border-top: none;
     }
-  
+
     /* Style the close button */
     .topright {
-      float: right;
-      cursor: pointer;
-      font-size: 28px;
+        float: right;
+        cursor: pointer;
+        font-size: 28px;
     }
-  
+
     .topright:hover {
-      color: red;
+        color: red;
     }
-  </style>
+</style>
 {% endblock extrahead %}
 
 {% block content %}
@@ -58,16 +57,12 @@
     <div class="row">
         <div class="col-md-6 search">
             <form class="form-inline my-2 my-lg-0" method="GET">
-                <input class="form-control mr-sm-2" type="text" placeholder="N° Pedido, Descripción" name="buscar" 
-                {% if busqueda %} value="{{ busqueda }}" {% endif %}>
+                <input class="form-control mr-sm-2" type="text" placeholder="N° Pedido, Descripción" name="buscar" {% if busqueda %} value="{{ busqueda }}" {% endif %}>
                 <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
                 <a class="btn  btn-secondary my-2 my-sm-0" style="margin-left: 10px;"
                     href="{% url 'solicita_puestos:listar_solicita_puesto' %}"></button>Limpiar</a>
             </form>
         </div>
-        <!-- <div class="col-md-6">
-        <a class="btn btn-lg btn-success rounded-circle" style="float: right;" href="{% url 'solicita_puestos:crear_solicita_puesto' %}" title="Nuevo Pedido">+</a>
-      </div> -->
     </div>
 </div>
 <div class="container">
@@ -75,6 +70,7 @@
 </div>
 <div style="width: 98%; margin: auto;">
     <table class="table table-hover table-striped container-fluid" style="margin: 5px auto" id="tabla-reporte">
+        {% if puestosSolicitados %}
         <thead>
             <tr>
                 <th scope="col">Pedido N°</th>
@@ -84,6 +80,7 @@
                 <th scope="col">Cargo</th>
                 <!-- <th scope="col">Justificación</th> -->
                 <th scope="col">Motivo</th>
+                <th scope="col">Observación</th>
                 <th scope="col">Estado Aprobación</th>
                 <th scope="col">Opciones</th>
             </tr>
@@ -98,8 +95,9 @@
                 <td>{{ item.departamento.dep_nombre }}</td>
                 <td>{{ item.cargo }}</td>
                 <td>{{ item.motivo }}</td>
+                <td>{{ item.observacion_aprueba| default:"--"}}</td>
                 {% if item.estado_aprobacion == 1 %}
-                <td>Aprobado</td>
+                <td>Enviado a RRHH</td>
                 {% elif item.estado_aprobacion == 0 %}
                 <td>Rechazado</td>
                 {% elif item.estado_aprobacion == 2 %}
@@ -114,7 +112,7 @@
                             title="Ver/Editar"></button>
                     </form>
                     <form action="{% url 'solicita_puestos:aprobar_solicita_puesto' item.id %}" method="GET">
-                        <button type="submit" name="aprobar" class="btn btn-success glyphicon glyphicon-edit"
+                        <button type="submit" name="aprobar" class="btn btn-success glyphicon glyphicon-ok"
                             title="Aprobar"></button>
                     </form>
                     <button type="button" id="rech" name="rech" class="btn btn-danger glyphicon glyphicon-remove"
@@ -125,7 +123,8 @@
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel" style="color: black;">Ingrese el motivo
+                                    <h5 class="modal-title" id="exampleModalLabel" style="color: black;">Ingrese el
+                                        motivo
                                         del rechazo
                                     </h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -133,12 +132,14 @@
                                     </button>
                                 </div>
                                 <form class="modal-body"
-                                    action="{% url 'solicita_puestos:rechazado_solicita_puesto' item.id %}" method="GET">
-                                     <div class="form-group">                              
+                                    action="{% url 'solicita_puestos:rechazado_solicita_puesto' item.id %}"
+                                    method="GET">
+                                    <div class="form-group">
                                         <textarea class="form-control" id="message-text" name="text"></textarea>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-secondary"
+                                            data-dismiss="modal">Close</button>
                                         <button type="submit" name="rechazar" class="btn btn-primary">Enviar</button>
                                     </div>
                                 </form>
@@ -150,9 +151,61 @@
             </tr>
             {% endfor %}
         </tbody>
-    
+        {% else %}
+        <div class="alert-danger" role="alert">
+            <h3 style="text-align: center;">No Hay Solicitudes Para Aprobar</h3>
+        </div>
+        {% endif %}
     </table>
 </div>
+<div class="container">
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% if puestosSolicitados.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1" aria-label="Inicio">
+                        <span aria-hidden="true">&laquo;&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ puestosSolicitados.previous_page_number }}" aria-label="Anterior">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">&laquo;&laquo;</span>
+                </li>
+                <li class="page-item disabled">
+                    <span class="page-link">&laquo;</span>
+                </li>
+            {% endif %}
 
+            <li class="page-item disabled">
+                <span class="page-link">Página {{ puestosSolicitados.number }} de {{ puestosSolicitados.paginator.num_pages }}</span>
+            </li>
+
+            {% if puestosSolicitados.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ puestosSolicitados.next_page_number }}" aria-label="Siguiente">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ puestosSolicitados.paginator.num_pages }}" aria-label="Final">
+                        <span aria-hidden="true">&raquo;&raquo;</span>
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">&raquo;</span>
+                </li>
+                <li class="page-item disabled">
+                    <span class="page-link">&raquo;&raquo;</span>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+  </div>
 
 {% endblock content %}

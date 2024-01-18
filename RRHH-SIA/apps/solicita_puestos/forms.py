@@ -13,8 +13,15 @@ class SolicitaPuestoForm(forms.ModelForm):
                   'justificacion',
                   'solicitante',
                   'usuario_aprueba',
-                  'estado_aprobacion']
+                  
+                  'observacion_aprueba',
+                  'estado_aprobacion'
+                  ]
         # fields = '__all__'
+        labels = {
+            'observacion_aprueba':'Observación',
+            'justificacion':'Justificación'
+        }
         widgets = {
             'ubicacion': forms.Select(
                 attrs={
@@ -50,17 +57,24 @@ class SolicitaPuestoForm(forms.ModelForm):
                     'id': 'cargo',
                 }
             ),
-            'descripcion': forms.Textarea(
-                attrs={
-                    'class': 'form-control',
-                    'id': 'justificacion_compra',
-                    'rows':5,
-                }
-            ),
+            # 'descripcion': forms.Textarea(
+            #     attrs={
+            #         'class': 'form-control',
+            #         'id': 'justificacion_compra',
+            #         'rows':5,
+            #     }
+            # ),
             'justificacion': forms.Textarea(
                 attrs={
                     'class': 'form-control',
-                    'id': 'justificacion_compra',
+                    'id': 'justificacion',
+                    'rows':5,
+                }
+            ),
+            'observacion_aprueba': forms.Textarea(
+                attrs={
+                    'class': 'form-control',
+                    'id': 'observacion_aprueba',
                     'rows':5,
                 }
             ),

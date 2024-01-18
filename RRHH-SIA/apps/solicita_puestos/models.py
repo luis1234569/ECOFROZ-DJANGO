@@ -73,12 +73,16 @@ class SolicitaPuesto(models.Model):
     fecha_solicitud = models.DateTimeField(auto_now_add=True)
     fecha_aprueba = models.DateTimeField(blank=True, null=True)
     usuario_aprueba = models.CharField(max_length=50, blank=True, null=True)
+    observacion_aprueba = models.CharField(max_length=255, blank=True, null=True)
     motRechaza = models.CharField(max_length=250, blank=True, null=True)
     estado_aprobacion = models.IntegerField(
         blank=True, null=True, choices=estado)
     notasges = models.CharField(max_length=255, blank=True, null=True)
     estado_ingreso = models.IntegerField(
         blank=True, null=True, choices=estado)
+    usuario_aprueba_rrhh = models.CharField(max_length=50, blank=True, null=True)
+    fecha_aprueba_rrhh = models.DateTimeField(blank=True, null=True)
+    
     
     class Meta:
         db_table = 'solicita_puesto'

@@ -49,16 +49,7 @@
     
     .topright:hover {color: red;}
 
-    .loader{
-        position: fixed;
-        left: 0px;
-        top: 0px;
-        width: 100%;
-        height: 100%;
-        z-index: 9999;
-        background: url('/media/img/load.gif') 50% 50% no-repeat rgb(249,249,249);
-        opacity: .8;
-    }
+
   </style>
 {% endblock %}
 
@@ -71,7 +62,7 @@
   <div class="row">
     <div class="col-md 12 search">
       <form class="form-inline my-2 my-lg-0" method="GET">
-        <input class="form-control mr-sm-2" size="65px;" type="text" placeholder="Filtre por: N° Pedido, Solicitante ó Transportista" name="buscar" {% if busqueda %} value="{{ busqueda }}" {% endif %}>
+        <input class="form-control mr-sm-2" size="65px;" type="text" placeholder="Filtre por: N° Pedido, Solicitante ó Cargo" name="buscar" {% if busqueda %} value="{{ busqueda }}" {% endif %}>
         <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
         <a class="btn btn-secondary my-2 my-sm-0" style="margin-left: 3px;" href="{% url 'solicita_puestos:listar_solicita_puesto_rrhh' %}"></button>Limpiar</a>
       </form>
@@ -93,48 +84,48 @@
 </div>
 
 <div id="Pendientes" class="tabcontent">
-<table class="table table-hover table-striped table-dark" style="margin: 10px auto">
-  {%if form2 %}
-    <thead>
-      <tr>
-        <th scope="col">Solicitud N°</th>
-        <th scope="col">Fecha Autoriza Solicitud</th>
-        <th scope="col">Ubicación</th>
-        <th scope="col">Solicita</th>
-        <th scope="col">Tipo</th> 
-        <th scope="col" style="text-align:center">Ver</th>
+  <table class="table table-hover table-striped table-dark" style="margin: 10px auto">
+    {%if form2 %}
+      <thead>
+        <tr>
+          <th scope="col">Solicitud N°</th>
+          <th scope="col">Fecha Autoriza Solicitud</th>
+          <th scope="col">Solicitante</th>
+          <th scope="col">Ubicación</th>
+          <th scope="col">Cargo</th>
+          <th scope="col">Tipo</th> 
+          <th scope="col" style="text-align:center">Ver</th>
+          
+        </tr>
+      </thead>
+      <tbody>
         
-      </tr>
-    </thead>
-    <tbody>
-      
-      {% for i in form2 %}
-      <tr>
-        <td>{{ i.id  }}</td>
-        <td>{{ i.fecha_aprueba }}</td>
-        <td>{{ i.ubicacion }}</td>
-        <td>{{ i.solicitante }}</td>
-        <td>{{ i.motivo }}</td>
-        
-        <td style="text-align:right">
-          <a href="{% url 'solicita_puestos:gestionar_solicita_cargo_aprobado' i.id %}" class="btn btn-warning glyphicon glyphicon-eye-open" title="Ver detalle"></a>
-        </td>
-      </tr>
-      {% endfor %}
-      
-      {% else %}
-            <div class="alert-danger" role="alert">
-              <h3 style="text-align: center;">No tiene nuevas solicitudes para gestionar</h3>
-              
-            </div>
-          {% endif %}
-    </tbody>
-</table>
-  
+        {% for i in form2 %}
+        <tr>
+          <td>{{ i.id  }}</td>
+          <td>{{ i.fecha_aprueba }}</td>
+          <td>{{ i.solicitante }}</td>
+          <td>{{ i.ubicacion }}</td>
+          <td>{{ i.cargo }}</td>
+          <td>{{ i.motivo }}</td>
+          
+          <td style="text-align:right">
+            <a href="{% url 'solicita_puestos:gestionar_solicita_cargo_aprobado' i.id %}" class="btn btn-warning glyphicon glyphicon-eye-open" title="Ver detalle"></a>
+          </td>
+        </tr>
+        {% endfor %}
+        {% else %}
+              <div class="alert-danger" role="alert">
+                <h3 style="text-align: center;">No tiene nuevas solicitudes para gestionar</h3>
+                
+              </div>
+            {% endif %}
+      </tbody>
+  </table>
 </div>  
 
 
-<div id="Proceso" class="tabcontent">
+<!-- <div id="Proceso" class="tabcontent">
 
     <table class="table table-warning table-striped">
       {%if form3 %}
@@ -154,11 +145,6 @@
     <tbody>
       
       {% for i in form3 %}
-      <!-- {% if i.numtrabajo.estado1n == 3 %}
-      <tr class="table-danger" >
-      {% else %}  
-      <tr class="table-success" >
-      {% endif %}  -->
       
       
       
@@ -179,7 +165,7 @@
     </tbody>
   </table>
   
-</div>
+</div> -->
 
 
 
@@ -223,9 +209,8 @@
       <td>{{ i.motivo }}</td>
       <td>{{ i.notasges }}</td>
       
-      <td style="text-align:right"> 
-        
-
+      <td style="text-align:center"> 
+        <a href="{% url 'solicita_puestos:gestionar_solicita_cargo_aprobado' i.id %}" class="btn btn-secondary glyphicon glyphicon-eye-open" title="Ver detalle"></a>
         </td>
       </tr>
       {% endfor %}
@@ -237,24 +222,6 @@
 
 </div>
 
-
-<div class="pagination">
-  <span class="step-links">
-      {% if procesadas.has_previous %}
-          <a href="?page=1">&laquo; inicio</a>
-          <a href="?page={{ procesadas.previous_page_number }}">previo</a>
-      {% endif %}
-
-      <span class="current">
-          Page {{ procesadas.number }} of {{ procesadas.paginator.num_pages }}.
-      </span>
-
-      {% if procesadas.has_next %}
-          <a href="?page={{ procesadas.next_page_number }}">próximo</a>
-          <a href="?page={{ procesadas.paginator.num_pages }}">último &raquo;</a>
-      {% endif %}
-  </span>
-</div>
 
 {% endblock %}
 

@@ -1,9 +1,5 @@
 {% extends 'layout/base.html' %}
 
-<!-- {% block title %}
-    <h2>Gestión de Solicitudes de Ingreso de personal</h2>
-{% endblock %} -->
-
 {% block extrahead %}
 
 <style>
@@ -11,31 +7,53 @@
     list-style-type: none;
   }
 </style>
+
 {% endblock %}
 
 {% block content %}
 <div class="loader"></div>
 <div class="container" style="margin: 25px auto;">
+  {% for campo in solicitud %}
   <div class="btn-group" style="float: right;margin-bottom: 15px;">
-    <a type="button" class="btn btn-info" href="{% url 'solicita_puestos:listar_solicita_puesto_rrhh' %}">Volver</a>
-    <!-- <a type="button" style="margin-left: 3px;" class="btn btn-info" data-toggle="modal" data-target="#devolver"
-      data-whatever="@getbootstrap" href="">Rechazar</a> -->
+    <a type="button" class="btn btn-info glyphicon glyphicon-arrow-left"
+      href="{% url 'solicita_puestos:listar_solicita_puesto_rrhh' %}"></a>
+    {% if campo.estado_ingreso %}
+    {% if campo.estado_ingreso == 1 %}
     <button type="button" style="margin-left: 3px;" class="btn btn-danger" name="confirmab" id="confirmab"
       onclick="saveStatus(2)">Rechazar</button>
-    <!-- <button type="button" style="margin-left: 3px;" class="btn btn-info" name="proceso" id="proceso" onclick="procesa()">Poner en proceso</button> -->
+    {% elif campo.estado_ingreso == 2 %}
     <button type="button" style="margin-left: 3px;" class="btn btn-success" name="confirmab" id="confirmab"
       onclick="saveStatus(1)">Aprobar</button>
+    {% endif %}
+    {% else %}
+    <button type="button" style="margin-left: 3px;" class="btn btn-danger" name="confirmab" id="confirmab"
+      onclick="saveStatus(2)">Rechazar</button>
+    <button type="button" style="margin-left: 3px;" class="btn btn-success" name="confirmab" id="confirmab"
+      onclick="saveStatus(1)">Aprobar</button>
+    {% endif %}
+
 
   </div>
 
 
   <table class="table table-bordered table-sm" style="margin-top:15px;">
     <tbody>
-      {% for campo in solicitud %}
+
       <tr>
         <th class="table-dark" scope="col" style="width: 25%;">N° Solicitud:</th>
         <td style='font-size: 18px; font-weight: bold;'>{{ campo.id }}</td>
       </tr>
+      {% if campo.estado_ingreso == 1 %}
+      <tr>
+        <th class="table-dark" scope="col" style="width: 25%;">Estado Solicitud:</th>
+        <td class="text-success" style='font-size: 18px; font-weight: bold;'>Aprobado</td>
+      </tr>
+      {% elif campo.estado_ingreso == 2 %}
+      <tr>
+        <th class="table-dark" scope="col" style="width: 25%;">Estado Solicitud:</th>
+        <td class="text-danger" style='font-size: 18px; font-weight: bold;'>Rechazado</td>
+      </tr>
+      {% endif %}
       <tr>
         <th class="table-dark" scope="col">Fecha Solicitud:</th>
         <td>{{ campo.fecha_solicitud | default:'--' }}</td>
@@ -54,8 +72,8 @@
         <td>{{ campo.departamento.dep_nombre }}</td>
       </tr>
       <tr>
-        <th class="table-dark" scope="col">Departamento Solicitante:</th>
-        <td>{{ campo.cargo }}</td>
+        <th class="table-dark" scope="col">Cargo</th>
+        <td><b>{{ campo.cargo }}</b></td>
       </tr>
       <tr>
         <th class="table-dark" scope="col">Motivo:</th>
@@ -66,13 +84,24 @@
         <td><b>{{ campo.justificacion | default:'--' }}</b></td>
       </tr>
       <tr>
-        <th class="table-dark" scope="col">Usuario Aprueba::</th>
+        <th class="table-dark" scope="col">Usuario Aprueba:</th>
         <td><b>{{ campo.usuario_aprueba | default:'--' }}</b></td>
       </tr>
       <tr>
         <th class="table-dark" scope="col">Fecha Aprobación:</th>
         <td>{{ campo.fecha_solicitud | default:'--' }}</td>
       </tr>
+      {% if campo.estado_ingreso %}
+      <tr>
+        <th class="table-dark" scope="col">Usuario confirma solicitud:</th>
+        <td>{{ campo.usuario_aprueba_rrhh | default:'--' }}</td>
+      </tr>
+      <tr>
+        <th class="table-dark" scope="col">Fecha confirma solicitud:</th>
+        <td>{{ campo.fecha_aprueba_rrhh | default:'--' }}</td>
+      </tr>
+      {% endif %}
+
 
 
     </tbody>
@@ -106,6 +135,19 @@
 
 {% block extrajs %}
 <script>
+  $(window).on("load", function () {
+    $(".loader").fadeOut("slow");
+  });
+
+  $(document).ready(function () {
+    $('#enviar').on('click', function () {
+      //Añadimos la imagen de carga en el contenedor
+      $(".loader").show();
+      $(window).on("load", function () {
+        $(".loader").fadeOut("slow");
+      });
+    });
+  });
 
   function procesa() {
     // document.getElementById('proceso').onclick = function() {
@@ -118,11 +160,7 @@
       url: 'ajax_cambia_enproceso/',
       data: { 'sol_id': sol_id, 'notasg': notasg },
       dataType: "json",
-      success: function (data) {
-        alert("Actualizado satisfactoriamente");
-
-      },
-      error: function (data) {
+      error: function () {
         alert("No se pudo guardar. Comuníquese con IT");
 
       },
@@ -158,7 +196,7 @@
       data: { 'notasg': notasg, 'id': id, 'aprobar': confirma },
       dataType: 'json',
       success: function (data) {
-        alert("La solicitud ha sido "+ data);
+        alert("La solicitud ha sido " + data);
       },
       error: function (data) {
         alert("No se pudo guardar. Comuníquese con IT");
