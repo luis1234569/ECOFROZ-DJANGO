@@ -20,13 +20,13 @@
                 </select>
             </div>
             <div class="form-group col-md-6">
-                <label>{{ form.departamento.label }}</label>
+                <label>AREA</label>
                 {{ form.departamento }}
             </div>
         </div>
         <div class="form-row">
             <div class="form-group col-md-6">
-                <label for="">{{ form.area.label }}</label>
+                <label for="">Centro de costos</label>
                 <select name="area" id="area" class="form-control in" required>
                     <option value="" selected>-------</option>
                     {% for i in areas %}
@@ -51,6 +51,17 @@
                 {{ form.justificacion }}
             </div>
         </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                {% if motivoRechaza %}
+                   <b>Rechazado a motivo de:</b> {{motivoRechaza}}
+                {% endif %}
+                {% if observacionRRHH %}
+                  <b>Observación:</b> {{observacionRRHH}}
+                {% endif %}
+            </div>
+            <div class="form-group col-md-6"></div>
+        </div>
 
     {% if editar %}
         <button class="btn btn-primary" type="submit">Editar Solicitud</button>
@@ -65,8 +76,29 @@
 
 {% block extrajs %}
   <script>
+    $(window).on("load", function() {
+        $(".loader").fadeOut("slow");
+    });
+
+    $(document).ready(function() {    
+        $('#enviar').on('click', function(){
+            var incompletos = false
+            $('.in').each(function(){
+                if ($(this).val().trim() == ''){
+                    incompletos = true
+                }
+            });
+            if (incompletos == false){
+                //Añadimos la imagen de carga en el contenedor
+                $(".loader").show();
+                $(window).on("load", function(){
+                    $(".loader").fadeOut("slow");
+                });
+            }
+        });              
+    });
+
     $("#ubicacion").on('change', function () {
-        console.log('paso por aqui')
         var id = $(this).val();
         var ubicacion = $("#area");
         var options = "<option value=''>---------</option>"

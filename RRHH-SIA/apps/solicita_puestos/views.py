@@ -24,7 +24,8 @@ def SolicitaPuestoList(request):
         )
     solicitudes = solicitudes.order_by('-fecha_solicitud')
 
-    paginator = Paginator(solicitudes, 100)  # Mueve la paginación fuera del condicional
+    # Mueve la paginación fuera del condicional
+    paginator = Paginator(solicitudes, 100)
     page = request.GET.get('page')
     puestos_paginados = paginator.get_page(page)
 
@@ -39,7 +40,7 @@ class SolicitaPuestoCreateView(CreateView):
     model = SolicitaPuesto
     form_class = SolicitaPuestoForm
     template_name = 'puestos/puestos-form.html'
-    success_url = reverse_lazy('solicita_puestos:listar_solicita_puesto')  
+    success_url = reverse_lazy('solicita_puestos:listar_solicita_puesto')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -56,10 +57,29 @@ class SolicitaPuestoUpdateView(UpdateView):
     model = SolicitaPuesto
     form_class = SolicitaPuestoForm
     template_name = 'puestos/puestos-form.html'
-    success_url = reverse_lazy('solicita_puestos:listar_solicita_puesto')  # Coloca la URL a la que deseas redirigir después de guardar la solicitud
+    success_url = reverse_lazy('solicita_puestos:listar_solicita_puesto')
 
     def form_valid(self, form):
+        instancia = form.save(commit=False)
+        # user = self.request.user
+        # instancia.solicitante = user
+        instancia.estado_aprobacion = None
+        instancia.estado_ingreso = None
+        instancia.notasges=''
+        instancia.observacion_aprueba=''
+        instancia.motRechaza=''
+        instancia.save()
         return super().form_valid(form)
+    
+    
+    def form_invalid(self, form):
+        response = super().form_invalid(form)
+        print('erroroororor',form.errors)
+        return response
+            # if self.request.is_ajax:
+            #     return JsonResponse(form.errors, status=400)
+            # else:
+            #     return response
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -75,6 +95,9 @@ class SolicitaPuestoUpdateView(UpdateView):
         context['areas'] = areas
 
         context['editar'] = True
+        context['motivoRechaza']= solicitud.motRechaza
+        context['observacionRRHH']= solicitud.notasges
+        
         return context
 
     def get_object(self, queryset=None):
@@ -85,13 +108,14 @@ class SolicitaPuestoDeleteView(DeleteView):
     model = SolicitaPuesto
     template_name = 'puestos/puestos-delete.html'
     success_url = reverse_lazy('solicita_puestos:listar_solicita_puesto')
-
+# aprueba solicitud (gerencia)
 class SolicitaPuestoApruebaUpdateView(UpdateView):
     model = SolicitaPuesto
     form_class = SolicitaPuestoForm
     template_name = 'puestos/puestos-form-aprueba.html'
-    success_url = reverse_lazy('solicita_puestos:listar_solicita_puesto_aprueba') 
-    
+    success_url = reverse_lazy(
+        'solicita_puestos:listar_solicita_puesto_aprueba')
+
     def form_valid(self, form):
         instancia = form.save(commit=False)
         user = self.request.user
@@ -120,10 +144,10 @@ class SolicitaPuestoApruebaUpdateView(UpdateView):
     def get_object(self, queryset=None):
         id_ = self.kwargs.get("pk")
         return get_object_or_404(SolicitaPuesto, id=id_)
-
+# lista las solicitudes para ser aprobadas
 def SolicitaPuestoListAprueba(request):
     queryset = request.GET.get("buscar")
-    solicitudes_base = SolicitaPuesto.objects.exclude(estado_aprobacion= 0)
+    solicitudes_base = SolicitaPuesto.objects.exclude(estado_aprobacion=0)
     # filter(estado_aprobacion= 0 )
 
     if queryset:
@@ -134,7 +158,7 @@ def SolicitaPuestoListAprueba(request):
 
     solicitudes_base = solicitudes_base.order_by('-fecha_solicitud')
 
-    paginator = Paginator(solicitudes_base, 100) 
+    paginator = Paginator(solicitudes_base, 100)
     page = request.GET.get('page')
     puestos_paginados = paginator.get_page(page)
 
@@ -144,20 +168,49 @@ def SolicitaPuestoListAprueba(request):
     }
 
     return render(request, 'puestos/puestos-list-aprueba.html', context)
+# aprobacion directa de gerencia
+def SolicitarPuestoAprobar(request, pk):
+    # Obtener el objeto y manejar el caso de que no exista
+    solicita_puesto = get_object_or_404(SolicitaPuesto, id=pk)
 
+    # Actualizar los campos necesarios en una sola llamada
+    solicita_puesto.estado_aprobacion = 1
+    solicita_puesto.fecha_aprueba = now()
+    solicita_puesto.save()
 
-def SolicitaCargoNotasRRHH(request, pk):
+    # Redirigir al usuario
+    return redirect('solicita_puestos:listar_solicita_puesto_aprueba')
+# rechazo directo por gerencia
+def rechazaDirect(request, pk):
+    rechaza = SolicitaPuesto.objects.get(id=pk)
     if request.method == 'GET':
-        solicitud = SolicitaPuesto.objects.filter(id=pk)
-        detail_solicitud = SolicitaPuesto.objects.get(id=pk)
-        note = detail_solicitud.notasges
-        context = {
-            'solicitud': solicitud,
-            'note': note
-        }
+        rechaza.estado_aprobacion = 0
+        rechaza.motRechaza = request.GET.get("text")
+        rechaza.save()
+    return redirect('solicita_puestos:listar_solicita_puesto_aprueba')
+# formulario (rrhh)
+def SolicitaCargoNotasRRHH(request, pk):
+    if request.method == 'POST':
+        id = request.POST.get("pkSolicita", '')
+        estado = request.POST.get("estado_ingreso", None) or None
+        notas = request.POST.get("notasges", '')
+        fecha = request.POST.get("fecha_inicio_proceso", '')
+        querySet = SolicitaPuesto.objects.get(id=id)
+        querySet.notasges = notas
+        if estado:
+            querySet.estado_ingreso = estado
+        if estado == 1 and fecha:
+            querySet.fecha_inicio_proceso = fecha
+        if estado == 2  :
+            querySet.estado_aprobacion = 0
+        querySet.save()
+        return redirect('solicita_puestos:listar_solicita_puesto_rrhh')
+    solicitud = SolicitaPuesto.objects.filter(id=pk)
+    context = {
+        'solicitud': solicitud,
+    }
     return render(request, 'puestos/puestos-form-rrhh.html', context)
-
-
+# lista las solicitudes rrhh
 def SolicitaPuestoListRRHH(request):
     queryset = request.GET.get("buscar")
     # area administracion
@@ -166,7 +219,8 @@ def SolicitaPuestoListRRHH(request):
         estado_aprobacion=1).order_by('fecha_aprueba')
     if queryset:
 
-        q1 = generalQuery.exclude(estado_ingreso=1).exclude(estado_ingreso=0).exclude(estado_ingreso=2)
+        q1 = generalQuery.exclude(estado_ingreso=1).exclude(
+            estado_ingreso=0).exclude(estado_ingreso=2)
         # q1 = SolicitaPuesto.objects.filter(activo_depar__id=108).filter(estado_aprobacion=1).order_by('fecha_aprueba')
         query_nuevas = q1.filter(
             Q(id__icontains=queryset) |
@@ -218,41 +272,7 @@ def SolicitaPuestoListRRHH(request):
                'countp': countp,
                'countc': countc}
     return render(request, 'puestos/puestos-list-rrhh.html', context)
-
-
-def none(request):
-    none = SolicitaPuesto.objects.filter(departamento__id=108).filter(
-        estado_aprobacion=1).order_by('fecha_aprueba')
-    context = {
-        'nonelist': none
-    }
-    return render(request, 'puestos/none.html', context)
-
-
-def SolicitarPuestoAprobar(request, pk):
-    # Obtener el objeto y manejar el caso de que no exista
-    solicita_puesto = get_object_or_404(SolicitaPuesto, id=pk)
-
-    # Actualizar los campos necesarios en una sola llamada
-    solicita_puesto.estado_aprobacion = 1
-    solicita_puesto.fecha_aprueba = now()
-    solicita_puesto.save()
-
-    # Redirigir al usuario
-    return redirect('solicita_puestos:listar_solicita_puesto_aprueba')
-
-
-def rechazaDirect(request, pk):
-    rechaza = SolicitaPuesto.objects.get(id=pk)
-    if request.method == 'GET':
-        rechaza.estado_aprobacion = 0
-        rechaza.motRechaza = request.GET.get("text")
-        rechaza.save()
-    noend= SolicitaPuesto.objects.get(id=pk)
-    print(noend,'dddddd')
-    return redirect('solicita_puestos:listar_solicita_puesto_aprueba')
-
-
+# componente formulario solicita puesto
 def ubicaAreaAjax(request):
     data = []
     # action = request.GET['action']
@@ -269,18 +289,22 @@ def ubicaAreaAjax(request):
         print(e)
 
 
-def ajax_save_status(request):
-    idn = request.GET.get("id")
-    notas = request.GET.get("notasg", 'No ingreso notas')
-    confirma = request.GET.get("aprobar", None) or None
-    SolicitaPuesto.objects.filter(id=idn).update(
-        notasges=notas, estado_ingreso=confirma)
-    # return redirect('solicita_puestos:gestionar_solicita_cargo_aprobado', idn)
-    return redirect('solicita_puestos:gestionar_solicita_cargo_aprobado', pk=idn)
 
 
-def ajax_save(request):
-    idn = request.GET.get("id")
-    notas = request.GET.get("notasg", 'Notas')
-    SolicitaPuesto.objects.filter(id=idn).update(notasges=notas)
-    return JsonResponse("Exito", safe=False)
+def none(request):
+
+    none = SolicitaPuesto.objects.filter(departamento__id=108).filter(
+        estado_aprobacion=1).order_by('fecha_aprueba')
+    context = {
+        'nonelist': none
+    }
+    return render(request, 'puestos/none.html', context)
+
+
+# def ajax_save_status(request):
+#     idn = request.GET.get("id")
+#     notas = request.GET.get("notasg", '')
+#     confirma = request.GET.get("aprobar", None) or None
+#     SolicitaPuesto.objects.filter(id=idn).update(
+#         notasges=notas, estado_ingreso=confirma)
+#     return redirect('solicita_puestos:listar_solicita_puesto_rrhh')

@@ -82,10 +82,14 @@ class SolicitaPuesto(models.Model):
         blank=True, null=True, choices=estado)
     usuario_aprueba_rrhh = models.CharField(max_length=50, blank=True, null=True)
     fecha_aprueba_rrhh = models.DateTimeField(blank=True, null=True)
-    
+    fecha_inicio_proceso = models.DateTimeField(blank=True, null=True)
     
     class Meta:
+        managed = True
         db_table = 'solicita_puesto'
+        # db_table = 'rrhh\".\"solicita_puesto'
+        verbose_name = 'Solicitud de personal'
+        verbose_name_plural = 'Solicitudes de personal'
 
     def __str__(self):
-        return str(self.cargo)
+        return str(self.id)

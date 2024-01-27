@@ -7,15 +7,16 @@ class SolicitaPuestoForm(forms.ModelForm):
         model = SolicitaPuesto
         fields = ['ubicacion',
                   'departamento',
-                  'area',
                   'motivo',
                   'cargo',
                   'justificacion',
                   'solicitante',
                   'usuario_aprueba',
-                  
                   'observacion_aprueba',
-                  'estado_aprobacion'
+                  'estado_aprobacion',
+                  'estado_ingreso',
+                  'notasges',
+                  'motRechaza'
                   ]
         # fields = '__all__'
         labels = {
@@ -37,13 +38,6 @@ class SolicitaPuestoForm(forms.ModelForm):
                     'required': 'required'
                 }
             ),
-            'area': forms.Select(
-                attrs={
-                    'class': 'form-control in',
-                    'id': 'area',
-                    'required': 'required',
-                }
-            ),
             'motivo': forms.Select(
                 attrs={
                     'class': 'form-control in',
@@ -55,6 +49,7 @@ class SolicitaPuestoForm(forms.ModelForm):
                 attrs={
                     'class': 'form-control',
                     'id': 'cargo',
+                    'required': 'required',
                 }
             ),
             # 'descripcion': forms.Textarea(
@@ -69,6 +64,7 @@ class SolicitaPuestoForm(forms.ModelForm):
                     'class': 'form-control',
                     'id': 'justificacion',
                     'rows':5,
+                    'required': 'required',
                 }
             ),
             'observacion_aprueba': forms.Textarea(
@@ -76,7 +72,9 @@ class SolicitaPuestoForm(forms.ModelForm):
                     'class': 'form-control',
                     'id': 'observacion_aprueba',
                     'rows':5,
+                    'required': 'required',
                 }
             ),
-            # Agrega más widgets si lo necesitas
         }
+
+

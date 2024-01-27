@@ -11,126 +11,134 @@
 {% endblock %}
 
 {% block content %}
-<div class="loader"></div>
-<div class="container" style="margin: 25px auto;">
-  {% for campo in solicitud %}
-  <div class="btn-group" style="float: right;margin-bottom: 15px;">
-    <a type="button" class="btn btn-info glyphicon glyphicon-arrow-left"
-      href="{% url 'solicita_puestos:listar_solicita_puesto_rrhh' %}"></a>
-    {% if campo.estado_ingreso %}
-    {% if campo.estado_ingreso == 1 %}
-    <button type="button" style="margin-left: 3px;" class="btn btn-danger" name="confirmab" id="confirmab"
-      onclick="saveStatus(2)">Rechazar</button>
-    {% elif campo.estado_ingreso == 2 %}
-    <button type="button" style="margin-left: 3px;" class="btn btn-success" name="confirmab" id="confirmab"
-      onclick="saveStatus(1)">Aprobar</button>
-    {% endif %}
-    {% else %}
-    <button type="button" style="margin-left: 3px;" class="btn btn-danger" name="confirmab" id="confirmab"
-      onclick="saveStatus(2)">Rechazar</button>
-    <button type="button" style="margin-left: 3px;" class="btn btn-success" name="confirmab" id="confirmab"
-      onclick="saveStatus(1)">Aprobar</button>
-    {% endif %}
-
-
-  </div>
-
-
-  <table class="table table-bordered table-sm" style="margin-top:15px;">
-    <tbody>
-
-      <tr>
-        <th class="table-dark" scope="col" style="width: 25%;">N° Solicitud:</th>
-        <td style='font-size: 18px; font-weight: bold;'>{{ campo.id }}</td>
-      </tr>
-      {% if campo.estado_ingreso == 1 %}
-      <tr>
-        <th class="table-dark" scope="col" style="width: 25%;">Estado Solicitud:</th>
-        <td class="text-success" style='font-size: 18px; font-weight: bold;'>Aprobado</td>
-      </tr>
-      {% elif campo.estado_ingreso == 2 %}
-      <tr>
-        <th class="table-dark" scope="col" style="width: 25%;">Estado Solicitud:</th>
-        <td class="text-danger" style='font-size: 18px; font-weight: bold;'>Rechazado</td>
-      </tr>
-      {% endif %}
-      <tr>
-        <th class="table-dark" scope="col">Fecha Solicitud:</th>
-        <td>{{ campo.fecha_solicitud | default:'--' }}</td>
-      </tr>
-      <tr>
-        <th class="table-dark" scope="col">Usuario Solicitante:</th>
-        <td>{{ campo.solicitante }}</td>
-      </tr>
-
-      <tr>
-        <th class="table-dark" scope="col">Ubicación:</th>
-        <td>{{ campo.ubicacion}}</td>
-      </tr>
-      <tr>
-        <th class="table-dark" scope="col">Departamento Solicitante:</th>
-        <td>{{ campo.departamento.dep_nombre }}</td>
-      </tr>
-      <tr>
-        <th class="table-dark" scope="col">Cargo</th>
-        <td><b>{{ campo.cargo }}</b></td>
-      </tr>
-      <tr>
-        <th class="table-dark" scope="col">Motivo:</th>
-        <td><b>{{ campo.motivo | default:'--' }}</b></td>
-      </tr>
-      <tr>
-        <th class="table-dark" scope="col">Justificación:</th>
-        <td><b>{{ campo.justificacion | default:'--' }}</b></td>
-      </tr>
-      <tr>
-        <th class="table-dark" scope="col">Usuario Aprueba:</th>
-        <td><b>{{ campo.usuario_aprueba | default:'--' }}</b></td>
-      </tr>
-      <tr>
-        <th class="table-dark" scope="col">Fecha Aprobación:</th>
-        <td>{{ campo.fecha_solicitud | default:'--' }}</td>
-      </tr>
+<!-- <form id="form" action="" method="post"> -->
+<form id="form" method="POST">
+  {% csrf_token %}
+  <div class="loader"></div>
+  <div class="container" style="margin: 25px auto;">
+    {% for campo in solicitud %}
+    <div class="btn-group" style="float: right;margin-bottom: 15px;">
+      <a type="button" class="btn btn-info glyphicon glyphicon-arrow-left"
+        href="{% url 'solicita_puestos:listar_solicita_puesto_rrhh' %}"></a>
       {% if campo.estado_ingreso %}
-      <tr>
-        <th class="table-dark" scope="col">Usuario confirma solicitud:</th>
-        <td>{{ campo.usuario_aprueba_rrhh | default:'--' }}</td>
-      </tr>
-      <tr>
-        <th class="table-dark" scope="col">Fecha confirma solicitud:</th>
-        <td>{{ campo.fecha_aprueba_rrhh | default:'--' }}</td>
-      </tr>
+      {% if campo.estado_ingreso == 1 %}
+      <button type="submit" style="margin-left: 3px;" class="btn btn-danger" name="rechaza"
+        id="rechaza">Rechazar</button>
+      {% elif campo.estado_ingreso == 2 %}
+      <button type="button" style="margin-left: 3px;" class="btn btn-success" name="confirma"
+        id="confirma">Aprobar</button>
+      {% endif %}
+      {% else %}
+      <button type="submit" style="margin-left: 3px;" class="btn btn-danger" name="rechaza"
+        id="rechaza">Rechazar</button>
+      <button type="button" style="margin-left: 3px;" class="btn btn-success" name="confirma"
+        id="confirma">Aprobar</button>
       {% endif %}
 
 
-
-    </tbody>
-  </table>
+    </div>
 
 
+    <table class="table table-bordered table-sm" style="margin-top:15px;">
+      <tbody>
 
-  <div>
-    <label for="" style="font-size:75%"><b>Notas del Gestor</b></label>
-    <textarea class="form-control" id="notasges" name="notasges" rows="4"
-      placeholder="Notas del Gestor">{{note | default:""}}</textarea>
-    <input id="pkSolicita" value="{{campo.id}}" type="text" hidden>
+        <tr>
+          <th class="table-dark" scope="col" style="width: 25%;">N° Solicitud:</th>
+          <td style='font-size: 18px; font-weight: bold;'>{{ campo.id }}</td>
+        </tr>
+        {% if campo.estado_ingreso == 1 %}
+        <tr>
+          <th class="table-dark" scope="col" style="width: 25%;">Estado Solicitud:</th>
+          <td class="text-success" style='font-size: 18px; font-weight: bold;'>Aprobado</td>
+        </tr>
+        {% elif campo.estado_ingreso == 2 %}
+        <tr>
+          <th class="table-dark" scope="col" style="width: 25%;">Estado Solicitud:</th>
+          <td class="text-danger" style='font-size: 18px; font-weight: bold;'>Rechazado</td>
+        </tr>
+        {% endif %}
+        <tr>
+          <th class="table-dark" scope="col">Fecha Solicitud:</th>
+          <td>{{ campo.fecha_solicitud | default:'--' }}</td>
+        </tr>
+        <tr>
+          <th class="table-dark" scope="col">Usuario Solicitante:</th>
+          <td>{{ campo.solicitante }}</td>
+        </tr>
+
+        <tr>
+          <th class="table-dark" scope="col">Ubicación:</th>
+          <td>{{ campo.ubicacion}}</td>
+        </tr>
+        <tr>
+          <th class="table-dark" scope="col">Departamento Solicitante:</th>
+          <td>{{ campo.departamento.dep_nombre }}</td>
+        </tr>
+        <tr>
+          <th class="table-dark" scope="col">Cargo</th>
+          <td><b>{{ campo.cargo }}</b></td>
+        </tr>
+        <tr>
+          <th class="table-dark" scope="col">Motivo:</th>
+          <td><b>{{ campo.motivo | default:'--' }}</b></td>
+        </tr>
+        <tr>
+          <th class="table-dark" scope="col">Justificación:</th>
+          <td><b>{{ campo.justificacion | default:'--' }}</b></td>
+        </tr>
+        <tr>
+          <th class="table-dark" scope="col">Usuario Aprueba:</th>
+          <td><b>{{ campo.usuario_aprueba | default:'--' }}</b></td>
+        </tr>
+        <tr>
+          <th class="table-dark" scope="col">Fecha Aprobación:</th>
+          <td>{{ campo.fecha_solicitud | default:'--' }}</td>
+        </tr>
+        {% if campo.estado_ingreso %}
+        <tr>
+          <th class="table-dark" scope="col">Usuario confirma solicitud:</th>
+          <td>{{ campo.usuario_aprueba_rrhh | default:'--' }}</td>
+        </tr>
+        <tr>
+          <th class="table-dark" scope="col">Fecha confirma solicitud:</th>
+          <td>{{ campo.fecha_aprueba_rrhh | default:'--' }}</td>
+        </tr>
+        {% endif %}
+
+
+
+      </tbody>
+    </table>
+
+
+    <div>
+      <label for="" style="font-size:75%"><b>Notas del Gestor</b></label>
+      <textarea class="form-control" id="notasges" name="notasges" rows="4"
+      placeholder="Notas del Gestor">{{campo.notasges | default:"" }}</textarea>
+    </div>
+    <div >
+      <label for="" style="font-size:75%"><b>Fecha Ingreso</b></label>
+      <div class="input-group mb-3">
+        <input type="date" class="form-control" name="fecha_inicio_proceso" id="fecha_inicio_proceso"
+          placeholder="Fecha Factura" value="{{campo.fecha_aprueba_rrhh|date:'Y-m-d'}}">
+      </div>
+    </div>
+    <br>
+    <input id="pkSolicita" name="pkSolicita" value="{{campo.id}}" type="text" hidden>
+    <input id="estado_ingreso" name="estado_ingreso" type="text" value="{{campo.estado_ingreso}}" hidden>
+    <button type="submit" class="btn btn-primary" name="save" id="save">Guardar</button>
   </div>
-  <br>
-  <button class="btn btn-primary" name="save" id="save" onclick="save()">Guardar</button>
-</div>
-<pre></pre>
-<pre></pre>
+  <pre></pre>
+  <pre></pre>
+
+  <pre></pre>
 
 
 
-<pre></pre>
+  </div>
 
-
-
-</div>
-
-{% endfor %}
-
+  {% endfor %}
+</form>
 {% endblock %}
 
 {% block extrajs %}
@@ -147,63 +155,21 @@
         $(".loader").fadeOut("slow");
       });
     });
+    $('#confirma').on('click', function (event) {
+      event.preventDefault();
+      $('#estado_ingreso').val(1);
+      event.target.form.submit();
+    });
+    $('#rechaza').on('click', function (event) {
+      event.preventDefault();
+      $('#estado_ingreso').val(2);
+      event.target.form.submit();
+    });
+
   });
 
-  function procesa() {
-    // document.getElementById('proceso').onclick = function() {
-    var sol_id = document.getElementById('idbk').value;
-    var notasg = document.getElementById('notasges').value;
 
 
-    $.ajax({
-      type: "GET",
-      url: 'ajax_cambia_enproceso/',
-      data: { 'sol_id': sol_id, 'notasg': notasg },
-      dataType: "json",
-      error: function () {
-        alert("No se pudo guardar. Comuníquese con IT");
-
-      },
-
-    })
-  }
-
-  function save() {
-    var notasg = document.getElementById('notasges').value;
-    var id = document.getElementById('pkSolicita').value
-    $.ajax({
-      type: 'GET',
-      url: 'ajax_save/',
-      data: { 'notasg': notasg, 'id': id },
-      dataType: 'json',
-      success: function (data) {
-        alert("Actualizado satisfactoriamente ");
-
-      },
-      error: function (data) {
-        alert("No se pudo guardar. Comuníquese con IT");
-      },
-
-    })
-  }
-
-  function saveStatus(confirma) {
-    var notasg = document.getElementById('notasges').value;
-    var id = document.getElementById('pkSolicita').value
-    $.ajax({
-      type: 'GET',
-      url: 'ajax_save_status/',
-      data: { 'notasg': notasg, 'id': id, 'aprobar': confirma },
-      dataType: 'json',
-      success: function (data) {
-        alert("La solicitud ha sido " + data);
-      },
-      error: function (data) {
-        alert("No se pudo guardar. Comuníquese con IT");
-      },
-
-    })
-  }
 
 
 </script>

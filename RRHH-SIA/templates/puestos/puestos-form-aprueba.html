@@ -58,7 +58,7 @@
                 {{ form.observacion_aprueba }}
             </div>
         </div>
-
+        
 
         <div class="row">
             <div class="col-md-12" style="margin-top: 10px;">
@@ -72,6 +72,26 @@
 
 {% block extrajs %}
   <script>
+    $(window).on("load", function() {
+        $(".loader").fadeOut("slow");
+    });
+    $(document).ready(function() {    
+        $('#enviar').on('click', function(){
+            var incompletos = false
+            $('.in').each(function(){
+                if ($(this).val().trim() == ''){
+                    incompletos = true
+                }
+            });
+            if (incompletos == false){
+                //Añadimos la imagen de carga en el contenedor
+                $(".loader").show();
+                $(window).on("load", function(){
+                    $(".loader").fadeOut("slow");
+                });
+            }
+        });              
+    });
     $("#ubicacion").on('change', function () {
         console.log('paso por aqui')
         var id = $(this).val();

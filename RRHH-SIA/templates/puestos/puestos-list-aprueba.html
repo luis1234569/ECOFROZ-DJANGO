@@ -57,7 +57,7 @@
     <div class="row">
         <div class="col-md-6 search">
             <form class="form-inline my-2 my-lg-0" method="GET">
-                <input class="form-control mr-sm-2" type="text" placeholder="N° Pedido, Descripción" name="buscar" {% if busqueda %} value="{{ busqueda }}" {% endif %}>
+                <input class="form-control mr-sm-2" type="text" placeholder="N° Solicitud, Descripción" name="buscar" {% if busqueda %} value="{{ busqueda }}" {% endif %}>
                 <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
                 <a class="btn  btn-secondary my-2 my-sm-0" style="margin-left: 10px;"
                     href="{% url 'solicita_puestos:listar_solicita_puesto' %}"></button>Limpiar</a>
@@ -73,13 +73,14 @@
         {% if puestosSolicitados %}
         <thead>
             <tr>
-                <th scope="col">Pedido N°</th>
+                <th scope="col">Solicitud N°</th>
                 <th scope="col">Solicitante</th>
                 <th scope="col">Fecha Solicitud</th>
                 <th scope="col">departamento</th>
                 <th scope="col">Cargo</th>
                 <!-- <th scope="col">Justificación</th> -->
                 <th scope="col">Motivo</th>
+                <th scope="col">Estado</th>
                 <th scope="col">Observación</th>
                 <th scope="col">Estado Aprobación</th>
                 <th scope="col">Opciones</th>
@@ -95,13 +96,22 @@
                 <td>{{ item.departamento.dep_nombre }}</td>
                 <td>{{ item.cargo }}</td>
                 <td>{{ item.motivo }}</td>
-                <td>{{ item.observacion_aprueba| default:"--"}}</td>
                 {% if item.estado_aprobacion == 1 %}
-                <td>Enviado a RRHH</td>
+                <td class="text-info">Enviado a RRHH</td>
                 {% elif item.estado_aprobacion == 0 %}
-                <td>Rechazado</td>
+                <td class="text-warning">Rechazado</td>
                 {% elif item.estado_aprobacion == 2 %}
-                <td style="color:rgb(230, 168, 11)"><b>Anulada</b></td>
+                <td class="text-danger"><b>Anulada</b></td>
+                {% else %}
+                <td>Pendiente</td>
+                {% endif %}
+                <td>{{ item.observacion_aprueba| default:"--"}}</td>
+                {% if item.estado_ingreso == 1 %}
+                <td class="text-success">Aprobado</td>
+                {% elif item.estado_ingreso == 0 %}
+                <td class="text-warning">Rechazado</td>
+                {% elif item.estado_ingreso == 2 %}
+                <td class="text-danger"><b>Anulada</b></td>
                 {% else %}
                 <td>Pendiente</td>
                 {% endif %}

@@ -62,11 +62,11 @@
             <td>{{ item.cargo }}</td>
             <td>{{ item.justificacion }}</td>
             {% if item.estado_aprobacion == 1 %}
-            <td style="color:rgb(29, 230, 11)">Aprobado</td>
+            <td class="text-success">Aprobado</td>
             {% elif item.estado_aprobacion == 0 %}
-            <td>No aprobado</td>
+            <td class="text-warning">No aprobado</td>
             {% elif item.estado_aprobacion == 2 %}
-            <td style="color:rgb(230, 168, 11)"><b>Anulada</b></td>
+            <td class="text-danger"style="color:rgb(230, 168, 11)"><b>Anulada</b></td>
             {% else %}
             <td>Pendiente</td>
             {% endif %}
@@ -91,23 +91,6 @@
     {% endif %}
 
 </table>
-<!-- <div class="pagination">
-    <span class="step-links">
-        {% if puestosSolicitados.has_previous %}
-            <a href="?page=1">&laquo; inicio</a>
-            <a href="?page={{ puestosSolicitados.previous_page_number }}">previo</a>
-        {% endif %}
-  
-        <span class="current">
-            Page {{ puestosSolicitados.number }} of {{ puestosSolicitados.paginator.num_pages }}.
-        </span>
-  
-        {% if puestosSolicitados.has_next %}
-            <a href="?page={{ puestosSolicitados.next_page_number }}">próximo</a>
-            <a href="?page={{ puestosSolicitados.paginator.num_pages }}">último &raquo;</a>
-        {% endif %}
-    </span>
-  </div> -->
   <div class="container">
     <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center">

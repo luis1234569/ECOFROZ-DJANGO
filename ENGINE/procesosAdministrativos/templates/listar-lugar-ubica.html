@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <!-- Saludo Personalizado -->
+    <h1 class="mt-4">Bienvenido, {{ nombre_usuario }}!</h1>
+    <p>Estos son los lugares que has visitado:</p>
+
+    <!-- Lista de Lugares Visitados -->
+    <div class="row">
+        {% for lugar in lugares_visitados %}
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="card mb-3" >
+                    <!-- <img src="{{ lugar.imagen_url }}" class="card-img-top" alt="Imagen de {{ lugar.nombre }}"> -->
+                    <div class="card-body">
+                        <h5 class="card-title">{{ lugar.nombre }}</h5>
+                        <p class="card-text">{{ lugar.descripcion }}</p>
+                        <p class="card-text">
+                            <small class="text-muted">Visitado el {{ lugar.fecha_visita|date:"d/m/Y" }} a las {{ lugar.hora_visita }}</small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}
