@@ -63,9 +63,12 @@ class CabRegistroAccesoUbica(models.Model):
     
 class DetRegistroAccesoUbica(models.Model):
     cab_registro = models.ForeignKey(CabRegistroAccesoUbica, models.DO_NOTHING)
+    fecha_hora_ingreso = models.DateTimeField(null=True, blank=True)
     completado = models.IntegerField(blank=False, null=False, choices=estado_acceso_ubica, default = 0)
     observacion = models.CharField(max_length=255, null=True, blank=True)
     area = models.ForeignKey(CodigoQrAreas, models.DO_NOTHING)
+    # area = models.ForeignKey(activo_areas, models.DO_NOTHING)
+    
     
     class Meta:
         managed = True 

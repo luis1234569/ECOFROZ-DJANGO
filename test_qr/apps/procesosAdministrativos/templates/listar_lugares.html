@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <!-- Saludo Personalizado -->
+    <h1 class="mt-4">Bienvenido, {{ user.first_name }}!</h1>
+    <p>Estos son los lugares que has visitado:</p>
+
+    <!-- Lista de Lugares Visitados -->
+    <div class="row">
+        {% for cabecera in cabeceras %}
+        <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="card mb-3">
+                <div class="card-header bg-primary text-white">
+                    <p class="mb-0"><small>Registro de Acceso - {{ cabecera.fecha_hora_ingreso |date:"d/m/Y" }} a las
+                        {{ cabecera.fecha_hora_ingreso |date:"H:i" }}</small></p>
+                        <p class="card-text h-6"><small>
+                        {% if cabecera.completado == 1 %}
+                        Registro de Salida - {{ cabecera.fecha_hora_ingreso |date:"d/m/Y" }} a las {{ cabecera.fecha_hora_ingreso |date:"H:i" }}
+                        {% elif cabecera.completado == 0 %}
+                        Registro de Salida pendiente
+                        {% elif cabecera.completado == 2 %}
+                        No registro la salida
+                        {% endif %}</small>
+                    </p>
+                </div>
+                <div class="card-body">
+                    {% for detalle in cabecera.detregistroaccesoubica_set.all %}
+                    <div class="row mb-2">
+                        <div class="col-10">
+                            <p class="mb-0"><small>{{ detalle.area.posicion }} {{ detalle.area.area }}</small></p>
+                        </div>
+                        <div class="col-1">
+                            {% if detalle.completado == 0 %}
+                            <span class="badge badge-danger">❌</span>
+                            {% elif detalle.completado == 1 %}
+                            <span class="badge badge-success">✅</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock content %}
