@@ -1,0 +1,3 @@
+INSERT INTO procesos.cab_registro_acceso_ubicacion (id, fecha_hora_ingreso, fecha_hora_salida, completado, observacion, username, usuario_id) VALUES (14, '2024-01-27 15:10:12.938420 +00:00', '2024-01-27 18:11:06.386761 +00:00', 1, null, 'lruiz', 1);
+INSERT INTO procesos.cab_registro_acceso_ubicacion (id, fecha_hora_ingreso, fecha_hora_salida, completado, observacion, username, usuario_id) VALUES (15, '2024-01-28 18:14:45.893698 +00:00', '2024-01-28 19:21:44.808198 +00:00', 1, null, 'lruiz', 1);
+INSERT INTO procesos.cab_registro_acceso_ubicacion (id, fecha_hora_ingreso, fecha_hora_salida, completado, observacion, username, usuario_id) VALUES (16, '2024-01-28 19:22:20.311445 +00:00', null, 0, null, 'lruiz', 1);

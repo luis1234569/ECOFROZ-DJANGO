@@ -1,0 +1,9 @@
+INSERT INTO procesos.area_codigo_qr (id, codigo_qr, tipo, alterar, posicion, activo, area_id) VALUES (1, 'fgrsgsfd34', 1, true, null, true, 1087);
+INSERT INTO procesos.area_codigo_qr (id, codigo_qr, tipo, alterar, posicion, activo, area_id) VALUES (2, 'hrthtrn5235', 1, true, null, true, 33);
+INSERT INTO procesos.area_codigo_qr (id, codigo_qr, tipo, alterar, posicion, activo, area_id) VALUES (3, 'ergbrsb', 0, false, 1, true, 13);
+INSERT INTO procesos.area_codigo_qr (id, codigo_qr, tipo, alterar, posicion, activo, area_id) VALUES (4, 'rsbgsgb', 0, false, 2, true, 14);
+INSERT INTO procesos.area_codigo_qr (id, codigo_qr, tipo, alterar, posicion, activo, area_id) VALUES (5, 'brb4b4b', 0, false, 3, true, 15);
+INSERT INTO procesos.area_codigo_qr (id, codigo_qr, tipo, alterar, posicion, activo, area_id) VALUES (6, 'fdhfdhd', 0, false, 4, true, 16);
+INSERT INTO procesos.area_codigo_qr (id, codigo_qr, tipo, alterar, posicion, activo, area_id) VALUES (7, 'hugdby734', 0, false, 5, true, 17);
+INSERT INTO procesos.area_codigo_qr (id, codigo_qr, tipo, alterar, posicion, activo, area_id) VALUES (8, 'vgywky37ygyfru', 0, false, 6, true, 18);
+INSERT INTO procesos.area_codigo_qr (id, codigo_qr, tipo, alterar, posicion, activo, area_id) VALUES (9, 'gfy7i46fr7', 0, false, 7, true, 19);
