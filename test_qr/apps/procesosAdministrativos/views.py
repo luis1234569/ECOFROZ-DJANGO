@@ -5,26 +5,17 @@ import datetime
 from django.core.exceptions import ObjectDoesNotExist
 
 # Create your views here.
-# def listarInformacion(request):
-#     cabeceras = CabRegistroAccesoUbica.objects.all()
-#     detalles = DetRegistroAccesoUbica.objects.all()
-
-#     return render(request, 'listar_lugares.html', {'cabeceras': cabeceras, 'detalles': detalles})
-
-def lista(request):
+def accesos(request):
     user= request.user
-    cabeceras = CabRegistroAccesoUbica.objects.filter(usuario= user).prefetch_related('detregistroaccesoubica_set')
-    # 'detregistroaccesoubica_set' es el nombre por defecto de la relación inversa en el modelo CabRegistroAccesoUbica
+    cabeceras = CabRegistroAccesoUbica.objects.filter(usuario= user).order_by('-fecha_hora_ingreso').prefetch_related('detregistroaccesoubica_set')
 
     return render(request, 'listar_lugares.html', {'cabeceras': cabeceras})
 
 def registerIngresoSalida(request, code_qr):
     user = request.user
-    print(user)
-    # Aquí va el código para registrar la entrada o salida de un usuario
     validate_qr = CodigoQrAreas.objects.get(codigo_qr =code_qr)
     try:
-        ingreso_salida = CabRegistroAccesoUbica.objects.get(usuario=user)
+        ingreso_salida = CabRegistroAccesoUbica.objects.filter(usuario=user).order_by('-fecha_hora_ingreso').first()
     except ObjectDoesNotExist:
         ingreso_salida = None
         
@@ -55,19 +46,21 @@ def registerIngresoSalida(request, code_qr):
 
 def registerCodeQR(request, code_qr):
     user = request.user
-    # Aquí va el código para registrar la entrada o salida de un usuario
     validate_qr = CodigoQrAreas.objects.get(codigo_qr =code_qr)
-    cabecera = CabRegistroAccesoUbica.objects.get(usuario=user)
+    cabecera = CabRegistroAccesoUbica.objects.filter(usuario=user).order_by('-fecha_hora_ingreso').first()
     if validate_qr is None:
         return HttpResponse("El codigo QR no es válido", status=403)
     else:
         if cabecera.fecha_hora_salida:
             return HttpResponse("Usted no ha ingresado correctamente", status=403)
         else:
-            detalle = DetRegistroAccesoUbica.objects.get(cab_registro_id=cabecera.id, area=validate_qr.area)
+            print(cabecera.id)
+            print(validate_qr.area.area_codigo)
+            detalle = DetRegistroAccesoUbica.objects.filter(cab_registro=cabecera.id, area=validate_qr.id).first()
+            print(detalle.id)
             detalle.completado = 1
             detalle.save()
-    return redirect('procesosAdministrativos:accesos')
+    return redirect('procesosadministrativos:accesos')
 
 
 def generateCodigoQR(request, code_qr):
